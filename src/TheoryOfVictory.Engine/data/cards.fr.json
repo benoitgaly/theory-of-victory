@@ -1,0 +1,288 @@
+{
+  "cards": [
+    {
+      "code": "sanctions_package_1",
+      "title": "Premier train de sanctions",
+      "family": "Économique",
+      "description": "L'Occident gèle les avoirs et coupe les circuits bancaires. La friction s'installe, le pétrole se vend avec décote.",
+      "type": "Permanent",
+      "politicalCost": 3,
+      "baseProbability": 0.95,
+      "effects": [
+        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": 0.45 },
+        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": 0.35 },
+        { "kind": "SanctionsComponentDelta", "targetSideCode": "invader", "value": 0.4, "delayTurns": 2 }
+      ]
+    },
+    {
+      "code": "western_aid_opens",
+      "title": "L'aide occidentale s'organise",
+      "family": "Politique occidentale",
+      "description": "Les livraisons passent de l'urgence à l'industrialisation. L'essentiel arrive en nature, pas en argent.",
+      "type": "Permanent",
+      "politicalCost": 4,
+      "baseProbability": 0.9,
+      "effects": [
+        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": 11.0 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 6 }
+      ]
+    },
+    {
+      "code": "himars_deep_strike",
+      "title": "Frappe de précision longue portée",
+      "family": "Militaire et technologique",
+      "description": "Les dépôts de munitions reculent de 80 km. Ce n'est pas du terrain gagné, c'est du flux adverse coupé.",
+      "type": "Permanent",
+      "politicalCost": 2,
+      "baseProbability": 0.7,
+      "effects": [
+        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": 0.45 },
+        { "kind": "LogisticsIntegrityDelta", "targetSideCode": "invader", "value": -0.18 }
+      ]
+    },
+    {
+      "code": "partial_mobilisation",
+      "title": "Mobilisation partielle",
+      "family": "Politique interne",
+      "description": "Trois cent mille hommes retirés à l'économie. Gratuit en trésorerie, ruineux en consentement — et le PIB le paiera longtemps.",
+      "type": "SlowRitual",
+      "ownerSideCode": "invader",
+      "politicalCost": 9,
+      "baseProbability": 0.4,
+      "effects": [
+        { "kind": "MobilisationWave", "targetSideCode": "invader", "value": 300 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 14 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -4 }
+      ]
+    },
+    {
+      "code": "counter_offensive_2022",
+      "title": "Contre-offensives d'automne",
+      "family": "Militaire et technologique",
+      "description": "Un front tenu trop mince cède là où personne ne regardait. L'attaquant paie encore, mais bien moins que d'habitude.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 6,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 10 },
+        { "kind": "MoraleDelta", "targetSideCode": "invader", "value": -8 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -7 },
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": 8 }
+      ]
+    },
+    {
+      "code": "grid_campaign",
+      "title": "Campagne contre le réseau électrique",
+      "family": "Énergie",
+      "description": "On ne vise plus les sous-stations mais les salles des machines. Les turbines ne se remplacent pas en une saison.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.6,
+      "effects": [
+        { "kind": "GridPermanentDamage", "targetSideCode": "defender", "value": 4.5 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -5 }
+      ]
+    },
+    {
+      "code": "oil_price_cap",
+      "title": "Plafonnement du prix du baril",
+      "family": "Économique",
+      "description": "La décote se creuse sans couper les volumes. La sanction qui rapporte le plus est celle qui ne se voit pas.",
+      "type": "Permanent",
+      "politicalCost": 5,
+      "baseProbability": 0.55,
+      "effects": [
+        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": 0.4 }
+      ]
+    },
+    {
+      "code": "failed_offensive",
+      "title": "Offensive d'été qui s'enlise",
+      "family": "Militaire et technologique",
+      "description": "Des champs de mines, des drones partout, et un rapport de force insuffisant. Le terrain ne se prend plus par la volonté.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 7,
+      "baseProbability": 0.5,
+      "effects": [
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -7 },
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -9 }
+      ]
+    },
+    {
+      "code": "attention_elsewhere",
+      "title": "Une autre guerre capte l'attention",
+      "family": "Externe",
+      "description": "Les stocks d'intercepteurs partent ailleurs, et les capitales aussi. Le soutien n'est pas retiré : il est distrait.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.3,
+      "effects": [
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -12 },
+        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "heavy_interceptors", "value": -180 }
+      ]
+    },
+    {
+      "code": "aid_blocked",
+      "title": "Blocage budgétaire du principal soutien",
+      "family": "Politique occidentale",
+      "description": "Rien n'est annulé, tout est suspendu. Les dépôts se vident au rythme habituel, sans plus rien pour les remplir.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": -0.62 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 }
+      ]
+    },
+    {
+      "code": "aid_unblocked",
+      "title": "Déblocage de l'aide",
+      "family": "Politique occidentale",
+      "description": "Le robinet se rouvre, mais un trimestre de disette laisse des dépôts vides et un front qui a reculé.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.6,
+      "effects": [
+        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": 0.62 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 5 }
+      ]
+    },
+    {
+      "code": "aid_collapse",
+      "title": "Rupture du soutien extérieur",
+      "family": "Politique occidentale",
+      "description": "Une élection, une lassitude, et le flux gratuit s'arrête net. C'est le risque que porte tout ce qu'on reçoit sans le payer.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.2,
+      "effects": [
+        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": -1.0 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -12 },
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -35 }
+      ]
+    },
+    {
+      "code": "refinery_strikes",
+      "title": "Drones sur les raffineries",
+      "family": "Énergie",
+      "description": "Le raffinage russe est concentré et l'export passe par peu de terminaux. Frapper là, c'est frapper le portefeuille.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 3,
+      "baseProbability": 0.55,
+      "effects": [
+        { "kind": "RefiningIntegrityDelta", "targetSideCode": "invader", "value": -0.22 },
+        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": 0.3 }
+      ]
+    },
+    {
+      "code": "foreign_shells",
+      "title": "Fournisseur étranger de munitions",
+      "family": "Externe",
+      "description": "Un flux payant, discret, et qui ne s'arrête pas. Il se paie en devises et en dépendance, jamais en incertitude.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.5,
+      "effects": [
+        { "kind": "ForeignSupplyCeilingDelta", "targetSideCode": "invader", "value": 6.0 }
+      ]
+    },
+    {
+      "code": "licence_transfer",
+      "title": "Transfert de licence",
+      "family": "Externe",
+      "description": "Ce qu'on achetait hier, on le fabrique demain chez soi. L'achat étranger devient capacité nationale.",
+      "type": "SlowRitual",
+      "ownerSideCode": "invader",
+      "politicalCost": 5,
+      "baseProbability": 0.4,
+      "effects": [
+        { "kind": "ProductionCapacityMultiplier", "targetSideCode": "invader", "value": 1.22, "delayTurns": 2 }
+      ]
+    },
+    {
+      "code": "fibre_optic_drones",
+      "title": "Drones à fibre optique",
+      "family": "Militaire et technologique",
+      "description": "Le brouillage ne mord plus. Toute avance se périme : celle-ci vient de périmer celle d'en face.",
+      "type": "Permanent",
+      "politicalCost": 2,
+      "baseProbability": 0.45,
+      "effects": [
+        { "kind": "InnovationTacticalJump", "targetSideCode": "invader", "value": 0.35 },
+        { "kind": "InnovationTacticalJump", "targetSideCode": "defender", "value": 0.4 }
+      ]
+    },
+    {
+      "code": "shadow_fleet_sanctions",
+      "title": "Sanctions sur la flotte fantôme",
+      "family": "Économique",
+      "description": "On ne coupe pas les barils, on renchérit chaque trajet. Le canal lent est celui qui décide.",
+      "type": "Permanent",
+      "politicalCost": 6,
+      "baseProbability": 0.4,
+      "effects": [
+        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": 0.3 },
+        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": 0.25 },
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -4 }
+      ]
+    },
+    {
+      "code": "anticorruption_crisis",
+      "title": "Crise anticorruption",
+      "family": "Politique interne",
+      "description": "L'assainissement coûte avant de rapporter : la conditionnalité se durcit au moment précis où l'on nettoie.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.3,
+      "effects": [
+        { "kind": "CorruptionDelta", "targetSideCode": "defender", "value": -9 },
+        { "kind": "ConditionalityDelta", "targetSideCode": "defender", "value": 0.12 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -4 }
+      ]
+    },
+    {
+      "code": "elite_fracture",
+      "title": "Fracture au sommet",
+      "family": "Politique interne",
+      "description": "Ce n'est pas la rue qui menace le régime, c'est une fraction de l'appareil pour qui la guerre a cessé de payer.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.12,
+      "effects": [
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -18 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 6 }
+      ]
+    },
+    {
+      "code": "component_embargo",
+      "title": "Embargo sur les machines-outils",
+      "family": "Économique",
+      "description": "Discret, technique, sans conférence de presse. C'est la sanction qui coupe un intrant physique, donc la seule qui compte.",
+      "type": "Permanent",
+      "politicalCost": 4,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "SanctionsComponentDelta", "targetSideCode": "invader", "value": 0.45, "delayTurns": 3 }
+      ]
+    },
+    {
+      "code": "harsh_winter",
+      "title": "Hiver rigoureux",
+      "family": "Énergie",
+      "description": "La même destruction ne vaut rien en juillet et devient une crise nationale en janvier.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.25,
+      "effects": [
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "defender", "value": 7 }
+      ]
+    }
+  ]
+}

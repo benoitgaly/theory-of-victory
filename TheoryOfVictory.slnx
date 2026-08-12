@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TheoryOfVictory.Core/TheoryOfVictory.Core.csproj" />
+    <Project Path="src/TheoryOfVictory.Engine/TheoryOfVictory.Engine.csproj" />
+    <Project Path="src/TheoryOfVictory.Simulator/TheoryOfVictory.Simulator.csproj" />
+    <Project Path="src/TheoryOfVictory.Web/TheoryOfVictory.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TheoryOfVictory.Engine.UnitTests/TheoryOfVictory.Engine.UnitTests.csproj" />
+  </Folder>
+</Solution>

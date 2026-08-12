@@ -1,0 +1,414 @@
+(function () {
+    "use strict";
+
+    var games = window.tovGames || [];
+    if (!games.length) {
+        return;
+    }
+
+    var state = { gameIndex: 0, turnIndex: 0 };
+
+    var SEASONS = {
+        Winter: "hiver",
+        Spring: "printemps",
+        Summer: "été",
+        Autumn: "automne"
+    };
+
+    function season(code) {
+        return SEASONS[code] || code;
+    }
+
+    var RESOURCE_LABELS = {
+        weapons: "Armes",
+        fuel: "Carburant",
+        food: "Nourriture",
+        strike_drones: "Drones d'attaque",
+        missiles: "Missiles",
+        cheap_interceptors: "Défense bas coût",
+        heavy_interceptors: "Intercepteurs lourds",
+        infantry: "Soldats"
+    };
+
+    // One cube is one board token: the flows a player would physically push around.
+    var CUBE_SCALE = {
+        weapons: 120,
+        fuel: 60,
+        food: 60,
+        strike_drones: 400,
+        missiles: 120,
+        cheap_interceptors: 600,
+        heavy_interceptors: 120
+    };
+
+    var CUBE_COLOUR = {
+        weapons: "#c9a227",
+        fuel: "#8a6d3b",
+        food: "#5f8a5f",
+        strike_drones: "#a2557f",
+        missiles: "#b0503f",
+        cheap_interceptors: "#4a7f97",
+        heavy_interceptors: "#3d7cc9"
+    };
+
+    function fmt(value, digits) {
+        if (value === null || value === undefined || isNaN(value)) {
+            return "—";
+        }
+        return value.toLocaleString("fr-FR", {
+            minimumFractionDigits: digits || 0,
+            maximumFractionDigits: digits || 0
+        });
+    }
+
+    function el(tag, className, text) {
+        var node = document.createElement(tag);
+        if (className) {
+            node.className = className;
+        }
+        if (text !== undefined) {
+            node.textContent = text;
+        }
+        return node;
+    }
+
+    function currentGame() {
+        return games[state.gameIndex];
+    }
+
+    function currentTurn() {
+        var turns = currentGame().turns;
+        return turns[Math.min(state.turnIndex, turns.length - 1)];
+    }
+
+    function renderVariants() {
+        var picker = document.getElementById("variantPicker");
+        picker.innerHTML = "";
+
+        games.forEach(function (game, index) {
+            var button = el("button", "variant" + (index === state.gameIndex ? " active" : ""));
+            button.type = "button";
+            button.appendChild(el("span", "v-title", game.title));
+            button.appendChild(el("span", "v-sub", game.subtitle));
+            button.addEventListener("click", function () {
+                state.gameIndex = index;
+                state.turnIndex = Math.min(state.turnIndex, game.turns.length - 1);
+                render();
+            });
+            picker.appendChild(button);
+        });
+    }
+
+    function renderTimeline() {
+        var ticks = document.getElementById("turnTicks");
+        ticks.innerHTML = "";
+
+        currentGame().turns.forEach(function (turn, index) {
+            var hasCard = turn.cardsPlayed && turn.cardsPlayed.length > 0;
+            var button = el(
+                "button",
+                "tick" + (index === state.turnIndex ? " active" : "") + (hasCard ? " has-card" : ""),
+                "T" + turn.turn);
+            button.type = "button";
+            button.title = season(turn.season) + " " + turn.year;
+            button.addEventListener("click", function () {
+                state.turnIndex = index;
+                render();
+            });
+            ticks.appendChild(button);
+        });
+    }
+
+    function gaugeColour(ratio) {
+        if (ratio >= 0.95) {
+            return "var(--ok)";
+        }
+        if (ratio >= 0.75) {
+            return "var(--warn)";
+        }
+        return "var(--bad)";
+    }
+
+    function addMetric(parent, label, value, headline) {
+        var row = el("div", "metric" + (headline ? " headline" : ""));
+        row.appendChild(el("span", "m-label", label));
+        row.appendChild(el("span", "m-value", value));
+        parent.appendChild(row);
+        return row;
+    }
+
+    function addCubes(parent, side, kinds) {
+        kinds.forEach(function (kind) {
+            var units = side.stocks[kind] || 0;
+            var count = Math.min(14, Math.round(units / CUBE_SCALE[kind]));
+            var row = el("div", "metric");
+            row.appendChild(el("span", "m-label", RESOURCE_LABELS[kind]));
+            row.appendChild(el("span", "m-value", fmt(units)));
+            parent.appendChild(row);
+
+            var cubes = el("div", "cubes");
+            for (var i = 0; i < Math.max(count, 1); i++) {
+                var cube = el("span", "cube" + (count === 0 ? " empty" : ""));
+                if (count > 0) {
+                    cube.style.background = CUBE_COLOUR[kind];
+                }
+                cubes.appendChild(cube);
+            }
+            parent.appendChild(cubes);
+        });
+    }
+
+    function renderSide(containerId, side, accent) {
+        var host = document.getElementById(containerId);
+        host.innerHTML = "";
+        host.appendChild(el("h3", null, side.name + (side.hasCollapsed ? " — rompue" : "")));
+
+        var bottleneck = el("div", "bottleneck");
+        bottleneck.appendChild(el("div", "label", "Ressource la plus rare"));
+        bottleneck.appendChild(el("div", "value", side.bottleneckName || "—"));
+        host.appendChild(bottleneck);
+
+        addMetric(host, "Puissance soutenable", fmt(side.combatPower), true);
+
+        var ratioRow = addMetric(host, "Ratio de génération", fmt(side.forceGenerationRatio, 2), true);
+        var gauge = el("div", "gauge");
+        var fill = el("span");
+        fill.style.width = Math.min(100, (side.forceGenerationRatio / 1.5) * 100) + "%";
+        fill.style.background = gaugeColour(side.forceGenerationRatio);
+        gauge.appendChild(fill);
+        ratioRow.after(gauge);
+
+        host.appendChild(el("div", "group-title", "Économie (Md)"));
+        addMetric(host, "PIB apparent", fmt(side.headlineGdp));
+        addMetric(host, "Capacité productive", fmt(side.productiveCapacity));
+        addMetric(host, "Effort de guerre", fmt(side.militarySpend, 1));
+        if (side.oilRevenue > 0) {
+            addMetric(host, "Recettes pétrolières", fmt(side.oilRevenue, 1));
+        }
+        addMetric(host, side.sideCode === "defender" ? "Aide reçue" : "Dépendance (%)",
+            side.sideCode === "defender" ? fmt(side.foreignSupport, 1) : fmt(side.dependency * 100, 0));
+        addMetric(host, "Réserves", fmt(side.reserves));
+
+        host.appendChild(el("div", "group-title", "Hommes (milliers)"));
+        addMetric(host, "Au front", fmt(side.soldiersAtFront));
+        addMetric(host, "En formation", fmt(side.soldiersInTraining));
+        addMetric(host, "Réservoir mobilisable", fmt(side.mobilisablePool));
+        addMetric(host, "Pertes cumulées", fmt(side.cumulativeLosses));
+
+        host.appendChild(el("div", "group-title", "Flux du front"));
+        addCubes(host, side, ["weapons", "fuel", "food"]);
+
+        host.appendChild(el("div", "group-title", "Frappe et défense"));
+        addCubes(host, side, ["strike_drones", "missiles", "cheap_interceptors", "heavy_interceptors"]);
+
+        host.appendChild(el("div", "group-title", "Énergie"));
+        addMetric(host, "Capacité disponible", fmt(side.gridAvailableGw, 1) + " GW");
+        addMetric(host, "Perte permanente", fmt(side.permanentGridDamage, 1) + " GW");
+
+        host.appendChild(el("div", "group-title", "Politique"));
+        addMetric(host, "Moral", fmt(side.morale));
+        addMetric(host, "Cohésion des élites", fmt(side.eliteCohesion));
+        addMetric(host, "Tension du régime", fmt(side.regimeStress));
+        addMetric(host, "Corruption", fmt(side.corruption));
+        addMetric(host, "Transmission", fmt(side.transmissionRate * 100) + " %");
+        if (side.sideCode === "defender") {
+            addMetric(host, "Volonté extérieure", fmt(side.externalWill));
+        } else {
+            addMetric(host, "Plafond de production", fmt(side.productionCeiling * 100) + " %");
+        }
+
+        host.appendChild(el("div", "group-title", "Innovation"));
+        addMetric(host, "Drones tactiques", fmt(side.tacticalDroneEdge, 2));
+        addMetric(host, "Frappe en profondeur", fmt(side.strikeEdge, 2));
+        addMetric(host, "Contre-drone", fmt(side.counterDroneEdge, 2));
+
+        host.style.setProperty("--side-accent", accent);
+    }
+
+    var HEX_SIZE = 11;
+    var ROWS = 9;
+    var BASELINE_ROW = 4;
+
+    function hexPoints(cx, cy, size) {
+        var points = [];
+        for (var i = 0; i < 6; i++) {
+            var angle = (Math.PI / 180) * (60 * i);
+            points.push((cx + size * Math.cos(angle)).toFixed(1) + "," + (cy + size * Math.sin(angle)).toFixed(1));
+        }
+        return points.join(" ");
+    }
+
+    function renderMap(turn) {
+        var host = document.getElementById("frontMap");
+        host.innerHTML = "";
+
+        var sectors = turn.sectors;
+        if (!sectors.length) {
+            return;
+        }
+
+        var totalColumns = sectors.reduce(function (sum, s) { return sum + (s.sectorWidth || 6); }, 0);
+        var stepX = HEX_SIZE * 1.5;
+        var stepY = HEX_SIZE * Math.sqrt(3);
+        var width = totalColumns * stepX + HEX_SIZE * 2;
+        var height = ROWS * stepY + stepY + 26;
+
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 " + width.toFixed(0) + " " + height.toFixed(0));
+        svg.setAttribute("width", width.toFixed(0));
+        svg.setAttribute("height", height.toFixed(0));
+
+        var column = 0;
+        sectors.forEach(function (sector) {
+            var sectorWidth = sector.sectorWidth || 6;
+            // Positive means the invader pushed forward; the line moves down the board.
+            var frontRow = BASELINE_ROW + sector.hexesCumulative;
+
+            for (var c = 0; c < sectorWidth; c++) {
+                var cx = HEX_SIZE + (column + c) * stepX + HEX_SIZE * 0.5;
+                var oddOffset = ((column + c) % 2) * stepY * 0.5;
+
+                for (var r = 0; r < ROWS; r++) {
+                    var cy = stepY * 0.5 + r * stepY + oddOffset + 4;
+                    var hex = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    hex.setAttribute("points", hexPoints(cx, cy, HEX_SIZE - 1));
+
+                    var held = r < frontRow;
+                    var contested = Math.abs(r - frontRow) < 1;
+
+                    if (contested) {
+                        hex.setAttribute("fill", "#4a3a2a");
+                        hex.setAttribute("stroke", "var(--accent)");
+                    } else if (held) {
+                        hex.setAttribute("fill", "#43201c");
+                        hex.setAttribute("stroke", "#5c2a24");
+                    } else {
+                        hex.setAttribute("fill", "#1b2c40");
+                        hex.setAttribute("stroke", "#24384f");
+                    }
+
+                    hex.setAttribute("stroke-width", "0.7");
+                    svg.appendChild(hex);
+                }
+            }
+
+            var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("class", "hex-label");
+            label.setAttribute("x", (HEX_SIZE + (column + sectorWidth / 2 - 0.5) * stepX).toFixed(0));
+            label.setAttribute("y", (height - 8).toFixed(0));
+            label.textContent = sector.sectorName;
+            svg.appendChild(label);
+
+            column += sectorWidth;
+        });
+
+        // The line the war started on, so the eye measures the movement.
+        var baseline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        var baselineY = (stepY * 0.5 + BASELINE_ROW * stepY + 4).toFixed(1);
+        baseline.setAttribute("x1", "0");
+        baseline.setAttribute("x2", width.toFixed(0));
+        baseline.setAttribute("y1", baselineY);
+        baseline.setAttribute("y2", baselineY);
+        baseline.setAttribute("stroke", "#e6e9ee");
+        baseline.setAttribute("stroke-width", "0.8");
+        baseline.setAttribute("stroke-dasharray", "3 4");
+        baseline.setAttribute("opacity", "0.35");
+        svg.appendChild(baseline);
+
+        host.appendChild(svg);
+    }
+
+    function renderCards(turn) {
+        var host = document.getElementById("cardsPlayed");
+        host.innerHTML = "";
+
+        (turn.cardsPlayed || []).forEach(function (title) {
+            var card = el("div", "event-card");
+            card.appendChild(el("div", "c-family", "Carte événement"));
+            card.appendChild(el("div", "c-title", title));
+            host.appendChild(card);
+        });
+    }
+
+    function renderNarrative(turn) {
+        var host = document.getElementById("narrative");
+        host.innerHTML = "";
+        (turn.narrative || []).forEach(function (line) {
+            host.appendChild(el("div", null, line));
+        });
+    }
+
+    function renderOutcome(turn) {
+        var host = document.getElementById("outcome");
+        host.innerHTML = "";
+        host.className = "outcome";
+
+        var outcome = turn.outcome || (state.turnIndex === currentGame().turns.length - 1 ? currentGame().outcome : null);
+        if (!outcome) {
+            return;
+        }
+
+        host.className = "outcome filled";
+        host.appendChild(el("h4", null, outcome.title));
+        host.appendChild(el("p", null, outcome.explanation));
+    }
+
+    function renderSectors(turn) {
+        var body = document.querySelector("#sectorTable tbody");
+        body.innerHTML = "";
+
+        turn.sectors.forEach(function (sector) {
+            var moved = Math.abs(sector.hexesMoved) > 0.01;
+            var row = el("tr", moved ? "moved" : "static");
+            row.appendChild(el("td", null, sector.sectorName));
+            row.appendChild(el("td", "num", fmt(sector.attackerPower)));
+            row.appendChild(el("td", "num", fmt(sector.defenderPower)));
+            row.appendChild(el("td", "num", fmt(sector.ratio, 2)));
+            row.appendChild(el("td", "num", moved ? fmt(sector.hexesMoved * 10, 1) + " km" : "—"));
+            row.appendChild(el("td", null, sector.outcome));
+            body.appendChild(row);
+        });
+    }
+
+    function render() {
+        var turn = currentTurn();
+
+        renderVariants();
+        renderTimeline();
+
+        document.getElementById("turnLabel").textContent =
+            "Tour " + turn.turn + " — " + turn.season + " " + turn.year;
+        document.getElementById("oilPrice").textContent =
+            "Brent " + fmt(turn.oilPrice) + " $  ·  " + fmt(turn.squareKilometresGained) + " km² pris";
+
+        renderSide("sideInvader", turn.invader, "var(--invader)");
+        renderSide("sideDefender", turn.defender, "var(--defender)");
+        renderMap(turn);
+        renderCards(turn);
+        renderNarrative(turn);
+        renderOutcome(turn);
+        renderSectors(turn);
+    }
+
+    document.getElementById("prevTurn").addEventListener("click", function () {
+        state.turnIndex = Math.max(0, state.turnIndex - 1);
+        render();
+    });
+
+    document.getElementById("nextTurn").addEventListener("click", function () {
+        state.turnIndex = Math.min(currentGame().turns.length - 1, state.turnIndex + 1);
+        render();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") {
+            state.turnIndex = Math.max(0, state.turnIndex - 1);
+            render();
+        } else if (event.key === "ArrowRight") {
+            state.turnIndex = Math.min(currentGame().turns.length - 1, state.turnIndex + 1);
+            render();
+        }
+    });
+
+    render();
+})();
