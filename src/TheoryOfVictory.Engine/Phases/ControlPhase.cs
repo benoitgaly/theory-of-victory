@@ -67,7 +67,8 @@ public sealed class ControlPhase : ITurnPhase
             floor = Math.Min(floor, belligerent.GetCoverage(kind.Code) + 0.25d);
         }
 
-        return floor;
+        // An army whose salaries are unfunded does not regenerate either.
+        return Math.Min(floor, belligerent.GetCoverage("payroll") + 0.25d);
     }
 
     private void CheckMilitaryCollapse(TurnContext context)
@@ -149,13 +150,17 @@ public sealed class ControlPhase : ITurnPhase
         Belligerent invader = context.State.Invader;
         Belligerent defender = context.State.DefenderSide;
 
-        bool bothHolding = invader.ForceGenerationRatio >= 0.95d && defender.ForceGenerationRatio >= 0.95d;
+        // Mutual exhaustion means both sides under the threshold, as the model states it.
+        // Testing instead that both are comfortable turned every slow bleed into an
+        // armistice, and called a side regenerating at 1.00 exhausted.
+        bool bothExhausted = invader.ForceGenerationRatio < CollapseThreshold
+            && defender.ForceGenerationRatio < CollapseThreshold;
 
         context.State.Outcome = new GameOutcome
         {
-            Code = bothHolding ? "frozen_front" : "mutual_exhaustion",
-            Title = bothHolding ? "Front figé" : "Épuisement mutuel",
-            Explanation = bothHolding
+            Code = bothExhausted ? "mutual_exhaustion" : "frozen_front",
+            Title = bothExhausted ? "Épuisement mutuel" : "Front figé",
+            Explanation = !bothExhausted
                 ? "Les deux camps régénèrent autant qu'ils consomment. Le front tient, personne ne gagne : "
                     + "l'égalité industrielle produit l'enlisement, pas la paix."
                 : "Les deux camps sont passés sous leur seuil de régénération. "

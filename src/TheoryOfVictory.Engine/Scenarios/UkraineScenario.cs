@@ -22,13 +22,17 @@ public enum SupportVariant
 /// </summary>
 public static class UkraineScenario
 {
-    /// <summary>Brent per quarter, 2022 Q1 to 2025 Q4. Estimation, not a sourced series.</summary>
+    /// <summary>
+    /// Brent per quarter, 2022 Q1 to 2026 Q3. Working estimates, not a sourced series;
+    /// the 2026 quarters are an assumption, not an observation.
+    /// </summary>
     private static readonly double[] OilCalendar =
     [
         100d, 114d, 100d, 89d,
         82d, 78d, 86d, 84d,
         83d, 85d, 80d, 74d,
         75d, 67d, 68d, 65d,
+        66d, 64d, 63d,
     ];
 
     public static Scenario Build(SupportVariant variant)
@@ -69,7 +73,7 @@ public static class UkraineScenario
             },
             StartYear = 2022,
             StartSeason = Season.Winter,
-            TurnCount = 16,
+            TurnCount = 19,
             OilPriceCalendar = [.. OilCalendar],
             Invader = BuildRussia(),
             Defender = BuildUkraine(),
@@ -116,9 +120,13 @@ public static class UkraineScenario
         russia.Economy.TreasuryBillions = 40d;
         russia.Economy.ReservesBillions = 310d;
         russia.Economy.FiscalCaptureRate = 0.088d;
-        russia.Economy.WarBudgetCeilingShare = 0.021d;
+
+        // The war wants more than the ordinary budget funds — that is what makes it a war
+        // effort rather than a line item, and it is what puts the sovereign fund on a clock
+        // from the first turn. Set it under ordinary funding and the barrel is decorative.
+        russia.Economy.WarBudgetCeilingShare = 0.038d;
         russia.Economy.MilitaryFiscalShare = 0.085d;
-        russia.Economy.ReserveDrawRate = 0.055d;
+        russia.Economy.ReserveDrawRate = 0.12d;
         russia.Economy.CivilianGrowthPerTurn = 0.003d;
         russia.Economy.MilitarySpendingMultiplier = 0.6d;
         russia.Economy.CapitalDecayPerTurn = 0.007d;
@@ -135,6 +143,11 @@ public static class UkraineScenario
         russia.Manpower.TrainingCapacityPerTurn = 105d;
         russia.Manpower.TrainingTurns = 1;
         russia.Manpower.ContractCostPerThousand = 0.021d;
+
+        // Pay and bonuses are the biggest line of the Russian war budget — deliberately so:
+        // the contract army was bought rather than conscripted, and it has to be bought again
+        // every quarter. Estimation.
+        russia.Manpower.UpkeepCostPerThousand = 0.056d;
         russia.Manpower.BaseGdpCostPerThousand = 0.031d;
         russia.Manpower.MarginalCostExponent = 1.4d;
 
@@ -198,7 +211,11 @@ public static class UkraineScenario
         ukraine.Economy.TreasuryBillions = 8d;
         ukraine.Economy.ReservesBillions = 29d;
         ukraine.Economy.FiscalCaptureRate = 0.072d;
-        ukraine.Economy.WarBudgetCeilingShare = 0.115d;
+
+        // Calibrated on what aid plus its own fiscal capacity actually funds, so that the
+        // funding gap reads zero while support holds and opens the turn it stops. A ceiling
+        // permanently out of reach would make the gauge cry wolf for nineteen turns.
+        ukraine.Economy.WarBudgetCeilingShare = 0.072d;
         ukraine.Economy.MilitaryFiscalShare = 0.62d;
         ukraine.Economy.ReserveDrawRate = 0.09d;
         ukraine.Economy.CivilianGrowthPerTurn = -0.02d;
@@ -218,6 +235,10 @@ public static class UkraineScenario
         ukraine.Manpower.TrainingCapacityPerTurn = 62d;
         ukraine.Manpower.TrainingTurns = 1;
         ukraine.Manpower.ContractCostPerThousand = 0.013d;
+
+        // A mobilised army is far cheaper in cash than a bought one — and far dearer in
+        // consent and in GDP, which is the whole asymmetry. Estimation.
+        ukraine.Manpower.UpkeepCostPerThousand = 0.022d;
         ukraine.Manpower.BaseGdpCostPerThousand = 0.062d;
         ukraine.Manpower.MarginalCostExponent = 1.55d;
 
@@ -236,7 +257,12 @@ public static class UkraineScenario
         ukraine.AirDefence.RearShare = 0.62d;
         ukraine.AirDefence.CheapPurchaseShare = 0.6d;
 
-        ukraine.Stock.Add(ResourceKind.Weapons, 700d);
+        // The Soviet inheritance: a large stock of the right calibres and no way to make
+        // more of them. It is what let the front hold through 2022 and what running out of
+        // produced the 2023 crisis — and it is the depot that buys the two quiet turns
+        // after support stops. Without a real depot, a flow cut lands the same turn, and
+        // the whole point is that it does not.
+        ukraine.Stock.Add(ResourceKind.Weapons, 2400d);
         ukraine.Stock.Add(ResourceKind.Fuel, 120d);
         ukraine.Stock.Add(ResourceKind.Food, 140d);
         ukraine.Stock.Add(ResourceKind.StrikeDrones, 150d);
@@ -449,10 +475,20 @@ public static class UkraineScenario
             new ScheduledCard { Turn = 10, CardCode = "refinery_strikes" },
             new ScheduledCard { Turn = 10, CardCode = "licence_transfer" },
             new ScheduledCard { Turn = 11, CardCode = "harsh_winter" },
+            new ScheduledCard { Turn = 11, CardCode = "rail_interdiction" },
             new ScheduledCard { Turn = 12, CardCode = "fibre_optic_drones" },
+
+            // The Red Queen made visible: the fibre-optic jump is answered the very turn
+            // it lands, and the card that was played produces nothing at all.
+            new ScheduledCard { Turn = 12, CardCode = "electronic_warfare" },
             new ScheduledCard { Turn = 13, CardCode = "shadow_fleet_sanctions" },
             new ScheduledCard { Turn = 13, CardCode = "grid_campaign" },
+
+            // Sanctions are upkeep, not an act: the circumvention network answers the
+            // shadow-fleet package the same quarter it is announced.
+            new ScheduledCard { Turn = 13, CardCode = "evasion_network" },
             new ScheduledCard { Turn = 14, CardCode = "anticorruption_crisis" },
+            new ScheduledCard { Turn = 14, CardCode = "air_defence_gap" },
             new ScheduledCard { Turn = 15, CardCode = "elite_fracture" },
         ];
 
@@ -464,30 +500,35 @@ public static class UkraineScenario
         }
         else if (variant == SupportVariant.Collapses)
         {
+            // What actually cuts a free flow: not a battle, a ballot. The two land together
+            // because one causes the other — and because the depot has to be full when they do.
+            calendar.Add(new ScheduledCard { Turn = 6, CardCode = "us_election_swing" });
             calendar.Add(new ScheduledCard { Turn = 6, CardCode = "aid_collapse" });
         }
         else
         {
-            // The cards the West actually holds, played early and kept up. None of them
-            // takes a single hex: every one of them cuts a flow at its source.
-            calendar.RemoveAll(c => c.CardCode is "attention_elsewhere" or "foreign_shells" or "failed_offensive");
+            // Same war, same events, same barrel calendar as the other runs. The only
+            // difference is what the West decides to play on top — and none of these
+            // cards takes a single hex: every one of them cuts a flow at its source.
+            // Asphyxiation is slow on purpose: it takes years, not two good quarters.
+            calendar.Add(new ScheduledCard { Turn = 9, CardCode = "aid_blocked" });
+            calendar.Add(new ScheduledCard { Turn = 10, CardCode = "aid_unblocked" });
 
             calendar.AddRange(
             [
-                new ScheduledCard { Turn = 3, CardCode = "component_embargo_total" },
-                new ScheduledCard { Turn = 4, CardCode = "aid_predictable" },
-                new ScheduledCard { Turn = 5, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 6, CardCode = "frozen_assets_released" },
-                new ScheduledCard { Turn = 7, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 8, CardCode = "oil_price_crash" },
-                new ScheduledCard { Turn = 9, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 9, CardCode = "supplier_withdraws" },
-                new ScheduledCard { Turn = 10, CardCode = "sovereign_fund_empty" },
-                new ScheduledCard { Turn = 11, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 10, CardCode = "component_embargo_total" },
+                new ScheduledCard { Turn = 11, CardCode = "aid_predictable" },
                 new ScheduledCard { Turn = 12, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 13, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 13, CardCode = "elite_break" },
+                new ScheduledCard { Turn = 13, CardCode = "frozen_assets_released" },
                 new ScheduledCard { Turn = 14, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 15, CardCode = "supplier_withdraws" },
+                new ScheduledCard { Turn = 16, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 17, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 18, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 19, CardCode = "oil_price_crash" },
+                new ScheduledCard { Turn = 19, CardCode = "sovereign_fund_empty" },
+                new ScheduledCard { Turn = 19, CardCode = "elite_break" },
+                new ScheduledCard { Turn = 19, CardCode = "refinery_campaign_sustained" },
             ]);
         }
 

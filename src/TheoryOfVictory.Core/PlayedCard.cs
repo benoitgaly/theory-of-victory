@@ -26,6 +26,19 @@ public sealed class PlayedCard
     /// <summary>Rules text, one readable line per effect.</summary>
     public List<string> RulesText { get; init; } = [];
 
+    /// <summary>Card this one answers, when it is a counter.</summary>
+    public string? CountersCardCode { get; init; }
+
+    /// <summary>True when an opposing counter stopped this card: it was played and did nothing.</summary>
+    public bool Countered { get; set; }
+
+    /// <summary>
+    /// False when the owner did not hold the political capital its cost demanded. V1.0 plays
+    /// the calendar regardless, but records the overdraft — it is the V2 currency being
+    /// tested against a real run before anyone has to pay it.
+    /// </summary>
+    public bool AffordedInFull { get; set; } = true;
+
     /// <summary>Illustration key, drives which artwork the frame renders.</summary>
     public required string Art { get; init; }
 }

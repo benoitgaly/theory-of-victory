@@ -35,6 +35,28 @@ public sealed class Manpower
     /// <summary>Cost in billions of recruiting a thousand men under contract, bonuses included.</summary>
     public double ContractCostPerThousand { get; set; }
 
+    /// <summary>
+    /// Quarterly cost of keeping a thousand men in the field — pay, bonuses, upkeep.
+    /// The largest single line of any war budget, and the one that makes a revenue
+    /// collapse reach the front: an army you cannot pay is an army that shrinks.
+    /// </summary>
+    public double UpkeepCostPerThousand { get; set; }
+
+    /// <summary>
+    /// Force the treasury can actually keep in the field this turn. Infinite while the
+    /// money holds; the binding constraint the quarter it stops.
+    /// </summary>
+    public double PayableForceSize { get; set; } = double.PositiveInfinity;
+
+    /// <summary>
+    /// The force that really counts: what command wants, capped by what it can pay for.
+    /// Ordering men you cannot pay does not put them in the line.
+    /// </summary>
+    public double EffectiveForceSize
+    {
+        get { return Math.Min(TargetForceSize, PayableForceSize); }
+    }
+
     /// <summary>Everyone ever taken out of the economy, drives the marginal cost.</summary>
     public double TotalMobilisedEver { get; set; }
 

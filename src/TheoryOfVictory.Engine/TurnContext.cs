@@ -32,6 +32,15 @@ public sealed class TurnContext
 
     public Dictionary<string, double> WeaponsDelivered { get; } = [];
 
+    /// <summary>Depots as they stood before the turn ran, per side. The slope needs two points.</summary>
+    public Dictionary<string, Dictionary<string, double>> OpeningStocks { get; } = [];
+
+    /// <summary>Generation ratio carried in from last turn, per side. Same reason.</summary>
+    public Dictionary<string, double> OpeningGenerationRatio { get; } = [];
+
+    /// <summary>Forward-looking readings, filled once the ten phases have run.</summary>
+    public List<PressureReading> Readings { get; } = [];
+
     public Doctrine DoctrineFor(Side side)
     {
         return side == Side.Invader ? InvaderDoctrine : DefenderDoctrine;

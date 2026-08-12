@@ -51,6 +51,22 @@ public sealed class AllocationPhase : ITurnPhase
             return;
         }
 
+        // Payroll comes before every choice, like rations. It is most of a war budget,
+        // and it is the line through which a collapsing revenue reaches the front: a
+        // state that cannot pay its army does not get to keep that army in the line.
+        double afterPayroll = PayTroops(context, belligerent, budget);
+        double payrollPaid = budget - afterPayroll;
+        budget = afterPayroll;
+
+        if (budget <= 0d)
+        {
+            economy.LastTurnMilitarySpendBillions = payrollPaid;
+            economy.TreasuryBillions = Math.Min(
+                Math.Max(0d, economy.TreasuryBillions - payrollPaid),
+                Math.Max(budgetCeiling, economy.LastTurnRevenueBillions));
+            return;
+        }
+
         double total = doctrine.TotalShare;
         if (total <= 0d)
         {
@@ -61,7 +77,7 @@ public sealed class AllocationPhase : ITurnPhase
         belligerent.AllocationThisTurn.Clear();
 
         double unspent = 0d;
-        double militarySpend = 0d;
+        double militarySpend = payrollPaid;
 
         double Share(double share)
         {
@@ -172,6 +188,38 @@ public sealed class AllocationPhase : ITurnPhase
     }
 
     /// <summary>
+    /// Bills the standing army against the war budget and returns what is left to decide
+    /// with. When the bill cannot be met, the force the state can field shrinks to what it
+    /// can pay — no assault required, and no arbitrary malus either.
+    /// </summary>
+    private double PayTroops(TurnContext context, Belligerent belligerent, double budget)
+    {
+        Manpower manpower = belligerent.Manpower;
+        if (manpower.UpkeepCostPerThousand <= 0d)
+        {
+            manpower.PayableForceSize = double.PositiveInfinity;
+            return budget;
+        }
+
+        double payroll = manpower.AtFront * manpower.UpkeepCostPerThousand;
+        belligerent.AllocationThisTurn["payroll"] = Math.Min(payroll, budget);
+
+        if (payroll <= budget)
+        {
+            manpower.PayableForceSize = double.PositiveInfinity;
+            return budget - payroll;
+        }
+
+        double payable = budget / manpower.UpkeepCostPerThousand;
+        manpower.PayableForceSize = payable;
+
+        context.Say($"{belligerent.Name} : la solde n'est plus couverte — {payable:F0} k hommes finançables "
+            + $"sur {manpower.AtFront:F0} k au front.");
+
+        return 0d;
+    }
+
+    /// <summary>
     /// Fuel and rations are bought on the market up to two turns of need, before any
     /// discretionary spending. Cheap, unglamorous, and fatal to forget.
     /// </summary>
@@ -180,28 +228,40 @@ public sealed class AllocationPhase : ITurnPhase
         double intensity = 0.7d + (context.DoctrineFor(belligerent.Side).OffensivePosture * 0.6d);
         double men = belligerent.Manpower.AtFront;
 
-        BuyUpTo(belligerent, ResourceKind.Fuel, men * LogisticsPhase.FuelPerThousandMen * intensity * 2d);
-        BuyUpTo(belligerent, ResourceKind.Food, men * LogisticsPhase.FoodPerThousandMen * 2d);
+        // Two turns of what actually has to leave the depot, leakage included.
+        double perTurn = 2d / belligerent.TransmissionRate;
+
+        double missed = BuyUpTo(belligerent, ResourceKind.Fuel, men * LogisticsPhase.FuelPerThousandMen * intensity * perTurn);
+        missed += BuyUpTo(belligerent, ResourceKind.Food, men * LogisticsPhase.FoodPerThousandMen * perTurn);
+
+        belligerent.SustainmentShortfall = Math.Clamp(missed, 0d, 1d);
+        if (missed > 0.05d)
+        {
+            context.Say($"{belligerent.Name} : {missed * 100d:F0} % du ravitaillement impayé — la trésorerie ne suit plus.");
+        }
     }
 
-    private void BuyUpTo(Belligerent belligerent, ResourceKind kind, double targetStock)
+    /// <summary>Returns the share of the top-up the treasury could not pay for.</summary>
+    private double BuyUpTo(Belligerent belligerent, ResourceKind kind, double targetStock)
     {
         double missing = targetStock - belligerent.Stock.GetActual(kind);
         if (missing <= 0d)
         {
-            return;
+            return 0d;
         }
 
         double cost = missing * kind.UnitCostMillions / 1000d;
         double affordable = Math.Min(cost, belligerent.Economy.TreasuryBillions);
         if (affordable <= 0d)
         {
-            return;
+            return targetStock <= 0d ? 0d : missing / targetStock;
         }
 
         double bought = affordable * 1000d / kind.UnitCostMillions;
         belligerent.Stock.Add(kind, bought);
         belligerent.Economy.TreasuryBillions -= affordable;
+
+        return targetStock <= 0d ? 0d : Math.Max(0d, (missing - bought) / targetStock);
     }
 
     /// <summary>Returns the part of the budget capacity could not absorb.</summary>

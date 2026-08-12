@@ -97,22 +97,18 @@ public static class CardEffectApplier
                 belligerent.Politics.PoliticalCapital = Math.Max(0d, belligerent.Politics.PoliticalCapital + value);
                 break;
 
+            // Counter-cards push an edge back down, so these clamp both ways: an adversary
+            // that adapts takes the advance away, it never drives it below nothing.
             case EffectKind.InnovationTacticalJump:
-                belligerent.Innovation.TacticalDroneEdge = Math.Min(
-                    belligerent.Innovation.ScaleCeiling,
-                    belligerent.Innovation.TacticalDroneEdge + value);
+                belligerent.Innovation.TacticalDroneEdge = Edge(belligerent, belligerent.Innovation.TacticalDroneEdge + value);
                 break;
 
             case EffectKind.InnovationStrikeJump:
-                belligerent.Innovation.StrikeEdge = Math.Min(
-                    belligerent.Innovation.ScaleCeiling,
-                    belligerent.Innovation.StrikeEdge + value);
+                belligerent.Innovation.StrikeEdge = Edge(belligerent, belligerent.Innovation.StrikeEdge + value);
                 break;
 
             case EffectKind.InnovationCounterJump:
-                belligerent.Innovation.CounterDroneEdge = Math.Min(
-                    belligerent.Innovation.ScaleCeiling,
-                    belligerent.Innovation.CounterDroneEdge + value);
+                belligerent.Innovation.CounterDroneEdge = Edge(belligerent, belligerent.Innovation.CounterDroneEdge + value);
                 break;
 
             case EffectKind.ProductionCapacityMultiplier:
@@ -162,6 +158,11 @@ public static class CardEffectApplier
             default:
                 throw new ArgumentOutOfRangeException(nameof(effect), effect.Kind, "Unhandled effect kind.");
         }
+    }
+
+    private static double Edge(Belligerent belligerent, double value)
+    {
+        return Math.Clamp(value, 0d, belligerent.Innovation.ScaleCeiling);
     }
 
     private static void Mobilise(Belligerent belligerent, double thousands, List<string> narrative)

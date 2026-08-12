@@ -41,6 +41,7 @@ public sealed class EventPhase : ITurnPhase
 
     private void PlayScheduledCards(TurnContext context)
     {
+        List<EventCard> turnCards = [];
         foreach (ScheduledCard scheduled in context.Scenario.Calendar)
         {
             if (scheduled.Turn != context.State.Turn)
@@ -48,13 +49,37 @@ public sealed class EventPhase : ITurnPhase
                 continue;
             }
 
-            EventCard? card = FindCard(context.Scenario, scheduled.CardCode);
-            if (card is null)
+            EventCard? found = FindCard(context.Scenario, scheduled.CardCode);
+            if (found is not null)
             {
+                turnCards.Add(found);
+            }
+        }
+
+        // A counter resolves before what it answers, as a counterspell does: the countered
+        // card is still played and still seen, it simply does nothing. Seeing a card spent
+        // for nothing is the whole pleasure of the mechanic.
+        HashSet<string> countered = [];
+        foreach (EventCard card in turnCards)
+        {
+            if (card.Type == CardType.Counter && !string.IsNullOrWhiteSpace(card.CountersCardCode))
+            {
+                countered.Add(card.CountersCardCode);
+            }
+        }
+
+        foreach (EventCard card in turnCards)
+        {
+            PlayedCard printed = CardPrinter.Print(card);
+            printed.AffordedInFull = Charge(context, card);
+            context.CardsPlayed.Add(printed);
+
+            if (countered.Contains(card.Code))
+            {
+                printed.Countered = true;
+                context.Say($"« {card.Title} » est contrée : la carte est jouée, elle ne produit rien.");
                 continue;
             }
-
-            context.CardsPlayed.Add(CardPrinter.Print(card));
 
             foreach (CardEffect effect in card.Effects)
             {
@@ -72,6 +97,33 @@ public sealed class EventPhase : ITurnPhase
                 CardEffectApplier.Apply(context.State, effect, context.Narrative);
             }
         }
+    }
+
+    /// <summary>
+    /// Debits the political cost from whoever owns the card. V1.0 plays its calendar
+    /// whatever the balance — the runs have to stay comparable — but the overdraft is
+    /// recorded, which is how the V2 currency gets tested before it gates anything.
+    /// </summary>
+    private static bool Charge(TurnContext context, EventCard card)
+    {
+        if (card.PoliticalCost <= 0d || string.IsNullOrWhiteSpace(card.OwnerSideCode))
+        {
+            return true;
+        }
+
+        PoliticalState politics = context.State.Get(Side.FromCode(card.OwnerSideCode)).Politics;
+        double shortfall = Math.Max(0d, card.PoliticalCost - politics.PoliticalCapital);
+
+        politics.PoliticalCapital = Math.Max(0d, politics.PoliticalCapital - card.PoliticalCost);
+        politics.PoliticalCapitalOverdraft += shortfall;
+
+        if (shortfall > 0d)
+        {
+            context.Say($"« {card.Title} » coûte {card.PoliticalCost:F0} de capital politique — "
+                + $"il en manquait {shortfall:F0}. En V2, cette carte reste en main.");
+        }
+
+        return shortfall <= 0d;
     }
 
     private EventCard? FindCard(Scenario scenario, string code)

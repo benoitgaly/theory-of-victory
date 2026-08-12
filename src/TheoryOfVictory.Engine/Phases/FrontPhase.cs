@@ -42,16 +42,23 @@ public sealed class FrontPhase : ITurnPhase
         double infantry = Math.Clamp(manpower.InfantryCoverage, 0d, 1.6d);
         belligerent.CoverageThisTurn["infantry"] = infantry;
 
+        // Money for salaries is a front flow like any other: it is scarce, it is consumed
+        // every quarter, and running out of it empties the line as surely as running out
+        // of shells. Treating it as a fourth stave keeps one single rule for everything.
+        belligerent.CoverageThisTurn["payroll"] = manpower.TargetForceSize <= 0d
+            ? 1.5d
+            : Math.Clamp(manpower.PayableForceSize / manpower.TargetForceSize, 0d, 1.5d);
+
         string bottleneck = "infantry";
         double scarcest = infantry;
 
-        foreach (ResourceKind kind in ResourceKind.FrontFlows)
+        foreach (string code in belligerent.CoverageThisTurn.Keys)
         {
-            double coverage = belligerent.GetCoverage(kind.Code);
+            double coverage = belligerent.CoverageThisTurn[code];
             if (coverage < scarcest)
             {
                 scarcest = coverage;
-                bottleneck = kind.Code;
+                bottleneck = code;
             }
         }
 

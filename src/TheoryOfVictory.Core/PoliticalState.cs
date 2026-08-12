@@ -36,6 +36,13 @@ public sealed class PoliticalState
     /// <summary>The card-playing currency of V2, generated differently by each side.</summary>
     public double PoliticalCapital { get; set; }
 
+    /// <summary>
+    /// Political capital the scripted calendar spent that this side did not actually hold.
+    /// V1.0 plays its cards regardless; this counter is what says whether the V2 economy
+    /// would have let it. A run ending near zero means the deck was affordable.
+    /// </summary>
+    public double PoliticalCapitalOverdraft { get; set; }
+
     /// <summary>Corruption index, 0 to 100. V1 uses it as a single transmission dial.</summary>
     public double Corruption { get; set; }
 

@@ -40,12 +40,35 @@ public sealed class TurnEngine
             DefenderDoctrine = defenderDoctrine,
         };
 
+        CaptureOpeningPosition(context);
+
         foreach (ITurnPhase phase in _phases)
         {
             phase.Execute(context);
         }
 
+        // Not an eleventh phase: it decides nothing, it reads what the ten just did.
+        PressureAnalyser.Read(context);
+
         return Freeze(context);
+    }
+
+    /// <summary>A slope needs two points: this is the first one, taken before anything runs.</summary>
+    private static void CaptureOpeningPosition(TurnContext context)
+    {
+        foreach (Side side in Side.All)
+        {
+            Belligerent belligerent = context.State.Get(side);
+
+            Dictionary<string, double> stocks = [];
+            foreach (ResourceKind kind in ResourceKind.All)
+            {
+                stocks[kind.Code] = belligerent.Stock.GetActual(kind);
+            }
+
+            context.OpeningStocks[side.Code] = stocks;
+            context.OpeningGenerationRatio[side.Code] = belligerent.ForceGenerationRatio;
+        }
     }
 
     private static TurnSnapshot Freeze(TurnContext context)
@@ -67,14 +90,24 @@ public sealed class TurnEngine
 
         double totalHexes = width <= 0d ? 0d : weighted / width;
 
+        PressureReading? invaderPressure = FindReading(context, Side.Invader);
+        PressureReading? defenderPressure = FindReading(context, Side.Defender);
+
+        List<PressureAlert> alerts = [];
+        alerts.AddRange(invaderPressure?.Alerts ?? []);
+        alerts.AddRange(defenderPressure?.Alerts ?? []);
+        alerts.Sort((left, right) => right.Level.CompareTo(left.Level));
+
         return new TurnSnapshot
         {
             Turn = state.Turn,
             Year = state.Year,
             Season = state.Season,
             OilPrice = state.OilPrice,
-            Invader = Capture(state.Invader),
-            Defender = Capture(state.DefenderSide),
+            Invader = Capture(state.Invader, invaderPressure),
+            Defender = Capture(state.DefenderSide, defenderPressure),
+            Headline = Headline(state, alerts),
+            Alerts = alerts,
             Sectors = [.. context.SectorResolutions],
             CardsPlayed = [.. context.CardsPlayed],
             Narrative = [.. context.Narrative],
@@ -86,7 +119,41 @@ public sealed class TurnEngine
         };
     }
 
-    private static SideSnapshot Capture(Belligerent belligerent)
+    private static PressureReading? FindReading(TurnContext context, Side side)
+    {
+        foreach (PressureReading reading in context.Readings)
+        {
+            if (reading.SideCode == side.Code)
+            {
+                return reading;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// The sentence the turn is about. An outcome speaks for itself; otherwise the
+    /// sharpest pressure on the board is what the player needs to hear before deciding
+    /// whether the next turn matters.
+    /// </summary>
+    private static string Headline(GameState state, List<PressureAlert> alerts)
+    {
+        if (state.Outcome is not null && state.Outcome.Code != "frozen_front")
+        {
+            return state.Outcome.Title;
+        }
+
+        if (alerts.Count == 0)
+        {
+            return "Les deux camps remplacent ce qu'ils consomment. Rien ne bouge, et c'est le sujet.";
+        }
+
+        PressureAlert sharpest = alerts[0];
+        return sharpest.Title;
+    }
+
+    private static SideSnapshot Capture(Belligerent belligerent, PressureReading? pressure)
     {
         Dictionary<string, double> stocks = [];
         foreach (ResourceKind kind in ResourceKind.All)
@@ -110,6 +177,7 @@ public sealed class TurnEngine
         {
             null => null,
             "infantry" => "Soldats",
+            "payroll" => "Solde",
             _ => ResourceKind.FromCode(belligerent.BottleneckCode).DisplayName,
         };
 
@@ -159,6 +227,7 @@ public sealed class TurnEngine
             LogisticsIntegrity = belligerent.Politics.LogisticsIntegrity,
             RefiningIntegrity = belligerent.Economy.RefiningIntegrity,
             PoliticalCapital = belligerent.Politics.PoliticalCapital,
+            PoliticalCapitalOverdraft = belligerent.Politics.PoliticalCapitalOverdraft,
             ExternalWill = belligerent.Politics.ExternalWill,
             SanctionsPrice = belligerent.Sanctions.PriceSeverity,
             SanctionsFriction = belligerent.Sanctions.FrictionSeverity,
@@ -169,6 +238,12 @@ public sealed class TurnEngine
             CounterDroneEdge = belligerent.Innovation.CounterDroneEdge,
             Dependency = belligerent.Foreign.Dependency,
             HasCollapsed = belligerent.HasCollapsed,
+            ReserveDraw = belligerent.Economy.LastTurnReserveDrawBillions,
+            OrdinaryWarFunding = belligerent.Economy.OrdinaryWarFundingBillions,
+            WarFundable = belligerent.Economy.WarFundableBillions,
+            WarBudgetCeiling = belligerent.Economy.HeadlineGdpBillions * belligerent.Economy.WarBudgetCeilingShare,
+            FundingGap = belligerent.Economy.FundingGap,
+            Pressure = pressure,
         };
     }
 }

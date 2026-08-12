@@ -112,7 +112,17 @@
 
     function link(step, value, unit, note) {
         var box = el("div", "link");
-        box.appendChild(el("div", "l-step", step));
+        // "1 · Économie" → médaillon numéroté + libellé, pour que la chaîne se compte.
+        var parts = String(step).split(" · ");
+        var head = el("div", "l-step");
+        if (parts.length > 1) {
+            var medal = el("b", null, parts[0]);
+            head.appendChild(medal);
+            head.appendChild(document.createTextNode(parts.slice(1).join(" · ")));
+        } else {
+            head.textContent = step;
+        }
+        box.appendChild(head);
         var v = el("div", "l-value", value);
         if (unit) {
             var u = el("span", "l-unit", unit);
@@ -220,15 +230,31 @@
 
     /* ---------------- Liebig barrel ---------------- */
 
-    // Liebig's barrel: the water never rises above the shortest stave.
-    function renderBarrel(side) {
-        var W = 268, H = 224;
-        var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
+    // Teinte un hex vers le noir (t < 0) ou vers le blanc (t > 0).
+    function tint(hex, t) {
+        var n = parseInt(hex.slice(1), 16);
+        var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+        var mix = function (v) {
+            var out = t >= 0 ? v + (255 - v) * t : v * (1 + t);
+            return Math.max(0, Math.min(255, Math.round(out)));
+        };
+        return "rgb(" + mix(r) + "," + mix(g) + "," + mix(b) + ")";
+    }
 
-        var staveW = 50, gapW = 5;
-        var baseY = 182, maxH = 138;
-        var startX = 22;
+    var gradSeq = 0;
+
+    // Le tonneau de Liebig : l'eau ne monte jamais au-dessus de la douve la plus courte.
+    function renderBarrel(side) {
+        var W = 430, H = 300;
+        var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H });
+        var defs = svgEl("defs", {});
+        svg.appendChild(defs);
+
+        var staveW = 62, gapW = 2;
+        var baseY = 238, maxH = 180;
+        var startX = 80;
         var innerW = FLOWS.length * (staveW + gapW) - gapW;
+        var rightX = startX + innerW;
 
         var scarcest = 2;
         FLOWS.forEach(function (f) {
@@ -237,83 +263,217 @@
         });
         scarcest = Math.max(0, Math.min(scarcest, 1.15));
 
+        // Un seul goulot désigné, même quand plusieurs ressources sont à égalité.
+        // Le moteur a déjà tranché : le dessin montre la ressource qu'il nomme.
+        var shortIndex = -1;
+        FLOWS.forEach(function (f, i) {
+            if (f.label === side.bottleneckName) { shortIndex = i; }
+        });
+        if (shortIndex < 0) {
+            for (var si = 0; si < FLOWS.length; si++) {
+                var sc = side.coverage[FLOWS[si].key];
+                if (sc !== undefined && Math.max(0, Math.min(sc, 1.15)) <= scarcest + 0.0001) { shortIndex = si; break; }
+            }
+        }
+        if (shortIndex < 0) { shortIndex = 0; }
+
         var waterH = maxH * Math.min(scarcest, 1);
         var waterY = baseY - waterH;
 
-        // Ground shadow
+        // Repère du besoin intégralement couvert : le haut théorique du tonneau.
+        var fullY = baseY - maxH;
+        svg.appendChild(svgEl("line", {
+            x1: startX - 12, y1: fullY, x2: rightX + 12, y2: fullY,
+            stroke: "#8b8578", "stroke-width": "1", "stroke-dasharray": "2 4", opacity: "0.85"
+        }));
+        var fullLabel = svgEl("text", {
+            x: rightX + 14, y: fullY + 3.5, "font-size": "9",
+            "letter-spacing": "0.08em", fill: "#8b8578", "font-weight": "700"
+        });
+        fullLabel.textContent = "100 %";
+        svg.appendChild(fullLabel);
+
+        // Ombre portée au sol
         svg.appendChild(svgEl("ellipse", {
-            cx: startX + innerW / 2, cy: baseY + 8, rx: innerW / 2 + 6, ry: 6,
-            fill: "#17191e", opacity: "0.09"
+            cx: startX + innerW / 2, cy: baseY + 13, rx: innerW / 2 + 12, ry: 8,
+            fill: "#1a1815", opacity: "0.11"
         }));
 
-        // Water inside the barrel
-        svg.appendChild(svgEl("rect", {
-            x: startX, y: waterY, width: innerW, height: waterH,
-            fill: "#8fc0dd", opacity: "0.55"
-        }));
-        svg.appendChild(svgEl("ellipse", {
-            cx: startX + innerW / 2, cy: waterY, rx: innerW / 2, ry: 7,
-            fill: "#6ba9cd", opacity: "0.75"
-        }));
+        // Cerclages métalliques. Le cercle est continu : là où une douve manque,
+        // on voit le fer de l'autre côté du tonneau, en retrait.
+        function hoop(ratio) {
+            var y = baseY - maxH * ratio;
+            var hg = "hoop" + (gradSeq++);
+            var lg = svgEl("linearGradient", { id: hg, x1: "0", y1: "0", x2: "0", y2: "1" });
+            [["0%", "#8d8272"], ["35%", "#5c5346"], ["70%", "#3d372e"], ["100%", "#6a6153"]].forEach(function (s) {
+                lg.appendChild(svgEl("stop", { offset: s[0], "stop-color": s[1] }));
+            });
+            defs.appendChild(lg);
 
-        // Staves
+            svg.appendChild(svgEl("rect", {
+                x: startX - 7, y: y, width: innerW + 14, height: 9, rx: "2",
+                fill: "url(#" + hg + ")", opacity: "0.3"
+            }));
+
+            FLOWS.forEach(function (f, i) {
+                var raw = side.coverage[f.key];
+                var c = Math.max(0, Math.min(raw === undefined ? 1 : raw, 1.15));
+                if (baseY - maxH * c > y) { return; }
+                var x = startX + i * (staveW + gapW);
+                svg.appendChild(svgEl("rect", {
+                    x: i === 0 ? x - 7 : x - gapW, y: y,
+                    width: staveW + (i === 0 || i === FLOWS.length - 1 ? 7 : 0) + gapW, height: 9, rx: "2",
+                    fill: "url(#" + hg + ")"
+                }));
+            });
+        }
+        // Douves
         FLOWS.forEach(function (f, i) {
-            var c = Math.max(0, Math.min(side.coverage[f.key] === undefined ? 1 : side.coverage[f.key], 1.15));
+            var raw = side.coverage[f.key];
+            var c = Math.max(0, Math.min(raw === undefined ? 1 : raw, 1.15));
             var h = maxH * c;
             var x = startX + i * (staveW + gapW);
             var y = baseY - h;
-            var isShortest = Math.abs(c - scarcest) < 0.0001;
+            var isShortest = i === shortIndex;
+
+            // Bois : clair au centre, sombre sur les chants — la douve est bombée.
+            // Les douves de bord sont assombries en plus : l'ensemble se lit comme un cylindre.
+            var cyl = Math.abs((i + 0.5) / FLOWS.length - 0.5) * 0.52;
+            var gid = "stave" + (gradSeq++);
+            var grad = svgEl("linearGradient", { id: gid, x1: "0", y1: "0", x2: "1", y2: "0" });
+            [["0%", tint(f.colour, -0.34 - cyl)], ["16%", tint(f.colour, 0.06 - cyl)], ["50%", tint(f.colour, 0.2 - cyl)],
+             ["84%", tint(f.colour, 0.02 - cyl)], ["100%", tint(f.colour, -0.38 - cyl)]].forEach(function (s) {
+                grad.appendChild(svgEl("stop", { offset: s[0], "stop-color": s[1] }));
+            });
+            defs.appendChild(grad);
 
             svg.appendChild(svgEl("rect", {
-                x: x, y: y, width: staveW, height: h,
-                fill: f.colour, opacity: isShortest ? "1" : "0.6",
-                rx: "2",
-                stroke: isShortest ? "#17191e" : "rgba(0,0,0,0.22)",
-                "stroke-width": isShortest ? "2" : "0.8"
+                x: x, y: y, width: staveW, height: h + 4, rx: "3",
+                fill: "url(#" + gid + ")",
+                stroke: isShortest ? "#1a1815" : "rgba(26,24,21,0.32)",
+                "stroke-width": isShortest ? "1.8" : "0.7"
             }));
 
-            // Wood grain
-            svg.appendChild(svgEl("line", {
-                x1: x + staveW / 2, y1: y + 4, x2: x + staveW / 2, y2: baseY - 4,
-                stroke: "#000", opacity: "0.09", "stroke-width": "1"
+            // Chant supérieur : biseau clair, la douve a une épaisseur.
+            svg.appendChild(svgEl("rect", {
+                x: x + 1.4, y: y + 1.2, width: staveW - 2.8, height: 3.4, rx: "1.6",
+                fill: "#fff", opacity: "0.34"
             }));
+
+            // Veines du bois
+            [0.3, 0.52, 0.72].forEach(function (k) {
+                svg.appendChild(svgEl("line", {
+                    x1: x + staveW * k, y1: y + 7, x2: x + staveW * k, y2: baseY - 3,
+                    stroke: "#1a1815", opacity: "0.08", "stroke-width": "1"
+                }));
+            });
 
             var pct = svgEl("text", {
-                x: x + staveW / 2, y: y - 7,
-                "text-anchor": "middle", "font-size": isShortest ? "13" : "11",
-                "font-weight": isShortest ? "800" : "500",
-                fill: isShortest ? "#a8322a" : "#8b93a1"
+                x: x + staveW / 2, y: y - 9,
+                "text-anchor": "middle", "font-size": isShortest ? "15" : "12",
+                "font-weight": isShortest ? "800" : "600",
+                fill: isShortest ? "#a8322a" : "#8b8578"
             });
-            pct.textContent = Math.round(c * 100) + "%";
+            pct.textContent = Math.round(c * 100) + " %";
             svg.appendChild(pct);
 
             var label = svgEl("text", {
-                x: x + staveW / 2, y: baseY + 22,
-                "text-anchor": "middle", "font-size": "10",
-                fill: isShortest ? "#17191e" : "#8b93a1",
-                "font-weight": isShortest ? "750" : "500"
+                x: x + staveW / 2, y: baseY + 30,
+                "text-anchor": "middle", "font-size": "11",
+                fill: isShortest ? "#1a1815" : "#8b8578",
+                "font-weight": isShortest ? "750" : "600"
             });
             label.textContent = f.label;
             svg.appendChild(label);
+
+            // Sceau du goulot : la douve courte est nommée sous le tonneau, pas ailleurs.
+            if (isShortest) {
+                svg.appendChild(svgEl("rect", {
+                    x: x + staveW / 2 - 30, y: baseY + 36, width: 60, height: 15, rx: "7.5",
+                    fill: "#a8322a"
+                }));
+                var tag = svgEl("text", {
+                    x: x + staveW / 2, y: baseY + 46.5, "text-anchor": "middle",
+                    "font-size": "8.5", "font-weight": "800", "letter-spacing": "0.09em", fill: "#fff"
+                });
+                tag.textContent = "GOULOT";
+                svg.appendChild(tag);
+            }
         });
 
-        // A single low hoop: enough to read as a barrel, never over the staves that matter.
+        // Eau : nappe translucide posée par-dessus le bois, comme une coupe du tonneau.
+        var wg = "water" + (gradSeq++);
+        var wgrad = svgEl("linearGradient", { id: wg, x1: "0", y1: "0", x2: "0", y2: "1" });
+        [["0%", "#6ea8cd"], ["100%", "#2f6d99"]].forEach(function (s) {
+            wgrad.appendChild(svgEl("stop", { offset: s[0], "stop-color": s[1] }));
+        });
+        defs.appendChild(wgrad);
+
+        // Voile léger : la teinte de chaque ressource doit rester lisible sous l'eau.
         svg.appendChild(svgEl("rect", {
-            x: startX - 4, y: baseY - 22, width: innerW + 8, height: 4,
-            fill: "#4a4238", opacity: "0.35", rx: "2"
+            x: startX, y: waterY, width: innerW, height: waterH,
+            fill: "url(#" + wg + ")", opacity: "0.19"
+        }));
+        svg.appendChild(svgEl("ellipse", {
+            cx: startX + innerW / 2, cy: waterY, rx: innerW / 2, ry: 8,
+            fill: "#2f6d99", opacity: "0.7"
+        }));
+        svg.appendChild(svgEl("ellipse", {
+            cx: startX + innerW / 2, cy: waterY - 1.5, rx: innerW / 2 - 9, ry: 5,
+            fill: "#cbe7f4", opacity: "0.85"
         }));
 
-        // Base
+        // Cerclages posés par-dessus : le métal est à l'extérieur du tonneau.
+        hoop(0.15);
+        hoop(0.55);
+        hoop(0.92);
+
+        // Débordement à la douve courte : c'est par là que tout le reste se perd.
+        if (scarcest < 0.995) {
+            var sx = startX + shortIndex * (staveW + gapW);
+            var isEdge = shortIndex === 0;
+            var spillX = isEdge ? sx - 2 : sx + staveW + 2;
+            var dir = isEdge ? -1 : 1;
+            svg.appendChild(svgEl("path", {
+                d: "M" + (sx + staveW / 2) + " " + (waterY + 2) +
+                   " Q" + spillX + " " + (waterY - 1) + " " + (spillX + dir * 9) + " " + (waterY + 16),
+                fill: "none", stroke: "#2f6d99", "stroke-width": "2.4",
+                "stroke-linecap": "round", opacity: "0.55"
+            }));
+            [0, 1, 2].forEach(function (k) {
+                svg.appendChild(svgEl("circle", {
+                    cx: spillX + dir * (10 + k * 2.5), cy: waterY + 24 + k * 13,
+                    r: 2.6 - k * 0.5, fill: "#2f6d99", opacity: String(0.5 - k * 0.13)
+                }));
+            });
+        }
+
+        // Fond du tonneau
         svg.appendChild(svgEl("rect", {
-            x: startX - 5, y: baseY, width: innerW + 10, height: 5,
-            fill: "#4a4238", rx: "2"
+            x: startX - 8, y: baseY + 2, width: innerW + 16, height: 8, rx: "3",
+            fill: "#4a4238"
         }));
 
-        // Water line, extended out to make the cap explicit
+        // Ligne d'eau prolongée dans la marge gauche : la limite est un fait, pas une décoration.
         svg.appendChild(svgEl("line", {
-            x1: 6, y1: waterY, x2: startX + innerW + 10, y2: waterY,
-            stroke: "#1e5fa8", "stroke-width": "1.6", "stroke-dasharray": "5 3", opacity: "0.9"
+            x1: 4, y1: waterY, x2: rightX + 10, y2: waterY,
+            stroke: "#1e5fa8", "stroke-width": "1.6", "stroke-dasharray": "5 3", opacity: "0.95"
         }));
+        svg.appendChild(svgEl("rect", {
+            x: 2, y: waterY - 22, width: 68, height: 19, rx: "3", fill: "#1e5fa8"
+        }));
+        var wlab = svgEl("text", {
+            x: 36, y: waterY - 13.5, "text-anchor": "middle", "font-size": "8.5",
+            "font-weight": "800", "letter-spacing": "0.09em", fill: "#fff"
+        });
+        wlab.textContent = "NIVEAU RÉEL";
+        svg.appendChild(wlab);
+        var wpct = svgEl("text", {
+            x: 36, y: waterY + 16, "text-anchor": "middle", "font-size": "14",
+            "font-weight": "800", fill: "#1e5fa8"
+        });
+        wpct.textContent = Math.round(scarcest * 100) + " %";
+        svg.appendChild(wpct);
 
         return svg;
     }
@@ -348,18 +508,39 @@
         wrap.appendChild(renderBarrel(side));
 
         var readout = el("div", "barrel-readout");
+        readout.appendChild(el("div", "b-eyebrow", "Puissance soutenable ce trimestre"));
         readout.appendChild(el("div", "b-power", fmt(side.combatPower)));
         readout.appendChild(el("div", "b-caption", "sur une cible de " + fmt(side.targetForceSize) + " k hommes"));
+
+        // Jauge atteint / cible : l'écart se voit avant de se lire.
+        var reach = side.targetForceSize > 0 ? Math.min(1, side.combatPower / side.targetForceSize) : 0;
+        var gauge = el("div", "b-gauge");
+        var gfill = el("span");
+        gfill.style.width = (reach * 100).toFixed(1) + "%";
+        gfill.style.background = coverColour(reach);
+        gauge.appendChild(gfill);
+        readout.appendChild(gauge);
+
+        var scarcest = 2;
+        FLOWS.forEach(function (f) {
+            var c = side.coverage[f.key];
+            if (c !== undefined && c < scarcest) { scarcest = c; }
+        });
 
         var bn = el("div", "b-bottleneck");
         bn.appendChild(el("div", "bb-label", "Goulot d'étranglement"));
         bn.appendChild(el("div", "bb-value", side.bottleneckName || "—"));
+        if (scarcest < 1.5) {
+            var bbNote = el("div", "bb-note");
+            bbNote.innerHTML = "Plafonné à <b>" + fmt(scarcest * 100) +
+                " %</b> du besoin. Tout ce qui est produit au-delà, dans les autres ressources, ne se transforme en rien.";
+            bn.appendChild(bbNote);
+        }
         readout.appendChild(bn);
 
-        var ratio = el("div", "b-caption");
-        ratio.style.marginTop = "12px";
-        ratio.innerHTML = "Ratio de génération <b style=\"color:" + coverColour(side.forceGenerationRatio) +
-            ";font-size:15px\">" + fmt(side.forceGenerationRatio, 2) + "</b>";
+        var ratio = el("div", "b-ratio");
+        ratio.innerHTML = "<span>Ratio de génération</span><b style=\"color:" + coverColour(side.forceGenerationRatio) +
+            "\">" + fmt(side.forceGenerationRatio, 2) + "</b>";
         readout.appendChild(ratio);
 
         wrap.appendChild(readout);
@@ -576,53 +757,262 @@
         return svg;
     }
 
+    /* ---------------- Illustrations de cartes ----------------
+       Six scènes, une grammaire commune : ciel dégradé, une source de lumière,
+       un plan intermédiaire, une silhouette au premier plan. La profondeur fait
+       l'illustration ; le pictogramme fait le panneau de signalisation. */
+
+    function artDefs(g) {
+        var d = svgEl("defs", {});
+        g.appendChild(d);
+        return d;
+    }
+
+    function linGrad(defs, stops, horizontal) {
+        var id = "art" + (gradSeq++);
+        var lg = svgEl("linearGradient", {
+            id: id, x1: "0", y1: "0", x2: horizontal ? "1" : "0", y2: horizontal ? "0" : "1"
+        });
+        stops.forEach(function (s) { lg.appendChild(svgEl("stop", { offset: s[0], "stop-color": s[1], "stop-opacity": s[2] === undefined ? 1 : s[2] })); });
+        defs.appendChild(lg);
+        return "url(#" + id + ")";
+    }
+
+    function radGrad(defs, stops, cx, cy, r) {
+        var id = "art" + (gradSeq++);
+        var rg = svgEl("radialGradient", { id: id, cx: cx, cy: cy, r: r });
+        stops.forEach(function (s) { rg.appendChild(svgEl("stop", { offset: s[0], "stop-color": s[1], "stop-opacity": s[2] === undefined ? 1 : s[2] })); });
+        defs.appendChild(rg);
+        return "url(#" + id + ")";
+    }
+
+    function sky(g, defs, stops) {
+        g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: linGrad(defs, stops) }));
+    }
+
+    // Voile sombre en bas de vignette : le texte de type qui suit garde sa place.
+    function vignette(g, defs) {
+        g.appendChild(svgEl("rect", {
+            x: 0, y: 38, width: 100, height: 22,
+            fill: linGrad(defs, [["0%", "#000", 0], ["100%", "#000", 0.42]])
+        }));
+    }
+
     var ART = {
         "Économique": function (g) {
-            g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: "#2c3e50" }));
-            [20, 40, 60, 80].forEach(function (x, i) {
-                g.appendChild(svgEl("rect", { x: x - 7, y: 44 - i * 6, width: 12, height: 16 + i * 6, fill: "#e0c07a", opacity: 0.85 }));
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#241a17"], ["52%", "#6d4630"], ["100%", "#d59a5c"]]);
+            // Soleil bas, posé sur la ligne d'horizon des halles.
+            g.appendChild(svgEl("circle", { cx: 72, cy: 44, r: 10, fill: "#f6d097", opacity: "0.85" }));
+            // Brume industrielle en bandes horizontales, pas en taches.
+            [[18, 0.1], [26, 0.08], [33, 0.06]].forEach(function (b) {
+                g.appendChild(svgEl("rect", { x: 0, y: b[0], width: 100, height: 3.5, fill: "#f0dcc0", opacity: String(b[1]) }));
             });
-            g.appendChild(svgEl("path", { d: "M4 46 L28 34 L52 38 L76 20 L96 12", fill: "none", stroke: "#e8746a", "stroke-width": "2.5" }));
+            // Halles et cheminées à contre-jour
+            g.appendChild(svgEl("path", {
+                d: "M0 60 L0 44 L10 44 L10 34 L16 34 L16 44 L26 44 L26 26 L31 26 L31 44 L42 44 L42 38 L54 38 L54 30 L60 30 L60 44 L74 44 L74 47 L100 47 L100 60 Z",
+                fill: "#171410"
+            }));
+            // Courbe : ce que la comptabilité nationale raconte
+            g.appendChild(svgEl("path", {
+                d: "M6 40 L24 31 L40 35 L58 20 L78 24 L96 9",
+                fill: "none", stroke: "#e8746a", "stroke-width": "2.2", "stroke-linecap": "round", "stroke-linejoin": "round"
+            }));
+            [[24, 31], [58, 20], [96, 9]].forEach(function (p) {
+                g.appendChild(svgEl("circle", { cx: p[0], cy: p[1], r: 1.8, fill: "#f4a49c" }));
+            });
+            vignette(g, d);
         },
+
         "Politique occidentale": function (g) {
-            g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: "#1b3a5c" }));
-            g.appendChild(svgEl("circle", { cx: 50, cy: 30, r: 17, fill: "none", stroke: "#f0d060", "stroke-width": "2" }));
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#0c1c33"], ["100%", "#1d3f6b"]]);
+            // Halo de tribune
+            g.appendChild(svgEl("rect", {
+                x: 0, y: 0, width: 100, height: 60,
+                fill: radGrad(d, [["0%", "#9dc4ec", 0.5], ["100%", "#9dc4ec", 0]], "0.5", "0.3", "0.55")
+            }));
+            // Cercle d'étoiles en fond de salle
             for (var i = 0; i < 12; i++) {
-                var a = (i / 12) * Math.PI * 2;
-                g.appendChild(svgEl("circle", { cx: 50 + Math.cos(a) * 17, cy: 30 + Math.sin(a) * 17, r: 1.8, fill: "#f0d060" }));
+                var a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+                g.appendChild(svgEl("circle", {
+                    cx: 50 + Math.cos(a) * 13, cy: 20 + Math.sin(a) * 9,
+                    r: 1.3, fill: "#f0d060", opacity: "0.9"
+                }));
             }
+            // Hémicycle : tables courbes vues de dos
+            [[36, 6.5], [46, 5]].forEach(function (row, k) {
+                g.appendChild(svgEl("path", {
+                    d: "M-6 " + (row[0] + 10) + " Q50 " + (row[0] - row[1] * 2) + " 106 " + (row[0] + 10),
+                    fill: "none", stroke: k ? "#0a1626" : "#0f2039", "stroke-width": String(9 - k * 1.5)
+                }));
+            });
+            // Délégués
+            [[14, 34], [30, 32], [50, 31], [70, 32], [86, 34]].forEach(function (p) {
+                g.appendChild(svgEl("circle", { cx: p[0], cy: p[1], r: 3, fill: "#0a1626" }));
+                g.appendChild(svgEl("path", {
+                    d: "M" + (p[0] - 5) + " " + (p[1] + 9) + " Q" + p[0] + " " + (p[1] + 2) + " " + (p[0] + 5) + " " + (p[1] + 9) + " Z",
+                    fill: "#0a1626"
+                }));
+            });
+            vignette(g, d);
         },
+
         "Politique interne": function (g) {
-            g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: "#3a2f2a" }));
-            [18, 32, 46, 60, 74].forEach(function (x, i) {
-                g.appendChild(svgEl("rect", { x: x, y: 22 + (i % 2) * 3, width: 7, height: 26, fill: "#c9b79a", opacity: 0.9 }));
-                g.appendChild(svgEl("circle", { cx: x + 3.5, cy: 19 + (i % 2) * 3, r: 3.6, fill: "#c9b79a" }));
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#241b16"], ["100%", "#54382a"]]);
+            // Halo de la tribune : toute l'attention converge là.
+            g.appendChild(svgEl("rect", {
+                x: 0, y: 0, width: 100, height: 60,
+                fill: radGrad(d, [["0%", "#ffd9a0", 0.5], ["100%", "#ffd9a0", 0]], "0.5", "0.32", "0.42")
+            }));
+            // Bannières verticales de part et d'autre
+            [22, 74].forEach(function (x) {
+                g.appendChild(svgEl("rect", { x: x, y: 4, width: 5, height: 30, fill: "#7a2b22", opacity: "0.75" }));
+                g.appendChild(svgEl("rect", { x: x, y: 4, width: 1.4, height: 30, fill: "#fff", opacity: "0.12" }));
             });
+            // Estrade, pupitre, orateur
+            g.appendChild(svgEl("rect", { x: 30, y: 34, width: 40, height: 4, fill: "#17110d" }));
+            g.appendChild(svgEl("rect", { x: 45, y: 26, width: 10, height: 8, fill: "#17110d" }));
+            g.appendChild(svgEl("circle", { cx: 50, cy: 17, r: 3.2, fill: "#17110d" }));
+            g.appendChild(svgEl("path", { d: "M45.4 26 Q50 15.5 54.6 26 Z", fill: "#17110d" }));
+            g.appendChild(svgEl("path", {
+                d: "M53 22 L58 14", stroke: "#17110d", "stroke-width": "1.8", "stroke-linecap": "round"
+            }));
+            // Foule de dos, chaque nuque détourée par la lumière de scène.
+            [4, 13, 22, 31, 40, 49, 58, 67, 76, 85, 94].forEach(function (x, i) {
+                var y = 47 + (i % 3) * 2.5;
+                g.appendChild(svgEl("path", {
+                    d: "M" + (x - 7.5) + " 60 Q" + x + " " + (y + 2) + " " + (x + 7.5) + " 60 Z", fill: "#0f0b08"
+                }));
+                g.appendChild(svgEl("circle", { cx: x, cy: y, r: 4.2, fill: "#0f0b08" }));
+                g.appendChild(svgEl("path", {
+                    d: "M" + (x - 3.6) + " " + (y - 2.2) + " A4.2 4.2 0 0 1 " + (x + 2.4) + " " + (y - 3.5),
+                    fill: "none", stroke: "#c99a63", "stroke-width": "0.9", opacity: "0.55"
+                }));
+            });
+            vignette(g, d);
         },
+
         "Énergie": function (g) {
-            g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: "#20242c" }));
-            g.appendChild(svgEl("path", { d: "M30 52 L38 8 L46 52 M22 52 L54 52 M32 34 L44 34", fill: "none", stroke: "#8fa3b8", "stroke-width": "2" }));
-            g.appendChild(svgEl("path", { d: "M66 10 L58 32 L68 32 L60 52", fill: "none", stroke: "#f0c040", "stroke-width": "3" }));
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#101c28"], ["66%", "#25384a"], ["100%", "#5a4229"]]);
+            // Lueur de la torchère
+            g.appendChild(svgEl("rect", {
+                x: 0, y: 0, width: 100, height: 60,
+                fill: radGrad(d, [["0%", "#ffb347", 0.6], ["100%", "#ffb347", 0]], "0.72", "0.25", "0.58")
+            }));
+            // Colonnes de distillation et tuyauterie
+            g.appendChild(svgEl("path", {
+                d: "M0 60 L0 50 L8 50 L8 30 L14 30 L14 50 L24 50 L24 22 L30 22 L30 50 L44 50 L44 36 L52 36 L52 50 L100 50 L100 60 Z",
+                fill: "#0c1218"
+            }));
+            // Liseré chaud sur les arêtes tournées vers la flamme : la nuit a une source.
+            [[14, 30], [30, 22], [52, 36]].forEach(function (e) {
+                g.appendChild(svgEl("line", {
+                    x1: e[0], y1: e[1], x2: e[0], y2: 50,
+                    stroke: "#ffb347", "stroke-width": "0.9", opacity: "0.6"
+                }));
+            });
+            [10, 18, 27, 36, 47].forEach(function (x) {
+                g.appendChild(svgEl("line", { x1: x, y1: 50, x2: x, y2: 44, stroke: "#33475a", "stroke-width": "1" }));
+            });
+            // Torchère
+            g.appendChild(svgEl("path", { d: "M70 50 L70 24 L73 24 L73 50 Z", fill: "#0c1218" }));
+            g.appendChild(svgEl("path", {
+                d: "M71.5 22 Q66 14 71 6 Q73 13 77 10 Q79 18 71.5 22 Z",
+                fill: linGrad(d, [["0%", "#fff0c0"], ["100%", "#e8721f"]])
+            }));
+            g.appendChild(svgEl("path", { d: "M71.5 20 Q69 14 71.5 9 Q73.5 14 71.5 20 Z", fill: "#fff6dc", opacity: "0.9" }));
+            vignette(g, d);
         },
+
         "Militaire et technologique": function (g) {
-            g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: "#26303a" }));
-            g.appendChild(svgEl("circle", { cx: 50, cy: 30, r: 5, fill: "#d8d2c4" }));
-            [[28, 16], [72, 16], [28, 44], [72, 44]].forEach(function (c) {
-                g.appendChild(svgEl("line", { x1: 50, y1: 30, x2: c[0], y2: c[1], stroke: "#d8d2c4", "stroke-width": "2" }));
-                g.appendChild(svgEl("circle", { cx: c[0], cy: c[1], r: 6.5, fill: "none", stroke: "#8fa3b8", "stroke-width": "1.6" }));
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#0d1826"], ["62%", "#274056"], ["100%", "#7d99ad"]]);
+            // Balayage radar depuis le sol
+            [16, 27, 38].forEach(function (r, i) {
+                g.appendChild(svgEl("path", {
+                    d: "M" + (14 - r) + " 52 A" + r + " " + r + " 0 0 1 " + (14 + r) + " 52",
+                    fill: "none", stroke: "#8fd0e8", "stroke-width": "0.9", opacity: String(0.4 - i * 0.1)
+                }));
             });
+            // Horizon
+            g.appendChild(svgEl("path", {
+                d: "M0 60 L0 51 Q18 47 34 50 Q54 54 72 49 Q88 45 100 49 L100 60 Z",
+                fill: "#101a24"
+            }));
+            // Drone en silhouette, aile delta
+            var dr = svgEl("g", {});
+            dr.appendChild(svgEl("path", { d: "M40 22 L74 26 L52 30 L46 34 L44 28 L34 27 Z", fill: "#0a1219" }));
+            dr.appendChild(svgEl("path", { d: "M52 26 L60 14 L62 15 L56 27 Z", fill: "#0a1219" }));
+            dr.appendChild(svgEl("circle", { cx: 71, cy: 26, r: 1.4, fill: "#ff6b5e" }));
+            g.appendChild(dr);
+            // Traits de vitesse
+            [20, 24, 31].forEach(function (y, i) {
+                g.appendChild(svgEl("line", {
+                    x1: 4, y1: y, x2: 24 + i * 4, y2: y, stroke: "#cfe6f2",
+                    "stroke-width": "0.8", opacity: "0.35"
+                }));
+            });
+            vignette(g, d);
         },
+
         "Externe": function (g) {
-            g.appendChild(svgEl("rect", { x: 0, y: 0, width: 100, height: 60, fill: "#2a3630" }));
-            g.appendChild(svgEl("path", { d: "M6 44 L34 44 L40 30 L64 30 L70 44 L94 44", fill: "none", stroke: "#9ab89a", "stroke-width": "2.4" }));
-            [20, 52, 82].forEach(function (x) {
-                g.appendChild(svgEl("rect", { x: x - 8, y: 12, width: 16, height: 11, fill: "#c8a86a" }));
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#1b2a26"], ["56%", "#4b5f4c"], ["100%", "#b6bf94"]]);
+            g.appendChild(svgEl("circle", { cx: 78, cy: 40, r: 8, fill: "#f4e6b4", opacity: "0.6" }));
+            // Rade au fond
+            g.appendChild(svgEl("rect", { x: 0, y: 42, width: 100, height: 8, fill: "#2f4340", opacity: "0.9" }));
+            [44, 47].forEach(function (y) {
+                g.appendChild(svgEl("line", { x1: 0, y1: y, x2: 100, y2: y, stroke: "#c9d6ae", "stroke-width": "0.5", opacity: "0.22" }));
             });
+            // Grue portuaire : la forme la plus reconnaissable d'un quai.
+            g.appendChild(svgEl("path", {
+                d: "M16 42 L16 14 L14 14 L14 42 M16 16 L44 16 L44 19 L16 19 M16 16 L4 22 L4 25 L16 21 M40 19 L40 30",
+                fill: "none", stroke: "#131a15", "stroke-width": "2"
+            }));
+            g.appendChild(svgEl("rect", { x: 36, y: 30, width: 8, height: 5, fill: "#131a15" }));
+            // Conteneurs empilés : le flux étranger, quantifié en boîtes.
+            [[50, 30, "#c8a86a"], [62, 30, "#8d9a6a"], [74, 30, "#b07a4a"],
+             [56, 24, "#9a8a5a"], [68, 24, "#7d8f6a"], [62, 18, "#c8a86a"]].forEach(function (c) {
+                g.appendChild(svgEl("rect", { x: c[0], y: c[1] + 6, width: 11, height: 5.4, rx: 0.5, fill: c[2] }));
+                g.appendChild(svgEl("rect", { x: c[0], y: c[1] + 6, width: 11, height: 1.4, fill: "#fff", opacity: "0.18" }));
+                for (var k = 1; k < 4; k++) {
+                    g.appendChild(svgEl("line", {
+                        x1: c[0] + k * 2.7, y1: c[1] + 6.6, x2: c[0] + k * 2.7, y2: c[1] + 10.8,
+                        stroke: "#000", opacity: "0.2", "stroke-width": "0.6"
+                    }));
+                }
+            });
+            // Quai
+            g.appendChild(svgEl("rect", { x: 0, y: 42, width: 100, height: 18, fill: "#1b2419" }));
+            g.appendChild(svgEl("rect", { x: 0, y: 42, width: 100, height: 1.6, fill: "#5d6a4a", opacity: "0.6" }));
+            // Dockers, pour l'échelle
+            [[26, 42], [33, 42], [88, 42]].forEach(function (p) {
+                g.appendChild(svgEl("circle", { cx: p[0], cy: p[1] - 5.4, r: 1.3, fill: "#0d1310" }));
+                g.appendChild(svgEl("rect", { x: p[0] - 1.5, y: p[1] - 4.2, width: 3, height: 4.2, rx: 1, fill: "#0d1310" }));
+            });
+            vignette(g, d);
         }
+    };
+
+    // Couleur de coque par famille : la carte annonce son domaine avant d'être lue.
+    var FAMILY_ACCENT = {
+        "Économique": "#b8860b",
+        "Politique occidentale": "#1e5fa8",
+        "Politique interne": "#8a4b2a",
+        "Énergie": "#c2621a",
+        "Militaire et technologique": "#4a6070",
+        "Externe": "#4a6d3a"
     };
 
     function renderCard(card) {
         var wrap = el("div", "mtg " + (card.ownerSideCode === "invader" ? "ru" : (card.ownerSideCode === "defender" ? "ua" : "")));
+        var accent = FAMILY_ACCENT[card.family] || FAMILY_ACCENT["Économique"];
+        wrap.style.setProperty("--fam", accent);
+        wrap.style.setProperty("--fam-1", tint(accent, -0.62));
+        wrap.style.setProperty("--fam-2", tint(accent, -0.86));
         var inner = el("div", "mtg-inner");
 
         var title = el("div", "mtg-title");
@@ -657,7 +1047,7 @@
         wrap.appendChild(inner);
 
         var foot = el("div", "mtg-foot");
-        foot.appendChild(el("span", null, card.family));
+        foot.appendChild(el("span", "fam", card.family));
         foot.appendChild(el("span", null, "TOV · V1"));
         wrap.appendChild(foot);
 
@@ -684,64 +1074,121 @@
         var field = el("div", "field");
 
         var mapPanel = el("section", "panel map-panel");
-        mapPanel.appendChild(renderMap(t));
-        var legend = el("div", "map-legend");
-        [
-            { label: "Territoire occupé", colour: "rgba(168,50,42,0.25)" },
-            { label: "Ligne de contact", colour: "#a8322a" },
-            { label: "Ligne de février 2022", colour: "#6b7280" }
-        ].forEach(function (l) {
-            var c = el("div", "chip");
-            var i = el("i");
-            i.style.background = l.colour;
-            c.appendChild(i);
-            c.appendChild(el("span", null, l.label));
-            legend.appendChild(c);
-        });
-        mapPanel.appendChild(legend);
-        field.appendChild(mapPanel);
+        // The hex map owns its own file so it can be reworked without touching the rest.
+        var hexMap = window.tovHexMap && window.tovHexMap.render;
+        var mapSvg = hexMap
+            ? window.tovHexMap.render(t, board, geo, { frontLine: frontLine })
+            : renderMap(t);
+        mapPanel.appendChild(mapSvg);
+
+        // La carte hexagonale porte sa propre légende : n'en afficher une seconde
+        // que pour le tracé de repli, sinon les deux se contredisent.
+        if (!hexMap) {
+            var legend = el("div", "map-legend");
+            [
+                { label: "Territoire occupé", colour: "rgba(168,50,42,0.25)" },
+                { label: "Ligne de contact", colour: "#a8322a" },
+                { label: "Ligne de février 2022", colour: "#6b7280" }
+            ].forEach(function (l) {
+                var c = el("div", "chip");
+                var i = el("i");
+                i.style.background = l.colour;
+                c.appendChild(i);
+                c.appendChild(el("span", null, l.label));
+                legend.appendChild(c);
+            });
+            mapPanel.appendChild(legend);
+        }
+        var leftCol = el("div");
+        leftCol.appendChild(mapPanel);
+        field.appendChild(leftCol);
+
+        // Le journal appartient à la colonne de la carte : les deux racontent le même trimestre.
+        if (t.narrative && t.narrative.length) {
+            var narr = el("section", "panel narrative");
+            narr.style.marginTop = "16px";
+            narr.appendChild(el("div", "panel-title", "Journal du trimestre"));
+            var ul = el("ul");
+            t.narrative.forEach(function (n) {
+                var li = el("li", null, n);
+                // Chaque ligne s'ouvre sur un camp : on le rend repérable au liseré.
+                if (/^Russie\b/.test(n)) { li.className = "ru"; }
+                else if (/^Ukraine\b/.test(n)) { li.className = "ua"; }
+                ul.appendChild(li);
+            });
+            narr.appendChild(ul);
+            leftCol.appendChild(narr);
+        }
 
         var right = el("div");
         var sectorPanel = el("section", "panel");
         sectorPanel.style.padding = "16px 18px";
         sectorPanel.appendChild(el("div", "panel-title", "Rapport de force par secteur"));
 
-        var list = el("div", "sector-list");
-        (t.sectors || []).forEach(function (s) {
-            var moved = Math.abs(s.hexesMoved) > 0.01;
-            var cls = moved ? (s.hexesMoved > 0 ? "gain" : "loss") : "static";
-            var row = el("div", "sector " + cls);
-            row.appendChild(el("div", "sc-name", s.sectorName));
-            row.appendChild(el("div", "sc-move", moved ? (s.hexesMoved > 0 ? "+" : "−") + fmt(Math.abs(s.hexesMoved * 10), 1) + " km" : "—"));
-            row.appendChild(el("div", "sc-outcome", s.outcome));
-            row.appendChild(el("div", "sc-ratio", "rapport " + fmt(s.ratio, 2)));
+        var sectors = t.sectors || [];
+        var movers = sectors.filter(function (s) { return Math.abs(s.hexesMoved) > 0.01; });
+        var frozen = sectors.filter(function (s) { return Math.abs(s.hexesMoved) <= 0.01; });
+        var netKm = movers.reduce(function (a, s) { return a + s.hexesMoved * 10; }, 0);
 
+        // Une phrase avant la liste : ce que le trimestre a produit, en un coup d'œil.
+        var summary = el("div", "sector-summary");
+        summary.innerHTML = movers.length === 0
+            ? "<b>Aucun secteur</b> n'a bougé ce trimestre sur " + sectors.length + "."
+            : "<b>" + movers.length + " secteur" + (movers.length > 1 ? "s" : "") + " sur " + sectors.length +
+              "</b> " + (movers.length > 1 ? "ont bougé" : "a bougé") + ", pour un solde de <b class=\"" +
+              (netKm >= 0 ? "ru" : "ua") + "\">" +
+              (netKm >= 0 ? "+" : "−") + fmt(Math.abs(netKm), 1) + " km</b>.";
+        sectorPanel.appendChild(summary);
+
+        // Un secteur ne bouge qu'au-delà d'un rapport de 1,1 : l'échelle s'arrête à 3.
+        function ratioGauge(s, withScale) {
             var bar = el("div", "ratiobar");
             var fill = el("span");
             fill.style.width = Math.min(100, (s.ratio / 3) * 100).toFixed(0) + "%";
-            fill.style.background = s.ratio >= 1.1 ? "#a8322a" : "#8b93a1";
+            fill.style.background = s.ratio >= 1.1 ? "#a8322a" : "#9b9484";
             bar.appendChild(fill);
             var th = el("div", "threshold");
             th.style.left = (1.1 / 3 * 100).toFixed(0) + "%";
-            th.title = "Seuil de mouvement";
+            th.title = "Seuil de mouvement : 1,1";
+            if (withScale) { th.appendChild(el("i", null, "1,1")); }
             bar.appendChild(th);
-            row.appendChild(bar);
+            return bar;
+        }
 
+        var list = el("div", "sector-list");
+        movers.forEach(function (s) {
+            var row = el("div", "sector " + (s.hexesMoved > 0 ? "gain" : "loss"));
+            row.appendChild(el("div", "sc-name", s.sectorName));
+            row.appendChild(el("div", "sc-move",
+                (s.hexesMoved > 0 ? "+" : "−") + fmt(Math.abs(s.hexesMoved * 10), 1) + " km"));
+            row.appendChild(el("div", "sc-outcome", s.outcome));
+            row.appendChild(el("div", "sc-ratio", "rapport " + fmt(s.ratio, 2)));
+            row.appendChild(ratioGauge(s, true));
             list.appendChild(row);
         });
         sectorPanel.appendChild(list);
-        right.appendChild(sectorPanel);
 
-        if (t.narrative && t.narrative.length) {
-            var narr = el("section", "panel narrative");
-            narr.style.marginTop = "14px";
-            narr.appendChild(el("div", "panel-title", "Journal du trimestre"));
-            var ul = el("ul");
-            t.narrative.forEach(function (n) { ul.appendChild(el("li", null, n)); });
-            narr.appendChild(ul);
-            right.appendChild(narr);
+        // Les secteurs figés disent tous la même chose : ils passent en second plan,
+        // ramenés à leur seule information distinctive, le rapport de force.
+        if (frozen.length) {
+            var frozenHead = el("div", "frozen-head");
+            frozenHead.innerHTML = "<span>" + frozen.length + " secteurs figés</span><em>" +
+                (frozen[0].outcome || "usure réciproque") + "</em>";
+            sectorPanel.appendChild(frozenHead);
+
+            var frozenList = el("div", "sector-list frozen");
+            frozen.forEach(function (s) {
+                var row = el("div", "sector static");
+                row.title = s.outcome;
+                row.appendChild(el("div", "sc-name", s.sectorName));
+                row.appendChild(el("div", "sc-ratio", fmt(s.ratio, 2)));
+                row.appendChild(ratioGauge(s, false));
+                frozenList.appendChild(row);
+            });
+            sectorPanel.appendChild(frozenList);
         }
 
+        right.appendChild(sectorPanel);
         field.appendChild(right);
         stage.appendChild(field);
 

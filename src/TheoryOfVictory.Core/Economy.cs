@@ -68,6 +68,47 @@ public sealed class Economy
 
     public double LastTurnMilitarySpendBillions { get; set; }
 
+    /// <summary>Reserves actually liquidated this turn to keep the war effort at its ceiling.</summary>
+    public double LastTurnReserveDrawBillions { get; set; }
+
+    /// <summary>War effort the ordinary revenue of the turn funds on its own, reserves excluded.</summary>
+    public double OrdinaryWarFundingBillions { get; set; }
+
+    /// <summary>
+    /// Quarters of reserve left at the current burn rate. The countdown the barrel drives:
+    /// once it reaches zero the war has to live on what it earns.
+    /// </summary>
+    public double ReserveQuartersLeft
+    {
+        get
+        {
+            if (LastTurnReserveDrawBillions <= 0.01d)
+            {
+                return double.PositiveInfinity;
+            }
+
+            return ReservesBillions / LastTurnReserveDrawBillions;
+        }
+    }
+
+    /// <summary>
+    /// Share of the war effort this quarter's revenue could not fund. Above zero the
+    /// apparatus starts noticing that the war has stopped paying.
+    /// </summary>
+    public double FundingGap
+    {
+        get
+        {
+            double ceiling = HeadlineGdpBillions * WarBudgetCeilingShare;
+            if (ceiling <= 0d)
+            {
+                return 0d;
+            }
+
+            return Math.Clamp(1d - (WarFundableBillions / ceiling), 0d, 1d);
+        }
+    }
+
     /// <summary>Share of GDP going to the war, the number the history books quote.</summary>
     public double WarEffortShare
     {

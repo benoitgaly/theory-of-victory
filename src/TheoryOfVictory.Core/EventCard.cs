@@ -90,6 +90,13 @@ public sealed class EventCard
     /// <summary>Base probability, unused in V1.0 where the calendar is fixed.</summary>
     public double BaseProbability { get; init; }
 
+    /// <summary>
+    /// Code of the card this one answers. A counter played on the same turn as its target
+    /// stops the target outright; this is what will create the bluff in V2, when the
+    /// attacker has to decide whether to commit against two unknown cards in hand.
+    /// </summary>
+    public string? CountersCardCode { get; init; }
+
     public List<CardEffect> Effects { get; init; } = [];
 }
 

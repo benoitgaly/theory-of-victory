@@ -394,6 +394,178 @@
         { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 },
         { "kind": "PopularDiscontentDelta", "targetSideCode": "defender", "value": 7 }
       ]
+    },
+    {
+      "code": "electronic_warfare",
+      "title": "Mur de guerre électronique",
+      "family": "Militaire et technologique",
+      "description": "On ne descend pas les drones, on coupe le lien qui les guide. Une avance ne se détruit pas : elle se périme.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "fibre_optic_drones",
+      "politicalCost": 3,
+      "baseProbability": 0.4,
+      "effects": [
+        { "kind": "InnovationCounterJump", "targetSideCode": "invader", "value": 0.4 },
+        { "kind": "InnovationTacticalJump", "targetSideCode": "defender", "value": -0.25 }
+      ]
+    },
+    {
+      "code": "air_defence_surge",
+      "title": "Parapluie au-dessus du réseau",
+      "family": "Énergie",
+      "description": "Les intercepteurs qui couvrent Kiev ce trimestre sont ceux qui manqueront à Pokrovsk. Le même missile ne peut pas être aux deux endroits.",
+      "type": "Counter",
+      "ownerSideCode": "defender",
+      "countersCardCode": "grid_campaign",
+      "politicalCost": 5,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "heavy_interceptors", "value": -220 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 4 }
+      ]
+    },
+    {
+      "code": "evasion_network",
+      "title": "Réseau de contournement",
+      "family": "Économique",
+      "description": "Un intermédiaire à Douchanbé, un pavillon de complaisance, et la sanction posée au tour 3 ne vaut plus rien au tour 12. Sanctionner n'est pas un acte, c'est un entretien.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "shadow_fleet_sanctions",
+      "politicalCost": 2,
+      "baseProbability": 0.5,
+      "effects": [
+        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": -0.2 },
+        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": -0.15 }
+      ]
+    },
+    {
+      "code": "counter_battery",
+      "title": "Contre-batterie",
+      "family": "Militaire et technologique",
+      "description": "Le lanceur tire trois coups et se déplace, ou il ne se déplace plus jamais. La riposte ne prend pas de terrain, elle interdit le geste.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "himars_deep_strike",
+      "politicalCost": 3,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "missiles", "value": -25 },
+        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": -0.2 }
+      ]
+    },
+    {
+      "code": "us_election_swing",
+      "title": "Bascule électorale américaine",
+      "family": "Politique occidentale",
+      "description": "Rien n'a été détruit, aucune ligne n'a bougé. Un scrutin à cinq mille kilomètres vient pourtant de décider du sort d'un front.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.3,
+      "effects": [
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -28 },
+        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": -0.45 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -8 }
+      ]
+    },
+    {
+      "code": "budget_fatigue",
+      "title": "Fatigue budgétaire",
+      "family": "Politique occidentale",
+      "description": "Personne n'abandonne personne : on reporte, on rogne, on conditionne. Le flux gratuit ne s'arrête jamais d'un coup, il maigrit.",
+      "type": "Permanent",
+      "politicalCost": 0,
+      "baseProbability": 0.45,
+      "effects": [
+        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": -4.0 },
+        { "kind": "ConditionalityDelta", "targetSideCode": "defender", "value": 0.1 }
+      ]
+    },
+    {
+      "code": "chinese_pressure",
+      "title": "Pression du grand voisin",
+      "family": "Externe",
+      "description": "Le fournisseur ne menace pas, il rappelle les termes. Chaque achat alourdit la dépendance, et la dépendance se paie en concessions.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 0,
+      "baseProbability": 0.25,
+      "effects": [
+        { "kind": "ForeignSupplyCeilingDelta", "targetSideCode": "invader", "value": 3.0 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -5 },
+        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": -0.12 }
+      ]
+    },
+    {
+      "code": "air_defence_gap",
+      "title": "Trou dans la couverture antiaérienne",
+      "family": "Militaire et technologique",
+      "description": "Les magasins se vident plus vite qu'ils ne se remplissent. Ce n'est pas le taux d'interception qui décide, c'est le rapport de coût.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.3,
+      "effects": [
+        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "heavy_interceptors", "value": -160 },
+        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "cheap_interceptors", "value": -500 }
+      ]
+    },
+    {
+      "code": "decapitation_strike",
+      "title": "Décapitation",
+      "family": "Politique interne",
+      "description": "On retire un homme et l'on découvre que la chaîne tenait à lui. Le régime paraît stable jusqu'au tour où il ne l'est plus du tout.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 8,
+      "baseProbability": 0.1,
+      "effects": [
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -9 },
+        { "kind": "LogisticsIntegrityDelta", "targetSideCode": "invader", "value": -0.1 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 5 }
+      ]
+    },
+    {
+      "code": "drone_swarm_scaling",
+      "title": "Passage à l'échelle des drones",
+      "family": "Militaire et technologique",
+      "description": "Le drone n'ajoute pas de la puissance de feu : il permet de l'obtenir sans obus. Innover, c'est déplacer le goulot, jamais le supprimer.",
+      "type": "SlowRitual",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.4,
+      "effects": [
+        { "kind": "InnovationTacticalJump", "targetSideCode": "defender", "value": 0.5, "delayTurns": 2 },
+        { "kind": "ProductionCapacityMultiplier", "targetSideCode": "defender", "value": 1.15, "delayTurns": 2 }
+      ]
+    },
+    {
+      "code": "rail_interdiction",
+      "title": "Interdiction du rail",
+      "family": "Énergie",
+      "description": "Ce qui sort du dépôt n'est pas ce qui arrive. Couper un nœud ferroviaire vaut plus de terrain qu'une tranchée prise.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 3,
+      "baseProbability": 0.4,
+      "effects": [
+        { "kind": "LogisticsIntegrityDelta", "targetSideCode": "invader", "value": -0.22 }
+      ]
+    },
+    {
+      "code": "conscription_law",
+      "title": "Abaissement de l'âge de mobilisation",
+      "family": "Politique interne",
+      "description": "Un réservoir démographique trois fois plus petit, et chaque homme retiré pèse trois fois plus lourd. L'Ukraine paie chaque mobilisation deux fois : au front et à l'usine.",
+      "type": "SlowRitual",
+      "ownerSideCode": "defender",
+      "politicalCost": 7,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "MobilisationWave", "targetSideCode": "defender", "value": 120 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "defender", "value": 11 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 }
+      ]
     }
   ]
 }

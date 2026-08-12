@@ -106,10 +106,7 @@ public sealed class AttritionPhase : ITurnPhase
             : Math.Clamp(1d - (belligerent.Economy.HeadlineGdpBillions / belligerent.Economy.ProductiveCapacityBillions), -1d, 1d);
 
         // The decisive signal: when the war stops being fundable, it stops paying the apparatus.
-        double ceiling = belligerent.Economy.HeadlineGdpBillions * belligerent.Economy.WarBudgetCeilingShare;
-        double fundingGap = ceiling <= 0d
-            ? 0d
-            : 1d - Math.Clamp(belligerent.Economy.WarFundableBillions / ceiling, 0d, 1d);
+        double fundingGap = belligerent.Economy.FundingGap;
 
         belligerent.Politics.EliteCohesion = Math.Clamp(
             belligerent.Politics.EliteCohesion

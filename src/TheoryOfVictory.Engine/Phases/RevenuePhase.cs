@@ -48,20 +48,33 @@ public sealed class RevenuePhase : ITurnPhase
             double inKind = grant * belligerent.Foreign.InKindShare;
             if (inKind > 0d)
             {
-                // Aid is not mostly ammunition: vehicles, training and maintenance eat most of it.
-                belligerent.Stock.Add(ResourceKind.Weapons, inKind * 1000d * 0.38d / ResourceKind.Weapons.UnitCostMillions);
+                // Aid is not all ammunition — vehicles, training and maintenance eat a third of
+                // it — but the ammunition share has to come close to covering consumption, or
+                // the depot never exists and cutting the flow lands the same quarter it is cut.
+                belligerent.Stock.Add(ResourceKind.Weapons, inKind * 1000d * 0.52d / ResourceKind.Weapons.UnitCostMillions);
                 belligerent.Stock.Add(ResourceKind.CheapInterceptors, inKind * 1000d * 0.12d / ResourceKind.CheapInterceptors.UnitCostMillions);
                 belligerent.Stock.Add(ResourceKind.HeavyInterceptors, inKind * 1000d * 0.18d / ResourceKind.HeavyInterceptors.UnitCostMillions);
             }
 
             // The war chest is not the whole budget: ordinary spending has first claim.
-            // Oil, aid and reserves are what actually fund the fighting.
-            economy.WarFundableBillions =
+            // Oil and aid are what actually fund the fighting, quarter by quarter.
+            double ordinary =
                 (fiscal * economy.MilitaryFiscalShare)
                 + oilRevenue
                 + (grant - inKind)
-                + (economy.ReservesBillions * economy.ReserveDrawRate)
                 - oilCost;
+
+            // The sovereign fund plugs whatever the quarter's revenue leaves short of the
+            // ceiling, and it is really liquidated doing so. A fund counted but never spent
+            // would make the barrel decorative: this is the line that puts it back in charge.
+            double warCeiling = economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare;
+            double liquidable = economy.ReservesBillions * economy.ReserveDrawRate;
+            double draw = Math.Clamp(warCeiling - ordinary, 0d, liquidable);
+
+            economy.ReservesBillions = Math.Max(0d, economy.ReservesBillions - draw);
+            economy.LastTurnReserveDrawBillions = draw;
+            economy.OrdinaryWarFundingBillions = ordinary;
+            economy.WarFundableBillions = ordinary + draw;
 
             economy.LastTurnOilRevenueBillions = oilRevenue;
             economy.LastTurnRevenueBillions = fiscal + oilRevenue + (grant - inKind) - oilCost;

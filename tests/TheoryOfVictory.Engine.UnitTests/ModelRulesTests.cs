@@ -43,11 +43,14 @@ public sealed class ModelRulesTests
     [Fact]
     public void SupportHolding_FreezesTheFront_NobodyWins()
     {
-        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
+        Scenario scenario = UkraineScenario.Build(SupportVariant.Holds);
+        PlayedGame game = new GameRunner().Run(scenario);
 
         Assert.NotNull(game.Outcome);
         Assert.Equal("frozen_front", game.Outcome!.Code);
-        Assert.Equal(16, game.Turns.Count);
+
+        // Nobody wins means nobody breaks: the run has to go the distance.
+        Assert.Equal(scenario.TurnCount, game.Turns.Count);
     }
 
     [Fact]
@@ -166,6 +169,140 @@ public sealed class ModelRulesTests
 
         // Drones cut the shells needed for the same effect; they never inflate combat power.
         Assert.True(after < before);
+    }
+
+    [Fact]
+    public void SovereignFund_IsReallySpent_SoTheBarrelDecides()
+    {
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Resolve));
+
+        // A fund counted as fundable but never liquidated makes the oil price decorative.
+        // It has to be visibly emptied by the war it is paying for.
+        double first = game.Turns[0].Invader.Reserves;
+        double last = game.Turns[^1].Invader.Reserves;
+        Assert.True(last < first * 0.5d, $"Réserves {first:F0} → {last:F0} : le fonds n'est pas ponctionné.");
+
+        // And once it can no longer plug the hole, the war effort is visibly underfunded.
+        Assert.True(game.Turns[^1].Invader.FundingGap > 0.25d);
+    }
+
+    [Fact]
+    public void TheAsphyxiationIsVisible_InvaderPowerFalls_WithoutLosingGround()
+    {
+        PlayedGame resolve = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Resolve));
+
+        double peak = 0d;
+        foreach (TurnSnapshot turn in resolve.Turns)
+        {
+            peak = Math.Max(peak, turn.Invader.CombatPower);
+        }
+
+        // The player must be able to watch the invader weaken on the one number they read,
+        // turn after turn. A rear that breaks while combat power keeps climbing teaches
+        // the opposite of the thesis.
+        Assert.True(
+            resolve.Turns[^1].Invader.CombatPower < peak * 0.7d,
+            $"Pic {peak:F0}, fin {resolve.Turns[^1].Invader.CombatPower:F0} : l'asphyxie ne se voit pas.");
+
+        // And it is not done by taking ground: the defender never runs a real offensive.
+        Assert.True(resolve.Turns[^1].SquareKilometresGained > 0d);
+    }
+
+    [Fact]
+    public void ThreatIsSignalledBeforeItStrikes_NotOnTheTurnItLands()
+    {
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
+
+        int collapseTurn = game.Turns.Count;
+        int firstCritical = int.MaxValue;
+
+        foreach (TurnSnapshot turn in game.Turns)
+        {
+            foreach (PressureAlert alert in turn.Alerts)
+            {
+                if (alert.SideCode == Side.Defender.Code && alert.Level == AlertLevel.Critical)
+                {
+                    firstCritical = Math.Min(firstCritical, turn.Turn);
+                }
+            }
+        }
+
+        // The whole point of a threshold model is that the player can see it coming.
+        Assert.True(firstCritical < collapseTurn - 1, $"Première alerte critique T{firstCritical}, chute T{collapseTurn}.");
+    }
+
+    [Fact]
+    public void CuttingSupport_DoesNothingForTwoTurns_ThenEverythingAtOnce()
+    {
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
+
+        // Aid stops at turn 6. The depot still covers the need that turn and the next:
+        // this latency is the demonstration, not an artefact of it.
+        Assert.Equal(1d, game.Turns[5].Defender.Coverage["weapons"], 2);
+        Assert.Equal(1d, game.Turns[6].Defender.Coverage["weapons"], 2);
+
+        // The turn after, the depot is empty and coverage falls off a cliff.
+        Assert.True(game.Turns[7].Defender.Coverage["weapons"] < 0.6d);
+    }
+
+    [Fact]
+    public void AnArmyThatCannotBePaid_Shrinks_WithoutAnyAssault()
+    {
+        Belligerent side = UkraineScenario.Build(SupportVariant.Holds).Invader;
+        Manpower manpower = side.Manpower;
+
+        manpower.TargetForceSize = 500d;
+        manpower.PayableForceSize = double.PositiveInfinity;
+        Assert.Equal(500d, manpower.EffectiveForceSize);
+
+        // Payroll is most of a war budget: it is how a collapsing revenue reaches the line.
+        manpower.PayableForceSize = 300d;
+        Assert.Equal(300d, manpower.EffectiveForceSize);
+    }
+
+    [Fact]
+    public void DeepStrikeDeck_BeatsFrontalAttrition_OnTheSameWarAndTheSameBudget()
+    {
+        List<DuelResult> duels = DeckDuel.Compare();
+
+        DuelResult deepStrike = duels.Single(duel => duel.Archetype == DeckArchetype.DeepStrike);
+        DuelResult attrition = duels.Single(duel => duel.Archetype == DeckArchetype.FrontalAttrition);
+
+        // The design document names this as the balance criterion: if the grinding deck
+        // wins, the game says the opposite of its own thesis.
+        Assert.True(deepStrike.DefenderWins, "Le deck frappe profonde ne gagne pas.");
+        Assert.False(attrition.DefenderWins, "Le deck attrition frontale gagne : la thèse est inversée.");
+
+        // And the losing deck is the one that took the most ground — you can lose the war
+        // while gaining hexes every single turn.
+        Assert.True(
+            attrition.GroundTaken > deepStrike.GroundTaken * 3d,
+            $"Attrition {attrition.GroundTaken:F0} km², frappe profonde {deepStrike.GroundTaken:F0} km².");
+    }
+
+    [Fact]
+    public void NoDeckIsDominant_TheyAreComparedAtEqualPoliticalCost()
+    {
+        List<DuelResult> duels = DeckDuel.Compare();
+
+        foreach (DuelResult duel in duels)
+        {
+            Assert.Equal(DeckDuel.CapitalBudget, duel.PoliticalCost, 0);
+        }
+    }
+
+    [Fact]
+    public void ACounterCard_StopsItsTarget_WhichIsPlayedAndDoesNothing()
+    {
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Resolve));
+
+        PlayedCard? countered = game.Turns
+            .SelectMany(turn => turn.CardsPlayed)
+            .FirstOrDefault(card => card.Countered);
+
+        // The counter type existed in the model with no card ever using it: the bluff the
+        // design rests on could not happen. It has to be reachable in a real run.
+        Assert.NotNull(countered);
     }
 
     [Fact]

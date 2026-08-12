@@ -51,6 +51,7 @@ public static class CardLibrary
                 PoliticalCost = dto.PoliticalCost,
                 MoneyCost = dto.MoneyCost,
                 BaseProbability = dto.BaseProbability,
+                CountersCardCode = dto.CountersCardCode,
                 Effects = effects,
             });
         }
@@ -98,6 +99,8 @@ public static class CardLibrary
         public double MoneyCost { get; set; }
 
         public double BaseProbability { get; set; }
+
+        public string? CountersCardCode { get; set; }
 
         public List<EffectDto> Effects { get; set; } = [];
     }

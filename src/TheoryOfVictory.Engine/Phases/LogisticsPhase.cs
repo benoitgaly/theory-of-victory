@@ -47,7 +47,12 @@ public sealed class LogisticsPhase : ITurnPhase
             return;
         }
 
-        double drawn = belligerent.Stock.Consume(kind, required);
+        // A depot exists to be drawn on harder than the front consumes: what leaks on the
+        // way has to leave the warehouse too. Capping the draw at the need would make the
+        // pile decorative — and a stock that cannot absorb a bad quarter buys no latency,
+        // which is precisely the latency the whole demonstration rests on.
+        double leavingDepot = required / belligerent.TransmissionRate;
+        double drawn = belligerent.Stock.Consume(kind, leavingDepot);
         double delivered = drawn * belligerent.TransmissionRate;
 
         belligerent.SetDelivered(kind, delivered);

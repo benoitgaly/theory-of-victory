@@ -24,6 +24,7 @@ public static class CardPrinter
             PoliticalCost = card.PoliticalCost,
             MoneyCost = card.MoneyCost,
             RulesText = rules,
+            CountersCardCode = card.CountersCardCode,
             Art = card.Family,
         };
     }

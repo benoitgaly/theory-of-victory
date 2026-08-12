@@ -81,6 +81,15 @@ public sealed class TurnSnapshot
     /// <summary>Cumulative ground taken since the start, the figure the reports quote.</summary>
     public double SquareKilometresGained { get; init; }
 
+    /// <summary>
+    /// The single sentence this turn is about, picked from the sharpest pressure on the
+    /// board. What a turn-by-turn replay needs to give a reason to press next.
+    /// </summary>
+    public string Headline { get; init; } = string.Empty;
+
+    /// <summary>Both sides' alerts, sharpest first. The board's tension strip.</summary>
+    public List<PressureAlert> Alerts { get; init; } = [];
+
     public GameOutcome? Outcome { get; init; }
 }
 
@@ -169,6 +178,9 @@ public sealed class SideSnapshot
 
     public double PoliticalCapital { get; init; }
 
+    /// <summary>Cumulated political capital the scripted calendar spent beyond what was held.</summary>
+    public double PoliticalCapitalOverdraft { get; init; }
+
     public double ExternalWill { get; init; }
 
     public double SanctionsPrice { get; init; }
@@ -188,4 +200,22 @@ public sealed class SideSnapshot
     public double Dependency { get; init; }
 
     public bool HasCollapsed { get; init; }
+
+    /// <summary>Sovereign reserves actually liquidated this turn to hold the war effort up.</summary>
+    public double ReserveDraw { get; init; }
+
+    /// <summary>What this quarter's own revenue funds, before touching the sovereign fund.</summary>
+    public double OrdinaryWarFunding { get; init; }
+
+    /// <summary>What the war effort could fund this turn, reserves included.</summary>
+    public double WarFundable { get; init; }
+
+    /// <summary>What it wanted to spend. The gap between the two is where regimes die.</summary>
+    public double WarBudgetCeiling { get; init; }
+
+    /// <summary>Share of the intended war effort this turn's revenue could not cover.</summary>
+    public double FundingGap { get; init; }
+
+    /// <summary>Everything forward-looking: countdowns, depot horizons, threat index, alerts.</summary>
+    public PressureReading? Pressure { get; init; }
 }

@@ -41,6 +41,13 @@ public sealed class Belligerent
     /// <summary>Units that left the factories this turn, before transmission losses.</summary>
     public Dictionary<string, double> ProducedThisTurn { get; } = [];
 
+    /// <summary>
+    /// Share of the rations and fuel the treasury could not pay for this turn. Sustainment
+    /// is a charge and not a decision, so this is only ever non-zero when the cash has run
+    /// out — which makes it one of the sharpest signals on the board.
+    /// </summary>
+    public double SustainmentShortfall { get; set; }
+
     /// <summary>Sustainable combat power: the scarcest resource, never the sum.</summary>
     public double SustainableCombatPower { get; set; }
 
