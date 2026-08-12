@@ -38,6 +38,8 @@ public sealed class LogisticsPhase : ITurnPhase
 
     private void Deliver(Belligerent belligerent, ResourceKind kind, double required)
     {
+        belligerent.NeedThisTurn[kind.Code] = required;
+
         if (required <= 0d)
         {
             belligerent.SetDelivered(kind, 0d);

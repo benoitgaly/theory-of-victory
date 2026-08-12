@@ -10,6 +10,14 @@ public static class CardEffectApplier
 {
     public static void Apply(GameState state, CardEffect effect, List<string> narrative)
     {
+        // The oil price is a property of the world, not of a side: apply it once.
+        if (effect.Kind == EffectKind.OilPriceDelta)
+        {
+            state.OilPriceShift += effect.Value;
+            state.OilPrice = Math.Max(18d, state.OilPrice + effect.Value);
+            return;
+        }
+
         foreach (Side side in Resolve(effect.TargetSideCode))
         {
             Belligerent belligerent = state.Get(side);
@@ -33,10 +41,6 @@ public static class CardEffectApplier
 
         switch (effect.Kind)
         {
-            case EffectKind.OilPriceDelta:
-                state.OilPrice = Math.Max(15d, state.OilPrice + value);
-                break;
-
             case EffectKind.AidPledgeDelta:
                 belligerent.Foreign.PledgedPerTurnBillions = Math.Max(0d, belligerent.Foreign.PledgedPerTurnBillions + value);
                 break;

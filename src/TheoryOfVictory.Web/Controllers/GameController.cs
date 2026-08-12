@@ -25,8 +25,19 @@ public sealed class GameController : Controller
     public IActionResult Index()
     {
         List<PlayedGame> games = [.. _library.All];
+
+        var board = _library.BoardSectors.Select(sector => new
+        {
+            code = sector.Code,
+            name = sector.Name,
+            lon = sector.Longitude,
+            lat = sector.Latitude,
+            pushLon = sector.PushLongitude,
+            pushLat = sector.PushLatitude,
+        });
+
         ViewBag.GamesJson = JsonSerializer.Serialize(games, JsonOptions);
-        ViewBag.Games = games;
+        ViewBag.BoardJson = JsonSerializer.Serialize(board, JsonOptions);
         return View();
     }
 }

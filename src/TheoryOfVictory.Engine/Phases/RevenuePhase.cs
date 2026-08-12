@@ -18,7 +18,7 @@ public sealed class RevenuePhase : ITurnPhase
     public void Execute(TurnContext context)
     {
         GameState state = context.State;
-        state.OilPrice = context.Scenario.OilPriceAt(state.Turn);
+        state.OilPrice = Math.Max(18d, context.Scenario.OilPriceAt(state.Turn) + state.OilPriceShift);
 
         foreach (Side side in Side.All)
         {
@@ -53,6 +53,15 @@ public sealed class RevenuePhase : ITurnPhase
                 belligerent.Stock.Add(ResourceKind.CheapInterceptors, inKind * 1000d * 0.12d / ResourceKind.CheapInterceptors.UnitCostMillions);
                 belligerent.Stock.Add(ResourceKind.HeavyInterceptors, inKind * 1000d * 0.18d / ResourceKind.HeavyInterceptors.UnitCostMillions);
             }
+
+            // The war chest is not the whole budget: ordinary spending has first claim.
+            // Oil, aid and reserves are what actually fund the fighting.
+            economy.WarFundableBillions =
+                (fiscal * economy.MilitaryFiscalShare)
+                + oilRevenue
+                + (grant - inKind)
+                + (economy.ReservesBillions * economy.ReserveDrawRate)
+                - oilCost;
 
             economy.LastTurnOilRevenueBillions = oilRevenue;
             economy.LastTurnRevenueBillions = fiscal + oilRevenue + (grant - inKind) - oilCost;

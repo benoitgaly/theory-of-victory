@@ -26,6 +26,7 @@ public sealed class ProductionPhase : ITurnPhase
 
     private void DeliverOrders(Belligerent belligerent)
     {
+        belligerent.ProducedThisTurn.Clear();
         List<ProductionOrder> due = [];
         foreach (ProductionOrder order in belligerent.Industry.Orders)
         {
@@ -42,7 +43,11 @@ public sealed class ProductionPhase : ITurnPhase
 
             // Rigged procurement delivers substandard goods: the units exist, they underperform.
             double qualityLoss = Math.Clamp(belligerent.Politics.Corruption / 100d * 0.2d, 0d, 0.2d);
-            belligerent.Stock.Add(order.Kind, order.Units * (1d - qualityLoss));
+            double usable = order.Units * (1d - qualityLoss);
+            belligerent.Stock.Add(order.Kind, usable);
+
+            belligerent.ProducedThisTurn[order.Kind.Code] =
+                belligerent.ProducedThisTurn.GetValueOrDefault(order.Kind.Code) + usable;
         }
     }
 

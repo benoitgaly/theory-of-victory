@@ -45,11 +45,17 @@ La V1.0 ne comporte **aucun aléa** : les cartes tombent à des tours écrits d'
 suivent une doctrine fixée par le scénario. Le moteur est néanmoins écrit pour que la source
 aléatoire et la couche de décision se rebranchent sans réécriture.
 
-**Démonstration V1** : le même départ est rejoué **deux fois côte à côte**, avec un seul paramètre
-changé — le soutien extérieur tient, ou il s'arrête au tour 6. Déroulé A : les deux camps
-régénèrent, le front se fige, personne ne gagne. Déroulé B : rien ne bouge pendant deux tours,
-puis les flux passent sous le seuil et le front cède d'un bloc. Une partie ne prouve rien ; une
-comparaison prouve tout.
+**Démonstration V1** : le même départ est rejoué **trois fois**, seules changent les cartes que
+l'Occident décide de jouer. *L'Occident joue ses cartes* → l'Ukraine l'emporte par asphyxie
+financière de l'adversaire, sans prendre un hexagone de plus. *Le soutien tient, sans plus* → front
+figé, personne ne gagne. *Le soutien s'arrête* → rien pendant deux tours, puis tout cède. Une partie
+ne prouve rien ; une comparaison prouve tout.
+
+**Leçon de calibration, apprise en construisant le déroulé de victoire** : tant que le budget de
+guerre était plafonné en simple part du PIB, couper les recettes pétrolières ne changeait
+strictement rien. Il a fallu adosser l'effort de guerre à ce que les recettes du trimestre
+**financent réellement** — impôt affectable, pétrole, aide, ponction sur les réserves — pour que le
+baril redevienne ce qu'il est dans la réalité : le robinet de la guerre.
 
 ---
 

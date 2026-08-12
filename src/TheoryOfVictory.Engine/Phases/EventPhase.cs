@@ -54,8 +54,7 @@ public sealed class EventPhase : ITurnPhase
                 continue;
             }
 
-            context.CardsPlayed.Add(card.Title);
-            context.Say($"Carte « {card.Title} » — {card.Description}");
+            context.CardsPlayed.Add(CardPrinter.Print(card));
 
             foreach (CardEffect effect in card.Effects)
             {

@@ -17,6 +17,9 @@ public sealed class GameState
     /// <summary>Brent in dollars. One variable, four channels, all pushing the same way.</summary>
     public double OilPrice { get; set; }
 
+    /// <summary>Lasting shift applied by cards on top of the calendar, never reset.</summary>
+    public double OilPriceShift { get; set; }
+
     public List<PendingEffect> PendingEffects { get; } = [];
 
     public List<TurnSnapshot> History { get; } = [];
@@ -64,7 +67,7 @@ public sealed class TurnSnapshot
 
     public List<SectorResolution> Sectors { get; init; } = [];
 
-    public List<string> CardsPlayed { get; init; } = [];
+    public List<PlayedCard> CardsPlayed { get; init; } = [];
 
     public List<string> Narrative { get; init; } = [];
 
@@ -121,6 +124,24 @@ public sealed class SideSnapshot
     public Dictionary<string, double> Coverage { get; init; } = [];
 
     public Dictionary<string, double> Stocks { get; init; } = [];
+
+    /// <summary>What the front required, per flow — the denominator of every coverage.</summary>
+    public Dictionary<string, double> Need { get; init; } = [];
+
+    public Dictionary<string, double> Delivered { get; init; } = [];
+
+    public Dictionary<string, double> Produced { get; init; } = [];
+
+    public Dictionary<string, double> Capacity { get; init; } = [];
+
+    /// <summary>Budget per spending line, for the economic flow view.</summary>
+    public Dictionary<string, double> Allocation { get; init; } = [];
+
+    public double FiscalRevenue { get; init; }
+
+    public double InKindAid { get; init; }
+
+    public double TargetForceSize { get; init; }
 
     public double GridAvailableGw { get; init; }
 

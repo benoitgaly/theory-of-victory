@@ -9,7 +9,7 @@ CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
 
 GameRunner runner = new();
 
-foreach (SupportVariant variant in new[] { SupportVariant.Holds, SupportVariant.Collapses })
+foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
 {
     Scenario scenario = UkraineScenario.Build(variant);
     PlayedGame game = runner.Run(scenario);
@@ -41,9 +41,9 @@ foreach (SupportVariant variant in new[] { SupportVariant.Holds, SupportVariant.
             turn.SquareKilometresGained,
             turn.Defender.GridAvailableGw));
 
-        foreach (string card in turn.CardsPlayed)
+        foreach (PlayedCard card in turn.CardsPlayed)
         {
-            Console.WriteLine($"        ► {card}");
+            Console.WriteLine($"        ► {card.Title}");
         }
     }
 

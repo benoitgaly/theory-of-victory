@@ -30,6 +30,16 @@ public sealed class FrontSector
     /// <summary>How much this sector is worth if taken: rail nodes, industry, symbolism.</summary>
     public double StrategicValue { get; init; } = 1d;
 
+    /// <summary>Anchor of the sector on the real contact line, February 2022.</summary>
+    public double Longitude { get; init; }
+
+    public double Latitude { get; init; }
+
+    /// <summary>Degrees the line moves per hex gained, along this sector's axis of advance.</summary>
+    public double PushLongitude { get; init; }
+
+    public double PushLatitude { get; init; }
+
     public double KilometresGained
     {
         get { return HexesGained * 10d; }

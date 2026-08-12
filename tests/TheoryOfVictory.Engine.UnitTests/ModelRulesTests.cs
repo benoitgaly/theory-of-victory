@@ -26,6 +26,21 @@ public sealed class ModelRulesTests
     }
 
     [Fact]
+    public void PlayingTheCards_BreaksTheInvader_WithoutTakingGround()
+    {
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Resolve));
+
+        Assert.NotNull(game.Outcome);
+        Assert.Equal(Side.Defender.Code, game.Outcome!.WinnerSideCode);
+
+        // The invader breaks at the rear, not at the front: its power collapses while
+        // the defender's holds. Cutting the money is what did it.
+        TurnSnapshot last = game.Turns[^1];
+        Assert.True(last.Invader.CombatPower < game.Turns[4].Invader.CombatPower);
+        Assert.True(last.Defender.ForceGenerationRatio >= 0.9d);
+    }
+
+    [Fact]
     public void SupportHolding_FreezesTheFront_NobodyWins()
     {
         PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));

@@ -12,7 +12,7 @@ public sealed class ControlPhase : ITurnPhase
 
     public const int TurnsBeforeCollapse = 3;
 
-    private const double RegimeCollapseStress = 72d;
+    private const double RegimeCollapseStress = 58d;
 
     public string Name
     {

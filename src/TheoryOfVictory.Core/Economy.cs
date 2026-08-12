@@ -28,6 +28,18 @@ public sealed class Economy
     /// </summary>
     public double WarBudgetCeilingShare { get; set; } = 0.03d;
 
+    /// <summary>
+    /// Share of ordinary tax revenue the state can divert to the war. The rest of the
+    /// war chest has to come from oil, aid or reserves — which is why the barrel decides.
+    /// </summary>
+    public double MilitaryFiscalShare { get; set; } = 0.1d;
+
+    /// <summary>Share of sovereign reserves that can be burnt in a single quarter.</summary>
+    public double ReserveDrawRate { get; set; } = 0.06d;
+
+    /// <summary>What this turn's revenue actually makes fundable, computed at the revenue phase.</summary>
+    public double WarFundableBillions { get; set; }
+
     /// <summary>Baseline civilian growth per turn, before war effects.</summary>
     public double CivilianGrowthPerTurn { get; set; } = 0.004d;
 

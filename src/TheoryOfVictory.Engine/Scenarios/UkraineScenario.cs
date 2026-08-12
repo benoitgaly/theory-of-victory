@@ -2,14 +2,17 @@ using TheoryOfVictory.Core;
 
 namespace TheoryOfVictory.Engine.Scenarios;
 
-/// <summary>The single parameter that separates the two runs.</summary>
+/// <summary>What the West chooses to do with the cards it holds.</summary>
 public enum SupportVariant
 {
-    /// <summary>Foreign support wavers but holds. Both sides regenerate; the front freezes.</summary>
-    Holds = 0,
+    /// <summary>The cards are played: the money is cut, and the war stops paying those who run it.</summary>
+    Resolve = 0,
 
-    /// <summary>Foreign support stops at turn 6. Nothing happens for two turns, then everything does.</summary>
-    Collapses = 1,
+    /// <summary>Support wavers but holds at today's level. Both sides regenerate; the front freezes.</summary>
+    Holds = 1,
+
+    /// <summary>Support stops at turn 6. Nothing happens for two turns, then everything does.</summary>
+    Collapses = 2,
 }
 
 /// <summary>
@@ -34,18 +37,36 @@ public static class UkraineScenario
 
         Scenario scenario = new()
         {
-            Code = variant == SupportVariant.Holds ? "ukraine_2022_a" : "ukraine_2022_b",
-            Title = variant == SupportVariant.Holds
-                ? "Déroulé A — le soutien tient"
-                : "Déroulé B — le soutien s'arrête",
-            Subtitle = variant == SupportVariant.Holds
-                ? "Les deux camps régénèrent"
-                : "Un seul paramètre change, au tour 6",
-            Description = variant == SupportVariant.Holds
-                ? "Le soutien extérieur vacille mais ne rompt jamais. Les deux camps parviennent à "
-                    + "remplacer ce qu'ils consomment, et le front se fige. Personne ne gagne."
-                : "Même situation de départ, mêmes cartes, même calendrier pétrolier. Seule différence : "
-                    + "au tour 6, le flux gratuit s'arrête. Rien ne bouge pendant deux tours, puis tout cède.",
+            Code = variant switch
+            {
+                SupportVariant.Resolve => "ukraine_2022_resolve",
+                SupportVariant.Holds => "ukraine_2022_holds",
+                _ => "ukraine_2022_collapse",
+            },
+            Title = variant switch
+            {
+                SupportVariant.Resolve => "L'Occident joue ses cartes",
+                SupportVariant.Holds => "Le soutien tient, sans plus",
+                _ => "Le soutien s'arrête",
+            },
+            Subtitle = variant switch
+            {
+                SupportVariant.Resolve => "L'Ukraine l'emporte",
+                SupportVariant.Holds => "Front figé, personne ne gagne",
+                _ => "L'Ukraine cède",
+            },
+            Description = variant switch
+            {
+                SupportVariant.Resolve => "On ne prend pas de terrain : on coupe la caisse. Embargo sur les "
+                    + "composants, campagne trimestrielle sur le raffinage, baril effondré, aide rendue "
+                    + "prévisible. La guerre cesse de payer ceux qui la tiennent, et c'est l'arrière russe "
+                    + "qui cède avant le front ukrainien.",
+                SupportVariant.Holds => "Le soutien extérieur vacille mais ne rompt jamais, sans jamais non "
+                    + "plus s'intensifier. Les deux camps remplacent ce qu'ils consomment et le front se fige. "
+                    + "L'égalité industrielle produit l'enlisement, pas la paix.",
+                _ => "Même départ, mêmes cartes, même calendrier pétrolier. Seule différence : au tour 6, le "
+                    + "flux gratuit s'arrête. Rien ne bouge pendant deux tours, puis tout cède d'un bloc.",
+            },
             StartYear = 2022,
             StartSeason = Season.Winter,
             TurnCount = 16,
@@ -96,6 +117,8 @@ public static class UkraineScenario
         russia.Economy.ReservesBillions = 310d;
         russia.Economy.FiscalCaptureRate = 0.088d;
         russia.Economy.WarBudgetCeilingShare = 0.021d;
+        russia.Economy.MilitaryFiscalShare = 0.085d;
+        russia.Economy.ReserveDrawRate = 0.055d;
         russia.Economy.CivilianGrowthPerTurn = 0.003d;
         russia.Economy.MilitarySpendingMultiplier = 0.6d;
         russia.Economy.CapitalDecayPerTurn = 0.007d;
@@ -176,6 +199,8 @@ public static class UkraineScenario
         ukraine.Economy.ReservesBillions = 29d;
         ukraine.Economy.FiscalCaptureRate = 0.072d;
         ukraine.Economy.WarBudgetCeilingShare = 0.115d;
+        ukraine.Economy.MilitaryFiscalShare = 0.62d;
+        ukraine.Economy.ReserveDrawRate = 0.09d;
         ukraine.Economy.CivilianGrowthPerTurn = -0.02d;
         ukraine.Economy.MilitarySpendingMultiplier = 0.35d;
         ukraine.Economy.CapitalDecayPerTurn = 0.014d;
@@ -222,6 +247,10 @@ public static class UkraineScenario
         return ukraine;
     }
 
+    /// <summary>
+    /// Anchored on the real February 2022 contact line, north to south. Push vectors point
+    /// along each sector's actual axis of advance, in degrees per ten-kilometre hex.
+    /// </summary>
     private static List<FrontSector> BuildSectors()
     {
         return
@@ -234,6 +263,10 @@ public static class UkraineScenario
                 Urbanisation = 0.35d,
                 Width = 7,
                 StrategicValue = 1.3d,
+                Longitude = 36.95d,
+                Latitude = 50.05d,
+                PushLongitude = -0.095d,
+                PushLatitude = -0.045d,
             },
             new FrontSector
             {
@@ -243,6 +276,10 @@ public static class UkraineScenario
                 Urbanisation = 0.12d,
                 Width = 6,
                 StrategicValue = 1.1d,
+                Longitude = 37.75d,
+                Latitude = 49.55d,
+                PushLongitude = -0.134d,
+                PushLatitude = 0d,
             },
             new FrontSector
             {
@@ -252,6 +289,10 @@ public static class UkraineScenario
                 Urbanisation = 0.08d,
                 Width = 5,
                 StrategicValue = 0.9d,
+                Longitude = 38.05d,
+                Latitude = 49.0d,
+                PushLongitude = -0.134d,
+                PushLatitude = 0d,
             },
             new FrontSector
             {
@@ -261,6 +302,10 @@ public static class UkraineScenario
                 Urbanisation = 0.4d,
                 Width = 5,
                 StrategicValue = 1.2d,
+                Longitude = 38.15d,
+                Latitude = 48.6d,
+                PushLongitude = -0.13d,
+                PushLatitude = 0.02d,
             },
             new FrontSector
             {
@@ -270,6 +315,10 @@ public static class UkraineScenario
                 Urbanisation = 0.22d,
                 Width = 7,
                 StrategicValue = 1.5d,
+                Longitude = 37.8d,
+                Latitude = 48.25d,
+                PushLongitude = -0.134d,
+                PushLatitude = 0d,
             },
             new FrontSector
             {
@@ -279,6 +328,10 @@ public static class UkraineScenario
                 Urbanisation = 0.18d,
                 Width = 5,
                 StrategicValue = 0.9d,
+                Longitude = 37.3d,
+                Latitude = 47.75d,
+                PushLongitude = -0.12d,
+                PushLatitude = 0.035d,
             },
             new FrontSector
             {
@@ -288,6 +341,10 @@ public static class UkraineScenario
                 Urbanisation = 0.15d,
                 Width = 7,
                 StrategicValue = 1.4d,
+                Longitude = 35.9d,
+                Latitude = 47.45d,
+                PushLongitude = -0.09d,
+                PushLatitude = 0.055d,
             },
             new FrontSector
             {
@@ -297,6 +354,10 @@ public static class UkraineScenario
                 Urbanisation = 0.2d,
                 Width = 6,
                 StrategicValue = 1.2d,
+                Longitude = 33.4d,
+                Latitude = 46.75d,
+                PushLongitude = -0.085d,
+                PushLatitude = 0.06d,
             },
         ];
     }
@@ -401,9 +462,33 @@ public static class UkraineScenario
             calendar.Add(new ScheduledCard { Turn = 9, CardCode = "aid_blocked" });
             calendar.Add(new ScheduledCard { Turn = 11, CardCode = "aid_unblocked" });
         }
-        else
+        else if (variant == SupportVariant.Collapses)
         {
             calendar.Add(new ScheduledCard { Turn = 6, CardCode = "aid_collapse" });
+        }
+        else
+        {
+            // The cards the West actually holds, played early and kept up. None of them
+            // takes a single hex: every one of them cuts a flow at its source.
+            calendar.RemoveAll(c => c.CardCode is "attention_elsewhere" or "foreign_shells" or "failed_offensive");
+
+            calendar.AddRange(
+            [
+                new ScheduledCard { Turn = 3, CardCode = "component_embargo_total" },
+                new ScheduledCard { Turn = 4, CardCode = "aid_predictable" },
+                new ScheduledCard { Turn = 5, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 6, CardCode = "frozen_assets_released" },
+                new ScheduledCard { Turn = 7, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 8, CardCode = "oil_price_crash" },
+                new ScheduledCard { Turn = 9, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 9, CardCode = "supplier_withdraws" },
+                new ScheduledCard { Turn = 10, CardCode = "sovereign_fund_empty" },
+                new ScheduledCard { Turn = 11, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 12, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 13, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 13, CardCode = "elite_break" },
+                new ScheduledCard { Turn = 14, CardCode = "refinery_campaign_sustained" },
+            ]);
         }
 
         scenario.Calendar.AddRange(calendar);

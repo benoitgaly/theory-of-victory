@@ -94,10 +94,16 @@ public sealed class TurnEngine
             stocks[kind.Code] = belligerent.Stock.GetActual(kind);
         }
 
-        Dictionary<string, double> coverage = [];
-        foreach (KeyValuePair<string, double> entry in belligerent.CoverageThisTurn)
+        Dictionary<string, double> coverage = new(belligerent.CoverageThisTurn);
+        Dictionary<string, double> need = new(belligerent.NeedThisTurn);
+        Dictionary<string, double> delivered = new(belligerent.DeliveredThisTurn);
+        Dictionary<string, double> produced = new(belligerent.ProducedThisTurn);
+        Dictionary<string, double> allocation = new(belligerent.AllocationThisTurn);
+
+        Dictionary<string, double> capacity = [];
+        foreach (ResourceKind kind in ResourceKind.All)
         {
-            coverage[entry.Key] = entry.Value;
+            capacity[kind.Code] = belligerent.Industry.GetCapacityPerTurn(kind);
         }
 
         string? bottleneckName = belligerent.BottleneckCode switch
@@ -130,6 +136,16 @@ public sealed class TurnEngine
             BottleneckName = bottleneckName,
             Coverage = coverage,
             Stocks = stocks,
+            Need = need,
+            Delivered = delivered,
+            Produced = produced,
+            Capacity = capacity,
+            Allocation = allocation,
+            FiscalRevenue = belligerent.Economy.HeadlineGdpBillions * belligerent.Economy.FiscalCaptureRate,
+            InKindAid = belligerent.Foreign.Mode == SupportMode.Granted
+                ? belligerent.Foreign.EffectiveGrantBillions * belligerent.Foreign.InKindShare
+                : 0d,
+            TargetForceSize = belligerent.Manpower.TargetForceSize,
             GridAvailableGw = belligerent.Grid.AvailableCapacityGw,
             GridDemandGw = belligerent.Grid.BaseDemandGw,
             GridShortfall = belligerent.Grid.ShortfallRatio(Season.Winter),

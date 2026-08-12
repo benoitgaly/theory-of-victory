@@ -71,8 +71,8 @@ public sealed class PoliticalState
             double visible = PopularDiscontent * (1d - (Repression * 0.7d));
             double elite = Math.Max(0d, 100d - EliteCohesion);
 
-            // Elite fracture weighs double: regimes fall from inside.
-            return Math.Clamp((visible + (elite * 2d) + LatentTension) / 4d, 0d, 100d);
+            // Elite fracture weighs double: regimes fall from inside, not from the street.
+            return Math.Clamp((visible + (elite * 2d) + LatentTension) / 3.2d, 0d, 100d);
         }
     }
 

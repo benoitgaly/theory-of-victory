@@ -34,8 +34,17 @@ public sealed class AllocationPhase : ITurnPhase
         BuySustainment(context, belligerent);
 
         double budgetCeiling = economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare;
-        double budget = Math.Min(economy.TreasuryBillions, budgetCeiling);
+        double fundable = Math.Max(0d, economy.WarFundableBillions);
+
+        // Three ceilings, and the war takes the lowest: what it holds, what the economy
+        // can bear, and what this quarter's revenue actually funds.
+        double budget = Math.Min(Math.Min(economy.TreasuryBillions, budgetCeiling), fundable);
         double withheld = economy.TreasuryBillions - budget;
+
+        if (fundable < budgetCeiling * 0.8d && fundable > 0d)
+        {
+            context.Say($"{belligerent.Name} : effort de guerre bridé par les recettes, {fundable:F1} Md finançables seulement.");
+        }
 
         if (budget <= 0d)
         {
@@ -49,6 +58,7 @@ public sealed class AllocationPhase : ITurnPhase
         }
 
         belligerent.AirDefence.RearShare = doctrine.RearDefenceShare;
+        belligerent.AllocationThisTurn.Clear();
 
         double unspent = 0d;
         double militarySpend = 0d;
@@ -57,6 +67,22 @@ public sealed class AllocationPhase : ITurnPhase
         {
             return budget * share / total;
         }
+
+        void Book(string line, double amount)
+        {
+            belligerent.AllocationThisTurn[line] = amount;
+        }
+
+        Book("recruitment", Share(doctrine.RecruitmentShare));
+        Book("weapons", Share(doctrine.WeaponsShare));
+        Book("strike", Share(doctrine.StrikeVectorsShare));
+        Book("defence", Share(doctrine.AirDefenceShare));
+        Book("expansion", Share(doctrine.IndustrialExpansionShare));
+        Book("innovation", Share(doctrine.InnovationShare));
+        Book("fortification", Share(doctrine.FortificationShare));
+        Book("audit", Share(doctrine.AntiCorruptionShare));
+        Book("civilian", Share(doctrine.CivilianShare));
+        Book("foreign", Share(doctrine.ForeignPurchaseShare));
 
         // Recruitment: contract bonuses are the cheapest politically, the dearest fiscally.
         double recruitBudget = Share(doctrine.RecruitmentShare);

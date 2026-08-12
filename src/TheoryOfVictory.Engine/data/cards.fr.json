@@ -272,6 +272,117 @@
       ]
     },
     {
+      "code": "aid_predictable",
+      "title": "Aide pluriannuelle garantie",
+      "family": "Politique occidentale",
+      "description": "Ce qui change tout n'est pas le montant, c'est la prévisibilité : on peut enfin planifier une industrie sur trois ans.",
+      "type": "Permanent",
+      "politicalCost": 8,
+      "baseProbability": 0.3,
+      "effects": [
+        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": 9.0 },
+        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 8 },
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": 12 }
+      ]
+    },
+    {
+      "code": "frozen_assets_released",
+      "title": "Transfert des avoirs gelés",
+      "family": "Politique occidentale",
+      "description": "Trois cents milliards immobilisés depuis le premier jour changent de camp. La sanction devient un budget.",
+      "type": "Instant",
+      "politicalCost": 10,
+      "baseProbability": 0.25,
+      "effects": [
+        { "kind": "TreasuryDelta", "targetSideCode": "defender", "value": 30 },
+        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": 5.0 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -6 }
+      ]
+    },
+    {
+      "code": "component_embargo_total",
+      "title": "Embargo étendu sur les composants",
+      "family": "Économique",
+      "description": "Les intermédiaires tombent un à un. Sans machines-outils, une chaîne de production ne se remplace pas : elle s'arrête.",
+      "type": "Permanent",
+      "politicalCost": 7,
+      "baseProbability": 0.25,
+      "effects": [
+        { "kind": "SanctionsComponentDelta", "targetSideCode": "invader", "value": 0.5, "delayTurns": 2 },
+        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": 0.3 }
+      ]
+    },
+    {
+      "code": "refinery_campaign_sustained",
+      "title": "Campagne soutenue sur le raffinage",
+      "family": "Énergie",
+      "description": "On y revient chaque trimestre, sans relâche. Un dégât réparable ne compte que si on le rouvre avant qu'il ne cicatrise.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.35,
+      "effects": [
+        { "kind": "RefiningIntegrityDelta", "targetSideCode": "invader", "value": -0.34 },
+        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": 0.35 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -4 }
+      ]
+    },
+    {
+      "code": "oil_price_crash",
+      "title": "Effondrement du prix du baril",
+      "family": "Économique",
+      "description": "Le baril sous les cinquante dollars fait ce qu'aucune offensive n'a réussi : il coupe la caisse.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.2,
+      "effects": [
+        { "kind": "OilPriceDelta", "value": -26 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -9 },
+        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": 6 }
+      ]
+    },
+    {
+      "code": "sovereign_fund_empty",
+      "title": "Le fonds souverain est vide",
+      "family": "Économique",
+      "description": "On ne pioche plus dans les réserves : il n'y en a plus. À partir d'ici, chaque obus se paie sur le vivant.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.2,
+      "effects": [
+        { "kind": "TreasuryDelta", "targetSideCode": "invader", "value": -25 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -12 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 10 }
+      ]
+    },
+    {
+      "code": "elite_break",
+      "title": "Rupture de l'appareil",
+      "family": "Politique interne",
+      "description": "La guerre a cessé de payer ceux qui la tenaient. Un régime ne tombe pas parce que la rue crie : il tombe parce que l'appareil lâche.",
+      "type": "Instant",
+      "politicalCost": 0,
+      "baseProbability": 0.1,
+      "effects": [
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -26 },
+        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 18 },
+        { "kind": "MoraleDelta", "targetSideCode": "invader", "value": -14 }
+      ]
+    },
+    {
+      "code": "supplier_withdraws",
+      "title": "Le fournisseur se retire",
+      "family": "Externe",
+      "description": "Le flux payant ne s'arrête jamais — sauf quand celui qui vend juge que le client ne gagnera pas.",
+      "type": "Instant",
+      "politicalCost": 6,
+      "baseProbability": 0.15,
+      "effects": [
+        { "kind": "ForeignSupplyCeilingDelta", "targetSideCode": "invader", "value": -6.0 },
+        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -8 }
+      ]
+    },
+    {
       "code": "harsh_winter",
       "title": "Hiver rigoureux",
       "family": "Énergie",

@@ -3,23 +3,15 @@
 }
 
 <header class="masthead">
-    <div class="masthead-title">
-        <h1>Theory&nbsp;of&nbsp;Victory</h1>
-        <p class="subtitle">
-            La guerre en Ukraine modélisée comme une compétition de génération de force.
-            Même situation de départ, un seul paramètre différent.
-        </p>
+    <div class="brand">
+        <div class="brand-mark">TV</div>
+        <div>
+            <h1>Theory of Victory</h1>
+            <p class="subtitle">You have the cards in hand</p>
+        </div>
     </div>
     <div class="variant-picker" id="variantPicker"></div>
 </header>
-
-<section class="thesis">
-    <p>
-        <strong>Le front est un thermomètre, pas un moteur.</strong>
-        Un secteur cède parce que le flux qui l'alimente s'est tari, jamais parce qu'un assaut a réussi.
-        La puissance d'un camp sur un secteur est celle de sa <em>ressource la plus rare</em> — jamais la somme.
-    </p>
-</section>
 
 <nav class="timeline">
     <button type="button" class="step" id="prevTurn" aria-label="Tour précédent">◀</button>
@@ -27,52 +19,28 @@
     <button type="button" class="step" id="nextTurn" aria-label="Tour suivant">▶</button>
 </nav>
 
-<main class="board">
-    <aside class="side side-invader" id="sideInvader"></aside>
+<nav class="phases" id="phasePicker">
+    <button type="button" class="phase active" data-phase="0">
+        <span class="p-num">1</span>
+        <span class="p-body"><strong>Génération de force</strong><em>Russie</em></span>
+    </button>
+    <button type="button" class="phase" data-phase="1">
+        <span class="p-num">2</span>
+        <span class="p-body"><strong>Génération de force</strong><em>Ukraine</em></span>
+    </button>
+    <button type="button" class="phase" data-phase="2">
+        <span class="p-num">3</span>
+        <span class="p-body"><strong>Résolution</strong><em>Champ de bataille</em></span>
+    </button>
+</nav>
 
-    <section class="centre">
-        <div class="turn-head">
-            <h2 id="turnLabel"></h2>
-            <div class="oil" id="oilPrice"></div>
-        </div>
-
-        <div class="front-map" id="frontMap"></div>
-
-        <div class="cards" id="cardsPlayed"></div>
-        <div class="narrative" id="narrative"></div>
-        <div class="outcome" id="outcome"></div>
-    </section>
-
-    <aside class="side side-defender" id="sideDefender"></aside>
-</main>
-
-<section class="sectors">
-    <h3>Résolution des secteurs</h3>
-    <table id="sectorTable">
-        <thead>
-            <tr>
-                <th>Secteur</th>
-                <th class="num">Attaque</th>
-                <th class="num">Résistance</th>
-                <th class="num">Rapport</th>
-                <th class="num">Mouvement</th>
-                <th>Issue</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</section>
-
-<footer class="legend">
-    <p>
-        <strong>Lecture.</strong> Le <em>goulot</em> est la ressource qui limite la puissance du camp ce
-        trimestre : c'est elle, et elle seule, qui fixe ce qu'il peut faire. Le <em>ratio de génération</em>
-        compare ce qu'un camp régénère à ce qu'il consomme ; sous 0,75 pendant trois tours, le front cède.
-        Les chiffres sont des ordres de grandeur de travail, pas des faits sourcés.
-    </p>
-</footer>
+<main id="stage"></main>
 
 @section Scripts {
-    <script>window.tovGames = @Html.Raw(ViewBag.GamesJson);</script>
+    <script>
+        window.tovGames = @Html.Raw(ViewBag.GamesJson);
+        window.tovBoard = @Html.Raw(ViewBag.BoardJson);
+    </script>
+    <script src="~/js/geography.js" asp-append-version="true"></script>
     <script src="~/js/board.js" asp-append-version="true"></script>
 }

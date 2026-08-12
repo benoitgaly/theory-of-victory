@@ -15,7 +15,7 @@ public sealed class TurnContext
 
     public List<string> Narrative { get; } = [];
 
-    public List<string> CardsPlayed { get; } = [];
+    public List<PlayedCard> CardsPlayed { get; } = [];
 
     public List<SectorResolution> SectorResolutions { get; } = [];
 

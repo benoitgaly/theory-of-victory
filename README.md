@@ -1,5 +1,7 @@
 # Theory of Victory
 
+### You have the cards in hand
+
 Simulation de la guerre en Ukraine comme **compétition de génération de force**, et non comme
 succession de batailles. Outil pédagogique inspiré des travaux de **Phillips P. O'Brien**.
 
@@ -8,21 +10,39 @@ succession de batailles. Outil pédagogique inspiré des travaux de **Phillips P
 
 ## Ce que la V1 démontre
 
-Le même départ — février 2022, seize tours de trois mois — est rejoué **deux fois**, avec un seul
-paramètre différent :
+Le même départ — février 2022, seize tours de trois mois, mêmes forces, même carte — est rejoué
+**trois fois**. Ce qui change, ce sont les cartes que l'Occident décide de jouer.
 
-| | Déroulé A | Déroulé B |
+| Déroulé | Ce que l'Occident fait | Issue |
 |---|---|---|
-| Soutien extérieur | Vacille mais tient | S'arrête au tour 6 |
-| Issue | **Front figé** — 2 300 km² en quatre ans | **Effondrement** au tour 9 — 16 500 km² |
+| **L'Occident joue ses cartes** | Embargo sur les composants, campagne trimestrielle sur le raffinage, baril effondré, aide rendue prévisible | **L'Ukraine l'emporte** — chute du régime russe au tour 12 |
+| **Le soutien tient, sans plus** | Le flux ne rompt jamais, sans jamais s'intensifier | **Front figé** — 2 300 km² en quatre ans, personne ne gagne |
+| **Le soutien s'arrête** | Le flux gratuit cesse au tour 6 | **L'Ukraine cède** — effondrement au tour 9, 30 000 km² |
 
-Dans le déroulé B, le tour de la coupure ne produit *rien* : les dépôts couvrent encore le besoin.
-C'est deux tours plus tard que la puissance ukrainienne passe de 344 à 130 et que le front cède.
-**L'effondrement est un seuil, pas une pente** — et c'est exactement ce qu'on cherche à donner à voir.
+Le déroulé de victoire ne prend pas un hexagone de plus que les autres : il **coupe la caisse**.
+Le baril tombe à 48 $, les recettes ne financent plus l'effort de guerre, la puissance russe passe
+de 450 à 283, et l'appareil lâche. C'est la théorie de la victoire que désigne O'Brien — on ne gagne
+pas en prenant du terrain, on gagne en asséchant ce qui permet d'en tenir.
 
-Le modèle retrouve par ailleurs seul, sans y être forcé, la crise des munitions de fin 2023 :
-le blocage budgétaire joué au tour 9 du déroulé A fait chuter la puissance ukrainienne au tour
+Dans le déroulé d'abandon, le tour de la coupure ne produit *rien* : les dépôts couvrent encore le
+besoin. C'est deux tours plus tard que tout cède. **L'effondrement est un seuil, pas une pente.**
+
+Le modèle retrouve par ailleurs seul, sans y être forcé, la crise des munitions de fin 2023 : le
+blocage budgétaire du déroulé « tient, sans plus » fait chuter la puissance ukrainienne au tour
 suivant, et le déblocage la restaure. C'est le test de validation historique du modèle.
+
+## L'interface
+
+Trois écrans par tour, comme les trois temps d'un tour de jeu de plateau :
+
+1. **Génération de force — Russie** — la chaîne complète, du PIB au front, et le tonneau de Liebig
+2. **Génération de force — Ukraine** — la même chaîne, avec une économie de flux opposée
+3. **Résolution — champ de bataille** — la carte, les rapports de force, les cartes du tour
+
+Le **tonneau de Liebig** porte la règle centrale : chaque douve est une ressource, sa hauteur est
+son taux de couverture, et l'eau ne monte jamais au-dessus de la plus courte. Les cartes événement
+sont imprimées au format Magic — cadre, coût en capital politique, illustration, ligne de type,
+boîte de règles et texte d'ambiance — parce que la V2 les mettra en main des joueurs.
 
 ## Lancer
 

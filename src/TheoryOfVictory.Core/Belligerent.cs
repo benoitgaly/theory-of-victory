@@ -32,6 +32,15 @@ public sealed class Belligerent
     /// <summary>Coverage ratio per front flow, computed at the front phase.</summary>
     public Dictionary<string, double> CoverageThisTurn { get; } = [];
 
+    /// <summary>What the front actually required this turn, denominator of coverage.</summary>
+    public Dictionary<string, double> NeedThisTurn { get; } = [];
+
+    /// <summary>Budget put on each spending line this turn, for the economic view.</summary>
+    public Dictionary<string, double> AllocationThisTurn { get; } = [];
+
+    /// <summary>Units that left the factories this turn, before transmission losses.</summary>
+    public Dictionary<string, double> ProducedThisTurn { get; } = [];
+
     /// <summary>Sustainable combat power: the scarcest resource, never the sum.</summary>
     public double SustainableCombatPower { get; set; }
 
