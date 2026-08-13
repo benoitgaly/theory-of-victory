@@ -1,0 +1,564 @@
+# Le capital de guerre
+
+> Spécification de conception. Le modèle faisant autorité reste
+> [`01-modele-de-jeu.md`](01-modele-de-jeu.md) ; la langue visuelle est fixée par
+> [`02-direction-artistique.md`](02-direction-artistique.md) et les conventions de dessin par
+> [`05-composantes-armee.md`](05-composantes-armee.md) §9, qu'on ne rouvre pas ici.
+
+État : conception arrêtée, calibration à faire. Aucun code écrit.
+
+---
+
+## 1. Ce que le bandeau doit rendre évident
+
+Le jeu repose sur une phrase, et cette phrase n'est aujourd'hui écrite nulle part à l'écran :
+
+> **Le capital produit les éléments du front. Quand on détruit le capital, le front continue de
+> paraître en forme pendant plusieurs trimestres — on avance même — puis il cède d'un bloc.**
+
+C'est la thèse d'O'Brien portée au niveau de l'affichage. Le plateau montre aujourd'hui trois
+choses : ce que le front consomme (le tonneau), ce qu'il produit (la carte, les secteurs), et une
+chaîne économique par camp. Il ne montre nulle part **le stock de départ** — ce qui reste à brûler.
+Or c'est le seul chiffre qui prédit le tour 15 depuis le tour 9.
+
+Trois conséquences de conception, qui commandent tout le reste du document.
+
+**Le bandeau dit le trimestre, le ciseau dit la guerre.** Le bandeau (§7) porte les huit postes et
+leur variation du tour ; il ne porte aucune trajectoire. La trajectoire est une seconde pièce (§6),
+et c'est elle qui met en scène le décalage. Mélanger les deux produirait sept petites courbes
+illisibles et une pièce maîtresse diluée.
+
+**On compare des trajectoires, jamais des masses.** La Russie détient 310 Md$ de réserves contre
+29 Md$ pour l'Ukraine, 245 GW contre 36, et une capacité d'armement onze fois supérieure. Mettre ces
+masses côte à côte à la même échelle ne dit qu'une chose, fausse : que la partie est jouée d'avance.
+La seule question intéressante est *qui brûle son capital plus vite que l'autre*. Chaque poste est
+donc dessiné en **indice base 100 au T1 de son propre camp**, et la valeur absolue est imprimée en
+chiffres à côté. La masse se compare, le chiffre s'informe.
+
+**Un indicateur en retard n'est pas une décoration : c'est le sujet.** Le moteur produit déjà trois
+couples où la mesure visible ment sur l'état réel — le PIB apparent contre la capacité productive,
+le mécontentement réprimé contre la tension latente, la puissance au front contre les flux qui la
+nourrissent. Le bandeau doit systématiquement montrer les deux termes de ces couples plutôt que le
+seul qui rassure. C'est le même geste, répété sept fois.
+
+---
+
+## 2. Sept postes pour huit demandés
+
+Les huit postes demandés sont : réserves monétaires, centrales, pétrole, usines civiles, usines
+d'armement, capital politique, soutien étranger, soutien international. **Le bandeau en dessine
+sept**, parce que soutien étranger et soutien international ne sont pas deux capitaux mais un seul,
+vu à deux étages.
+
+**Pourquoi la fusion, et pourquoi elle ne perd rien.** Le moteur porte les deux termes et il les
+relie par une causalité stricte : `PoliticalState.ExternalWill` (0 à 100, la volonté politique des
+soutiens) commande `ForeignSupport.DisbursementRate`, qui commande `EffectiveGrantBillions`, le flux
+du trimestre. Les dessiner en deux cartouches indépendants affirmerait qu'ils peuvent diverger
+librement, ce qui est faux. Les dessiner en un seul cartouche à deux étages — **une cuve et un
+robinet** — garde les deux valeurs, ajoute leur lien, et produit gratuitement l'image la plus
+utile du poste : *le robinet coule encore alors que la cuve est déjà presque vide.* C'est la thèse
+du jeu à l'échelle d'un cartouche, et c'est l'argument décisif de la fusion.
+
+L'asymétrie est un acquis du projet (`01` §9) et elle prend ici sa forme visuelle :
+
+| | Ukraine — on **donne** | Russie — on **vend** |
+|---|---|---|
+| La cuve | `Politics.ExternalWill` — volonté d'un tiers, tombe d'un coup sur une élection | `Economy.TreasuryBillions` face à `Foreign.SupplyCeilingBillions` — un plafond comptable, jamais politique |
+| Le robinet | `Foreign.EffectiveGrantBillions`, dont `InKindShare` = 54 % arrive en matériel et contourne les usines | `Foreign.Purchase(budget)`, plafonné à 1,5 Md$/tour, majoré de `PricePremium` = 1,35 |
+| Le prix caché | `Foreign.Conditionality`, qui se durcit avec la corruption | `Foreign.Dependency`, qui monte à chaque achat et se paie en concessions |
+| Le risque | Arrêt net | Aucun tant qu'elle paie |
+
+Le chiffre à mettre en scène : **4 Md$ par trimestre donnés à l'Ukraine contre 1,5 Md$ que la Russie
+peut acheter.** Le flux gratuit est le plus gros des deux — et c'est celui qui peut disparaître en
+une journée. Toute la tension du jeu tient dans cette ligne, et elle est lisible sans commentaire
+dès que les deux cuves se font face.
+
+---
+
+## 3. Les sept postes
+
+### 3.1 Ce qu'ils valent, ce qu'ils produisent, ce qui les détruit
+
+| Poste | Ce qu'il vaut | Ce qu'il produit — le chemin vers le front | Ce qui le détruit |
+|---|---|---|---|
+| **Réserves monétaires** | Md$. RU 310, UA 29 au T1 | Comble l'écart entre ce que la recette finance et ce que la guerre veut dépenser. Seul poste dont l'emploi **est** la destruction | La ponction elle-même (12 %/tour RU, 9 % UA), et rien d'autre |
+| **Centrales électriques** | GW installés contre GW demandés. RU 245/148, UA 36/15,5 | Ne va jamais au front. **Ouvre ou ferme** la production d'armes, le raffinage, le PIB, le chauffage | Frappes réversibles (sous-stations, 55 % réparés/tour) et permanentes (salles des machines, 6 %/tour, plafond 55 %) |
+| **Pétrole** | RU : Md$ de recette/trimestre. UA : Md$ de facture/trimestre | RU : ≈ 46 Md$/trimestre au baril à 100, la première source du budget de guerre. UA : une charge nette qui ampute le même budget | Frappes sur le raffinage, décote et friction des sanctions, et le baril lui-même |
+| **Usines civiles** | Md$ de capacité civile × intégrité. **N'existe pas dans le moteur** (§4) | Le niveau de vie, donc le consentement à la guerre | Frappes sur les entrepôts et les usines, délestage civil, mobilisation qui prend les ouvriers |
+| **Usines d'armement** | Md$ de capacité installée par tour. RU 3,72, UA 0,33 — **onze contre un** | Les obus, les drones, les missiles, les intercepteurs. Le seul poste qui produit du matériel | Plafond de composants sous sanctions, délestage industriel, frappes, et le plafond structurel de 3,5 × la ligne d'avant-guerre |
+| **Tenue du pouvoir** | Points de marge avant la rupture, sur 58 (§3.3) | Le capital politique du tour, qui paie les cartes | L'écart de financement (le coefficient le plus violent du moteur), les pertes, les sanctions sur composants, la défaite visible |
+| **Soutien étranger** | Cuve : 0 à 100 (UA) ou Md$ disponibles (RU). Robinet : Md$/trimestre | UA : 54 % en matériel, qui contourne entièrement les usines nationales. RU : des armes hors capacité domestique | Une élection, le baril cher qui nourrit l'inflation chez les soutiens, la conditionnalité qui se durcit avec la corruption |
+
+### 3.2 D'où vient la valeur dans le code
+
+Aucune propriété n'est à créer, sauf pour les usines civiles.
+
+| Poste | Valeur affichée | Repères et seuils |
+|---|---|---|
+| Réserves | `Economy.ReservesBillions` | `Economy.ReserveQuartersLeft` (le décompte, déjà calculé), `LastTurnReserveDrawBillions` (la ponction du tour) |
+| Centrales | `Grid.AvailableCapacityGw` contre `Grid.DemandGw(season)` | `Grid.ShortfallRatio`, `PermanentDamageGw`, `WinterDemandMultiplier` |
+| Pétrole | `Economy.LastTurnOilRevenueBillions`, ou la facture dérivée de `OilImportMbd × 91,25 × OilPrice / 1000` | `Economy.RefiningIntegrity`, `Sanctions.ExportDiscountPerBarrel`, `Sanctions.FrictionRate`, `GameState.OilPrice` |
+| Usines civiles | **à créer** — `CivilianIndustry.CapacityBillions × Integrity` | `CivilianIndustry.LivingStandard` |
+| Usines d'armement | `Industry.TotalCapacityValueBillions()` | `Industry.GetCapacityPerTurn(kind)` contre `GetCapacityCeiling(kind)`, `Sanctions.ProductionCeilingMultiplier`, `Grid.IndustrialSupplyRatio(season)` |
+| Tenue du pouvoir | `58 − Politics.RegimeStress` | `PopularDiscontent`, `EliteCohesion`, `LatentTension`, `Repression`, `PoliticalCapital` |
+| Soutien étranger | Cuve UA `Politics.ExternalWill` · cuve RU `min(TreasuryBillions, SupplyCeilingBillions × PricePremium)` · robinet `Foreign.EffectiveGrantBillions` ou le montant réellement acheté | `Foreign.Conditionality`, `Foreign.Dependency`, `Foreign.InKindShare` |
+
+Le seuil de rupture du régime, **58**, est aujourd'hui une constante privée de `ControlPhase`
+(`RegimeCollapseStress`). Le bandeau doit le dessiner : il faut donc la rendre publique. C'est la
+seule modification de visibilité que la publication exige.
+
+### 3.3 Le capital politique : « la tenue du pouvoir »
+
+L'utilisateur a hésité sur le mot et sa description vaut mieux que n'importe quel terme abstrait :
+*Poutine est menacé en permanence d'un coup d'État.* Deux objets du moteur se disputent le nom de
+« capital politique », et il faut trancher lequel monte dans le bandeau.
+
+- `Politics.PoliticalCapital` (0 à 30) est le **mana** : la monnaie qui paie les cartes en V2. Il est
+  déjà à l'écran, sur les pastilles de coût des cartes.
+- `Politics.RegimeStress` est **la menace** : la distance au moment où l'appareil se fracture. C'est
+  ce que l'utilisateur décrit, et ce n'est nulle part.
+
+Le bandeau porte la seconde, et la première y entre comme son **rendement**. C'est cohérent avec la
+grammaire de tous les autres postes : un capital vaut quelque chose et produit un flux. La tenue du
+pouvoir produit littéralement le capital politique du trimestre — `AttritionPhase` le calcule déjà
+ainsi, `3 × Morale/100` pour un régime autoritaire, `2 × ExternalWill/100 × Morale/100` pour une
+démocratie. Le régime qui se fissure ne paie plus ses cartes : la boucle est déjà écrite, elle n'est
+pas montrée.
+
+**Nom retenu : « Tenue du pouvoir ».** Il couvre les deux formes sans en trahir aucune, et il dit
+une action continue plutôt qu'un état — ce qui est exactement le point : *tenir* est un effort de
+chaque trimestre. Le sous-titre du cartouche diffère par camp, et cette différence est la leçon :
+
+- Russie — « fracture de l'appareil ». Le régime tombe de l'intérieur, jamais par la rue.
+- Ukraine — « épuisement de la volonté ». Le régime ne tombe pas : le pays négocie. Lassitude,
+  élections suspendues, corruption qui durcit la conditionnalité.
+
+**La menace doit se lire comme permanente, jamais comme un score.** Deux règles de dessin en
+découlent, et elles suffisent :
+
+1. Le cartouche ne montre pas la valeur, il montre **la marge restante avant 58**. Une marge se lit
+   comme un danger ; un score se lit comme une note.
+2. Les deux jauges qui la composent sont dessinées séparément et **l'élite compte double**, comme
+   dans le moteur : `RegimeStress = (visible + 2 × fracture des élites + tension latente) / 3,2`. La
+   rue est spectaculaire, l'appareil décide. Un joueur qui regarde la mauvaise jauge se fait
+   surprendre — et c'est le comportement souhaité.
+
+Le paradoxe de la répression tombe alors tout seul dans le dessin : la répression rabote la jauge
+visible et gonfle la tension latente. Le cartouche russe affiche donc une rue calme au-dessus d'une
+réserve de pression qui monte. **Quatrième instance du même décalage**, et la plus démonstrative.
+
+---
+
+## 4. Les usines civiles — vérification et spécification
+
+**Vérifié : elles n'existent pas.** Le moteur ne connaît que trois traces d'économie civile, et
+aucune ne fait ce que l'exemple Wildberries demande.
+
+- `Doctrine.CivilianShare` — une ligne de budget qui augmente `ProductiveCapacityBillions` et le
+  moral. Une dépense, pas un actif : rien ne peut la détruire.
+- `EnergyGrid.CivilianShareOfDemand` — la part de la demande électrique délestée en premier.
+- `Economy.ProductiveCapacityBillions` — la capacité productive soutenable, agrégat de tout, jamais
+  ciblable en tant que telle.
+
+`StrikeTarget` ne compte que quatre cibles — réseau, raffinage, industrie d'armement, logistique.
+Une frappe sur `Industry` ne touche que `Industry.SetCapacityPerTurn` des ressources militaires.
+**Il n'existe aujourd'hui aucun chemin entre la destruction d'un entrepôt et le mécontentement
+populaire.** Le mécanisme de l'exemple est absent, et c'est le seul poste du bandeau qui demande du
+moteur.
+
+### 4.1 La structure
+
+```
+CivilianIndustry
+    CapacityBillions      // capacité civile installée, en Md$ de production annuelle
+    Integrity             // 0..1 — part de l'appareil civil en état de produire
+    ReversibleDamage      // entrepôts, plateformes logistiques : semaines
+    PermanentDamage       // lignes d'assemblage, outillage : années
+    RepairRatePerTurn     // 0,50 sur le réversible
+    RebuildPerTurn        // 0,05 sur le permanent
+```
+
+Deux niveaux de dégât, exactement comme le réseau électrique : la distinction sous-stations /
+salles des machines se transpose sans rien inventer. Un entrepôt brûlé se rebâtit en un trimestre,
+une ligne d'assemblage détruite ne revient pas avant la fin de la partie. **Frapper juste, c'est
+viser la ligne, pas la palette.**
+
+### 4.2 Ce qu'elles produisent : le niveau de vie
+
+```
+LivingStandard = Integrity × CivilianSupplyRatio(saison) × (ProductiveCapacity / ProductiveCapacité₁)
+```
+
+Un indice à 1,00 au T1. Il descend quand on casse les usines, quand on coupe le courant civil, et
+quand la mobilisation prend les ouvriers — les trois canaux réels, et les trois sont déjà dans le
+moteur sauf le premier.
+
+### 4.3 La chaîne de conséquences, jusqu'au bout
+
+C'est l'exemple de l'utilisateur, écrit comme une suite de causes dont chaque maillon existe déjà
+sauf le premier :
+
+```
+frappe sur les entrepôts
+  → CivilianIndustry.ReversibleDamage ↑           (nouveau)
+  → Integrity ↓  →  LivingStandard ↓              (nouveau)
+  → Politics.PopularDiscontent ↑                  (existe)
+  → Politics.RegimeStress ↑                       (existe, l'élite compte double)
+  → Politics.PoliticalCapital ↓ le tour suivant   (existe, AttritionPhase)
+  → moins de cartes jouables                      (existe, en V2)
+```
+
+Six maillons, un seul à écrire. C'est le rapport qu'on cherche partout dans ce projet.
+
+### 4.4 La règle qui protège les trois issues
+
+Le niveau de vie **remplace** le canal existant, il ne s'y ajoute pas. `EnergyPhase` déplace
+aujourd'hui le mécontentement directement (`PopularDiscontent += (1 − civilian) × 8`). Cette ligne
+disparaît et son coefficient part dans le terme du niveau de vie, inchangé :
+
+```
+PopularDiscontent += (1 − LivingStandard) × 8
+```
+
+Avec `Integrity = 1` et une capacité productive à son niveau de référence, `LivingStandard` vaut
+exactement `CivilianSupplyRatio` : le terme est **algébriquement identique à l'actuel**. Comme
+aucune carte du calendrier ne vise les usines civiles et qu'aucune doctrine ne prend cette cible,
+les trois issues du scénario — victoire ukrainienne au T19, front figé, effondrement ukrainien vers
+T10 — sont inchangées au bit près. C'est un test, pas une espérance :
+`CivilianIndustry_UntouchedRun_ReproducesTheThreeOutcomes_Bitwise`.
+
+Une seule cible nouvelle (`StrikeTarget.CivilianIndustry`) et une seule carte pour l'emprunter
+(« Frappe sur les entrepôts »), hors calendrier des trois variantes. La leçon devient jouable sans
+que rien de démontré ne bouge.
+
+### 4.5 Ce qu'il ne faut pas modéliser côté civil
+
+Ni secteurs d'activité, ni chômage, ni panier de consommation, ni inflation alimentaire distincte.
+Une capacité, une intégrité, un indice. Le joueur décide s'il envoie ses drones sur un entrepôt ou
+sur une raffinerie ; tout le reste est du texte de carte.
+
+---
+
+## 5. L'évolution du tour
+
+C'est la demande centrale, et elle se décompose en trois exigences dont aucune n'est décorative.
+
+### 5.1 Le delta est calculé par le moteur, jamais par la vue
+
+`TurnEngine.CaptureOpeningPosition` prend déjà une photo des dépôts et du ratio de génération avant
+que les dix phases ne tournent : *une pente demande deux points*. On généralise au vecteur des sept
+postes. La vue reçoit `opening` et `closing` dans le même instantané et ne soustrait jamais deux
+tours entre eux — sans quoi le premier tour n'a pas de delta, un changement de variante en produit
+un faux, et l'origine de la variation est perdue.
+
+### 5.2 Une variation ordinaire et une destruction ne sont pas le même chiffre
+
+Un poste qui perd 4 GW ne dit rien tant qu'on ignore si c'est la demande d'hiver, une réparation en
+retard, ou une salle des machines partie pour de bon. Chaque poste porte donc un **delta décomposé
+en trois causes au plus**, et jamais plus de trois :
+
+| Cause | Signe | Nature | Dessin |
+|---|---|---|---|
+| `regeneration` | + | Réparation, croissance, recette, aide reçue | Filet gravé, 2 px, encre tertiaire |
+| `consumption` | − | Ponction ordinaire, entretien, érosion, usure | Filet gravé, 2 px, encre tertiaire |
+| `destruction` | − | Frappe, carte, perte permanente | **Matière pleine**, hachure `#a8322a` à 0,45, avec l'encoche |
+
+> **Règle de lecture, tenable sur un plateau : le gravé est ordinaire, le plein est une
+> destruction.** Aucun pourcentage à comparer, aucune légende à consulter.
+
+La destruction porte **le nom de sa cause** : le titre de la carte, ou la cible de la frappe. Un
+chiffre rouge sans nom est un chiffre qu'on ne peut pas contester ; c'est précisément ce qu'un outil
+pédagogique doit refuser.
+
+### 5.3 Le ruban de conséquence
+
+Trois deltas côte à côte ne font pas une chaîne. Sur les tours où une destruction a produit une
+suite, le bandeau déplie sous le camp concerné un **ruban** de deux à quatre maillons :
+
+```
+« Frappe sur les entrepôts »  →  usines civiles −12 %  →  niveau de vie −0,06  →  tenue du pouvoir −4
+```
+
+Quatre règles le rendent lisible plutôt que bavard :
+
+1. **Un seul ruban par camp et par tour**, le plus vif. Le moteur sait déjà choisir : les
+   `PressureAlert` sont triées du plus tranchant au plus faible dans `TurnEngine.Freeze`.
+2. **Le ruban n'apparaît que s'il y a eu destruction.** Un trimestre calme est un bandeau mince,
+   et cette minceur est une information.
+3. **L'origine est attribuée, jamais devinée.** Une table statique `EffectKind → poste` dit quels
+   effets touchent quel poste ; si exactement une carte du tour porte un effet de cette famille,
+   elle est nommée. Sinon on regarde la frappe du tour (`InvaderStrike.Target`). Sinon le ruban est
+   dessiné sans nom d'origine. Une attribution honnête vaut mieux qu'une attribution jolie.
+4. **La dérivation ne touche aucune phase.** Un `CapitalChainBuilder` lit l'ouverture, la clôture,
+   les cartes jouées et la frappe. Rien dans la simulation ne bouge.
+
+---
+
+## 6. Le décalage capital / front — « le ciseau »
+
+**Il mérite son propre dessin.** Dilué dans le bandeau, il deviendrait sept petites courbes ; et le
+décalage n'est pas un attribut d'un poste, c'est le rapport entre l'ensemble des postes et la
+puissance qu'ils nourrissent. C'est la pièce que le visiteur doit emporter.
+
+### 6.1 Les deux courbes
+
+- **Le front** — `SideSnapshot.CombatPower`, la puissance de combat soutenable, en indice base 100 au
+  T1. C'est ce que le joueur prend pour son succès. Les trimestres où le camp a gagné du terrain
+  portent un petit repère plein sur la courbe : *on avance, et la courbe monte.*
+- **Le capital** — l'indice composite des sept postes, base 100 au T1 (§6.2).
+
+### 6.2 Composer l'indice sans mentir
+
+Trois règles, et chacune répond à une erreur tentante.
+
+**Ce n'est pas un minimum.** La règle du minimum ne vaut que pour les flux consommés au front, où
+une douve courte plafonne tout. Un capital ne se comporte pas ainsi : une trésorerie vide se
+supporte quelques trimestres, un réseau détruit se contourne un temps. Appliquer le minimum au
+capital serait la même erreur de catégorie que celle déjà refusée pour les effectifs.
+
+**Ce n'est pas une somme non plus.** Une réserve de 310 Md$ masquerait un réseau mort. La somme
+autorise exactement la compensation qu'on veut réfuter.
+
+**C'est une moyenne géométrique**, plancher à 15 points par poste :
+
+```
+IndiceCapital = ( ∏ clamp(indice(poste), 15, 150) ) ^ (1/7)
+```
+
+La moyenne géométrique punit le déséquilibre sans l'annuler : deux postes à 50 pèsent plus lourd
+qu'un poste à 0 et un à 100, ce qui est le comportement juste d'un capital. Le plancher dit
+l'essentiel en un chiffre : **aucun poste ne met le capital à zéro à lui seul.** Un camp ne meurt
+pas d'avoir perdu son pétrole ; il meurt de l'avoir perdu en même temps que le reste.
+
+Côté ukrainien, le pétrole est une charge et non une recette : son indice s'inverse,
+`100 × facture₁ / facture`. Un baril qui monte fait donc baisser le capital ukrainien — c'est
+exactement le canal 2 du §7 du modèle, obtenu sans une ligne de règle nouvelle.
+
+### 6.3 Le dessin
+
+`viewBox="0 0 560 230"`, **un ciseau par camp**, les deux côte à côte sur la largeur du bandeau.
+
+- Axe des tours en abscisse, 26 px par trimestre, dix-neuf trimestres de x = 62 à x = 530.
+- Ordonnée de 0 à 130, la ligne 100 en pointillé à y = 60, le zéro à y = 210.
+- **Front** : trait plein d'encre chaude `#1a1815`, 2,2 px. C'est ce qu'on voit.
+- **Capital** : trait de la couleur du camp, 2,2 px. C'est ce qu'on a.
+- **La surface entre les deux est le sujet.** Front au-dessus du capital : hachure `#a8322a` à
+  0,22 — *on brûle*. Capital au-dessus : aplat crème `--card-2` — *on reconstitue*.
+- Le trimestre du croisement porte un filet vertical d'encre et une seule phrase en petites
+  capitales : « à partir de T9, le front vit sur le capital ».
+- Le dernier point de chaque courbe porte sa valeur en sérif 20 px.
+
+Un joueur qui gagne du terrain en brûlant son capital voit la hachure s'installer six tours avant de
+perdre. Un joueur qui recule en préservant son capital voit l'aplat crème et comprend qu'il est en
+train de gagner. C'est la demande, littéralement.
+
+---
+
+## 7. Le dessin du bandeau
+
+Même langue que le tonneau et que les cinq parcs : papier `#f2efe7`, carton `#fbf9f4`, filets
+`#d9d1be`, encre chaude `#1a1815`, chiffres en sérif, libellés en petites capitales 9,5 px à
+`letter-spacing: 0.13em`, graisse 700, couleur `#8b8578`. Fond clair, jamais sombre.
+
+### 7.1 Deux teintes nouvelles, cinq reprises
+
+| Poste | Teinte | Origine |
+|---|---|---|
+| Réserves monétaires | `#8a6f2b` | **nouvelle** — or bruni, sourd exprès pour ne pas se confondre avec `--gold`, réservé aux événements |
+| Centrales électriques | `#c2621a` | `FAMILY_ACCENT["Énergie"]` |
+| Pétrole | `#8a5a2b` | la teinte du carburant dans `FLOWS` : c'est la même matière |
+| Usines civiles | `#6f8060` | **nouvelle** — vert sourd |
+| Usines d'armement | `#4a6070` | `FAMILY_ACCENT["Militaire et technologique"]` |
+| Tenue du pouvoir | `#8a4b2a` | `FAMILY_ACCENT["Politique interne"]` |
+| Soutien étranger | `#2f8f8f` | seule teinte franche du bandeau, parce que c'est le seul poste qui vient de l'extérieur du camp |
+
+**La teinte porte le poste, la position porte le camp.** Sept postes doivent se distinguer les uns
+des autres à l'intérieur d'une rangée ; les deux camps, eux, sont déjà séparés sans ambiguïté par le
+haut et le bas. Le camp est rappelé par un filet de 3 px en `--ru` ou `--ua` sur le bord extérieur
+de sa rangée, et par son nom une seule fois à l'extrémité gauche.
+
+### 7.2 Géométrie
+
+`viewBox="0 0 1140 296"`, hauteur recalculée quand un ruban se déplie.
+
+- **Sept colonnes de 128 px**, pas de 138, ancrées à x = 158, 296, 434, 572, 710, 848, 986.
+- **Rangée russe** : y = 20 à 134. La masse pousse **vers le haut** depuis y = 134.
+- **Bande de partage** : y = 134 à 170. C'est le sol commun.
+- **Rangée ukrainienne** : y = 170 à 284. La masse pousse **vers le bas** depuis y = 170.
+- À gauche de la bande de partage, x = 22 à 150 : le cartouche du trimestre — « T12 · hiver 2024 »,
+  le Brent en sérif, et un flocon gravé quand la saison est l'hiver. La saison décide, elle mérite un
+  signe et pas un mot.
+
+### 7.3 Le nom au centre, les deux camps qui tirent
+
+Le nom du poste est écrit **une seule fois**, dans la bande de partage, centré sur sa colonne. Les
+deux masses le tirent de part et d'autre, comme une corde. Cela divise par deux le texte du bandeau
+— une donnée répétée à l'identique n'est pas une donnée — et cela produit l'image juste : les deux
+camps se disputent le même poste.
+
+Un seul poste par tour reçoit une **pastille pleine `#1a1815`** derrière son nom, texte en papier :
+celui que le moteur désigne comme la pression la plus vive du trimestre, lu dans les
+`PressureAlert` déjà triées. Une seule autorité par information — le dessin ne désigne jamais un
+poste que le moteur n'a pas nommé.
+
+### 7.4 Anatomie d'un cartouche
+
+Sur 128 px de large, depuis la bande de partage vers l'extérieur :
+
+- **La masse** — un bloc plein de la teinte du poste, hauteur = indice, 52 px pour 100, bornée à
+  68 px (130 %). Chant supérieur biseauté en blanc à 0,34, comme les douves du tonneau : la matière
+  a une épaisseur.
+- **Le niveau de février 2022** — un filet pointillé à la hauteur 52 px, traversant la colonne, avec
+  aucune étiquette. C'est le repère qui rend toute masse lisible sans échelle, exactement comme le
+  pointillé à 100 % du tonneau.
+- **L'encoche de destruction** — la part détruite ce trimestre est **découpée dans le haut de la
+  masse par une arête irrégulière**, non par un trait droit, et remplie d'une hachure `#a8322a` à
+  0,45 avec un liseré gravé sur la ligne de coupe. On voit le morceau manquant. C'est la convention
+  déjà posée pour les cinq parcs (`05` §9.1) et il n'y a aucune raison d'en avoir deux.
+- **Le filet de variation ordinaire** — un segment creux de 2 px posé au-dessus de la masse quand
+  elle a gagné, en dessous quand elle a perdu. Gravé, jamais plein.
+- **La valeur** — sérif 19 px en `#1a1815`, juste à l'extérieur de la masse. Le delta suit en 11 px,
+  précédé de son signe, **coloré uniquement s'il s'agit d'une destruction**.
+- **Le seuil**, sur les trois postes qui en ont un, et seulement ceux-là : les réserves à quatre
+  trimestres de ponction restante, les centrales à la demande d'hiver, la tenue du pouvoir à 58.
+  Un pointillé rouge de 1 px traversant la colonne. **Les quatre autres postes n'ont pas de seuil et
+  n'en dessinent pas.**
+- **Le sablier et le cadenas** — repris de `05` §9.1. Un sablier de 16 × 22 quand la perte met des
+  tours à mordre, avec un grain par tour ; un cadenas de 14 × 16 en encre pleine quand la perte est
+  définitive à l'échelle de la partie. Le cadenas n'apparaît que sur la part permanente des
+  centrales et des usines. Il dit « irréparable » mieux que n'importe quel chiffre.
+
+### 7.5 Un poste détruit se voit
+
+Sous **25 % de son indice de départ**, un poste cesse d'être une masse : il est dessiné en filet
+creux, et la hachure de destruction remplit tout ce qui manque **jusqu'au pointillé de février
+2022**. On voit le fantôme de ce qu'il y avait. Le cartouche devient un trou dans le bandeau, et un
+trou se repère avant d'être lu — ce qui est le principe de direction artistique n° 3.
+
+### 7.6 Le cartouche du soutien étranger
+
+Seul cartouche à deux étages, parce que seul poste où la cuve et le robinet peuvent diverger.
+
+- La **cuve** occupe les deux tiers extérieurs : un contenant gravé dont le remplissage est la
+  volonté (UA) ou la capacité de payer (RU).
+- Le **robinet** occupe le tiers intérieur, contre la bande de partage : un trait plein dont
+  l'épaisseur, de 2 à 9 px, est le flux du trimestre.
+- Une cuve presque vide sous un robinet encore large est l'image que le poste existe pour produire.
+  Elle précède l'arrêt de l'aide de deux à trois trimestres dans la variante « Le soutien s'arrête »,
+  et c'est exactement le préavis que le jeu doit donner.
+- Côté russe, un troisième repère : la **dépendance**, une petite chaîne gravée dont les maillons se
+  ferment à mesure que `Foreign.Dependency` monte. Elle ne coûte rien à dessiner et elle dit ce que
+  l'achat coûte vraiment.
+
+### 7.7 Où ça vit
+
+- **Le bandeau** : écran « Résolution », **au-dessus de la carte**, pleine largeur, avant le bloc
+  `.field`. C'est là que l'utilisateur le demande et c'est là qu'il est utile : la carte montre le
+  thermomètre, le bandeau montre le moteur, et les deux se lisent dans un seul regard.
+- **Le ciseau** : immédiatement sous le bandeau, avant la carte.
+- Les deux écrans de génération de force ne changent pas. Le tonneau, la chaîne et la main y disent
+  déjà le détail d'un camp ; le bandeau dit les deux camps d'un coup.
+
+Cela livre au passage la recommandation 4.4 de la direction artistique — comparer les deux camps
+côte à côte — qui attendait une décision de conception. Elle est prise ici.
+
+---
+
+## 8. Chemin d'implémentation
+
+Cinq étapes. **Les quatre premières ne touchent pas la simulation** : elles publient, agrègent et
+dessinent des valeurs qui existent déjà. Les tests de non-régression doivent y passer au bit près.
+Seule l'étape 5 modifie le moteur, et elle porte sa propre garantie de neutralité (§4.4).
+
+### Étape 1 — publier le capital *(dessin pur, aucun risque)*
+
+| Fichier | Modification |
+|---|---|
+| `src/TheoryOfVictory.Core/CapitalPost.cs` | **nouveau** — `Code`, `Value`, `IndexBase100`, `Opening`, `Regeneration`, `Consumption`, `Destruction`, `DestructionCause`, `Threshold`, `PermanentLoss` |
+| `src/TheoryOfVictory.Core/GameState.cs` | `SideSnapshot.Capital` — la liste des postes ; `CapitalIndex` — la moyenne géométrique du §6.2 |
+| `src/TheoryOfVictory.Engine/TurnEngine.cs` | `CaptureOpeningPosition` étendu au vecteur des postes ; `Capture` remplit `Capital` |
+| `src/TheoryOfVictory.Engine/Phases/ControlPhase.cs` | `RegimeCollapseStress` passe de privé à `public const` — le bandeau dessine ce seuil |
+| `tests/…/ModelRulesTests.cs` | `CapitalPosts_AreCaptured_WithoutChangingAnyOutcome` · `CapitalIndex_NeverZeroesOnASinglePost` |
+
+Six postes sur sept : les usines civiles arrivent à l'étape 5.
+
+### Étape 2 — le bandeau dessiné *(dessin pur, aucun C#)*
+
+`src/TheoryOfVictory.Web/wwwroot/js/board.js` — `renderCapitalBand(t)` appelée en tête de
+`renderBattlefield`, avant `.field`. `src/TheoryOfVictory.Web/wwwroot/css/site.css` — la classe
+`.capital-band` et les jetons de teinte du §7.1.
+
+### Étape 3 — le ciseau *(dessin pur, aucun risque)*
+
+`board.js` — `renderScissor(game, sideCode)`, deux panneaux côte à côte sous le bandeau. La série
+est reconstruite depuis `game.turns[].invader.capitalIndex` et `.combatPower`, déjà publiés à
+l'étape 1. Test : `CapitalIndex_FallsBeforeCombatPower_InTheVictoryRun` — le décalage doit exister
+dans la variante « L'Occident joue ses cartes », sinon la pièce maîtresse ne démontre rien.
+
+### Étape 4 — le ruban de conséquence *(dérivation, aucune phase touchée)*
+
+`src/TheoryOfVictory.Engine/CapitalChainBuilder.cs` **nouveau** — la table `EffectKind → poste` et
+l'attribution du §5.3 ; `GameState.cs` — `SideSnapshot.Chain` ; `board.js` — le ruban. Il fonctionne
+dès cette étape sur les campagnes contre le réseau électrique, qui existent déjà au calendrier et
+qui déplacent déjà le mécontentement : la chaîne est démontrable **avant** que les usines civiles
+n'existent.
+
+### Étape 5 — les usines civiles *(touche la simulation, à recalibrer)*
+
+| Fichier | Modification |
+|---|---|
+| `src/TheoryOfVictory.Core/CivilianIndustry.cs` | **nouveau** — §4.1 |
+| `src/TheoryOfVictory.Core/Belligerent.cs` | propriété `Civilian` |
+| `src/TheoryOfVictory.Core/StrikeCampaign.cs` | `StrikeTarget.CivilianIndustry` |
+| `src/TheoryOfVictory.Engine/Phases/DeepStrikePhase.cs` | le cas de la nouvelle cible, réversible et permanent |
+| `src/TheoryOfVictory.Engine/Phases/EnergyPhase.cs` | la ligne de mécontentement **retirée** — elle passe dans le niveau de vie |
+| `src/TheoryOfVictory.Engine/Phases/AttritionPhase.cs` | `LivingStandard` calculé, mécontentement déplacé, réparations civiles |
+| `src/TheoryOfVictory.Engine/Scenarios/UkraineScenario.cs` | capacité civile initiale des deux camps |
+| `src/TheoryOfVictory.Engine/data/cards.fr.json` | « Frappe sur les entrepôts », hors calendrier |
+| `tests/…/ModelRulesTests.cs` | `CivilianIndustry_UntouchedRun_ReproducesTheThreeOutcomes_Bitwise` · `BurningTheWarehouses_MovesTheRegime_ThroughLivingStandardOnly` |
+
+---
+
+## 9. Points de calibration à vérifier
+
+À examiner en implémentant, sans les trancher ici.
+
+1. **La tenue du pouvoir au T1 surprend.** Avec les valeurs du scénario, `RegimeStress` vaut environ
+   11 côté russe et 16 côté ukrainien, pour un seuil à 58 : l'Ukraine part **plus près de la
+   rupture** que la Russie. Cela vient de `EliteCohesion` (86 contre 78) et du poids double de la
+   fracture des élites. C'est peut-être juste — une démocratie en guerre est structurellement plus
+   fragile à l'arrière — mais c'est contre-intuitif et le bandeau va le rendre visible pour la
+   première fois. À trancher avant de le publier, pas après.
+2. **Capacité civile initiale.** Le paramètre qui décide si l'exemple Wildberries est un désagrément
+   ou une crise. Le viser de sorte qu'une campagne soutenue de deux à trois trimestres coûte 8 à
+   12 points de mécontentement — sensible, jamais décisif à soi seul. Ne pas céder à la tentation de
+   le gonfler : la démonstration porte sur le rapport entre l'effet et son prix.
+3. **Le plancher de 15 points de la moyenne géométrique.** Trop haut, l'indice ne bouge plus ; trop
+   bas, un seul poste effondré emporte tout et l'on retombe dans la règle du minimum qu'on a
+   explicitement refusée pour le capital.
+4. **Le seuil d'affichage « poste détruit » à 25 %.** À vérifier sur les dix-neuf tours des trois
+   variantes : si aucun poste ne le franchit jamais, le dessin le plus fort du bandeau ne sert
+   jamais, et il faut remonter le seuil ou admettre que le capital ne s'effondre pas si loin.
+
+---
+
+## 10. Ce qui alourdirait le bandeau sans rien apporter
+
+À écarter explicitement, pour que la question ne se repose pas.
+
+- **Un huitième cartouche pour le soutien international.** Deux cartouches indépendants pour une
+  seule causalité ; la cuve et le robinet disent la même chose en mieux (§2).
+- **Une sparkline par poste.** Sept petites courbes dans le bandeau tueraient le ciseau, qui est la
+  pièce maîtresse. Le bandeau dit le trimestre, le ciseau dit la guerre.
+- **Une échelle commune aux deux camps.** Elle affirmerait que la partie est jouée au T1 et
+  masquerait la seule question qui compte : qui brûle plus vite.
+- **Le mana (`PoliticalCapital`) comme poste à part.** Il est le rendement de la tenue du pouvoir,
+  pas un capital ; il est déjà lisible sur les pastilles de coût des cartes.
+- **Un score de capital unique en gros chiffre.** L'indice composite n'existe que pour tracer une
+  courbe contre celle du front. Affiché seul, il redevient exactement le chiffre agrégé et rassurant
+  que ce jeu passe son temps à dénoncer.
+- **Une jauge de PIB apparent dans le bandeau.** Le PIB apparent monte quand tout va mal : c'est le
+  piège keynésien, il a sa place dans la chaîne économique de chaque camp, pas dans un bandeau qui
+  prétend dire ce qu'un camp possède encore.
+- **Des seuils inventés sur les postes qui n'en ont pas.** Le pétrole, les usines et le soutien
+  n'ont pas de valeur de rupture ; en dessiner une serait affirmer une mécanique qui n'existe pas.
