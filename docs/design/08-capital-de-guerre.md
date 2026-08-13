@@ -5,8 +5,13 @@
 > [`02-direction-artistique.md`](02-direction-artistique.md) et les conventions de dessin par
 > [`05-composantes-armee.md`](05-composantes-armee.md) §9, qu'on ne rouvre pas ici.
 
-État : **implémenté**, étapes 1 à 5 du §8. Quatre écarts assumés par rapport au texte ci-dessous,
-et chacun est documenté à l'endroit du code qui le porte :
+État : **implémenté**, étapes 1 à 5 du §8, puis **converti en dollars** — le §11 porte cette
+révision, décidée après coup, et il l'emporte sur les unités citées dans les §3 et §7 ci-dessous.
+Le bandeau ne parle plus qu'une seule langue : les sept postes se comptent en milliards de
+dollars, les variations s'impriment en pourcentages, et le poste sous contrainte porte son nom.
+
+Quatre écarts assumés par rapport au texte ci-dessous, et chacun est documenté à l'endroit du
+code qui le porte :
 
 1. **Le niveau de vie n'a que deux facteurs**, l'intégrité de l'appareil civil et l'électricité
    civile disponible. Le troisième terme du §4.2, l'érosion de la capacité productive, a été
@@ -51,12 +56,14 @@ leur variation du tour ; il ne porte aucune trajectoire. La trajectoire est une 
 et c'est elle qui met en scène le décalage. Mélanger les deux produirait sept petites courbes
 illisibles et une pièce maîtresse diluée.
 
-**On compare des trajectoires, jamais des masses.** La Russie détient 310 Md$ de réserves contre
-29 Md$ pour l'Ukraine, 245 GW contre 36, et une capacité d'armement onze fois supérieure. Mettre ces
-masses côte à côte à la même échelle ne dit qu'une chose, fausse : que la partie est jouée d'avance.
-La seule question intéressante est *qui brûle son capital plus vite que l'autre*. Chaque poste est
-donc dessiné en **indice base 100 au T1 de son propre camp**, et la valeur absolue est imprimée en
-chiffres à côté. La masse se compare, le chiffre s'informe.
+**On compare les masses ET les trajectoires — mais pas avec le même signe.** ~~Chaque poste est
+dessiné en indice base 100 au T1 de son propre camp.~~ **Révisé au §11.4** : la masse est
+désormais une valeur en dollars sur une règle partagée par les deux camps, et c'est le
+**pourcentage** imprimé contre chaque masse qui porte la trajectoire. La longueur dit ce qu'on
+possède, le pourcentage dit ce que le trimestre en a fait. L'argument d'origine — mettre 310 Md$
+de réserves russes en face de 29 Md$ ukrainiens ne dirait qu'une chose, que la partie est jouée
+d'avance — reste vrai et reste répondu, mais par le second chiffre plutôt qu'en renonçant au
+premier.
 
 **Un indicateur en retard n'est pas une décoration : c'est le sujet.** Le moteur produit déjà trois
 couples où la mesure visible ment sur l'état réel — le PIB apparent contre la capacité productive,
@@ -118,6 +125,9 @@ dès que les deux cuves se font face.
 
 ### 3.1 Ce qu'ils valent, ce qu'ils produisent, ce qui les détruit
 
+Les valeurs de cette colonne sont celles d'origine, dans l'unité propre de chaque poste ; le §11.1
+donne la conversion en dollars et les valeurs du T1.
+
 | Poste | Ce qu'il vaut | Ce qu'il produit — le chemin vers le front | Ce qui le détruit |
 |---|---|---|---|
 | **Réserves monétaires** | Md$. RU 310, UA 29 au T1 | Comble l'écart entre ce que la recette finance et ce que la guerre veut dépenser. Seul poste dont l'emploi **est** la destruction | La ponction elle-même (12 %/tour RU, 9 % UA), et rien d'autre |
@@ -132,15 +142,18 @@ dès que les deux cuves se font face.
 
 Aucune propriété n'est à créer, sauf pour les usines civiles.
 
-| Poste | Valeur affichée | Repères et seuils |
+Toutes les valeurs affichées sont converties en milliards de dollars par `CapitalReader.Measure`
+(§11.1) ; la colonne ci-dessous nomme la mesure du moteur d'où chacune sort.
+
+| Poste | Mesure du moteur | Repères et seuils |
 |---|---|---|
 | Réserves | `Economy.ReservesBillions` | `Economy.ReserveQuartersLeft` (le décompte, déjà calculé), `LastTurnReserveDrawBillions` (la ponction du tour) |
-| Centrales | `Grid.AvailableCapacityGw` contre `Grid.DemandGw(season)` | `Grid.ShortfallRatio`, `PermanentDamageGw`, `WinterDemandMultiplier` |
-| Pétrole | `Economy.LastTurnOilRevenueBillions`, ou la facture dérivée de `OilImportMbd × 91,25 × OilPrice / 1000` | `Economy.RefiningIntegrity`, `Sanctions.ExportDiscountPerBarrel`, `Sanctions.FrictionRate`, `GameState.OilPrice` |
-| Usines civiles | **à créer** — `CivilianIndustry.CapacityBillions × Integrity` | `CivilianIndustry.LivingStandard` |
-| Usines d'armement | `Industry.TotalCapacityValueBillions()` | `Industry.GetCapacityPerTurn(kind)` contre `GetCapacityCeiling(kind)`, `Sanctions.ProductionCeilingMultiplier`, `Grid.IndustrialSupplyRatio(season)` |
-| Tenue du pouvoir | `58 − Politics.RegimeStress` | `PopularDiscontent`, `EliteCohesion`, `LatentTension`, `Repression`, `PoliticalCapital` |
-| Soutien étranger | Cuve UA `Politics.ExternalWill` · cuve RU `min(TreasuryBillions, SupplyCeilingBillions × PricePremium)` · robinet `Foreign.EffectiveGrantBillions` ou le montant réellement acheté | `Foreign.Conditionality`, `Foreign.Dependency`, `Foreign.InKindShare` |
+| Centrales | `Grid.AvailableCapacityGw` × 1,5 Md$/GW, seuil sur `Grid.DemandGw(Winter)` | `Grid.ShortfallRatio`, `PermanentDamageGw`, `WinterDemandMultiplier` |
+| Pétrole | `Economy.LastTurnOilRevenueBillions` × 4, ou la facture dérivée de `OilImportMbd × 91,25 × OilPrice / 1000` × 4 | `Economy.RefiningIntegrity`, `Sanctions.ExportDiscountPerBarrel`, `Sanctions.FrictionRate`, `GameState.OilPrice` |
+| Usines civiles | `CivilianIndustry.CapacityBillions × Integrity` | `CivilianIndustry.LivingStandard` |
+| Usines d'armement | `Industry.TotalCapacityValueBillions()` × 4 | `Industry.GetCapacityPerTurn(kind)` contre `GetCapacityCeiling(kind)`, `Sanctions.ProductionCeilingMultiplier`, `Grid.IndustrialSupplyRatio(season)` |
+| Tenue du pouvoir | `part × Economy.ProductiveCapacityBillions × (58 − Politics.RegimeStress) / 58` | `PopularDiscontent`, `EliteCohesion`, `LatentTension`, `Repression`, `PoliticalCapital` |
+| Soutien étranger | Le robinet, annualisé : `Foreign.EffectiveGrantBillions × 4` ou le budget d'achat du tour × 4. La cuve — `Politics.ExternalWill` (UA), `min(TreasuryBillions, SupplyCeilingBillions × PricePremium × 4)` (RU) — descend en seconde lecture | `Foreign.Conditionality`, `Foreign.Dependency`, `Foreign.InKindShare` |
 
 Le seuil de rupture du régime, **58**, est aujourd'hui une constante privée de `ControlPhase`
 (`RegimeCollapseStress`). Le bandeau doit le dessiner : il faut donc la rendre publique. C'est la
@@ -481,10 +494,11 @@ Sur 16 px de haut, depuis la gouttière vers le bord du bandeau :
   déjà posée pour les cinq parcs (`05` §9.1) et il n'y a aucune raison d'en avoir deux.
 - **Le filet de variation ordinaire** — un trait creux de 2 px en travers de la piste, posé là où la
   masse se tenait à l'ouverture du trimestre. Gravé, jamais plein.
-- **La valeur** — sérif 19 px en `#1a1815`, au bord du bandeau, dans une bande que la masse
-  n'atteint jamais : le chiffre reste lisible quelle que soit la longueur atteinte, et c'est ce que
-  poser le chiffre au bout de la masse ne garantissait pas. Le delta lui fait face en 11 px, adossé
-  à la piste, précédé de son signe, **coloré uniquement s'il s'agit d'une destruction**.
+- **La valeur** — sérif 19 px en `#1a1815`, au bord du bandeau, en milliards de dollars, dans une
+  bande que la masse n'atteint jamais : le chiffre reste lisible quelle que soit la longueur
+  atteinte, et c'est ce que poser le chiffre au bout de la masse ne garantissait pas. La variation
+  lui fait face en 11 px, adossée à la piste, en pourcentage signé ou en tiret (§11.5), **colorée
+  uniquement s'il s'agit d'une destruction**.
 - **Le seuil**, sur les trois postes qui en ont un, et seulement ceux-là : les réserves à quatre
   trimestres de ponction restante, les centrales à la demande d'hiver, la tenue du pouvoir à 58.
   Un pointillé rouge de 1 px en travers de la piste. **Les quatre autres postes n'ont pas de seuil
@@ -622,9 +636,169 @@ n'existent.
   pas un capital ; il est déjà lisible sur les pastilles de coût des cartes.
 - **Un score de capital unique en gros chiffre.** L'indice composite n'existe que pour tracer une
   courbe contre celle du front. Affiché seul, il redevient exactement le chiffre agrégé et rassurant
-  que ce jeu passe son temps à dénoncer.
+  que ce jeu passe son temps à dénoncer. Le bilan en dollars (§11.3) ne rouvre pas cette porte :
+  il publie **deux** totaux par camp — le patrimoine et le flux annuel — et **jamais leur somme**,
+  parce qu'additionner un fonds souverain et une année de recette pétrolière est exactement
+  l'arithmétique des communiqués de guerre.
 - **Une jauge de PIB apparent dans le bandeau.** Le PIB apparent monte quand tout va mal : c'est le
   piège keynésien, il a sa place dans la chaîne économique de chaque camp, pas dans un bandeau qui
   prétend dire ce qu'un camp possède encore.
 - **Des seuils inventés sur les postes qui n'en ont pas.** Le pétrole, les usines et le soutien
   n'ont pas de valeur de rupture ; en dessiner une serait affirmer une mécanique qui n'existe pas.
+
+---
+
+## 11. Le bilan en dollars
+
+> **Demande de l'utilisateur** : « Il faut que le capital soit comptabilisé en milliards de
+> dollars. » Elle découle de la phrase qui fonde le jeu : *l'idée du jeu, c'est capitaliste — le
+> capital produit les éléments pour le front.* Un capital se compte en argent.
+
+Le bandeau parlait cinq langues : un indice base 100 pour les réserves, des gigawatts pour les
+centrales, des points de marge pour le régime, un ratio pour le soutien, des milliards par tour
+pour l'armement. Cinq langues font une liste, pas un bilan. On ne pouvait ni additionner deux
+postes, ni dire lequel pesait le plus, ni répondre à la seule question qu'un bilan pose : *ce
+camp vit-il sur ce qu'il possède ou sur ce qu'il produit ?*
+
+### 11.1 Ce qui a été converti, et ce qui ne l'a pas été
+
+**Cinq postes sur sept n'ont demandé aucun coefficient** : le moteur les tenait déjà en argent.
+Deux coefficients seulement ont été posés, et ce sont les deux seuls chiffres de ce document qui
+ne viennent pas de la simulation.
+
+| Poste | Ce qu'on compte | Conversion | T1 Russie | T1 Ukraine |
+|---|---|---|---|---|
+| **Réserves monétaires** | Le fonds souverain | aucune — c'est déjà de l'argent | 310 | 26,4 |
+| **Centrales électriques** | La valeur de remplacement du parc encore debout | **1,5 Md$ par GW installé** | 367,5 | 39,0 |
+| **Pétrole** | La production annuelle au baril du jour | recette (ou facture) du trimestre **× 4** | 148,9 | 7,0 *(facture)* |
+| **Usines civiles** | Une année de production civile | aucune — la capacité civile est déjà annuelle | 412,8 | 45,1 |
+| **Usines d'armement** | Une année de production d'armes | capacité installée par tour **× 4** | 12,7 | 1,9 |
+| **Tenue du pouvoir** | Ce que le régime peut encore consacrer à tenir | **3,5 % (autocratie) / 2,0 % (démocratie)** de la capacité productive soutenable, × la part de marge restante | 47,2 | 2,6 |
+| **Soutien extérieur** | Une année du flux obtenu du dehors | flux du trimestre **× 4** | 6,5 *(acheté)* | 16,5 *(reçu)* |
+
+**Production ou outil ?** Les deux usines sont comptées en **production annuelle**, et non en
+valeur de l'outil. C'est le seul choix qui les garde comparables entre elles — or leur écart est
+la leçon du bandeau — et c'est celui qui suit le moteur, où la capacité civile est déjà une
+production annuelle et la capacité d'armement une production par tour. Compter l'outil aurait
+demandé un multiple capitalistique par filière, donc deux coefficients inventés de plus pour
+répondre à une question que le jeu ne pose pas.
+
+**Pourquoi la tenue du pouvoir se compte ainsi.** La piste évidente — *ce que coûte par an le
+maintien de la coalition au pouvoir* — dit l'inverse de ce qui se passe : un régime en difficulté
+paie **plus** pour tenir, donc son poste gonflerait à mesure qu'il approche de la rupture. Ce
+qu'on met au bilan est donc la **marge**, valorisée au prix courant du maintien :
+
+```
+facture annuelle de maintien = part × capacité productive soutenable
+tenue du pouvoir            = facture × (58 − RegimeStress) / 58
+```
+
+Le poste se vide exactement quand l'appareil se fissure, la masse qui touche la gouttière est
+toujours le régime qui tombe, et le seuil à 58 reste le seul de ce poste. La facture se prélève
+sur la **capacité productive soutenable** et jamais sur le PIB apparent : le PIB apparent est
+gonflé par la guerre elle-même, et un régime qui consomme son économie paraîtrait chaque
+trimestre mieux armé pour financer sa propre survie.
+
+### 11.2 Incertitude, et ce que le dépôt promet
+
+Le [`README`](../../README.md) §« Statut des chiffres » vaut ici sans exception : ce sont des
+**ordres de grandeur de travail**, posés pour que le bandeau produise un bilan discutable. Ils ne
+sont pas sourcés un par un et ne doivent pas être cités comme des faits.
+
+- **1,5 Md$ par GW** — un parc post-soviétique est thermique pour l'essentiel, avec du nucléaire
+  et de l'hydraulique dessous. Une tranche prise isolément vaut la moitié ou le double. Le
+  coefficient est **le même pour les deux camps** : il déplace le poids du poste dans le
+  patrimoine, jamais le rapport entre Moscou et Kyiv.
+- **3,5 % et 2,0 % de la capacité soutenable** — le chiffre le plus fragile des deux, et il est
+  assumé comme tel. Il vise l'addition sécurité intérieure + clientèle + subventions à la paix
+  sociale ; à un facteur deux près, le poste garderait la même forme, puisque c'est la marge qui
+  le fait bouger et non la facture.
+- Le **× 4** n'est pas un coefficient : c'est un changement de période. Le moteur pense au
+  trimestre, un bilan se lit à l'année.
+
+### 11.3 Deux natures, deux totaux, jamais leur somme
+
+Un fonds souverain et une année de recette pétrolière ne s'additionnent pas. Chaque poste porte
+donc sa nature, et le bandeau publie **deux totaux par camp** :
+
+| Nature | Postes | T1 Russie | T1 Ukraine |
+|---|---|---|---|
+| **Patrimoine** — ce qu'on détient | réserves, centrales | **678 Md$** | **65 Md$** |
+| **Flux annuel** — ce qu'on produit, reçoit ou doit payer | pétrole, usines civiles, usines d'armement, tenue du pouvoir, soutien extérieur | **628 Md$/an** | **59 Md$/an** |
+
+La facture pétrolière ukrainienne est une **charge** : elle se retranche du flux au lieu de le
+gonfler. Le soutien international, lui, n'entre dans aucun des deux : ce n'est pas une
+possession mais une position, et il reste lu sur cent, dans l'infobulle du poste qu'il commande.
+
+**Ce que le bilan révèle et que l'indice base 100 cachait.** Les deux camps sont séparés d'un
+ordre de grandeur sur *tous* les postes — dix contre un sur le patrimoine, onze sur les réserves,
+neuf sur les centrales et l'appareil civil, sept sur l'armement, dix-huit sur la tenue du
+pouvoir — **sauf un seul, où le petit dépasse le grand** : le soutien extérieur, 16,5 Md$/an
+donnés à l'Ukraine contre 6,5 achetés par la Russie, et jusqu'à 80 contre 4 dans les déroulés où
+l'Occident tient. La seule ligne du bandeau qui penche vers la droite est celle qu'on ne fabrique
+pas chez soi — et c'est aussi la seule qui peut s'arrêter du jour au lendemain. Un test la
+verrouille (`TheBalanceSheet_ShowsRussiaAnOrderOfMagnitudeHeavier_ExceptOnForeignSupport`).
+
+### 11.4 L'échelle des masses
+
+Une règle **par rangée**, partagée par les deux camps, posée sur le plus gros capital que ce
+poste atteint dans **tout le déroulé**. Trois conséquences, et chacune répond à une objection.
+
+1. **Partagée par les deux camps** : un milliard vaut la même longueur à gauche et à droite,
+   sinon le bilan en dollars ne se comparerait pas. La masse ukrainienne devient courte — dix à
+   trente pixels contre trois cents — et c'est une information, pas un défaut. Aucune ne
+   descend sous cinq pixels sur les soixante-quatre bandeaux des trois déroulés.
+2. **Posée sur le maximum du déroulé, pas sur février 2022** : l'aide occidentale quintuple dans
+   le déroulé de la victoire. Une règle calée sur le premier trimestre aurait plafonné soixante
+   masses sur la butée de la piste, et une masse plafonnée cache exactement ce que le poste
+   existe pour montrer. Une masse ne change donc jamais d'échelle d'un trimestre à l'autre : elle
+   se compare toujours à elle-même.
+3. **Une règle par rangée, pas une pour les sept** : treize milliards d'usines d'armement contre
+   quatre cent treize d'appareil civil, sur une règle commune, feraient de l'armement un trait.
+   Ce sont les **chiffres**, au bord du bandeau, qui comparent un poste à un autre.
+
+Ce que la masse a perdu, le pourcentage le reprend : **la longueur dit ce qu'on possède, le
+pourcentage dit ce que le trimestre en a fait.** Deux questions, deux réponses, et plus une seule
+ligne qui prétendait aux deux. Le pointillé de février 2022 reste sur chaque piste, à la place de
+ce camp-là : la distance entre la masse et son propre pointillé reste lisible côté russe et
+devient minuscule côté ukrainien, ce qui est précisément pourquoi le pourcentage est imprimé.
+
+**La charge se dessine rayée.** Une facture qui s'allonge n'est pas un capital qui grossit. Le
+pétrole ukrainien est donc dessiné en matière rayée et non en aplat plein — une masse pleine dit
+« je possède », une masse rayée dit « je paie » — et il échappe au dessin du poste détruit, qui
+n'a pas de sens pour une charge.
+
+### 11.5 La forme des variations
+
+> **Demande de l'utilisateur** : « Les variations c'est "-" pour inchangé, et sinon en % + ou
+> - x %. »
+
+Une seule forme, partout : le cartouche, l'infobulle et le ruban de conséquence. Plus de
+« inchangé » écrit en toutes lettres, plus de « −14,2 Md », plus de « +0,9 pts », plus de
+« /100 ».
+
+- La variation est la **part de l'indice du poste**, comptée du point de vue du capital :
+  `(indice − indice à l'ouverture) / indice à l'ouverture`. Une facture qui double imprime donc
+  −50 %, et non +100 %.
+- **Le seuil du tiret est 0,05 %.** En dessous, l'arrondi à la décimale imprimerait « +0,0 % » :
+  ce n'est pas une variation, c'est un arrondi, et l'écrire comme une variation ferait chercher
+  une cause qui n'existe pas. Sur les soixante-quatre bandeaux, 331 des 896 variations imprimées
+  sont des tirets — un tiers d'un bandeau qui ne bouge pas est une information, pas un vide.
+- Le pourcentage n'est **coloré que s'il s'agit d'une destruction** : la règle du §5.2 est
+  inchangée, seule l'unité a bougé.
+
+### 11.6 Le goulot du trimestre
+
+> **Question de l'utilisateur** : pourquoi ce cercle noir autour de « Réserves » ?
+
+C'était le repère du poste que l'alerte la plus vive du trimestre désigne — la règle centrale du
+jeu, *la puissance est la ressource la plus rare* — et **rien à l'écran ne le disait**. Un signe
+qu'il faut deviner passe pour une bizarrerie.
+
+La pastille reste, et une **bannière** la précède, juste au-dessus du bandeau : la même pastille
+noire portant « goulot du trimestre », le camp concerné, le nom du poste, et la phrase que le
+moteur a écrite pour cette alerte. Le lecteur fait le lien de lui-même, sans infobulle et sans
+légende. La bannière nomme le camp, ce que la pastille ne pouvait pas faire — le nom du poste est
+écrit une seule fois, dans la gouttière, et il appartient aux deux camps. Un trimestre sans
+alerte de capital n'affiche aucune bannière : le bandeau commence alors directement, et cette
+minceur est elle-même une information.

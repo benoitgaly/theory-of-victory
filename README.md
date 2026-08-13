@@ -167,8 +167,12 @@ minutes plus tard sur [benoitgaly.github.io/theory-of-victory](https://benoitgal
 
 Les valeurs sont, sauf mention contraire, des **ordres de grandeur de travail**, posées pour que le
 moteur produise des courbes discutables. Elles ne sont pas sourcées une par une et ne doivent pas
-être citées comme des faits. Font exception les **effectifs**, calés sur sources ouvertes avec
-fourchettes d'incertitude assumées dans [`04-calibration-effectifs.md`](docs/design/04-calibration-effectifs.md).
+être citées comme des faits. Cela vaut aussi pour les deux coefficients qui convertissent le
+capital de guerre en milliards de dollars — le coût du gigawatt installé et le prix annuel du
+maintien au pouvoir — écrits avec leur incertitude au
+[§11 du capital de guerre](docs/design/08-capital-de-guerre.md). Font exception les **effectifs**,
+calés sur sources ouvertes avec fourchettes d'incertitude assumées dans
+[`04-calibration-effectifs.md`](docs/design/04-calibration-effectifs.md).
 La conception complète est dans [`docs/design/01-modele-de-jeu.md`](docs/design/01-modele-de-jeu.md).
 
 ## Licence

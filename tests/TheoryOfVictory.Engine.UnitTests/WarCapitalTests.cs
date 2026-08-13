@@ -74,6 +74,154 @@ public sealed class WarCapitalTests
     }
 
     [Fact]
+    public void EveryProduction_IsWorthFiveYearsOfItself_AndNothingElseIsCapitalised()
+    {
+        // The rule of the balance sheet, checked on the two posts whose yearly production the
+        // snapshot publishes on its own — the oil receipt and the standing power fleet. One
+        // multiple, one place, and no coefficient invented post by post.
+        foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
+        {
+            PlayedGame game = new GameRunner().Run(UkraineScenario.Build(variant));
+
+            foreach (TurnSnapshot turn in game.Turns)
+            {
+                foreach (SideSnapshot side in new[] { turn.Invader, turn.Defender })
+                {
+                    CapitalPost grid = side.Capital.Single(post => post.Code == CapitalReader.Grid);
+                    Assert.Equal(CapitalReader.GridValue(side.GridAvailableGw), grid.Value, 6);
+
+                    CapitalPost oil = side.Capital.Single(post => post.Code == CapitalReader.Oil);
+                    if (side.OilRevenue > 0d)
+                    {
+                        Assert.Equal(side.OilRevenue * 4d * CapitalReader.CapitalisationMultiple, oil.Value, 6);
+                    }
+
+                    // Aid is a flow that one election cancels: capitalising it would book five
+                    // guaranteed years of a package that can stop in a day. The post is worth
+                    // exactly the year it is given, and the band totals it apart for that reason.
+                    CapitalPost foreign = side.Capital.Single(post => post.Code == CapitalReader.Foreign);
+                    Assert.Equal(CapitalNature.AnnualFlow, foreign.Nature);
+                    Assert.Equal(CapitalNature.AnnualFlow, side.Capital.Single(post => post.Code == CapitalReader.Regime).Nature);
+                }
+            }
+        }
+    }
+
+    [Fact]
+    public void EveryPost_IsPricedInBillions_AndTotalledByNature()
+    {
+        // The whole point of the conversion: one unit, so the seven posts are a balance sheet
+        // rather than a list of five languages. The diplomatic position is the one exception,
+        // because it is not a possession — and it therefore enters neither total.
+        foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
+        {
+            PlayedGame game = new GameRunner().Run(UkraineScenario.Build(variant));
+
+            foreach (TurnSnapshot turn in game.Turns)
+            {
+                foreach (SideSnapshot side in new[] { turn.Invader, turn.Defender })
+                {
+                    foreach (CapitalPost post in side.Capital)
+                    {
+                        string expected = post.Code == CapitalReader.International ? "sur 100" : "Md$";
+                        Assert.Equal(expected, post.Unit);
+                    }
+
+                    // Une charge se retranche du bilan au lieu de le gonfler : la facture
+                    // pétrolière ukrainienne est de l'argent qui sort, pas du capital détenu.
+                    Assert.Equal(
+                        side.Capital
+                            .Where(post => post.Nature == CapitalNature.Stock)
+                            .Sum(post => post.Inverted ? -post.Value : post.Value),
+                        side.CapitalStock,
+                        6);
+
+                    Assert.True(
+                        double.IsFinite(side.CapitalFlow),
+                        $"{side.SideCode} T{turn.Turn} : flux annuel non fini.");
+                }
+            }
+        }
+    }
+
+    [Fact]
+    public void TheBalanceSheet_ShowsRussiaAnOrderOfMagnitudeHeavier_ExceptOnForeignSupport()
+    {
+        // What the dollar reading reveals and the base-100 index could not: the two camps are
+        // an order of magnitude apart on every holding and every production — and on exactly
+        // ONE post the smaller camp is the bigger, because it is given what the other has to
+        // buy. That single inversion is the game, and it is now visible without a tooltip.
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
+        TurnSnapshot first = game.Turns[0];
+
+        Assert.True(
+            first.Invader.CapitalStock > first.Defender.CapitalStock * 5d,
+            $"Patrimoine {first.Invader.CapitalStock:F0} contre {first.Defender.CapitalStock:F0} Md$.");
+
+        foreach (string code in new[] { CapitalReader.Reserves, CapitalReader.Grid, CapitalReader.Civilian, CapitalReader.Arms })
+        {
+            CapitalPost russian = first.Invader.Capital.Single(post => post.Code == code);
+            CapitalPost ukrainian = first.Defender.Capital.Single(post => post.Code == code);
+            Assert.True(
+                russian.Value > ukrainian.Value * 4d,
+                $"{code} : {russian.Value:F1} contre {ukrainian.Value:F1} Md$.");
+        }
+
+        CapitalPost bought = first.Invader.Capital.Single(post => post.Code == CapitalReader.Foreign);
+        CapitalPost given = first.Defender.Capital.Single(post => post.Code == CapitalReader.Foreign);
+        Assert.True(
+            given.Value > bought.Value,
+            $"Soutien extérieur : {given.Value:F1} donné contre {bought.Value:F1} acheté.");
+
+        // Le pétrole n'est pas un poste plus petit chez l'un : c'est un poste de signe opposé.
+        // L'Ukraine n'exporte pas d'hydrocarbures, elle en importe — le poste est une charge, et
+        // il pèse un ordre de grandeur sous la recette russe. Aucune symétrie n'est forcée.
+        CapitalPost receipt = first.Invader.Capital.Single(post => post.Code == CapitalReader.Oil);
+        CapitalPost bill = first.Defender.Capital.Single(post => post.Code == CapitalReader.Oil);
+        Assert.False(receipt.Inverted);
+        Assert.True(bill.Inverted, "Le pétrole ukrainien doit se lire comme une facture.");
+        Assert.True(
+            receipt.Value > bill.Value * 10d,
+            $"Pétrole : {receipt.Value:F0} de recette capitalisée contre {bill.Value:F0} de facture.");
+    }
+
+    [Fact]
+    public void TheHoldingPost_EmptiesWithTheMargin_AndIsPricedOnSustainableCapacity()
+    {
+        // Pricing the bill on its own would have swelled the post as the regime got closer to
+        // rupture, since a regime in trouble pays MORE to hold. What is priced is the margin,
+        // so the post still empties exactly as the apparatus cracks.
+        foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
+        {
+            PlayedGame game = new GameRunner().Run(UkraineScenario.Build(variant));
+
+            foreach (TurnSnapshot turn in game.Turns)
+            {
+                foreach (SideSnapshot side in new[] { turn.Invader, turn.Defender })
+                {
+                    CapitalPost post = side.Capital.Single(candidate => candidate.Code == CapitalReader.Regime);
+                    Assert.True(post.Value >= 0d);
+
+                    double margin = Math.Max(0d, 58d - side.RegimeStress);
+                    if (margin < 1d || side.ProductiveCapacity <= 0d)
+                    {
+                        continue;
+                    }
+
+                    // The post is the yearly holding bill times the share of the margin left,
+                    // and that bill is a share of the SUSTAINABLE capacity — never of headline
+                    // GDP, which the war inflates and which would have a regime looking richer
+                    // in survival the poorer its economy got.
+                    double share = post.Value / (side.ProductiveCapacity * margin / 58d);
+                    Assert.True(
+                        Math.Abs(share - 0.035d) < 1e-9d || Math.Abs(share - 0.02d) < 1e-9d,
+                        $"{side.SideCode} T{turn.Turn} : part de tenue à {share:F4}.");
+                }
+            }
+        }
+    }
+
+    [Fact]
     public void TheCapitalIndex_IsNeverZeroedByASinglePost()
     {
         // A side does not die of having lost its oil. It dies of having lost it at the same
@@ -143,18 +291,20 @@ public sealed class WarCapitalTests
 
         Assert.True(
             civilianAfter.Value < civilianBefore.Value * 0.8d,
-            $"Usines civiles à {civilianAfter.Value:F0} Md contre {civilianBefore.Value:F0} sans la campagne.");
+            $"Usines civiles à {civilianAfter.Value:F0} Md$ contre {civilianBefore.Value:F0} sans la campagne.");
 
         // The whole chain, checked link by link: the plant, then the living standard, then
-        // discontent, then the margin the regime has left.
-        Assert.True(civilianAfter.Secondary < 0.9d, $"Niveau de vie à {civilianAfter.Secondary:F2}.");
+        // discontent, then the margin the regime has left. The margin is now priced, so it is
+        // checked as a share of itself — the Ukrainian holding bill is small in dollars and a
+        // threshold in billions would only be measuring the size of the economy.
+        Assert.True(civilianAfter.Secondary < 90d, $"Niveau de vie à {civilianAfter.Secondary:F0} %.");
         Assert.True(after.PopularDiscontent > before.PopularDiscontent + 10d);
 
         CapitalPost regimeBefore = before.Capital.Single(post => post.Code == CapitalReader.Regime);
         CapitalPost regimeAfter = after.Capital.Single(post => post.Code == CapitalReader.Regime);
         Assert.True(
-            regimeAfter.Value < regimeBefore.Value - 5d,
-            $"Tenue du pouvoir à {regimeAfter.Value:F1} pts contre {regimeBefore.Value:F1}.");
+            regimeAfter.Value < regimeBefore.Value * 0.9d,
+            $"Tenue du pouvoir à {regimeAfter.Value:F1} Md$ contre {regimeBefore.Value:F1}.");
 
         // And the point of the whole exercise: the waves that did this took nothing off the
         // front. They were spent on the rear of the rear, and the line is no worse for it.
@@ -227,17 +377,15 @@ public sealed class WarCapitalTests
             Assert.False(invader.Inverted);
             Assert.True(defender.Inverted);
 
-            // Printed from the point of view of whoever reads it: a door the world closes is a
+            // Read from the point of view of whoever reads it: a door the world closes is a
             // loss in Moscow and a gain in Kyiv, and the same sign under both would put a minus
             // under the side that just won.
-            Assert.Equal(invader.DisplayDelta, -defender.DisplayDelta, 6);
-
-            if (Math.Abs(invader.DisplayDelta) > 0.01d)
+            if (Math.Abs(invader.Value - invader.Opening) > 0.01d)
             {
                 everDiverged = true;
                 Assert.True(
-                    (invader.Index - invader.OpeningIndex) * (defender.Index - defender.OpeningIndex) < 0d,
-                    "Les deux masses doivent tirer en sens contraire.");
+                    invader.PercentDelta * defender.PercentDelta < 0d,
+                    "Les deux lectures doivent aller en sens contraire.");
             }
         }
 
@@ -292,7 +440,8 @@ public sealed class WarCapitalTests
         {
             Code = code,
             Name = code,
-            Unit = string.Empty,
+            Unit = "Md$",
+            Nature = CapitalNature.Stock,
             Value = index,
             Opening = index,
             Reference = 100d,

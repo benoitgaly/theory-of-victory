@@ -261,10 +261,25 @@ public sealed class SideSnapshot
     public PressureReading? Pressure { get; init; }
 
     /// <summary>
-    /// The seven posts of war capital, in the band's own order. What this side still holds
-    /// to make war with, against what the front is showing.
+    /// The seven posts of war capital, in the band's own order, every one of them in billions
+    /// of dollars. What this side still holds to make war with, against what the front shows.
     /// </summary>
     public List<CapitalPost> Capital { get; init; } = [];
+
+    /// <summary>
+    /// What this side owns, in billions: the sovereign fund, plus every production valued at
+    /// five years of itself. The oil bill of an importer comes off it as a liability.
+    /// </summary>
+    public double CapitalStock { get; init; }
+
+    /// <summary>
+    /// A year of what this side does not own — the aid it is given, the margin it can still
+    /// spend holding power — in billions. Never added to <see cref="CapitalStock"/>: an asset
+    /// and an income are not the same object, and one figure covering both is the arithmetic of
+    /// a wartime communiqué. The ratio between the two is the question the band asks: a side
+    /// whose war runs on the flow is a side that can be switched off.
+    /// </summary>
+    public double CapitalFlow { get; init; }
 
     /// <summary>
     /// The seven posts in one figure, base 100 at the first quarter, as a geometric mean

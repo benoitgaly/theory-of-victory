@@ -331,6 +331,8 @@ public sealed class TurnEngine
             FundingGap = belligerent.Economy.FundingGap,
             Pressure = pressure,
             Capital = capital,
+            CapitalStock = CapitalReader.Stock(capital),
+            CapitalFlow = CapitalReader.Flow(capital),
             CapitalIndex = CapitalReader.Index(capital),
             Chain = CapitalReader.Chain(capital),
         };

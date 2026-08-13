@@ -1,15 +1,42 @@
 namespace TheoryOfVictory.Core;
 
 /// <summary>
+/// What a post is made of, and therefore what it may be added to. A balance sheet that added
+/// an asset to a year of aid would be counting a holding and an income as the same thing, so
+/// the band totals them apart and says which is which.
+/// </summary>
+public enum CapitalNature
+{
+    /// <summary>
+    /// An asset the side owns: the cash in the fund, and every production valued at five years
+    /// of itself. That multiple is what makes an oil field, a power fleet and a shell line
+    /// comparable at all — it is the rule of the balance sheet, not a detail of the reading.
+    /// </summary>
+    Stock = 0,
+
+    /// <summary>
+    /// A year of something the side has no title to and cannot capitalise: what it is given
+    /// from outside and can lose in a day, and what it can still spend holding itself in place.
+    /// </summary>
+    AnnualFlow = 1,
+
+    /// <summary>Not a possession — a position, read on a hundred. Never enters either total.</summary>
+    Position = 2,
+}
+
+/// <summary>
 /// One post of war capital at the close of a quarter — what a side still HOLDS to make war
 /// with, as opposed to what it is currently putting on the front.
 ///
+/// Every post is priced in billions of dollars, both camps, because a capital is counted in
+/// money: an index in base 100, gigawatts, points of margin and a ratio are five languages,
+/// and five languages make a list rather than a balance sheet. The conversion coefficients and
+/// their uncertainty live in <c>docs/design/08-capital-de-guerre.md</c>.
+///
 /// A level on its own teaches nothing, so every post carries the move that produced it, split
 /// by cause: an ordinary draw-down and a destroyed assembly line are the same figure and not
-/// the same event. And every post carries its own base-100 index, read against this side's
-/// first quarter and never against the other camp: 310 billions of Russian reserve against 29
-/// Ukrainian ones on a single scale would only say, falsely, that the war was over before it
-/// started. The one question worth asking is which side burns its capital faster.
+/// the same event. And the move is printed as a percentage of where the post opened — the one
+/// form that reads alike on a post worth 310 billions and on one worth 1,3.
 /// </summary>
 public sealed class CapitalPost
 {
@@ -17,10 +44,10 @@ public sealed class CapitalPost
 
     public required string Name { get; init; }
 
+    /// <summary>Billions of dollars on the seven posts of the band, and nothing else.</summary>
     public required string Unit { get; init; }
 
-    /// <summary>Decimals the board prints. A grid in GW and a budget in billions do not round alike.</summary>
-    public int Decimals { get; init; }
+    public required CapitalNature Nature { get; init; }
 
     /// <summary>
     /// True when a rising figure is a falling capital. Ukrainian oil is a bill, not a receipt:
@@ -40,10 +67,19 @@ public sealed class CapitalPost
     /// <summary>Where this post breaks, when it has such a value. Four of the seven do not, and draw none.</summary>
     public double? Threshold { get; init; }
 
-    /// <summary>A second reading of the same post: the winter demand, the tap, the living standard.</summary>
+    /// <summary>What the threshold is, in words: a red line nobody can name is a red line nobody trusts.</summary>
+    public string? ThresholdLabel { get; init; }
+
+    /// <summary>
+    /// A second reading of the same post, in its own physical unit: the gigawatts behind the
+    /// valuation, the living standard, the tank behind the tap. The money says how much is
+    /// held; this says what it is made of.
+    /// </summary>
     public double? Secondary { get; init; }
 
     public string? SecondaryLabel { get; init; }
+
+    public string? SecondaryUnit { get; init; }
 
     /// <summary>Repair, growth, revenue, aid received. Drawn engraved: ordinary is never solid matter.</summary>
     public double Regeneration { get; init; }
@@ -75,19 +111,33 @@ public sealed class CapitalPost
         get { return ToIndex(Opening); }
     }
 
-    /// <summary>Signed move of the quarter, in the post's own unit.</summary>
+    /// <summary>Signed move of the quarter, in billions.</summary>
     public double Delta
     {
         get { return Value - Opening; }
     }
 
     /// <summary>
-    /// The move as the board prints it. It differs from <see cref="Delta"/> on the one post
-    /// whose unit is not a possession but a shared quantity — a bill that shrinks is naturally
-    /// written as a fall, while a diplomatic latitude has to be signed from the point of view
-    /// of the camp reading it, or the band puts a minus under the side that just gained.
+    /// The move of the quarter as the band prints it: a share of where the post opened, in
+    /// percent, counted capital-wise. It is the one form that works on every post — a bill and
+    /// a receipt, a post worth 310 billions and a post worth 1,3 — and it is the reading that
+    /// survives the band being drawn on a scale shared by two camps of very different size,
+    /// where a Ukrainian mass is short by construction and its trajectory can no longer be read
+    /// off the bar. Percent for the level, and a mass for the level: two questions, two answers.
     /// </summary>
-    public double DisplayDelta { get; init; }
+    public double PercentDelta
+    {
+        get
+        {
+            double opening = OpeningIndex;
+            if (opening <= 0.01d)
+            {
+                return 0d;
+            }
+
+            return (Index - opening) / opening * 100d;
+        }
+    }
 
     private double ToIndex(double value)
     {
@@ -107,7 +157,7 @@ public sealed class CapitalPost
     }
 }
 
-/// <summary>One link of the consequence ribbon: which post moved, and by how many index points.</summary>
+/// <summary>One link of the consequence ribbon: which post moved, and by how much.</summary>
 public sealed class CapitalLink
 {
     public required string PostCode { get; init; }
@@ -115,10 +165,11 @@ public sealed class CapitalLink
     public required string Label { get; init; }
 
     /// <summary>
-    /// Signed move of the quarter, as a share of where the post stood. A percentage rather
-    /// than index points, so a post whose base quarter happened to be tiny does not print an
-    /// unreadable figure next to a post whose base was large: the ribbon has to be read in one
-    /// pass, and every link has to be on the same scale for that to work.
+    /// Signed move of the quarter, as a share of where the post stood. The same form as
+    /// everywhere else on the band: a percentage rather than billions, so a post whose base
+    /// happened to be tiny does not print an unreadable figure next to a post whose base was
+    /// large. The ribbon has to be read in one pass, and every link has to be on the same
+    /// scale for that to work.
     /// </summary>
     public double PercentDelta { get; init; }
 }

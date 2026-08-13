@@ -9,6 +9,14 @@
      · le bandeau dit le trimestre — sept postes, leur variation, sa cause ;
      · le ciseau dit la guerre — la puissance au front contre le capital qui la nourrit.
 
+   Le bandeau compte TOUT en milliards de dollars, les deux camps sur la même règle. L'idée du
+   jeu est capitaliste — le capital produit les éléments du front — et un capital se compte en
+   argent : un indice base 100 pour les réserves, des gigawatts pour les centrales et des points
+   de marge pour le régime faisaient une liste, pas un bilan. La valorisation tient en une
+   phrase, écrite une seule fois dans le moteur : un actif vaut cinq années de ce qu'il produit.
+   Le prix de tout cela est que la masse ukrainienne devient courte ; c'est le pourcentage,
+   contre chaque masse, qui porte désormais la trajectoire de chaque camp.
+
    Mélanger les deux produirait sept petites courbes illisibles et une pièce maîtresse
    diluée, alors on les sépare.
 
@@ -71,7 +79,10 @@
     // Les chiffres ont leur bande à eux, au bord extérieur du bandeau : quelle que soit la
     // longueur de la masse, le chiffre reste lisible et jamais recouvert.
     var NUM_IN = 186, NUM_OUT = 22;
-    var BAR_H = 16, PX_PER_100 = 2.26, MAX_LEN = 322;
+    // TRACK : la longueur qu'atteint la plus grosse masse d'une rangée. MAX_LEN reste la butée
+    // physique de la piste, celle qui protège la bande des chiffres — rien ne devrait plus
+    // l'atteindre, et le chevron reste là pour le dire si cela arrivait.
+    var BAR_H = 16, TRACK = 306, MAX_LEN = 322;
     var RUINED_INDEX = 25;
 
     var ICON_X = GUT_L + 7, ICON_S = 22, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
@@ -110,6 +121,28 @@
         return (v > 0 ? "+" : v < 0 ? "−" : "±") + num(Math.abs(v), d);
     }
 
+    // Tout le capital se compte en milliards de dollars : un bilan ne se lit pas dans cinq
+    // langues à la fois. Sous dix milliards la décimale porte l'information — les usines
+    // d'armement ukrainiennes valent 1,3 Md$ par an, et « 1 » n'aurait rien dit ; au-dessus,
+    // elle n'est plus que du bruit devant un parc électrique à 368.
+    function money(v) {
+        if (v === null || v === undefined || isNaN(v)) { return "—"; }
+        return num(v, Math.abs(v) < 10 ? 1 : 0);
+    }
+
+    // Sous ce seuil, l'arrondi imprimerait « +0,0 % » : ce n'est pas une variation, c'est un
+    // arrondi, et l'écrire comme une variation ferait chercher une cause qui n'existe pas.
+    var FLAT_PERCENT = 0.05;
+
+    // Une variation, c'est un tiret quand rien ne bouge et sinon un pourcentage signé. Une
+    // seule forme, partout : le cartouche, l'infobulle et le ruban de conséquence. Des points
+    // d'indice ici, des milliards là et des « pts » ailleurs obligeaient à convertir de tête
+    // avant de comparer deux lignes du même bandeau.
+    function pct(v) {
+        if (v === null || v === undefined || isNaN(v) || Math.abs(v) < FLAT_PERCENT) { return "—"; }
+        return signed(v, 1) + " %";
+    }
+
     function dateOf(t) {
         return window.tovDates ? window.tovDates.of(t) : String(t.year);
     }
@@ -134,23 +167,6 @@
             if (post.code === code) { found = post; }
         });
         return found;
-    }
-
-    // Les sept postes viennent du moteur, dans l'ordre du bandeau. Une seule autorité par
-    // information : le lecteur de capital les mesure, les indexe et les attribue — la vue ne
-    // recalcule rien, sinon deux chiffres finiraient par répondre à la même question sans
-    // qu'on sache lequel croire.
-    function postsOf(game, turnIndex, invader) {
-        var side = invader ? game.turns[turnIndex].invader : game.turns[turnIndex].defender;
-        var out = [];
-
-        POSTS.forEach(function (p) {
-            (side.capital || []).forEach(function (post) {
-                if (post.code === p.code) { out.push(post); }
-            });
-        });
-
-        return out;
     }
 
     /* ---------------- Les sept icônes ----------------
@@ -296,24 +312,48 @@
         return d;
     }
 
-    function toIndex(post, value) {
-        if (!post.reference) { return 100; }
-        if (post.inverted) { return value <= 0 ? 100 : post.reference / value * 100; }
-        return value / post.reference * 100;
+    // Les rayures de la charge : le pétrole ukrainien n'est pas une recette mais une facture,
+    // et une facture qui grossit n'est pas un capital qui grossit. Elle se dessine donc en
+    // matière rayée, jamais en aplat plein — une masse pleine dit « je possède », une masse
+    // rayée dit « je paie ».
+    function chargePattern(defs, id, colour) {
+        var p = svg("pattern", {
+            id: id, width: "5", height: "5", patternUnits: "userSpaceOnUse",
+            patternTransform: "rotate(45)"
+        });
+        p.appendChild(svg("rect", { width: "5", height: "5", fill: colour, opacity: "0.14" }));
+        p.appendChild(svg("line", {
+            x1: "0", y1: "0", x2: "0", y2: "5", stroke: colour, "stroke-width": "2.2", opacity: "0.7"
+        }));
+        defs.appendChild(p);
     }
 
     // Un poste, un camp, une ligne. La masse est ancrée à la gouttière centrale et pousse vers
     // le bord du bandeau ; les chiffres l'attendent dans leur bande réservée, où rien ne vient
     // jamais les recouvrir quelle que soit la longueur atteinte.
-    function cartouche(host, post, colour, invader, hatchId, alerted, row, diplomatic) {
+    //
+    // L'échelle est celle de la RANGÉE, partagée par les deux camps : un milliard vaut la même
+    // longueur à gauche et à droite. C'est le prix à payer pour que le bilan se compare, et il
+    // se paie surtout côté ukrainien, où une masse dix fois plus courte ne montre plus sa
+    // propre trajectoire. C'est le pourcentage, imprimé contre chaque masse, qui la porte
+    // désormais : la longueur dit ce qu'on possède, le pourcentage dit ce que le trimestre en
+    // a fait. Deux questions, deux réponses, et plus une seule ligne qui prétend aux deux.
+    function cartouche(host, defs, post, colour, invader, hatchId, alerted, row, scale, diplomatic) {
         var yc = HEAD_H + row * ROW_H + ROW_H / 2;
         var top = yc - BAR_H / 2, bottom = yc + BAR_H / 2;
         var anchor = invader ? GUT_L : GUT_R;
         var dir = invader ? -1 : 1;
         var index = post.index;
-        var len = Math.min(Math.max(index, 0) * PX_PER_100, MAX_LEN);
-        var ruined = index < RUINED_INDEX;
+        var charge = !!post.inverted;
+        var len = Math.min(Math.max(post.value, 0) * scale, MAX_LEN);
+        var ruined = index < RUINED_INDEX && !charge;
         var edge = anchor + dir * len;
+
+        var chargeId = null;
+        if (charge) {
+            chargeId = "capCharge" + (seq++);
+            chargePattern(defs, chargeId, colour);
+        }
 
         var span = function (from, to) {
             return { x: Math.min(from, to), width: Math.abs(to - from) };
@@ -322,25 +362,36 @@
         var g = svg("g", { class: "cap-post" + (alerted ? " alerted" : "") });
 
         var tip = svg("title", {});
-        tip.textContent = nameOf(post) + " — " + num(post.value, post.decimals) + " " + post.unit +
-            " (indice " + num(index, 0) + ", base 100 au premier trimestre)\n" + yieldOf(post.code) +
-            "\nVariation du trimestre : " + signed(post.displayDelta, Math.max(post.decimals, 1)) + " " + post.unit +
+        tip.textContent = nameOf(post) + " — " + money(post.value) + " Md$" +
+            (post.nature === "AnnualFlow" ? " par an" : "") +
+            (charge ? " de facture" : "") + "\n" + yieldOf(post.code) +
+            "\nVariation du trimestre : " + pct(post.percentDelta) +
             (post.destructionCause ? "\nDétruit par : " + post.destructionCause : "") +
-            (post.secondaryLabel ? "\n" + post.secondaryLabel + " : " + num(post.secondary, 2) : "") +
+            (post.secondaryLabel
+                ? "\n" + post.secondaryLabel + " : " + num(post.secondary, post.secondary < 10 ? 1 : 0) +
+                  (post.secondaryUnit ? " " + post.secondaryUnit : "")
+                : "") +
+            (post.thresholdLabel ? "\nSeuil dessiné : " + post.thresholdLabel : "") +
             // La position diplomatique n'a plus de colonne, mais elle reste mesurée et elle
             // reste la raison du resserrement : elle se lit ici, du point de vue du camp qui
             // la lit — un verrou que le monde referme est une perte à Moscou et un gain à Kyiv.
+            // C'est le seul poste qui ne se compte pas en dollars, parce que c'est le seul qui
+            // ne se possède pas : une latitude commerciale ne se met pas au bilan.
             (diplomatic
                 ? "\n" + diplomatic.name.replace(/^Soutien international/, "Position diplomatique") +
                   " : " + num(diplomatic.value, 0) + " " + diplomatic.unit +
-                  " (" + signed(diplomatic.displayDelta, 1) + " ce trimestre)" +
-                  (diplomatic.secondaryLabel ? "\n" + diplomatic.secondaryLabel + " : " + num(diplomatic.secondary, 2) : "")
+                  " (" + pct(diplomatic.percentDelta) + " ce trimestre)" +
+                  (diplomatic.secondaryLabel
+                      ? "\n" + diplomatic.secondaryLabel + " : " + num(diplomatic.secondary, 0) +
+                        (diplomatic.secondaryUnit ? " " + diplomatic.secondaryUnit : "")
+                      : "")
                 : "");
         g.appendChild(tip);
 
-        // Le repère du premier trimestre : le pointillé qui rend toute masse lisible sans
-        // échelle. Aucune étiquette — c'est le 100 % du tonneau, et il se lit pareil.
-        var refX = anchor + dir * (100 * PX_PER_100);
+        // Le repère de février 2022 : le pointillé qui dit où CE camp partait, sur une piste
+        // dont l'échelle appartient désormais aux deux. Côté ukrainien il se tient tout près de
+        // la gouttière — c'est bien ce qu'on veut montrer.
+        var refX = anchor + dir * Math.min((post.reference || 0) * scale, MAX_LEN);
         g.appendChild(svg("line", {
             x1: refX, y1: top - 5, x2: refX, y2: bottom + 5,
             stroke: "#8b8578", "stroke-width": "1", "stroke-dasharray": "2 4", opacity: "0.9"
@@ -365,6 +416,16 @@
                     x: body.x, y: top, width: body.width, height: BAR_H, fill: colour, opacity: "0.95"
                 }));
             }
+        } else if (charge) {
+            // Une facture n'est pas un avoir : elle s'allonge quand elle empire, et la rayure
+            // dit qu'il ne faut pas la lire comme les six autres masses. La Russie encaisse le
+            // baril, l'Ukraine le paie — c'est le même poste, et c'est le quatrième canal de la
+            // règle du pétrole rendu visible d'un seul regard.
+            g.appendChild(svg("rect", {
+                x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H,
+                class: "cap-mass", fill: "url(#" + chargeId + ")",
+                stroke: colour, "stroke-width": "0.9"
+            }));
         } else {
             g.appendChild(svg("rect", {
                 x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
@@ -379,8 +440,7 @@
 
         // L'encoche de destruction : la part détruite est découpée dans le bout de la masse
         // par une arête irrégulière. On voit le morceau manquant.
-        var destroyedIndex = post.reference ? Math.abs(post.destruction) / post.reference * 100 : 0;
-        var ld = Math.min(destroyedIndex * PX_PER_100, len);
+        var ld = Math.min(Math.abs(post.destruction) * scale, len);
         if (post.destruction > 0 && ld > 0.6 && !ruined) {
             var notch = span(edge, edge - dir * ld);
             g.appendChild(svg("rect", {
@@ -394,13 +454,12 @@
 
         // Le filet de variation ordinaire : gravé, jamais plein. Il marque où la masse se
         // tenait à l'ouverture du trimestre — le gravé est ordinaire, le plein est une
-        // destruction, et aucune légende n'est à consulter.
-        var ordinary = post.regeneration - post.consumption;
-        if (Math.abs(ordinary) > 0.0001 && post.reference) {
-            var lo = Math.abs(ordinary) / post.reference * 100 * PX_PER_100;
-            var opened = Math.min(Math.max(len + (ordinary > 0 ? -lo : lo), 0), MAX_LEN);
+        // destruction, et aucune légende n'est à consulter. Il ne se dessine que si la perte
+        // n'a pas de coupable : sinon c'est l'encoche qui porte déjà le mouvement.
+        if (post.destruction <= 0) {
+            var lo = Math.abs(post.value - post.opening) * scale;
             if (lo > 0.8) {
-                var fx = anchor + dir * opened;
+                var fx = anchor + dir * Math.min(Math.max(post.opening, 0) * scale, MAX_LEN);
                 g.appendChild(svg("line", {
                     x1: fx, y1: top - 2, x2: fx, y2: bottom + 2,
                     stroke: "#8b8578", "stroke-width": "2", "stroke-dasharray": "1 2"
@@ -410,7 +469,7 @@
 
         // Le seuil, sur les postes qui en ont un, et seulement ceux-là.
         if (post.threshold !== null && post.threshold !== undefined) {
-            var tx = anchor + dir * Math.min(toIndex(post, post.threshold) * PX_PER_100, MAX_LEN);
+            var tx = anchor + dir * Math.min(post.threshold * scale, MAX_LEN);
             g.appendChild(svg("line", {
                 x1: tx, y1: top - 4, x2: tx, y2: bottom + 4,
                 stroke: "#a8322a", "stroke-width": "1", "stroke-dasharray": "3 2", opacity: "0.85"
@@ -420,11 +479,12 @@
         // La masse bute sur son plafond : le chevron dit que la ligne est hors d'échelle, et
         // le chiffre de sa bande dit de combien. Il se grave DANS le chant de la masse, jamais
         // au-delà — posé dehors, il viendrait buter contre le chiffre.
-        if (index * PX_PER_100 > MAX_LEN) {
+        if (post.value * scale > MAX_LEN) {
             var cx = edge - dir * 9;
             g.appendChild(svg("path", {
                 d: "M" + cx + " " + (yc - 5) + " l" + (dir * 5) + " 5 l" + (-dir * 5) + " 5",
-                fill: "none", stroke: "#fff", "stroke-width": "2", "stroke-linecap": "round", opacity: "0.8"
+                fill: "none", stroke: charge ? "#1a1815" : "#fff", "stroke-width": "2",
+                "stroke-linecap": "round", opacity: "0.8"
             }));
         }
 
@@ -446,20 +506,18 @@
         var out = invader ? NUM_OUT : W - NUM_OUT;
         var inner = invader ? NUM_IN : W - NUM_IN;
 
-        text(g, out, yc + 6, num(post.value, post.decimals), {
+        text(g, out, yc + 6, money(post.value), {
             "text-anchor": invader ? "start" : "end", class: "cap-value"
         });
 
-        // Un poste qui n'a pas bougé le dit : « −0,0 » n'est pas une variation, c'est un
-        // arrondi, et l'écrire comme une variation ferait chercher une cause qui n'existe pas.
-        var precision = Math.max(post.decimals, 1);
-        var moved = Math.abs(post.displayDelta) >= 0.5 / Math.pow(10, precision);
+        // Un trimestre où rien n'a bougé porte un tiret, et le tiret est une information : il
+        // dit qu'aucune cause n'est à chercher. Partout ailleurs, un pourcentage signé.
+        var moved = Math.abs(post.percentDelta) >= FLAT_PERCENT;
 
-        text(g, inner, yc + 5,
-            moved ? signed(post.displayDelta, precision) + " " + post.unit : "inchangé", {
-                "text-anchor": invader ? "end" : "start",
-                class: "cap-delta" + (moved ? (post.destruction > 0 ? " destroyed" : "") : " flat")
-            });
+        text(g, inner, yc + 5, pct(post.percentDelta), {
+            "text-anchor": invader ? "end" : "start",
+            class: "cap-delta" + (moved ? (post.destruction > 0 ? " destroyed" : "") : " flat")
+        });
 
         host.appendChild(g);
     }
@@ -555,13 +613,65 @@
         });
     }
 
-    function alertedPost(t) {
+    // La règle d'une rangée, et la seule décision d'échelle du bandeau.
+    //
+    // Elle est partagée par les deux camps — un milliard vaut la même longueur à gauche et à
+    // droite, sans quoi le bilan en dollars ne se comparerait pas — et elle est posée sur le
+    // plus gros capital que ce poste atteint dans TOUT le déroulé. Deux propriétés en
+    // découlent, et les deux comptent : une masse ne change jamais d'échelle d'un trimestre à
+    // l'autre, donc elle se compare à elle-même ; et aucune ne vient buter sur le bord, alors
+    // que l'aide occidentale du déroulé de la victoire quintuple — une masse plafonnée aurait
+    // caché exactement ce que ce poste existe pour montrer.
+    //
+    // Chaque rangée a la sienne : sur une règle commune aux sept, les usines d'armement — treize
+    // milliards contre quatre cent treize d'appareil civil — ne seraient plus qu'un trait. Ce
+    // sont les chiffres, au bord du bandeau, qui comparent un poste à un autre.
+    function rules(game) {
+        if (game.tovRules) { return game.tovRules; }
+
+        var top = {};
+        (game.turns || []).forEach(function (t) {
+            [t.invader, t.defender].forEach(function (side) {
+                (side.capital || []).forEach(function (post) {
+                    var v = Math.max(post.value || 0, post.reference || 0);
+                    if (!(top[post.code] >= v)) { top[post.code] = v; }
+                });
+            });
+        });
+
+        game.tovRules = top;
+        return top;
+    }
+
+    // Le goulot du trimestre : le poste que l'alerte la plus vive du moteur désigne. On rend
+    // l'alerte elle-même, pas seulement le nom du poste, parce qu'un signe muet ne s'explique
+    // pas — voir la bannière ci-dessous.
+    function bottleneck(t) {
         var alerts = t.alerts || [];
         for (var i = 0; i < alerts.length; i++) {
             var code = ALERT_POST[alerts[i].code];
-            if (code) { return code; }
+            if (code) { return { code: code, alert: alerts[i] }; }
         }
         return null;
+    }
+
+    // La bannière du goulot. La pastille noire posée sur un poste était juste — c'est la règle
+    // centrale du jeu, la puissance est la ressource la plus rare — mais rien à l'écran ne le
+    // disait, et un signe qu'il faut deviner passe pour une bizarrerie. La bannière porte donc
+    // la même pastille, le camp concerné, le nom du poste et la phrase que le moteur a écrite :
+    // le lecteur fait le lien de lui-même, sans infobulle et sans légende.
+    function bottleneckBanner(t, found) {
+        if (!found) { return null; }
+
+        var alert = found.alert;
+        var side = alert.sideCode === "invader" ? t.invader : t.defender;
+        var row = el("div", "cap-bottleneck " + (alert.sideCode === "invader" ? "ru" : "ua"));
+
+        row.appendChild(el("span", "cb-chip", "Goulot du trimestre"));
+        row.appendChild(el("b", "cb-post", side.name + " — " + NAMES[found.code].toLowerCase()));
+        row.appendChild(el("span", "cb-detail", alert.detail || alert.title));
+
+        return row;
     }
 
     // Le ruban : trois deltas côte à côte ne font pas une chaîne. Il n'apparaît que s'il y
@@ -577,7 +687,7 @@
             row.appendChild(el("span", "cr-arrow", "→"));
             var box = el("span", "cr-link");
             box.appendChild(el("b", null, link.label.replace(/^Soutien étranger/, "Soutien extérieur")));
-            box.appendChild(el("i", null, signed(link.percentDelta, 1) + " %"));
+            box.appendChild(el("i", null, pct(link.percentDelta)));
             row.appendChild(box);
         });
 
@@ -592,10 +702,20 @@
         head.appendChild(el("h3", null, "Le capital de guerre"));
         head.appendChild(el("p", null,
             "Ce que chaque camp possède encore pour faire la guerre, et ce que le trimestre lui a pris. " +
-            "La Russie à gauche, l'Ukraine à droite, poste par poste en vis-à-vis. Chaque masse est un " +
-            "indice base 100 au premier trimestre de son propre camp : on compare des trajectoires, " +
-            "jamais des masses."));
+            "La Russie à gauche, l'Ukraine à droite, poste par poste en vis-à-vis. Tout est compté en " +
+            "milliards de dollars, sous une seule règle : un actif vaut cinq années de ce qu'il produit. " +
+            "Le pétrole, les centrales et les deux usines s'évaluent ainsi ; les réserves sont déjà un " +
+            "stock ; le soutien extérieur et la tenue du pouvoir restent une année, parce qu'on ne " +
+            "capitalise pas ce qui peut s'arrêter du jour au lendemain. Les deux camps partagent la règle " +
+            "graphique de chaque ligne — mais chaque ligne a la sienne, sinon l'armement ne serait qu'un " +
+            "trait à côté de l'appareil civil, et ce sont donc les chiffres qui comparent un poste à un " +
+            "autre. Le pourcentage contre chaque masse dit ce que le trimestre en a fait ; un tiret dit " +
+            "que rien n'a bougé."));
         host.appendChild(head);
+
+        var bottle = bottleneck(t);
+        var banner = bottleneckBanner(t, bottle);
+        if (banner) { host.appendChild(banner); }
 
         var s = svg("svg", { viewBox: "0 0 " + W + " " + H, class: "cap-svg", role: "img" });
         var defs = svg("defs", {});
@@ -607,8 +727,21 @@
         // sous lui : à gauche l'envahisseur, à droite l'envahi, et plus rien à chercher.
         s.appendChild(svg("rect", { x: 22, y: 46, width: GUT_L - 36, height: 3, fill: "#a8322a" }));
         s.appendChild(svg("rect", { x: GUT_R + 14, y: 46, width: W - 36 - GUT_R, height: 3, fill: "#1e5fa8" }));
-        text(s, 22, 38, t.invader.name.toUpperCase(), { class: "cap-side ru" });
-        text(s, W - 22, 38, t.defender.name.toUpperCase(), { "text-anchor": "end", class: "cap-side ua" });
+        text(s, 22, 26, t.invader.name.toUpperCase(), { class: "cap-side ru" });
+        text(s, W - 22, 26, t.defender.name.toUpperCase(), { "text-anchor": "end", class: "cap-side ua" });
+
+        // Deux totaux par camp, jamais leur somme : un fonds souverain et une année de recette
+        // pétrolière ne s'additionnent pas, et le chiffre unique qui prétendrait le contraire
+        // est exactement l'arithmétique des communiqués de guerre. Le patrimoine dit ce qu'on
+        // possède, le flux ce qu'on gagne — et la question devient : ce camp vit-il sur ce
+        // qu'il possède ou sur ce qu'il produit ?
+        var totals = function (side, x, anchorEnd) {
+            text(s, x, 41,
+                "patrimoine " + money(side.capitalStock) + " Md$  ·  flux " + money(side.capitalFlow) + " Md$/an",
+                { "text-anchor": anchorEnd ? "end" : "start", class: "cap-total" });
+        };
+        totals(t.invader, 22, false);
+        totals(t.defender, W - 22, true);
 
         // Les deux bords de la gouttière : c'est le sol commun, et c'est de là que les deux
         // masses partent en sens contraire.
@@ -627,29 +760,25 @@
             }));
         }
 
-        var alerted = alertedPost(t);
+        var alerted = bottle ? bottle.code : null;
         quarterCartouche(s, t);
         spine(s, alerted);
-
-        var ru = postsOf(game, turnIndex, true);
-        var ua = postsOf(game, turnIndex, false);
 
         // La position diplomatique n'accompagne que le poste qu'elle commande.
         var ruDiplomatic = postIn(t.invader, DIPLOMATIC);
         var uaDiplomatic = postIn(t.defender, DIPLOMATIC);
 
+        var ruler = rules(game);
+
         POSTS.forEach(function (p, i) {
             var carries = p.code === "foreign";
-            ru.forEach(function (post) {
-                if (post.code === p.code) {
-                    cartouche(s, post, p.colour, true, hatchId, p.code === alerted, i, carries ? ruDiplomatic : null);
-                }
-            });
-            ua.forEach(function (post) {
-                if (post.code === p.code) {
-                    cartouche(s, post, p.colour, false, hatchId, p.code === alerted, i, carries ? uaDiplomatic : null);
-                }
-            });
+            var ru = postIn(t.invader, p.code);
+            var ua = postIn(t.defender, p.code);
+            var top = ruler[p.code] || 0;
+            var scale = top > 0 ? TRACK / top : 0;
+
+            if (ru) { cartouche(s, defs, ru, p.colour, true, hatchId, p.code === alerted, i, scale, carries ? ruDiplomatic : null); }
+            if (ua) { cartouche(s, defs, ua, p.colour, false, hatchId, p.code === alerted, i, scale, carries ? uaDiplomatic : null); }
         });
 
         host.appendChild(s);

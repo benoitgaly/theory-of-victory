@@ -9,10 +9,64 @@ namespace TheoryOfVictory.Engine;
 /// The band it feeds exists to make one thing visible — a front that still looks healthy while
 /// the capital feeding it gives way. That only works if a fall is attributed: an ordinary
 /// draw-down and a destroyed turbine hall are the same number and not the same event.
+///
+/// Everything here is priced in BILLIONS OF DOLLARS, both camps and all seven posts. The game
+/// is capitalist in its premise — the capital produces what the front consumes — and a capital
+/// is counted in money, not in an index for one post, gigawatts for the next and points of
+/// margin for a third. The conversion coefficients below are working orders of magnitude, in
+/// the sense the README gives that phrase: they are posed so the band produces a balance sheet
+/// worth arguing with, and each of them is written down with its uncertainty in
+/// <c>docs/design/08-capital-de-guerre.md</c>. None of them touches the simulation.
 /// </summary>
 public static class CapitalReader
 {
     private const double DaysPerTurn = 91.25d;
+
+    /// <summary>The engine thinks in quarters; a balance sheet is read by the year.</summary>
+    private const double QuartersPerYear = 4d;
+
+    /// <summary>
+    /// THE rule of the balance sheet: a productive asset is worth five years of what it makes.
+    ///
+    /// It is the only reason the seven posts can be read against one another. An oil field, a
+    /// power fleet, a shell line and a consumer-goods industry have nothing in common except
+    /// that each produces something every year — so each is valued the same way, and no post
+    /// gets a coefficient of its own invented for it. Five is a capitalisation multiple in the
+    /// low range, which is the honest range for an asset sitting in a war zone: nobody prices
+    /// twenty years of future output for a refinery inside missile range.
+    ///
+    /// Two posts are deliberately NOT capitalised, and the exception is the point rather than
+    /// an oversight. Foreign support is a flow that can stop in a day — that is rule five of
+    /// the model — and multiplying it by five would book five guaranteed years of an aid
+    /// package that one election cancels. Holding on to power is not a production either: it
+    /// is a bill the regime pays, and what the band prices is the margin it has left to pay it.
+    ///
+    /// Consequence, and it is wanted: the oil post now revalues and depreciates WITH the
+    /// barrel, five times over. A barrel collapsing takes far more out of the Russian capital
+    /// than the quarter's lost revenue — which is exactly the mechanism the victory run works.
+    /// </summary>
+    public const double CapitalisationMultiple = 5d;
+
+    /// <summary>
+    /// A year of electricity sales per gigawatt of standing plant, in billions: 8 760 hours at
+    /// roughly half load — a mixed post-Soviet fleet runs at about 50 % — sold near 50 $ the
+    /// megawatt-hour. It is the one physical price the band still needs, because the grid is
+    /// the only post the engine holds in a unit that is not money; everything downstream of it
+    /// is the same capitalisation rule as every other production.
+    /// </summary>
+    public const double GridAnnualOutputPerGwBillions = 0.22d;
+
+    /// <summary>
+    /// What holding on to power costs in a year, as a share of the sustainable productive
+    /// capacity: internal security, the clientele, the subsidies that buy social peace. An
+    /// apparatus that has to buy obedience pays more for it than one that is elected — and it
+    /// is read on the sustainable capacity rather than on headline GDP, because headline GDP is
+    /// inflated by the war itself and a regime consuming its own economy would otherwise look
+    /// better able to pay for its survival every quarter it got poorer.
+    /// </summary>
+    private const double HoldingCostShareAutocracy = 0.035d;
+
+    private const double HoldingCostShareDemocracy = 0.02d;
 
     /// <summary>Quarters of reserve left below which the countdown is worth drawing.</summary>
     private const double ReserveWarningQuarters = 4d;
@@ -98,8 +152,14 @@ public static class CapitalReader
     }
 
     /// <summary>
-    /// The raw scalars of one side, taken identically before and after the ten phases. Two
-    /// readings of the same ruler: anything derived from them is a real move, never an artefact.
+    /// The seven posts of one side in billions of dollars, taken identically before and after
+    /// the ten phases. Two readings of the same ruler: anything derived from them is a real
+    /// move, never an artefact.
+    ///
+    /// Five posts are ASSETS — the cash in the fund, and four productions valued at five years
+    /// of themselves (<see cref="CapitalisationMultiple"/>). Two are FLOWS the side has no
+    /// title to and cannot capitalise: what it is given from outside, and what it can still
+    /// spend holding itself in place. The band totals the two natures apart.
     /// </summary>
     public static Dictionary<string, double> Measure(Belligerent belligerent, GameState state)
     {
@@ -107,32 +167,69 @@ public static class CapitalReader
 
         // One post, two opposite economies: the barrel is a receipt on the side that exports
         // it and a bill on the side that imports it. The bill is read as a capital further on,
-        // which is where a rising barrel starts costing Ukraine.
-        double oil = economy.OilExportCapacityMbd > 0d
+        // which is where a rising barrel starts costing Ukraine. Priced at the barrel of the
+        // day, so the post moves the quarter the price moves — which is the point of the lever.
+        double oilPerQuarter = economy.OilExportCapacityMbd > 0d
             ? economy.LastTurnOilRevenueBillions
             : economy.OilImportMbd * DaysPerTurn * state.OilPrice / 1000d;
 
-        double tank = belligerent.Foreign.Mode == SupportMode.Granted
-            ? belligerent.Politics.ExternalWill
-            : Math.Min(economy.TreasuryBillions, belligerent.Foreign.SupplyCeilingBillions * belligerent.Foreign.PricePremium);
+        double tapPerQuarter = belligerent.Foreign.Mode == SupportMode.Granted
+            ? belligerent.Foreign.EffectiveGrantBillions
+            : belligerent.AllocationThisTurn.GetValueOrDefault("foreign");
 
         return new Dictionary<string, double>
         {
             [Reserves] = economy.ReservesBillions,
-            [Grid] = belligerent.Grid.AvailableCapacityGw,
-            ["grid_permanent"] = belligerent.Grid.PermanentDamageGw,
-            [Oil] = oil,
+            [Grid] = GridValue(belligerent.Grid.AvailableCapacityGw),
+            ["grid_permanent"] = GridValue(belligerent.Grid.PermanentDamageGw),
+            [Oil] = oilPerQuarter * QuartersPerYear * CapitalisationMultiple,
             // The plant that still stands, not what it managed to deliver: a factory left dark
             // by a strike on the grid is idle, not destroyed, and booking it as lost capital
-            // would count the same wave twice — once on the grid post, once here.
-            [Civilian] = belligerent.Civilian.CapacityBillions * belligerent.Civilian.Integrity,
-            ["living_standard"] = belligerent.Civilian.LivingStandard,
-            ["civilian_permanent"] = belligerent.Civilian.PermanentDamage,
-            [Arms] = belligerent.Industry.TotalCapacityValueBillions(),
-            [Regime] = Math.Max(0d, Phases.ControlPhase.RegimeCollapseStress - belligerent.Politics.RegimeStress),
-            [Foreign] = tank,
+            // would count the same wave twice — once on the grid post, once here. The capacity
+            // is already a year of civilian output, so the arms works are read the same way and
+            // the two factories stay comparable: nearly seven to one between the camps, and
+            // thirty to one between the civilian base and the arms works inside each of them.
+            [Civilian] = belligerent.Civilian.CapacityBillions * belligerent.Civilian.Integrity * CapitalisationMultiple,
+            ["civilian_permanent"] = belligerent.Civilian.PermanentDamage * CapitalisationMultiple,
+            [Arms] = belligerent.Industry.TotalCapacityValueBillions() * QuartersPerYear * CapitalisationMultiple,
+            [Regime] = HoldingCapacity(belligerent),
+            [Foreign] = tapPerQuarter * QuartersPerYear,
             [International] = Latitude(state.Invader),
         };
+    }
+
+    /// <summary>
+    /// A standing power fleet, priced like every other production: a year of what it sells,
+    /// capitalised. It is the same two steps as the oil field and the two factories, and the
+    /// only reason it needs a line of its own is that the engine holds it in gigawatts.
+    /// </summary>
+    public static double GridValue(double gigawatts)
+    {
+        return gigawatts * GridAnnualOutputPerGwBillions * CapitalisationMultiple;
+    }
+
+    /// <summary>
+    /// What the regime can still spend a year on holding itself in place, before the apparatus
+    /// stops obeying. The full bill — internal security, clientele, social peace — multiplied
+    /// by the share of the margin to rupture it has left.
+    ///
+    /// Pricing the bill alone would have said the opposite of what happens: a regime in trouble
+    /// pays MORE to hold, so its post would swell as it approached collapse. What is being held
+    /// here is the margin, and the money only says what that margin is worth — so the post
+    /// still empties exactly as the regime cracks, and the mass reaching the gutter is still
+    /// the apparatus giving way.
+    /// </summary>
+    private static double HoldingCapacity(Belligerent belligerent)
+    {
+        double share = belligerent.Politics.Regime == RegimeType.Authoritarian
+            ? HoldingCostShareAutocracy
+            : HoldingCostShareDemocracy;
+
+        double bill = belligerent.Economy.ProductiveCapacityBillions * share;
+        double threshold = Phases.ControlPhase.RegimeCollapseStress;
+        double margin = Math.Max(0d, threshold - belligerent.Politics.RegimeStress);
+
+        return bill * margin / threshold;
     }
 
     /// <summary>
@@ -173,50 +270,74 @@ public static class CapitalReader
         bool invader = belligerent.Side == Side.Invader;
 
         double draw = belligerent.Economy.LastTurnReserveDrawBillions;
-        double tap = granted
-            ? belligerent.Foreign.EffectiveGrantBillions
-            : belligerent.AllocationThisTurn.GetValueOrDefault("foreign");
+
+        // The tank behind the tap: a will that can vanish overnight on the side that is given
+        // its materiel, a ceiling of cash on the side that buys it. The band prints the flow,
+        // because that is what a year of foreign support is worth; the tank says how long the
+        // flow has left, which is a different question and belongs to the second reading.
+        double tank = granted
+            ? belligerent.Politics.ExternalWill
+            : Math.Min(
+                belligerent.Economy.TreasuryBillions,
+                belligerent.Foreign.SupplyCeilingBillions * belligerent.Foreign.PricePremium * QuartersPerYear);
 
         List<CapitalPost> posts =
         [
-            Build(Reserves, "Réserves monétaires", "Md", 0, false, closing, opening, reference,
+            Build(Reserves, "Réserves monétaires", CapitalNature.Stock, false, closing, opening, reference,
                 threshold: draw > 0.01d ? draw * ReserveWarningQuarters : null,
-                secondary: draw, secondaryLabel: "ponction du trimestre"),
+                thresholdLabel: "quatre trimestres de ponction",
+                secondary: draw, secondaryLabel: "ponction du trimestre", secondaryUnit: "Md$"),
 
-            Build(Grid, "Centrales électriques", "GW", 0, false, closing, opening, reference,
-                threshold: belligerent.Grid.DemandGw(Season.Winter),
-                secondary: belligerent.Grid.DemandGw(state.Season), secondaryLabel: "demande"),
+            Build(Grid, "Centrales électriques", CapitalNature.Stock, false, closing, opening, reference,
+                threshold: GridValue(belligerent.Grid.DemandGw(Season.Winter)),
+                thresholdLabel: $"la demande d'hiver, {belligerent.Grid.DemandGw(Season.Winter):F0} GW",
+                secondary: belligerent.Grid.AvailableCapacityGw, secondaryLabel: "parc debout", secondaryUnit: "GW"),
 
-            Build(Oil, exporter ? "Pétrole — recette" : "Pétrole — facture", "Md", 1, !exporter,
+            // La seconde lecture des postes capitalisés est leur production de l'année : c'est
+            // elle qui rend la règle du bilan lisible sans document — la valeur affichée en est
+            // exactement cinq fois celle-ci.
+            Build(Oil, exporter ? "Pétrole — recette" : "Pétrole — facture", CapitalNature.Stock, !exporter,
                 closing, opening, reference,
-                secondary: belligerent.Economy.RefiningIntegrity * 100d,
-                secondaryLabel: exporter ? "raffinage" : null),
+                secondary: closing.GetValueOrDefault(Oil) / CapitalisationMultiple,
+                secondaryLabel: exporter ? "recette de l'année" : "facture de l'année", secondaryUnit: "Md$"),
 
-            Build(Civilian, "Usines civiles", "Md", 0, false, closing, opening, reference,
-                secondary: belligerent.Civilian.LivingStandard, secondaryLabel: "niveau de vie"),
+            Build(Civilian, "Usines civiles", CapitalNature.Stock, false, closing, opening, reference,
+                secondary: belligerent.Civilian.LivingStandard * 100d,
+                secondaryLabel: "niveau de vie", secondaryUnit: "% de l'avant-guerre"),
 
-            Build(Arms, "Usines d'armement", "Md/tour", 2, false, closing, opening, reference,
-                secondary: belligerent.Sanctions.ProductionCeilingMultiplier * 100d,
-                secondaryLabel: "plafond composants"),
+            Build(Arms, "Usines d'armement", CapitalNature.Stock, false, closing, opening, reference,
+                secondary: closing.GetValueOrDefault(Arms) / CapitalisationMultiple,
+                secondaryLabel: "production de l'année", secondaryUnit: "Md$"),
 
             // No threshold rule: this post IS its own threshold. The mass reaching zero is the
             // regime falling, and a line drawn there would only repeat the floor of the column.
-            Build(Regime, "Tenue du pouvoir", "pts", 0, false, closing, opening, reference,
-                secondary: belligerent.Politics.PoliticalCapital, secondaryLabel: "capital politique"),
+            Build(Regime, "Tenue du pouvoir", CapitalNature.AnnualFlow, false, closing, opening, reference,
+                secondary: belligerent.Politics.PoliticalCapital,
+                secondaryLabel: "capital politique produit", secondaryUnit: "pts"),
 
             Build(Foreign, granted ? "Soutien étranger — reçu" : "Soutien étranger — acheté",
-                granted ? "/100" : "Md", granted ? 0 : 1, false, closing, opening, reference,
-                secondary: tap, secondaryLabel: granted ? "versé ce trimestre" : "acheté ce trimestre"),
+                CapitalNature.AnnualFlow, false, closing, opening, reference,
+                secondary: tank,
+                secondaryLabel: granted ? "volonté des soutiens" : "capacité à payer",
+                secondaryUnit: granted ? "sur 100" : "Md$"),
 
             // Le soutien étranger, c'est ce qu'on reçoit ; le soutien international, c'est la
-            // position diplomatique qui décide si le premier continue. Deux leviers, deux
-            // cartouches — et une seule quantité, lue à l'endroit pour qui la possède et à
-            // l'envers pour qui la lui prend.
+            // position diplomatique qui décide si le premier continue. Une seule quantité, lue
+            // à l'endroit pour qui la possède et à l'envers pour qui la lui prend — et la seule
+            // du bandeau qui ne soit pas un capital, donc la seule qui ne se compte pas en
+            // dollars et n'entre dans aucun des deux totaux.
             Build(International,
                 invader ? "Soutien international — latitude" : "Soutien international — pression obtenue",
-                "/100", 0, !invader, closing, opening, reference,
-                secondary: invader ? belligerent.Foreign.Dependency * 100d : belligerent.Politics.ExternalWill,
-                secondaryLabel: invader ? "dépendance aux fournisseurs" : "volonté des soutiens"),
+                CapitalNature.Position, !invader, closing, opening, reference,
+                // Vu de Moscou, ce que l'achat coûte vraiment ; vu de Kyiv, le canal lent —
+                // les composants, qui pèsent double dans la latitude et sont le seul des trois
+                // qui décide. La volonté des soutiens, elle, se lit déjà sur le poste voisin :
+                // deux fois la même mesure dans la même infobulle ne dit pas deux choses.
+                secondary: invader
+                    ? belligerent.Foreign.Dependency * 100d
+                    : state.Invader.Sanctions.ComponentSeverity * 100d,
+                secondaryLabel: invader ? "dépendance aux fournisseurs" : "verrou sur les composants",
+                secondaryUnit: "%"),
         ];
 
         return [.. posts.Select(post => Attribute(post, belligerent, closing, opening, cardsPlayed, incoming))];
@@ -225,40 +346,76 @@ public static class CapitalReader
     private static CapitalPost Build(
         string code,
         string name,
-        string unit,
-        int decimals,
+        CapitalNature nature,
         bool inverted,
         IReadOnlyDictionary<string, double> closing,
         IReadOnlyDictionary<string, double> opening,
         IReadOnlyDictionary<string, double> reference,
         double? threshold = null,
+        string? thresholdLabel = null,
         double? secondary = null,
-        string? secondaryLabel = null)
+        string? secondaryLabel = null,
+        string? secondaryUnit = null)
     {
         double value = closing.GetValueOrDefault(code);
         double open = opening.TryGetValue(code, out double measured) ? measured : value;
-
-        // Le pétrole ukrainien est une facture : elle se lit comme une facture, à la baisse
-        // quand elle baisse. Le soutien international est une latitude partagée : elle se lit
-        // du point de vue du camp, sans quoi le bandeau mettrait un moins sous celui qui vient
-        // de gagner. Seul ce poste-là inverse le signe imprimé.
-        double display = code == International && inverted ? open - value : value - open;
 
         return new CapitalPost
         {
             Code = code,
             Name = name,
-            Unit = unit,
-            Decimals = decimals,
+            // Six posts of the seven are money; the diplomatic position is not a possession
+            // and is read on a hundred, which is exactly why it has no column of its own.
+            Unit = nature == CapitalNature.Position ? "sur 100" : "Md$",
+            Nature = nature,
             Inverted = inverted,
             Value = value,
             Opening = open,
             Reference = reference.GetValueOrDefault(code),
             Threshold = threshold,
+            ThresholdLabel = threshold is null ? null : thresholdLabel,
             Secondary = secondaryLabel is null ? null : secondary,
             SecondaryLabel = secondaryLabel,
-            DisplayDelta = display,
+            SecondaryUnit = secondaryLabel is null ? null : secondaryUnit,
         };
+    }
+
+    /// <summary>
+    /// What the side owns, in billions: the fund, and four productions capitalised at five
+    /// years each.
+    ///
+    /// Two totals rather than one, and never their sum. Adding an asset to a year of aid would
+    /// be adding a holding to an income, which is the arithmetic every wartime communiqué does
+    /// and none of them survives. Two figures per camp force the reader to ask the only
+    /// question that matters — is this side living off what it owns, or off what it is handed.
+    /// </summary>
+    public static double Stock(IReadOnlyList<CapitalPost> posts)
+    {
+        return Total(posts, CapitalNature.Stock);
+    }
+
+    /// <summary>A year of what the side is given or can still spend holding on, in billions.</summary>
+    public static double Flow(IReadOnlyList<CapitalPost> posts)
+    {
+        return Total(posts, CapitalNature.AnnualFlow);
+    }
+
+    private static double Total(IReadOnlyList<CapitalPost> posts, CapitalNature nature)
+    {
+        double total = 0d;
+        foreach (CapitalPost post in posts)
+        {
+            if (post.Nature != nature)
+            {
+                continue;
+            }
+
+            // A charge is a liability, and a liability comes off a balance sheet rather than
+            // swelling it: the Ukrainian oil bill is money leaving, not capital held.
+            total += post.Inverted ? -post.Value : post.Value;
+        }
+
+        return total;
     }
 
     /// <summary>
@@ -354,15 +511,16 @@ public static class CapitalReader
             Code = post.Code,
             Name = post.Name,
             Unit = post.Unit,
-            Decimals = post.Decimals,
+            Nature = post.Nature,
             Inverted = post.Inverted,
             Value = post.Value,
             Opening = post.Opening,
             Reference = post.Reference,
             Threshold = post.Threshold,
+            ThresholdLabel = post.ThresholdLabel,
             Secondary = post.Secondary,
             SecondaryLabel = post.SecondaryLabel,
-            DisplayDelta = post.DisplayDelta,
+            SecondaryUnit = post.SecondaryUnit,
             Regeneration = regeneration,
             Consumption = consumption,
             Destruction = destruction,
@@ -395,17 +553,6 @@ public static class CapitalReader
         }
 
         return Math.Pow(product, 1d / posts.Count);
-    }
-
-    /// <summary>How far a post moved this quarter, relative to where it opened.</summary>
-    private static double Relative(CapitalPost post)
-    {
-        if (post.OpeningIndex <= 0.01d)
-        {
-            return 0d;
-        }
-
-        return (post.Index - post.OpeningIndex) / post.OpeningIndex * 100d;
     }
 
     /// <summary>
@@ -443,18 +590,20 @@ public static class CapitalReader
         {
             PostCode = origin.Code,
             Label = origin.Name,
-            PercentDelta = Relative(origin),
+            PercentDelta = origin.PercentDelta,
         });
 
         // The living standard is not a post — it is the road between a burnt warehouse and an
-        // angry population, and the ribbon is the one place it has to be visible.
+        // angry population, and the ribbon is the one place it has to be visible. It is
+        // published as a percentage of its pre-war level, so its distance to a hundred is
+        // already the move the ribbon prints.
         if (origin.Code == Civilian && origin.Secondary is double standard)
         {
             chain.Links.Add(new CapitalLink
             {
                 PostCode = "living_standard",
                 Label = "Niveau de vie",
-                PercentDelta = (standard - 1d) * 100d,
+                PercentDelta = standard - 100d,
             });
         }
 
@@ -466,7 +615,7 @@ public static class CapitalReader
                 continue;
             }
 
-            double moved = Relative(next);
+            double moved = next.PercentDelta;
             if (moved < -0.05d)
             {
                 chain.Links.Add(new CapitalLink
