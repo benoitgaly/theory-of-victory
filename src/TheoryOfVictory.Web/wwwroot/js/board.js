@@ -15,9 +15,20 @@
     // read as the same thing.
     var HISTORY_TURNS = Math.max(1, window.tovCurrentTurn || 1);
 
+    // The opening quarter is found by its own number, never by converting that number into
+    // an array index: the scenario now starts on a 2021 prologue and will keep moving, and
+    // a numbering that no longer begins at one would silently open a quarter off.
     function openingTurnIndex(g) {
-        var wanted = (window.tovCurrentTurn || 1) - 1;
-        return Math.max(0, Math.min(wanted, g.turns.length - 1));
+        var wanted = window.tovCurrentTurn || 1;
+        var fallback = 0;
+
+        for (var i = 0; i < g.turns.length; i++) {
+            if (g.turns[i].turn === wanted) { return i; }
+            // The run stopped before the quarter we are living in: open on the last one it played.
+            if (g.turns[i].turn < wanted) { fallback = i; }
+        }
+
+        return fallback;
     }
 
     var state = { gameIndex: 0, turnIndex: 0, phase: 0 };
@@ -150,14 +161,18 @@
         return hand;
     }
 
-    // February 2022 is turn 1, so turn N is a known quarter of a known year.
-    function quarterOf(turn) {
-        var index = turn - 1;
-        var seasons = ["hiver", "print", "été", "autom"];
-        return {
-            season: seasons[index % 4],
-            year: 2022 + Math.floor(index / 4)
-        };
+    // The quarters a run never reached carry no season of their own: they are counted from
+    // the last one it did play. Deriving them from a hard-coded origin was correct only as
+    // long as turn 1 was February 2022 — the scenario now opens on the autumn 2021 prologue,
+    // and that origin would have dated every unplayed quarter one season off.
+    function quarterAfter(last, steps) {
+        var order = ["Winter", "Spring", "Summer", "Autumn"];
+        var short = ["hiver", "print", "été", "autom"];
+        var from = order.indexOf(last.season);
+        if (from < 0) { return { season: "", year: last.year }; }
+
+        var total = from + steps;
+        return { season: short[total % 4], year: last.year + Math.floor(total / 4) };
     }
 
     function renderTimeline() {
@@ -181,13 +196,18 @@
             : "Trimestre suivant";
 
         var planned = g.plannedTurns || g.turns.length;
+        var lastIndex = g.turns.length - 1;
+        var last = g.turns[lastIndex];
 
         for (var i = 0; i < planned; i++) {
             var played = i < g.turns.length;
             var t = played ? g.turns[i] : null;
+            // A played quarter carries its own number; only the quarters the run never
+            // reached have to be deduced from their position.
+            var number = played ? t.turn : last.turn + (i - lastIndex);
             var q = played
                 ? { season: (SEASONS[t.season] || "").slice(0, 5), year: t.year }
-                : quarterOf(i + 1);
+                : quarterAfter(last, i - lastIndex);
 
             var hasCard = played && t.cardsPlayed && t.cardsPlayed.length > 0;
             var cls = "tick";
@@ -195,7 +215,7 @@
             if (hasCard) { cls += " has-card"; }
             // The site is about a war that is still being fought: what has happened and what
             // the model projects must never be read as the same thing.
-            if (i + 1 > HISTORY_TURNS) { cls += " projected"; }
+            if (number > HISTORY_TURNS) { cls += " projected"; }
             // Beyond the last played turn the war is over: the quarter still shows, greyed,
             // so the timeline never looks like a broken button.
             if (!played) { cls += " unplayed"; }
@@ -203,11 +223,11 @@
             var b = el("button", cls);
             b.type = "button";
             b.disabled = !played;
-            b.appendChild(el("span", null, "T" + (i + 1)));
+            b.appendChild(el("span", null, "T" + number));
             b.appendChild(el("span", "t-season", q.season + " " + String(q.year).slice(2)));
 
             if (played) {
-                b.title = "Tour " + (i + 1);
+                b.title = "Tour " + number + " · " + (SEASONS[t.season] || t.season) + " " + t.year;
                 (function (index) {
                     b.addEventListener("click", function () { state.turnIndex = index; render(); });
                 })(i);
