@@ -226,6 +226,19 @@ h1, h2, h3, h4 {
     flex: 1;
 }
 
+/* Ce qui s'est passé et ce que le modèle projette ne se lisent pas de la même façon :
+   au-delà du trimestre en cours, le trait devient discontinu. */
+.tick.projected {
+    border-style: dashed;
+    background: repeating-linear-gradient(
+        135deg,
+        var(--paper),
+        var(--paper) 5px,
+        rgba(0, 0, 0, 0.025) 5px,
+        rgba(0, 0, 0, 0.025) 10px
+    );
+}
+
 .tick {
     flex: 1;
     height: 42px;

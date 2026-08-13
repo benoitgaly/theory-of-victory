@@ -10,6 +10,11 @@
 
     // The page opens on the quarter we are living in, not on February 2022 — and on the
     // last played turn when the war ended before it.
+    // Turns up to the quarter we are actually living in are history; everything beyond is
+    // the model projecting. On a site about a war still being fought, the two must never be
+    // read as the same thing.
+    var HISTORY_TURNS = Math.max(1, window.tovCurrentTurn || 1);
+
     function openingTurnIndex(g) {
         var wanted = (window.tovCurrentTurn || 1) - 1;
         return Math.max(0, Math.min(wanted, g.turns.length - 1));
@@ -180,6 +185,9 @@
             var cls = "tick";
             if (played && i === state.turnIndex) { cls += " active"; }
             if (hasCard) { cls += " has-card"; }
+            // The site is about a war that is still being fought: what has happened and what
+            // the model projects must never be read as the same thing.
+            if (i + 1 > HISTORY_TURNS) { cls += " projected"; }
             // Beyond the last played turn the war is over: the quarter still shows, greyed,
             // so the timeline never looks like a broken button.
             if (!played) { cls += " unplayed"; }
@@ -1265,9 +1273,13 @@
 
         var head = el("div", "stage-head");
         head.appendChild(el("h2", null, "Résolution — champ de bataille"));
+        // Only the movement of the eight simulated sectors is counted, never the initial
+        // rush of 2022 nor the ground given back that autumn. Saying « depuis février 2022 »
+        // invited the reader to compare it with the seventy thousand square kilometres of
+        // the real war, which is not what this number measures.
         head.appendChild(el("div", "turn-tag",
             "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year +
-            " · " + fmt(t.squareKilometresGained) + " km² pris depuis février 2022"));
+            " · " + fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés"));
         stage.appendChild(head);
 
         // On the last turn of a run that stopped early, say so: the timeline stops here
