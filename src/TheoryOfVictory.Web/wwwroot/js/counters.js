@@ -1,4 +1,4 @@
-// Sector counters. Owns its own file, like hexmap.js: the map calls
+// Sector gauges. Owns its own file, like hexmap.js: the map calls
 // window.tovCounters.draw() and nothing else.
 //
 //   draw(svg, turn, board, project, opts) -> void
@@ -8,65 +8,91 @@
 //   - project  lon,lat -> [x,y], the map's own padded projector
 //   - opts     optional. opts.cities defaults to window.tovGeo.cities
 //
-// It draws, per sector, two counters astride the contact line and one resolution
-// glyph on the line itself. It replaces callouts() rather than sitting next to it:
-// the sector name and the distance moved are carried here, on the glyph.
+// It also calls window.tovDepth.draw() first, before any of its own pieces, so the two
+// deep-strike overflights pass UNDER the front rather than over it. That is not a detail of
+// z-order, it is the argument the whole board is built on.
 //
 // ---------------------------------------------------------------------------
-// WHAT IS DEGRADED TODAY, AND WHY
+// ONE PIECE PER SECTOR, AND WHY THE COUNTERS WENT AWAY
 //
-// Step 0 of the implementation path — publishing per-side sector detail on
-// SectorResolution — is not done yet. SectorResolution currently exposes the
-// pair (attackerPower, defenderPower) oriented on whoever pushed hardest, and
-// defenderPower is a RESISTANCE: hold multiplied by terrain, urbanisation,
-// fortification, drone friction and season. None of those multipliers is
-// published, so the holder's raw power cannot be recovered from it.
+// The first draft drew two counters of 46 by 34 per sector, each with its own vertical ladder,
+// bottleneck glyph and figure, plus a resolution glyph and a label. Thirty-two objects on a
+// two-hundred-pixel band of Donbas. It was unreadable, and worse, the one thing it existed to
+// show — the ladder — was the first thing that disappeared at that size, while the infantry
+// cross filled the counter and read as a strike-through.
 //
-// The rule of the project is that JavaScript never recomputes a quantity of the
-// model. So nothing is inferred, and the drawing degrades where the data is
-// missing:
+// What replaced it is one horizontal gauge per sector, eight objects instead of thirty-two:
 //
-//   - Full steps        drawn for the attacking side only, from attackerPower.
-//                       The holder's ladder is drawn as a DASHED empty track,
-//                       which reads as "not published" and never as zero.
-//                       On a still sector nobody is named attacker, so both
-//                       ladders are dashed. Unlocked by invaderPower /
-//                       defenderPowerRaw.
-//   - Dry steps         absent everywhere. Establishment = power / coverage
-//                       would be a recomputation, and a wrong one: coverage is
-//                       clamped at 1.2 and training quality and cohesion also
-//                       multiply. Unlocked by invaderEstablishmentPower /
-//                       defenderEstablishmentPower.
-//   - Crenellation      absent: fortification is per side and per sector inside
-//                       FrontSector, never serialised. Unlocked by
-//                       invaderFortification / defenderFortification.
-//   - Attacker identity derived from the sign of hexesMoved, which says nothing
-//                       when the sector did not move — the most frequent case.
-//                       Unlocked by attackerSideCode.
+//     POKROVSK   ▭ ■■■□□  ◄|►  ■■□□
 //
-// Everything else is live today: the ratio, the movement, the losses, the
-// bottleneck and the collapse flag. Each field above is picked up on its own
-// the day it appears, with no change here.
+// Notches, not a bar: a wargamer counts steps, he does not measure a length, and a bar chart
+// laid on a map would be the histogram this board exists to avoid. Each notch is a fixed
+// quantity of men, filled where the flows supply them and hollow where they do not — Liebig
+// read on the front, the barrel that would reach that far against the level it actually holds.
+// The two sides grow outward from the line, so the longer run of filled notches is the
+// stronger army and no reader has to compare two distant ladders.
 //
-// Two conversions are done in this file, and they are unit changes, not model
-// arithmetic. The engine counts men in THOUSANDS everywhere except in
-// SideSnapshot, which converts; SectorResolution does not. So sector powers and
-// sector losses are multiplied by a thousand before being shown, because
-// "48" means nothing to a reader and "48 000 hommes" is read at once.
+// The centre carries the resolution: a butée, two chevrons that meet, when nothing moved —
+// which is the model's normal result and must look deliberate — or an arrow pointing at
+// whoever gave ground.
+//
+// Three things left the map on purpose:
+//
+//   - The per-sector figure. Repeating "2 000 hommes" eight times spends eight labels on a
+//     number nobody compares. It lives in the tooltip now, with everything else.
+//   - The bottleneck glyph. It was drawn sixteen times for two distinct values, because the
+//     scarcest stave is a property of an ARMY, not of a sector. It moved to the rear card in
+//     depth.js, where the side is named once.
+//   - Fortification crenels. Second-order, and already inside the ratio the glyph shows.
+//
+// The NATO frame stays, small, and only on the side that is pushing — so it says who the
+// attacker is, which nothing else on the piece does, and costs eight marks instead of sixteen.
+//
+// ---------------------------------------------------------------------------
+// WHERE THE FIGURES COME FROM
+//
+// Step 0 is done: SectorResolution names the attacker outright and publishes, per side, the
+// raw power committed to the sector and what that power would be with every stave full.
+// Everything below reads those fields and recomputes none of them — the rule of the project is
+// that JavaScript never recomputes a quantity of the model, and if a figure is missing the
+// drawing degrades rather than inventing one.
+//
+// Two readings that are easy to confuse, and the class comment on SectorResolution says the
+// same: AttackerPush against HolderResistance is what produced the ratio, and the resistance
+// already carries terrain, urbanisation, fortification, drone friction and season.
+// InvaderCommitted and DefenderCommitted are raw powers, comparable to each other and to
+// nothing else. The notches draw the second pair, never the first.
+//
+// Still degraded, on purpose:
+//
+//   - Older payload   a page served before step 0 has no per-side power. The attacking side
+//                     then falls back to AttackerPush and the holder's run is drawn as DASHED
+//                     empty notches, which reads as "not published" and never as zero.
+//   - Dry notches     shown only where the shortfall exceeds the thousand-man grain the engine
+//                     rounds to. On a small sector a five per cent gap is fewer than a thousand
+//                     men: real, not printable, and inventing it would be worse.
+//
+// UNIT — every man count arriving here is already in MEN, rounded to the thousand by the
+// engine. Nothing in this file converts; men() groups the digits and stops there.
 window.tovCounters = (function () {
     "use strict";
 
     /* ---------------- Display constants ----------------
-       None of these is a rule. Changing any of them must change no engine
-       output — they only decide how a published number is drawn. */
+       None of these is a rule. Changing any of them must change no engine output — they only
+       decide how a published number is drawn. */
 
-    var STEP_THOUSANDS = 10;   // one notch = 10 000 men-equivalents
-    var STEPS = 8;             // notches on the ladder
-    var ARMY_THOUSANDS = 60;   // at or above, the counter is drawn as an army
+    // One notch, measured rather than guessed: the highest power any sector carries across the
+    // three reference runs is 102 000 men-equivalents, and the rule is that the maximum fills
+    // all but one of the notches, so nothing ever saturates.
+    var STEP_MEN = 15000;
+    var NOTCHES = 7;
+    var ARMY_MEN = 60000;      // at or above, the pushing side is drawn as an army
 
-    var CW = 46, CH = 34;      // counter box
-    var GAP = 38;              // minimum vertical distance between two counters
-    var OFFSET = 34;           // from the contact line to the counter's inner edge
+    var NW = 6, NH = 9, NGAP = 1.6;          // notch box and spacing
+    var RUN = NOTCHES * (NW + NGAP);         // one side's full run
+    var CENTRE = 10;                         // half-width of the resolution glyph
+    var FRAME_W = 15, FRAME_H = 11;          // the NATO mark on the pushing side
+    var PITCH = 26;                          // minimum vertical distance between two gauges
     var MAP_W = 900, MAP_H = 520;
 
     var COLOUR = {
@@ -80,20 +106,10 @@ window.tovCounters = (function () {
         defender: "#1e5fa8"
     };
 
-    // The three staves, in the colours the barrel already uses on the other screens:
-    // one authority per resource, whatever the surface.
-    var BOTTLENECK = {
-        weapons: { code: "weapons", colour: "#b8860b" },
-        fuel: { code: "fuel", colour: "#8a5a2b" },
-        food: { code: "food", colour: "#3d7a51" }
-    };
-
-    var seq = 0;
-
     /* ---------------- Small helpers, same facture as hexmap.js ---------------- */
 
-    // Null-valued attributes are dropped rather than stringified: several pieces
-    // below are drawn with or without a dash pattern depending on what is published.
+    // Null-valued attributes are dropped rather than stringified: several pieces below are
+    // drawn with or without a dash pattern depending on what is published.
     function svgEl(tag, attrs) {
         var n = document.createElementNS("http://www.w3.org/2000/svg", tag);
         Object.keys(attrs || {}).forEach(function (k) {
@@ -111,22 +127,29 @@ window.tovCounters = (function () {
         return n;
     }
 
-    // Paper painted behind the glyphs, so a figure stays readable over the grid.
+    // Paper painted behind the glyphs, so a label stays readable over the grid.
     function halo(node, colour) {
         node.setAttribute("stroke", colour || COLOUR.paper);
-        node.setAttribute("stroke-width", "3");
+        node.setAttribute("stroke-width", "2.6");
         node.setAttribute("stroke-linejoin", "round");
         node.setAttribute("paint-order", "stroke");
         return node;
     }
 
-    // French grouping: a narrow no-break space, never a comma.
-    function men(thousands) {
-        var v = Math.round(thousands * 1000 / 100) * 100;
-        var s = String(Math.round(v));
+    function tip(node, content) {
+        var t = svgEl("title", {});
+        t.textContent = content;
+        node.appendChild(t);
+        return node;
+    }
+
+    // Grouping only. Sector figures leave the engine in men, already rounded to the thousand,
+    // so converting here a second time would multiply an army by a thousand.
+    function men(value) {
+        var s = String(Math.round(value));
         var out = "";
         for (var i = 0; i < s.length; i++) {
-            if (i > 0 && (s.length - i) % 3 === 0) { out += " "; }
+            if (i > 0 && (s.length - i) % 3 === 0) { out += " "; }
             out += s[i];
         }
         return out;
@@ -137,55 +160,40 @@ window.tovCounters = (function () {
         return v.toFixed(v < 10 ? 1 : 0).replace(".", ",");
     }
 
-    /* ---------------- Reading the turn ----------------
-       One place where the shape of the published data is interpreted, so the
-       drawing below never has to ask whether a field exists. */
+    /* ---------------- Reading the turn ---------------- */
 
     function sideOf(turn, code) {
         return code === "invader" ? turn.invader : turn.defender;
     }
 
-    function bottleneckOf(snapshot) {
-        if (!snapshot || !snapshot.bottleneckCode) { return null; }
-        // Only when it actually bites: naming a stave that covers the need would
-        // put a warning on a counter that has none.
-        if (snapshot.materialCoverage === undefined || snapshot.materialCoverage >= 0.95) { return null; }
-        return BOTTLENECK[snapshot.bottleneckCode] || null;
-    }
-
     function readSector(res, turn) {
         var moved = res.hexesMoved || 0;
 
-        // Step 0 names the attacker outright. Without it, only a sector that moved
-        // says who was pushing — and most sectors do not move.
         var attacker = res.attackerSideCode || null;
         if (!attacker && Math.abs(moved) > 0.001) {
             attacker = moved > 0 ? "invader" : "defender";
         }
 
-        function power(sideCode, publishedRaw) {
-            if (publishedRaw !== undefined && publishedRaw !== null) { return publishedRaw; }
-            // The published pair is oriented on the attacker: only his half is a
-            // raw power. The holder's is a resistance, and undoing it is impossible.
-            if (attacker === sideCode && res.attackerPower !== undefined) { return res.attackerPower; }
+        function power(sideCode, published) {
+            if (published !== undefined && published !== null) { return published; }
+            // Fallback for a payload without step 0. The resolution pair is oriented on the
+            // attacker and only his half is a raw power: the other is HolderResistance, with
+            // terrain and fortification and season already baked in, and undoing it is
+            // impossible.
+            if (attacker === sideCode && res.attackerPush !== undefined) { return res.attackerPush; }
             return null;
         }
 
-        function losses(sideCode) {
-            if (!attacker) { return null; }
-            return attacker === sideCode ? res.attackerLosses : res.defenderLosses;
-        }
-
-        function side(sideCode, rawKey, estKey, fortKey) {
+        function side(sideCode, committedKey, establishmentKey) {
             var snapshot = sideOf(turn, sideCode);
             return {
                 code: sideCode,
                 colour: sideCode === "invader" ? COLOUR.invader : COLOUR.defender,
-                power: power(sideCode, res[rawKey]),
-                establishment: res[estKey] === undefined ? null : res[estKey],
-                fortification: res[fortKey] === undefined ? null : res[fortKey],
-                losses: losses(sideCode),
-                bottleneck: bottleneckOf(snapshot),
+                power: power(sideCode, res[committedKey]),
+                establishment: res[establishmentKey] === undefined ? null : res[establishmentKey],
+                losses: attacker === null
+                    ? null
+                    : (attacker === sideCode ? res.attackerLosses : res.defenderLosses),
                 collapsed: !!(snapshot && snapshot.hasCollapsed)
             };
         }
@@ -196,393 +204,337 @@ window.tovCounters = (function () {
             ratio: res.ratio || 0,
             moved: moved,
             attacker: attacker,
-            // No attribution is possible on a still sector, but the pair always
-            // sums to what the quarter cost — and on a stalled sector that total
-            // is the only thing worth saying.
+            outcome: res.outcome || "",
+            // No attribution is possible on a still sector, but the pair always sums to what
+            // the quarter cost — and on a stalled sector that total is the only thing worth
+            // saying out loud.
             cost: (res.attackerLosses || 0) + (res.defenderLosses || 0),
-            invader: side("invader", "invaderPower", "invaderEstablishmentPower", "invaderFortification"),
-            defender: side("defender", "defenderPowerRaw", "defenderEstablishmentPower", "defenderFortification")
+            invader: side("invader", "invaderCommitted", "invaderEstablishment"),
+            defender: side("defender", "defenderCommitted", "defenderEstablishment")
         };
     }
 
+    // True when the map has already named this place near this gauge. Accent- and
+    // case-insensitive, because "Zaporijjia" the city and "Zaporijjia" the sector are the same
+    // word and only one of them needs printing.
+    function named(name, cx, cy, towns) {
+        var wanted = fold(name);
+        for (var i = 0; i < towns.length; i++) {
+            if (fold(towns[i].name) !== wanted) { continue; }
+            if (Math.abs(towns[i].x - cx) < 120 && Math.abs(towns[i].y - cy) < 40) { return true; }
+        }
+        return false;
+    }
+
+    function fold(value) {
+        return value.normalize
+            ? value.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+            : value.toLowerCase();
+    }
+
+    // Above the gauge by preference, below it when a city label is already sitting there.
+    // Cities were on this map first and they are what gives it scale, so they never lose.
+    function nameY(name, cx, cy, towns) {
+        var half = name.length * 2.7 + 3;
+
+        function free(y) {
+            for (var i = 0; i < towns.length; i++) {
+                var t = towns[i];
+                if (Math.abs(t.y - y) > 9) { continue; }
+                if (cx - half < t.right && cx + half > t.x - 6) { return false; }
+            }
+            return true;
+        }
+
+        if (free(cy - 10)) { return cy - 10; }
+        if (free(cy + 16)) { return cy + 16; }
+        return null;
+    }
+
+    function tooltip(sector) {
+        var lines = [sector.name.toUpperCase(), sector.outcome];
+
+        [sector.invader, sector.defender].forEach(function (side) {
+            var label = side.code === "invader" ? "Russie" : "Ukraine";
+            if (side.power === null) {
+                lines.push(label + " : puissance non publiée");
+                return;
+            }
+            var line = label + " : " + men(side.power) + " hommes-équivalents engagés";
+            if (side.establishment !== null && side.establishment > side.power) {
+                line += ", " + men(side.establishment) + " si les flux suivaient";
+            }
+            lines.push(line);
+        });
+
+        lines.push("Rapport de force : " + sector.ratio.toFixed(2).replace(".", ","));
+        if (sector.cost > 0) {
+            lines.push("Coût du trimestre : " + men(sector.cost) + " hommes, les deux camps réunis.");
+        }
+        return lines.join("\n");
+    }
+
     /* ---------------- Placement ----------------
-       Lifted from callouts() in hexmap.js: sort north to south, push each label
-       down until it clears the previous one, then pull the column back inside the
-       frame. Copied rather than shared, so the map keeps owning its own file. */
+       The gauge is fourteen pixels tall against the counters' thirty-four, so eight of them fit
+       on the front without stretching: each one sits on its own anchor and the column no longer
+       drags its southern half eighty pixels away. The de-collision below almost never binds,
+       and that is the point of the smaller piece. */
 
     function spread(wanted, gap, top, bottom) {
-        var out = wanted.slice();
-        for (var i = 0; i < out.length; i++) {
+        var out = wanted.slice(), i, j;
+        for (i = 0; i < out.length; i++) {
             var floor = i === 0 ? top : out[i - 1] + gap;
             if (out[i] < floor) { out[i] = floor; }
         }
-        for (var j = out.length - 1; j >= 0; j--) {
+        for (j = out.length - 1; j >= 0; j--) {
             var ceiling = j === out.length - 1 ? bottom : out[j + 1] - gap;
             if (out[j] > ceiling) { out[j] = ceiling; }
+        }
+
+        var drift = 0;
+        for (i = 0; i < out.length; i++) { drift += out[i] - wanted[i]; }
+        drift /= out.length || 1;
+        if (Math.abs(drift) > 0.5 && out[0] - drift >= top && out[out.length - 1] - drift <= bottom) {
+            for (i = 0; i < out.length; i++) { out[i] -= drift; }
         }
         return out;
     }
 
-    // Cities own their names. A counter that would land on one is pushed further
-    // away from the line, never on top of it.
-    function avoidCities(x, y, towns, direction) {
-        for (var pass = 0; pass < 2; pass++) {
-            towns.forEach(function (t) {
-                if (Math.abs(t.y - y) > CH / 2 + 7) { return; }
-                var overlaps = x < t.right && x + CW > t.left;
-                if (!overlaps) { return; }
-                x = direction > 0 ? Math.max(x, t.right + 5) : Math.min(x, t.left - 5 - CW);
-            });
-        }
-        return Math.max(6, Math.min(MAP_W - 6 - CW, x));
-    }
+    /* ---------------- The notch run ----------------
+       Filled outward from the line: the reader counts steps away from the contact, which is the
+       direction the army stands in. Hollow notches continue the run where the establishment
+       stands above what the flows actually supplied. */
 
-    /* ---------------- The counter ----------------
-       Mirrored so the two counters of a sector face each other: each keeps its
-       ladder on the outer flank and its trench line on the flank turned towards
-       the enemy. Everything is laid out in the unmirrored frame and passed
-       through mx(), which is the only thing that knows about the flip. */
-
-    function counter(svg, x, y, side, facing) {
-        var flip = facing < 0;                       // enemy on the left
-        // Mirrors a box, not a point: pass the width so a rectangle lands on the
-        // other flank instead of hanging off the edge.
-        function mirror(left, width) { return flip ? CW - left - (width || 0) : left; }
-
-        var g = svgEl("g", { transform: "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")" });
-
-        g.appendChild(svgEl("rect", {
-            x: 0, y: 0, width: CW, height: CH, rx: 1.5,
-            fill: COLOUR.card, stroke: side.colour, "stroke-width": "1.2"
-        }));
-
-        /* The ladder. Filled from the bottom, like a thermometer, because that is
-           how a reader expects a level to grow. */
-        var trackW = 6, trackX = mirror(3.5, trackW);
-        var trackTop = 4, trackH = 26, notch = trackH / STEPS;
+    function run(g, cx, cy, direction, side) {
         var known = side.power !== null && side.power !== undefined;
+        var filled = known ? Math.min(NOTCHES, side.power / STEP_MEN) : 0;
+        var total = known && side.establishment !== null
+            ? Math.min(NOTCHES, Math.max(filled, side.establishment / STEP_MEN))
+            : filled;
 
-        g.appendChild(svgEl("rect", {
-            x: trackX, y: trackTop, width: trackW, height: trackH,
-            fill: "none", stroke: known ? COLOUR.rule : COLOUR.ink3, "stroke-width": "0.6",
-            "stroke-dasharray": known ? null : "1 1.5"
-        }));
+        for (var i = 0; i < NOTCHES; i++) {
+            var x = cx + direction * (CENTRE + i * (NW + NGAP)) - (direction < 0 ? NW : 0);
+            var full = Math.min(1, Math.max(0, filled - i));
+            var dry = Math.min(1, Math.max(0, total - i));
 
-        if (known) {
-            var steps = Math.min(STEPS, side.power / STEP_THOUSANDS);
-
-            // Dry notches: the men who are there and are not supplied. They arrive
-            // with step 0; until then the top of the track is simply empty.
-            if (side.establishment !== null && side.establishment > side.power) {
-                var dry = Math.min(STEPS, side.establishment / STEP_THOUSANDS);
+            if (!known) {
+                // Not published, and never to be read as zero.
                 g.appendChild(svgEl("rect", {
-                    x: trackX, y: trackTop + trackH - dry * notch,
-                    width: trackW, height: (dry - steps) * notch,
-                    fill: "url(#tov-dry-" + seq + ")", stroke: "none"
+                    x: x, y: cy - NH / 2, width: NW, height: NH,
+                    fill: "none", stroke: COLOUR.ink3, "stroke-width": "0.5",
+                    "stroke-dasharray": "1 1.4"
                 }));
+                continue;
             }
 
+            if (dry <= 0.02) { break; }
+
+            // The hollow part: men present, and not supplied.
             g.appendChild(svgEl("rect", {
-                x: trackX, y: trackTop + trackH - steps * notch,
-                width: trackW, height: steps * notch,
-                fill: side.colour, opacity: "0.78"
+                x: x, y: cy - NH / 2, width: NW * dry, height: NH,
+                fill: "none", stroke: side.colour, "stroke-width": "0.7", opacity: "0.55"
             }));
 
-            // What the quarter cost, carved off the top of the stack. Below one
-            // notch it is a sliver, which is honest: a quarter of grinding rarely
-            // costs a full step.
-            if (side.losses) {
-                var lost = Math.min(steps, side.losses / STEP_THOUSANDS);
-                if (lost > 0.04) {
-                    g.appendChild(svgEl("rect", {
-                        x: trackX, y: trackTop + trackH - steps * notch,
-                        width: trackW, height: lost * notch,
-                        fill: COLOUR.paper, opacity: "0.55"
-                    }));
-                    g.appendChild(svgEl("line", {
-                        x1: trackX - 1, y1: trackTop + trackH - steps * notch,
-                        x2: trackX + trackW + 1, y2: trackTop + trackH - (steps - lost) * notch,
-                        stroke: COLOUR.ink, "stroke-width": "0.8"
-                    }));
-                }
-            }
-
-            // Notch rules, drawn over the fill: the eye counts crans, not a bar.
-            for (var k = 1; k < STEPS; k++) {
-                g.appendChild(svgEl("line", {
-                    x1: trackX, y1: trackTop + k * notch, x2: trackX + trackW, y2: trackTop + k * notch,
-                    stroke: COLOUR.card, "stroke-width": "0.5", opacity: "0.85"
+            if (full > 0.02) {
+                g.appendChild(svgEl("rect", {
+                    x: x, y: cy - NH / 2, width: NW * full, height: NH,
+                    fill: side.colour, opacity: "0.82"
                 }));
             }
         }
 
-        g.appendChild(svgEl("line", {
-            x1: mirror(11.5), y1: 4, x2: mirror(11.5), y2: 30,
-            stroke: COLOUR.rule, "stroke-width": "0.5"
-        }));
-
-        /* The NATO frame. Infantry — the two diagonals — because the engine's own
-           unit of power is the fully supplied infantryman, and the counter should
-           say the unit it is drawn in. */
-        var fw = 28, fx = mirror(15, fw), fy = 10, fh = 18;
-        g.appendChild(svgEl("rect", {
-            x: fx, y: fy, width: fw, height: fh,
-            fill: "none", stroke: COLOUR.ink2, "stroke-width": "0.9"
-        }));
-        g.appendChild(svgEl("path", {
-            d: "M" + fx + " " + fy + "L" + (fx + fw) + " " + (fy + fh) +
-               "M" + (fx + fw) + " " + fy + "L" + fx + " " + (fy + fh),
-            stroke: COLOUR.ink2, "stroke-width": "0.8", fill: "none", opacity: "0.75"
-        }));
-
-        // Echelon, above the frame as symbology requires. A display convention,
-        // not a rule: it reads the same published power as the ladder.
-        if (known) {
-            g.appendChild(text(fx + fw / 2, 8,
-                side.power >= ARMY_THOUSANDS ? "XXXX" : "XXX", {
-                    "text-anchor": "middle", "font-size": "6", "font-weight": "700",
-                    "letter-spacing": "0.5", fill: COLOUR.ink2
-                }));
-        }
-
-        // The check figure. The ladder is the glance; this is the verification,
-        // and never the other way round.
-        if (known) {
-            g.appendChild(text(fx + fw / 2, 32.5, men(side.power), {
-                "text-anchor": "middle", "font-size": "7.5",
-                "font-family": "Georgia, 'Palatino Linotype', serif",
-                "font-variant-numeric": "tabular-nums", fill: COLOUR.ink
-            }));
-        }
-
-        // The bottleneck, named only when it bites. One authority: the glyph
-        // designates the stave the engine designated.
-        if (side.bottleneck) {
-            bottleneckGlyph(g, mirror(4, 7), 25, side.bottleneck);
-        }
-
-        /* Prepared positions, on the flank turned towards the enemy. Awaiting the
-           fortification fields; the shape is here so the day they land, nothing
-           else moves. */
-        if (side.fortification) {
-            var crenels = Math.max(1, Math.min(3, Math.round(side.fortification / 0.4)));
-            crenellation(g, flip ? 0 : CW, facing, crenels);
-        }
-
-        // An army that has broken is struck out. It is the only turn that must
-        // look like no other.
+        // A broken army is struck through, and it must not look like any other quarter: this is
+        // the turn the whole game exists to reach.
         if (side.collapsed) {
-            g.appendChild(svgEl("path", {
-                d: "M2 2L" + (CW - 2) + " " + (CH - 2) + "M" + (CW - 2) + " 2L2 " + (CH - 2),
-                stroke: side.colour, "stroke-width": "1.6", opacity: "0.75", fill: "none"
+            var end = cx + direction * (CENTRE + RUN);
+            g.appendChild(svgEl("line", {
+                x1: cx + direction * CENTRE, y1: cy - NH / 2 - 2,
+                x2: end, y2: cy + NH / 2 + 2,
+                stroke: side.colour, "stroke-width": "1.4", opacity: "0.85"
             }));
         }
 
-        svg.appendChild(g);
+        return known ? Math.max(1, Math.ceil(total)) : NOTCHES;
     }
 
-    // Three silhouettes rather than three letters: a pictogram is read without
-    // being decoded, and there are only ever three of them.
-    function bottleneckGlyph(g, x, y, flow) {
-        var d;
-        if (flow.code === "weapons") {
-            d = "M" + x + " " + (y + 6) + "v-4l3-3 3 3v4z";              // a shell
-        } else if (flow.code === "fuel") {
-            d = "M" + (x + 0.5) + " " + (y + 6) + "v-5h5v5zM" + (x + 5.5) + " " + (y + 2) + "h1.2v1.6h-1.2z";
-        } else {
-            d = "M" + x + " " + (y + 6) + "a3 3 0 0 1 6 0z";              // a loaf
-        }
-        g.appendChild(svgEl("path", { d: d, fill: flow.colour, opacity: "0.9" }));
-    }
+    /* ---------------- The resolution glyph ---------------- */
 
-    // The trench symbol every player already knows: a square wave along the edge.
-    function crenellation(g, edgeX, facing, crenels) {
-        var step = 6, amp = 2.6, y0 = CH / 2 - (crenels * step) / 2;
-        var d = "M" + edgeX + " " + y0;
-        for (var i = 0; i < crenels; i++) {
-            var y = y0 + i * step;
-            d += "h" + (facing * amp) + "v" + (step / 2) + "h" + (-facing * amp) + "v" + (step / 2);
-        }
-        g.appendChild(svgEl("path", {
-            d: d, fill: "none", stroke: COLOUR.ink2, "stroke-width": "1", "stroke-linejoin": "miter"
-        }));
-    }
-
-    /* ---------------- The resolution glyph ----------------
-       On the line itself, between the two counters. Below 1,1 it is not a short
-       arrow: it is a butée, two chevrons that meet. The frozen front is the normal
-       result of this model, not an absence, and it must be drawn as an event. */
-
-    function butee(svg, ax, ay, ux, uy, sector) {
-        var g = svgEl("g", {});
-        var nx = -uy, ny = ux;                  // along the line, for the stop bar
-
-        function chevron(dir) {
-            var tipX = ax + ux * dir * 3.5, tipY = ay + uy * dir * 3.5;
-            var backX = ax + ux * dir * 12, backY = ay + uy * dir * 12;
-            return "M" + (backX + nx * 6).toFixed(1) + " " + (backY + ny * 6).toFixed(1) +
-                   "L" + tipX.toFixed(1) + " " + tipY.toFixed(1) +
-                   "L" + (backX - nx * 6).toFixed(1) + " " + (backY - ny * 6).toFixed(1);
-        }
-
+    // Below 1,1 the line holds. Two chevrons that meet and a stop bar between them — the frozen
+    // front is the normal result of this model, not an absence, and it is drawn as an event.
+    function butee(g, cx, cy) {
         [1, -1].forEach(function (dir) {
             g.appendChild(svgEl("path", {
-                d: chevron(dir), fill: "none", stroke: COLOUR.ink,
-                "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round",
-                opacity: "0.85"
+                d: "M" + (cx + dir * 7) + " " + (cy - 5) +
+                   "L" + (cx + dir * 2.5) + " " + cy +
+                   "L" + (cx + dir * 7) + " " + (cy + 5),
+                fill: "none", stroke: COLOUR.ink, "stroke-width": "1.5",
+                "stroke-linecap": "round", "stroke-linejoin": "round", opacity: "0.85"
             }));
         });
-
-        // Where they meet, the line holds.
         g.appendChild(svgEl("line", {
-            x1: (ax + nx * 7).toFixed(1), y1: (ay + ny * 7).toFixed(1),
-            x2: (ax - nx * 7).toFixed(1), y2: (ay - ny * 7).toFixed(1),
-            stroke: COLOUR.ink, "stroke-width": "1.1", opacity: "0.55"
+            x1: cx, y1: cy - 5.5, x2: cx, y2: cy + 5.5,
+            stroke: COLOUR.ink, "stroke-width": "1", opacity: "0.5"
         }));
-
-        svg.appendChild(g);
-        return sector.cost > 0 ? "− " + men(sector.cost) + " hommes" : null;
     }
 
-    function arrow(svg, ax, ay, ux, uy, sector) {
-        var dir = sector.moved > 0 ? 1 : -1;
-        var colour = dir > 0 ? COLOUR.invader : COLOUR.defender;
+    // Above 1,1 the line gave. The arrow points at whoever gave ground; its weight is the band
+    // of the resolution table, never the distance, which is five pixels at this scale.
+    function arrow(g, cx, cy, sector) {
+        var dir = sector.moved > 0 ? -1 : 1;   // the invader advances west, so leftward
+        var colour = sector.moved > 0 ? COLOUR.invader : COLOUR.defender;
         var broken = sector.invader.collapsed || sector.defender.collapsed;
+        var weight = sector.ratio >= 3 ? 3 : (sector.ratio >= 2 ? 2.3 : 1.6);
+        var reach = broken ? CENTRE + 8 : CENTRE - 1;
 
-        // Symbolic, never to scale: ten kilometres is five pixels on this map, and
-        // the distance is carried by the figure beside it.
-        var reach = broken ? 30 : 15;
-        var thick = sector.ratio >= 3 ? 3.4 : (sector.ratio >= 2 ? 2.6 : 1.8);
-
-        var x1 = ax - ux * dir * reach, y1 = ay - uy * dir * reach;
-        var x2 = ax + ux * dir * reach, y2 = ay + uy * dir * reach;
-        var nx = -uy * dir, ny = ux * dir;
-
-        svg.appendChild(svgEl("line", {
-            x1: x1.toFixed(1), y1: y1.toFixed(1), x2: x2.toFixed(1), y2: y2.toFixed(1),
-            stroke: COLOUR.paper, "stroke-width": (thick + 2.4).toFixed(1),
-            "stroke-linecap": "round", opacity: "0.75"
+        g.appendChild(svgEl("line", {
+            x1: cx - dir * (CENTRE - 1), y1: cy, x2: cx + dir * reach, y2: cy,
+            stroke: colour, "stroke-width": weight, "stroke-linecap": "round"
         }));
-        svg.appendChild(svgEl("line", {
-            x1: x1.toFixed(1), y1: y1.toFixed(1), x2: x2.toFixed(1), y2: y2.toFixed(1),
-            stroke: colour, "stroke-width": thick.toFixed(1), "stroke-linecap": "round"
-        }));
-
-        var headX = ax + ux * dir * (reach - 1), headY = ay + uy * dir * (reach - 1);
-        svg.appendChild(svgEl("path", {
-            d: "M" + x2.toFixed(1) + " " + y2.toFixed(1) +
-               "L" + (headX - ux * dir * 6 + nx * 4.6).toFixed(1) + " " + (headY - uy * dir * 6 + ny * 4.6).toFixed(1) +
-               "L" + (headX - ux * dir * 6 - nx * 4.6).toFixed(1) + " " + (headY - uy * dir * 6 - ny * 4.6).toFixed(1) + "Z",
+        g.appendChild(svgEl("path", {
+            d: "M" + (cx + dir * reach) + " " + cy +
+               "L" + (cx + dir * (reach - 6)) + " " + (cy - 4) +
+               "L" + (cx + dir * (reach - 6)) + " " + (cy + 4) + "Z",
             fill: colour
         }));
+    }
 
-        return (dir > 0 ? "+" : "−") + km(sector.moved) + " km";
+    /* ---------------- The pushing side's mark ----------------
+       Infantry, because the engine's own unit of power is the fully supplied infantryman, and
+       the piece should say the unit it is drawn in. Only on the side that is pushing: it names
+       the attacker, which nothing else on the gauge does. */
+
+    function mark(g, x, cy, side) {
+        var y = cy - FRAME_H / 2;
+        g.appendChild(svgEl("rect", {
+            x: x, y: y, width: FRAME_W, height: FRAME_H,
+            fill: COLOUR.card, stroke: side.colour, "stroke-width": "0.9"
+        }));
+        g.appendChild(svgEl("path", {
+            d: "M" + x + " " + y + "L" + (x + FRAME_W) + " " + (y + FRAME_H) +
+               "M" + (x + FRAME_W) + " " + y + "L" + x + " " + (y + FRAME_H),
+            stroke: COLOUR.ink2, "stroke-width": "0.6", fill: "none", opacity: "0.7"
+        }));
+        g.appendChild(text(x + FRAME_W / 2, y - 1.5,
+            side.power >= ARMY_MEN ? "XXXX" : "XXX", {
+                "text-anchor": "middle", "font-size": "4.6", "font-weight": "700",
+                "letter-spacing": "0.4", fill: COLOUR.ink2
+            }));
     }
 
     /* ---------------- Draw ---------------- */
 
     function draw(svg, turn, board, project, opts) {
         if (!svg || !turn || !board || !project) { return; }
+        var options = opts || {};
+
+        // First, and deliberately: the rear cards and their overflights go down before the
+        // front does, so a deep strike never reads as an arrow on the line of contact. It owns
+        // its own file and is optional — the map still draws without it.
+        if (window.tovDepth && typeof window.tovDepth.draw === "function" && options.depth !== false) {
+            window.tovDepth.draw(svg, turn, project, options);
+        }
+
         var resolutions = turn.sectors || [];
         if (!resolutions.length) { return; }
-        seq++;
 
-        var options = opts || {};
         var cities = options.cities || (window.tovGeo && window.tovGeo.cities) || [];
-
-        // The hatch that will carry the dry notches once step 0 lands. Declared
-        // now so the piece is complete the day the field appears.
-        var defs = svgEl("defs", {});
-        var pattern = svgEl("pattern", {
-            id: "tov-dry-" + seq, width: "3", height: "3",
-            patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)"
-        });
-        pattern.appendChild(svgEl("line", {
-            x1: "0", y1: "0", x2: "0", y2: "3",
-            stroke: COLOUR.ink3, "stroke-width": "0.8", opacity: "0.5"
-        }));
-        defs.appendChild(pattern);
-        svg.appendChild(defs);
-
+        // The label box, not the dot: a city's name runs to the right of its mark, and it is
+        // the name that the gauge would bury. Same estimate hexmap.js uses for its own labels.
         var towns = cities.map(function (c) {
             var xy = project(c.lon, c.lat);
-            return { left: xy[0] - 6, right: xy[0] + 10 + c.name.length * 6.4, y: xy[1] };
+            return { name: c.name, x: xy[0], y: xy[1], right: xy[0] + 10 + c.name.length * 6.4 };
         });
 
-        // Anchors: each sector sits where its own line has been pushed to.
         var marks = [];
         board.forEach(function (s) {
             var res = resolutions.find(function (r) { return r.sectorCode === s.code; });
             if (!res) { return; }
 
-            var anchor = project(s.lon + s.pushLon * res.hexesCumulative,
-                                 s.lat + s.pushLat * res.hexesCumulative);
+            var lon = s.lon + s.pushLon * res.hexesCumulative;
+            var lat = s.lat + s.pushLat * res.hexesCumulative;
+            var anchor = project(lon, lat);
 
-            // The axis of advance, in screen space. Everything else — which camp
-            // stands on which side, where the arrow points — follows from it,
-            // rather than from an assumption about east and west.
-            var ahead = project(s.lon + s.pushLon, s.lat + s.pushLat);
-            var dx = ahead[0] - anchor[0], dy = ahead[1] - anchor[1];
-            var len = Math.sqrt(dx * dx + dy * dy) || 1;
-
-            marks.push({
-                sector: readSector(res, turn),
-                ax: anchor[0], ay: anchor[1],
-                ux: dx / len, uy: dy / len
-            });
+            marks.push({ sector: readSector(res, turn), ax: anchor[0], ay: anchor[1] });
         });
 
         if (!marks.length) { return; }
         marks.sort(function (a, b) { return a.ay - b.ay; });
 
-        // One column per camp, each de-collided on its own: a counter never lands
-        // on its neighbour, whatever the line does.
-        var top = CH / 2 + 8, bottom = MAP_H - CH / 2 - 8;
-        var ys = spread(marks.map(function (m) { return m.ay; }), GAP, top, bottom);
+        var ys = spread(marks.map(function (m) { return m.ay; }), PITCH, 20, MAP_H - 20);
 
-        marks.forEach(function (m, i) {
-            m.cy = ys[i];
-            // The invader stands behind his own axis of advance, the defender ahead
-            // of it — which is what "astride the line" means once it is oriented.
-            m.invaderX = avoidCities(m.ax - m.ux * OFFSET - (m.ux < 0 ? 0 : CW), m.cy, towns, m.ux < 0 ? 1 : -1);
-            m.defenderX = avoidCities(m.ax + m.ux * OFFSET - (m.ux < 0 ? CW : 0), m.cy, towns, m.ux < 0 ? -1 : 1);
+        // One figure on the map, not eight: the quarter's dearest sector says what it cost, the
+        // way the rest of this board gives a screen a single hero number.
+        var dearest = null;
+        marks.forEach(function (m) {
+            if (!dearest || m.sector.cost > dearest.sector.cost) { dearest = m; }
         });
 
-        // Leaders first, so nothing crosses over a counter.
-        marks.forEach(function (m) {
-            [[m.invaderX, m.sector.invader.colour], [m.defenderX, m.sector.defender.colour]].forEach(function (c) {
-                var edge = c[0] + (c[0] < m.ax ? CW : 0);
-                svg.appendChild(svgEl("line", {
-                    x1: edge.toFixed(1), y1: m.cy.toFixed(1),
-                    x2: m.ax.toFixed(1), y2: m.ay.toFixed(1),
-                    stroke: c[1], "stroke-width": "0.8", opacity: "0.35"
+        marks.forEach(function (m, index) {
+            var cx = Math.max(RUN + CENTRE + 30, Math.min(MAP_W - RUN - CENTRE - 30, m.ax));
+            var cy = ys[index];
+            var sector = m.sector;
+            var g = svgEl("g", {});
+
+            // A leader back to the true position whenever the piece had to be nudged.
+            if (Math.abs(cy - m.ay) > 3 || Math.abs(cx - m.ax) > 3) {
+                g.appendChild(svgEl("line", {
+                    x1: cx, y1: cy, x2: m.ax, y2: m.ay,
+                    stroke: COLOUR.ink3, "stroke-width": "0.6", opacity: "0.35"
                 }));
-            });
-        });
+            }
 
-        marks.forEach(function (m) {
-            var still = Math.abs(m.sector.moved) <= 0.01;
-            var figure = still
-                ? butee(svg, m.ax, m.ay, m.ux, m.uy, m.sector)
-                : arrow(svg, m.ax, m.ay, m.ux, m.uy, m.sector);
+            // The invader stands east of the line, the defender west of it.
+            var invaderNotches = run(g, cx, cy, 1, sector.invader);
+            var defenderNotches = run(g, cx, cy, -1, sector.defender);
 
-            // Facing: each counter turns its trench line towards the other.
-            counter(svg, m.invaderX, m.cy - CH / 2, m.sector.invader, m.invaderX < m.ax ? 1 : -1);
-            counter(svg, m.defenderX, m.cy - CH / 2, m.sector.defender, m.defenderX < m.ax ? 1 : -1);
+            if (Math.abs(sector.moved) <= 0.01) {
+                butee(g, cx, cy);
+            } else {
+                arrow(g, cx, cy, sector);
+            }
 
-            // The sector names itself once, on the line, never twice on the counters.
-            var lx = m.ax, ly = m.ay - 16;
-            svg.appendChild(halo(text(lx, ly, m.sector.name, {
-                "text-anchor": "middle", "font-size": "9.5", "font-weight": "700", fill: COLOUR.ink
-            })));
-            if (figure) {
-                svg.appendChild(halo(text(lx, m.ay + 22, figure, {
-                    "text-anchor": "middle", "font-size": "9",
-                    "font-family": "Georgia, 'Palatino Linotype', serif",
-                    "font-variant-numeric": "tabular-nums",
-                    fill: still ? COLOUR.ink3 : (m.sector.moved > 0 ? COLOUR.invader : COLOUR.defender)
+            var attacking = sector.attacker === "invader" ? sector.invader
+                : (sector.attacker === "defender" ? sector.defender : null);
+            if (attacking && attacking.power !== null) {
+                var side = sector.attacker === "invader" ? 1 : -1;
+                var notches = sector.attacker === "invader" ? invaderNotches : defenderNotches;
+                var markX = cx + side * (CENTRE + notches * (NW + NGAP) + 3);
+                mark(g, side < 0 ? markX - FRAME_W : markX, cy, attacking);
+            }
+
+            // The name rides above its own gauge, in small capitals so it never reads as one of
+            // the map's city labels — and it is left out entirely where the map already names
+            // the place. Half these sectors are named after the town they are fought over, and
+            // printing "KHERSON" beside Kherson was both a duplicate and the thing that buried
+            // the city underneath it.
+            var label = sector.name.toUpperCase();
+            var ly = named(sector.name, cx, cy, towns) ? null : nameY(label, cx, cy, towns);
+            if (ly !== null) {
+                g.appendChild(halo(text(cx, ly, label, {
+                    "text-anchor": "middle", "font-size": "7.5", "font-weight": "700",
+                    "letter-spacing": "0.09em", fill: COLOUR.ink2
                 })));
             }
+
+            // Only what a reader would actually compare: the ground that changed hands, and the
+            // single dearest sector of the quarter.
+            var note = null, noteColour = COLOUR.ink3;
+            if (Math.abs(sector.moved) > 0.01) {
+                note = (sector.moved > 0 ? "+" : "−") + km(sector.moved) + " km";
+                noteColour = sector.moved > 0 ? COLOUR.invader : COLOUR.defender;
+            } else if (m === dearest && sector.cost > 0) {
+                note = "− " + men(sector.cost) + " hommes";
+            }
+
+            if (note) {
+                g.appendChild(halo(text(cx + CENTRE + RUN + 22, cy + 3, note, {
+                    "font-size": "8.5", "font-family": "Georgia, 'Palatino Linotype', serif",
+                    "font-variant-numeric": "tabular-nums", fill: noteColour
+                })));
+            }
+
+            tip(g, tooltip(sector));
+            svg.appendChild(g);
         });
     }
 
