@@ -3,7 +3,8 @@
 
    Même langue que le tonneau et que la carte : papier, encre chaude, chiffres en
    sérif, libellés en petites capitales. Aucune teinte nouvelle hors des sept postes,
-   qui vivent dans capital.js — la couleur y est une donnée, pas une décoration.
+   qui vivent dans capital.js — la couleur y est une donnée, pas une décoration, et
+   c'est elle qui tient ensemble l'icône, le nom et les deux masses d'une même ligne.
    ============================================================ */
 
 .capital-band,

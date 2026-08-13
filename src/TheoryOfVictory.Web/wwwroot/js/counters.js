@@ -171,8 +171,13 @@ window.tovCounters = (function () {
         return code === "invader" ? turn.invader : turn.defender;
     }
 
-    function readSector(res, turn) {
+    // `historical` replaces the modelled movement with what the front really did in this sector
+    // this quarter — a direction and nothing else, because the chronicle records control and not
+    // kilometres. Everything else on the gauge stays the model's: the notches are force
+    // generation, which is the subject of the whole board and is not in the chronicle's gift.
+    function readSector(res, turn, historical) {
         var moved = res.hexesMoved || 0;
+        if (historical) { moved = historical.move; }
 
         var attacker = res.attackerSideCode || null;
         if (!attacker && Math.abs(moved) > 0.001) {
@@ -208,6 +213,7 @@ window.tovCounters = (function () {
             name: (res.sectorName || res.sectorCode || "").split(" — ")[0],
             ratio: res.ratio || 0,
             moved: moved,
+            historical: !!historical,
             attacker: attacker,
             outcome: res.outcome || "",
             // No attribution is possible on a still sector, but the pair always sums to what
@@ -482,16 +488,34 @@ window.tovCounters = (function () {
             return { name: c.name, x: xy[0], y: xy[1], right: xy[0] + 10 + c.name.length * 6.4 };
         });
 
+        // Where the map put the line this quarter, when the map is drawing one of its own. A
+        // gauge hung on the modelled position while the ground behind it is the real one is the
+        // page telling two stories at once, and the front is the one that has to win.
+        var lineAt = typeof options.lineAt === "function" ? options.lineAt : null;
+        var index = options.turnIndex === undefined ? -1 : options.turnIndex;
+        var chronicle = options.historical && window.tovFront && window.tovFront.available && index >= 0;
+
         var marks = [];
         board.forEach(function (s) {
             var res = resolutions.find(function (r) { return r.sectorCode === s.code; });
             if (!res) { return; }
 
-            var lon = s.lon + s.pushLon * res.hexesCumulative;
             var lat = s.lat + s.pushLat * res.hexesCumulative;
+            var lon = s.lon + s.pushLon * res.hexesCumulative;
+            if (lineAt) {
+                // Nothing held at this latitude means the sector has been pushed back to where
+                // it started — the state border. That anchor, and not the modelled position, is
+                // the honest fallback: it is the one point on this row the map still agrees with.
+                var onLine = lineAt(s.lat, s.lon);
+                lat = s.lat;
+                lon = (onLine === null || onLine === undefined) ? s.lon : onLine;
+            }
             var anchor = project(lon, lat);
 
-            marks.push({ sector: readSector(res, turn), ax: anchor[0], ay: anchor[1] });
+            var historical = chronicle
+                ? { move: window.tovFront.sectorMoveAt(s.code, index) }
+                : null;
+            marks.push({ sector: readSector(res, turn, historical), ax: anchor[0], ay: anchor[1] });
         });
 
         if (!marks.length) { return; }
@@ -573,7 +597,10 @@ window.tovCounters = (function () {
             // Only what a reader would actually compare: the ground that changed hands, and the
             // single dearest sector of the quarter.
             var note = null, noteColour = COLOUR.ink3;
-            if (Math.abs(sector.moved) > 0.01) {
+            // No distance on a documented quarter: the chronicle records who held what, never
+            // how many kilometres it took, and printing one would be a fabrication with the
+            // authority of a measurement.
+            if (Math.abs(sector.moved) > 0.01 && !sector.historical) {
                 note = (sector.moved > 0 ? "+" : "−") + km(sector.moved) + " km";
                 noteColour = sector.moved > 0 ? COLOUR.invader : COLOUR.defender;
             } else if (m === dearest && sector.cost > 0) {

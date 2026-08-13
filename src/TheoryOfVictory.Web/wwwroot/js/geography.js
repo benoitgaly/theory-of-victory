@@ -102,7 +102,13 @@ window.tovGeo = (function () {
         { name: "Louhansk", lon: 39.31, lat: 48.57, rank: 3 },
         { name: "Marioupol", lon: 37.55, lat: 47.10, rank: 3 },
         { name: "Kherson", lon: 32.62, lat: 46.64, rank: 3 },
-        { name: "Sébastopol", lon: 33.53, lat: 44.60, rank: 3 }
+        { name: "Sébastopol", lon: 33.53, lat: 44.60, rank: 3 },
+        // The northern axes of 2022 and the Kursk salient of 2024 need somewhere to be read
+        // against: without these three names, the ground that changes hands up there is a
+        // coloured patch with no address.
+        { name: "Tchernihiv", lon: 31.29, lat: 51.49, rank: 3 },
+        { name: "Soumy", lon: 34.80, lat: 50.91, rank: 3 },
+        { name: "Soudja", lon: 35.28, lat: 51.19, rank: 3 }
     ];
 
     // Placed in the neighbours' territory, far enough from the border to stay off the grid.
@@ -130,6 +136,154 @@ window.tovGeo = (function () {
     ];
 
     var BOUNDS = { minLon: 22.00, maxLon: 40.28, minLat: 44.24, maxLat: 52.46 };
+
+    /* ---------------- The twenty zones of the front ----------------
+
+       front-history.json says which zones each side held at the close of every documented
+       quarter. It names them and does not draw them: these outlines are where that vocabulary
+       lands on the ground.
+
+       Two things to know before reading a coordinate here.
+
+       FIRST, THEY OVERLAP ON PURPOSE. A hexagon is given to the FIRST zone in this list whose
+       outline contains its centre, so the order below is the resolution rule: the small, precise
+       places come before the wide ones that surround them. Gapless tiling by hand would take a
+       hundred coincident vertices and one typo would open a hole in the occupied ground —
+       overlap plus priority cannot.
+
+       SECOND, THE RESOLUTION IS THE READING HEX, ABOUT 1 400 km². Nothing finer survives the
+       drawing, and the file that feeds these zones says the same of itself. So a town on a zone
+       edge is a town this map cannot place, not a claim: Sloviansk, Kramatorsk and Druzhkivka
+       are the pocket left deliberately unassigned between `pokrovsk`, `bakhmout` and `lyman`,
+       because they never fell and a zone reaching over them would say they did.
+
+       Neither Kyiv, Chernihiv nor Sumy fell. `kyiv_axis` is cut to stay north of the capital for
+       that reason; the two others carry their city inside the corridor that was occupied around
+       them, which is the limit the chronicle already accepts for itself. */
+
+    var ZONES = [
+        // Crimea, annexed in 2014, north edge on the Perekop isthmus.
+        { code: "crimea", ring: [
+            [32.30, 45.85], [33.30, 46.10], [33.85, 46.22], [35.00, 46.15], [35.60, 46.05],
+            [36.10, 45.50], [36.90, 45.55], [36.90, 44.20], [32.30, 44.20]] },
+
+        // The two 2014 enclaves, which are one continuous area against the border: from the
+        // Azov coast east of Shyrokyne, up the contact line of 2015 through Debaltseve and
+        // Pervomaisk to Stanytsia Luhanska, then back down the state border.
+        { code: "donbas_2014", ring: [
+            [39.78, 48.85], [39.55, 48.72], [39.15, 48.72], [38.60, 48.70], [38.42, 48.62],
+            [38.45, 48.42], [38.10, 48.32], [37.90, 48.30], [37.82, 48.12], [37.58, 47.95],
+            [37.62, 47.68], [37.66, 47.35], [37.72, 47.02],
+            [38.21, 47.05], [38.29, 47.56], [38.64, 47.67], [38.90, 47.86], [39.66, 47.84],
+            [39.78, 47.96], [39.96, 48.27], [39.89, 48.36], [39.84, 48.54], [39.64, 48.59],
+            [39.70, 48.74]] },
+
+        // Coastal southern Donetsk, west of the 2014 line: Mariupol and Volnovakha.
+        { code: "mariupol", ring: [
+            [37.72, 47.02], [37.66, 47.35], [37.62, 47.68], [37.28, 47.62], [36.98, 47.35],
+            [37.00, 46.85]] },
+
+        { code: "avdiivka", ring: [
+            [37.58, 47.95], [37.82, 48.12], [37.90, 48.30], [37.72, 48.42], [37.42, 48.32],
+            [37.35, 48.05]] },
+
+        // Bakhmut, Soledar, Chasiv Yar, Toretsk — the belt of fortress towns.
+        { code: "bakhmout", ring: [
+            [37.72, 48.42], [38.10, 48.32], [38.42, 48.42], [38.42, 48.62], [38.30, 48.85],
+            [37.85, 48.85], [37.62, 48.62]] },
+
+        // Lyman and Siversk, north of the Sloviansk pocket that never fell.
+        { code: "lyman", ring: [
+            [37.62, 48.95], [37.90, 48.88], [38.30, 48.88], [38.22, 49.18], [37.78, 49.20],
+            [37.55, 49.10]] },
+
+        { code: "pokrovsk", ring: [
+            [37.35, 48.05], [37.42, 48.32], [37.72, 48.42], [37.62, 48.62], [37.20, 48.62],
+            [36.85, 48.45], [36.88, 48.10], [37.10, 47.98]] },
+
+        { code: "vouhledar", ring: [
+            [37.10, 47.98], [37.35, 48.05], [37.58, 47.95], [37.62, 47.68], [37.28, 47.62],
+            [36.80, 47.68], [36.45, 47.80], [36.50, 48.05], [36.88, 48.10]] },
+
+        // Izium and Balakliia, on the bend of the Siverskyi Donets.
+        { code: "izioum", ring: [
+            [36.55, 49.55], [37.30, 49.52], [37.55, 49.10], [37.40, 48.88], [36.85, 48.85],
+            [36.50, 49.10]] },
+
+        // Eastern Kharkiv oblast, from the Oskil to the oblast edge.
+        { code: "koupiansk", ring: [
+            [37.00, 49.95], [37.55, 49.90], [38.05, 49.92], [38.15, 49.60], [38.05, 49.35],
+            [37.60, 49.32], [37.25, 49.50], [36.98, 49.70]] },
+
+        // The border belt north and east of Kharkiv — Lyptsi, Vovchansk. Its northern edge is
+        // the state border itself, point for point off the outline: drawn a few kilometres
+        // short of it, the belt left Vovchansk — the town this whole zone is fought over —
+        // outside its own zone, and the map showed the 2022 and 2024 offensives stopping at
+        // nothing. The southern edge stays clear of Kharkiv, shelled from this ground and
+        // never entered.
+        { code: "kharkiv_north", ring: [
+            [35.62, 50.40], [35.89, 50.44], [36.12, 50.41], [36.31, 50.28], [36.50, 50.28],
+            [36.62, 50.21], [36.76, 50.29], [37.42, 50.41], [37.58, 50.29], [37.70, 50.11],
+            [37.42, 49.94], [37.00, 49.95], [36.80, 50.05], [36.35, 50.10], [35.95, 50.06],
+            [35.70, 50.15]] },
+
+        // Luhansk oblast outside the 2014 enclave: Sievierodonetsk, Kreminna, Svatove, Starobilsk.
+        { code: "severodonetsk", ring: [
+            [38.10, 48.35], [38.45, 48.42], [38.42, 48.62], [38.60, 48.70], [39.15, 48.72],
+            [39.55, 48.72], [39.78, 48.85], [39.75, 48.91], [39.89, 49.06], [40.11, 49.25],
+            [40.13, 49.37], [40.06, 49.43], [40.08, 49.58], [39.78, 49.57], [39.46, 49.73],
+            [39.17, 49.86], [38.92, 49.82], [38.60, 49.75], [38.20, 49.60], [38.10, 49.20],
+            [38.00, 48.80]] },
+
+        // Orikhiv, Robotyne, Polohy — where the 2023 counteroffensive spent itself.
+        { code: "zaporijjia_south", ring: [
+            [34.50, 47.30], [34.62, 47.62], [35.20, 47.65], [36.00, 47.68], [36.45, 47.70],
+            [36.40, 47.42], [36.20, 47.42], [35.30, 47.48]] },
+
+        // The land corridor: Melitopol, Berdiansk, Enerhodar and the Azov shore.
+        { code: "melitopol", ring: [
+            [34.50, 47.30], [35.30, 47.48], [36.20, 47.42], [36.95, 47.30], [37.00, 46.85],
+            [36.55, 46.62], [35.80, 46.52], [35.05, 46.15], [34.55, 46.30], [34.40, 46.90]] },
+
+        // Left bank of the Dnipro, from the mouth to the Kakhovka reservoir.
+        { code: "kherson_left", ring: [
+            [32.50, 46.58], [33.08, 46.76], [33.58, 46.85], [34.00, 47.12], [34.32, 47.38],
+            [34.58, 47.48], [34.60, 46.40], [34.20, 46.08], [33.20, 46.02], [32.35, 46.15]] },
+
+        // Right bank: Kherson city and the pocket up to Vysokopillia, clear of Mykolaiv.
+        { code: "kherson_right", ring: [
+            [32.35, 46.42], [32.30, 46.78], [32.35, 47.05], [32.75, 47.28], [33.20, 47.50],
+            [33.75, 47.45], [34.10, 47.30], [34.00, 47.12], [33.58, 46.85], [33.08, 46.76],
+            [32.50, 46.58]] },
+
+        // The corridor of the northern column, north of Kyiv on both banks.
+        { code: "kyiv_axis", ring: [
+            [29.10, 51.05], [30.05, 51.25], [30.60, 51.30], [31.20, 51.20], [31.35, 50.72],
+            [30.95, 50.45], [30.62, 50.60], [30.35, 50.50], [30.00, 50.52], [29.55, 50.58],
+            [29.20, 50.75]] },
+
+        { code: "chernihiv_axis", ring: [
+            [30.60, 51.30], [31.20, 51.10], [31.70, 51.00], [32.30, 51.15], [32.70, 51.60],
+            [32.45, 52.28], [31.60, 52.10], [30.98, 52.05], [30.76, 51.90]] },
+
+        // Sumy oblast: the 2022 sweep, and the border strip Russia reopened in 2025.
+        { code: "sumy_axis", ring: [
+            [33.60, 51.30], [34.20, 51.55], [34.60, 51.75], [35.10, 51.20], [35.20, 50.90],
+            [34.90, 50.55], [34.40, 50.50], [33.90, 50.75], [33.65, 51.00]] }
+    ];
+
+    // Russian soil, north of the border around Sudzha. It is the only place the defender ever
+    // held ground in the invader's country, so it has to be on the map — and the grid, which
+    // otherwise stops at the Ukrainian outline, is extended over exactly this shape and no other.
+    //
+    // The southern edge follows the state border point for point, so the pocket rests ON the
+    // frontier instead of floating beside it. Roughly two thousand square kilometres against the
+    // thousand of August 2024: below one reading hexagon nothing is drawable at all, and a
+    // salient that cannot be seen would be a worse account of it than one drawn slightly large.
+    var KURSK_SALIENT = [
+        [34.45, 51.26], [34.71, 51.17], [35.06, 51.20], [35.16, 51.06], [35.35, 51.03],
+        [35.55, 51.22], [35.40, 51.48], [34.80, 51.48], [34.45, 51.42]
+    ];
 
     function nearestIndex(ring, lon, lat) {
         var best = 0, bestD = Infinity;
@@ -223,6 +377,19 @@ window.tovGeo = (function () {
         return close ? d + " Z" : d;
     }
 
+    // Which zone of the chronicle a point belongs to, or null where none does — the west of the
+    // country, and the pocket around Sloviansk. Ukrainian soil is tested against the twenty zones
+    // in priority order; anything outside the outline can only be the Kursk salient.
+    function zoneAt(lon, lat) {
+        if (!contains(UKRAINE, lon, lat)) {
+            return contains(KURSK_SALIENT, lon, lat) ? "kursk_incursion" : null;
+        }
+        for (var i = 0; i < ZONES.length; i++) {
+            if (contains(ZONES[i].ring, lon, lat)) { return ZONES[i].code; }
+        }
+        return null;
+    }
+
     return {
         ukraine: UKRAINE,
         easternEdge: EASTERN_EDGE,
@@ -235,6 +402,9 @@ window.tovGeo = (function () {
         neighbours: NEIGHBOURS,
         seas: SEAS,
         bounds: BOUNDS,
+        zones: ZONES,
+        kurskSalient: KURSK_SALIENT,
+        zoneAt: zoneAt,
         contains: contains,
         projector: projector,
         path: path

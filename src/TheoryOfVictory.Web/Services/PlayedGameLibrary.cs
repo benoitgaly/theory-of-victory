@@ -47,4 +47,11 @@ public sealed class PlayedGameLibrary
     /// </summary>
     public IReadOnlyList<PlayedCard> Deck { get; } =
         [.. CardLibrary.Load().Select(CardPrinter.Print)];
+
+    /// <summary>
+    /// The real front, quarter by quarter, from the autumn of 2021 to the summer of 2026. The
+    /// board draws the documented quarters from this and the projected ones from the run — and
+    /// says on screen which of the two it is showing. The engine never reads it.
+    /// </summary>
+    public FrontHistory FrontHistory { get; } = FrontHistoryLibrary.Load();
 }

@@ -58,10 +58,12 @@
         <section>
             <h2>Ce qui est observé, ce qui est projeté</h2>
             <p>
-                Les trimestres jusqu'à l'été 2026 s'appuient sur le déroulé réel de la guerre.
-                <strong>Au-delà, tout est une projection du modèle</strong> — la frise les marque
-                d'un trait discontinu. Une projection est une conséquence des règles du jeu, jamais
-                une prédiction : elle se discute, elle ne s'annonce pas.
+                Jusqu'à l'été 2026, la carte porte la <strong>position réelle du front</strong>,
+                reconstituée trimestre par trimestre à partir de sources ouvertes.
+                <strong>Au-delà, tout est une projection du modèle</strong> — la frise marque ces
+                trimestres d'un trait discontinu, et la carte passe son front en pointillé. Une
+                projection est une conséquence des règles du jeu, jamais une prédiction : elle se
+                discute, elle ne s'annonce pas.
             </p>
             <p>
                 Les chiffres sont des ordres de grandeur de travail, sauf les effectifs, calés sur
@@ -95,8 +97,10 @@
         window.tovBoard = @Html.Raw(ViewBag.BoardJson);
         window.tovCurrentTurn = @ViewBag.CurrentTurn;
         window.tovDeck = @Html.Raw(ViewBag.DeckJson);
+        window.tovFrontHistory = @Html.Raw(ViewBag.FrontHistoryJson);
     </script>
     <script src="~/js/geography.js" asp-append-version="true"></script>
+    <script src="~/js/frontline.js" asp-append-version="true"></script>
     <script src="~/js/counters.js" asp-append-version="true"></script>
     <script src="~/js/depth.js" asp-append-version="true"></script>
     <script src="~/js/hexmap.js" asp-append-version="true"></script>

@@ -59,6 +59,14 @@ légende, et un bandeau d'arrière pour chaque camp, hors du champ de bataille, 
 frappes profondes. Le terrain suit la **densité d'hommes en ligne de contact par kilomètre** : on
 prend du terrain là où il n'y a personne, et on le perd de la même façon.
 
+Sur les vingt trimestres qui vont de l'automne 2021 à l'été 2026, **la carte porte la position
+réelle du front**, reconstituée et sourcée trimestre par trimestre : la colonne de Kyiv arrive puis
+se retire, Marioupol tombe, la rive droite de Kherson revient à l'Ukraine, Kharkiv perce, le
+saillant de Koursk apparaît au nord de la frontière puis disparaît. Au-delà, c'est le modèle qui
+place la ligne — et il le dit : **le front passe alors en pointillé**. Un déroulé où une armée
+rompt, ce que la guerre réelle n'a pas fait, bascule de la même façon et pour la même raison.
+Le détail est dans [la carte historique](docs/design/12-carte-historique.md).
+
 Chaque camp tient une **main de six cartes**, imprimées au format Magic — cadre, coût en capital
 politique, illustration propre à chaque carte, ligne de type, boîte de règles et texte d'ambiance.
 Celles qu'il a jouées portent leur bandeau ; les autres attendent, parce que la V2 les mettra en
@@ -70,9 +78,10 @@ place de tout ce qui ne se joue pas — et c'est pour cela que l'Occident, dans 
 victoire, paie son étranglement de dix trimestres d'intercepteurs qu'il ne livre pas. Le détail des
 arbitrages est dans le [calendrier](docs/design/06-calendrier-propose.md).
 
-La conception détaillée est répartie en neuf documents, du [modèle de jeu](docs/design/01-modele-de-jeu.md)
-à la [fin de guerre](docs/design/10-fin-de-guerre.md), en passant par la
-[calibration des effectifs](docs/design/04-calibration-effectifs.md) et l'
+La conception détaillée est répartie en douze documents, du [modèle de jeu](docs/design/01-modele-de-jeu.md)
+à la [carte historique](docs/design/12-carte-historique.md), en passant par la
+[calibration des effectifs](docs/design/04-calibration-effectifs.md), le
+[front historique](docs/design/11-front-historique.md) — les vingt trimestres sourcés — et l'
 [audit de réalisme](docs/design/09-audit-realisme.md), qui nomme les écarts entre le jeu et le réel
 sans les excuser.
 

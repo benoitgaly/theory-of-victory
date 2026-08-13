@@ -66,19 +66,21 @@ seul qui rassure. C'est le même geste, répété sept fois.
 
 ---
 
-> **Décision revue à l'implémentation : le bandeau porte les huit postes, pas sept.** La fusion
-> argumentée ci-dessous a été refusée par l'utilisateur, et sa raison tient : le soutien étranger
-> est ce qu'on **reçoit** — armes, argent, munitions — tandis que le soutien international est la
-> **position diplomatique**, qui vote quoi, qui sanctionne, qui achète encore le pétrole. Ce sont
-> deux leviers qu'on actionne séparément, donc deux cartouches.
+> **Décision de l'utilisateur, après un aller-retour : le bandeau porte sept postes, et la fusion
+> argumentée ci-dessous s'applique.** Le soutien étranger et le soutien international sont un seul
+> capital vu à deux étages, et le poste fusionné s'appelle **soutien extérieur**. Il dit ce que le
+> camp obtient du dehors : pour l'Ukraine un flux donné qui peut cesser du jour au lendemain, pour
+> la Russie un flux acheté qui ne cesse jamais tant qu'il y a de l'argent.
 >
-> Le huitième poste lit le régime de sanctions, seul objet du moteur qui décrive cette position,
-> les composants comptant double comme partout ailleurs — c'est le canal lent, et c'est le seul
-> qui décide. Une seule quantité, la latitude commerciale laissée à l'envahisseur, lue des deux
-> côtés de la table : elle est son capital, et elle est exactement ce que ses adversaires lui ont
-> pris. Le même nombre porte donc deux masses qui tirent en sens contraire, et le delta change de
-> signe d'un camp à l'autre — la corde que le §7.3 dessine partout ailleurs, ici prise au pied de
-> la lettre.
+> **Ce qui disparaît est la colonne, pas l'information.** Le moteur continue de mesurer la position
+> diplomatique — la latitude commerciale laissée à l'envahisseur, lue sur le régime de sanctions,
+> les composants comptant double comme partout ailleurs — et `CapitalReader` la publie toujours sur
+> les deux camps, avec sa valeur commune et son delta de signe opposé. Deux tests la verrouillent
+> (`TheDiplomaticPost_IsOneQuantity_ReadFromBothSidesOfTheTable`,
+> `TheDiplomaticPost_CanFallWithNoCardPlayed_BecauseSanctionsErode`). Elle **descend dans
+> l'infobulle du poste fusionné**, du point de vue du camp qui la lit, parce que c'est elle qui
+> explique pourquoi le flux se resserre ou se relâche : la mesure reste, seul le cartouche a été
+> retiré, et le moteur n'a pas été touché pour cela.
 
 ## 2. Sept postes pour huit demandés
 
@@ -416,22 +418,47 @@ de sa rangée, et par son nom une seule fois à l'extrémité gauche.
 
 ### 7.2 Géométrie
 
-`viewBox="0 0 1140 296"`, hauteur recalculée quand un ruban se déplie.
+`viewBox="0 0 1240 318"`, hauteur recalculée quand un ruban se déplie.
 
-- **Sept colonnes de 128 px**, pas de 138, ancrées à x = 158, 296, 434, 572, 710, 848, 986.
-- **Rangée russe** : y = 20 à 134. La masse pousse **vers le haut** depuis y = 134.
-- **Bande de partage** : y = 134 à 170. C'est le sol commun.
-- **Rangée ukrainienne** : y = 170 à 284. La masse pousse **vers le bas** depuis y = 170.
-- À gauche de la bande de partage, x = 22 à 150 : le cartouche du trimestre — « T12 · hiver 2024 »,
-  le Brent en sérif, et un flocon gravé quand la saison est l'hiver. La saison décide, elle mérite un
-  signe et pas un mot.
+**Deux colonnes qui se font face, et non deux rangées empilées.** La Russie tient la moitié gauche
+et s'aligne à gauche, l'Ukraine tient la moitié droite et s'aligne à droite ; les huit postes se
+lisent l'un sous l'autre, chacun en vis-à-vis de son homologue. C'est ce qui permet de comparer
+poste par poste d'un balayage horizontal — un empilement en miroir haut/bas oblige au contraire à
+sauter d'un bord à l'autre du bandeau pour rapprocher deux chiffres qui parlent de la même chose.
+
+- **Sept rangées de 36 px**, de y = 54 à y = 306, un filet de séparation entre deux.
+- **Gouttière centrale** : x = 528 à 712. C'est le sol commun, celui d'où partent les deux masses.
+- **Piste russe** : la masse est ancrée à x = 528 et pousse **vers la gauche**, 2,26 px par point
+  d'indice, bornée à 322 px. La bande des chiffres l'attend de x = 22 à 186.
+- **Piste ukrainienne** : symétrique, ancrée à x = 712, poussant **vers la droite**.
+- Au-dessus de la gouttière, y = 8 à 46 : le cartouche du trimestre — « hiver 2024 », le Brent en
+  sérif, et un flocon gravé quand la saison est l'hiver. La saison décide, elle mérite un signe et
+  pas un mot. Il coiffe la gouttière parce qu'il n'appartient à aucun des deux camps.
+- Le nom du camp est écrit une seule fois, au bord qui lui revient, souligné de son filet de 3 px.
 
 ### 7.3 Le nom au centre, les deux camps qui tirent
 
-Le nom du poste est écrit **une seule fois**, dans la bande de partage, centré sur sa colonne. Les
-deux masses le tirent de part et d'autre, comme une corde. Cela divise par deux le texte du bandeau
+Le nom du poste est écrit **une seule fois**, dans la gouttière, précédé de son icône. Les deux
+masses le tirent de part et d'autre, comme une corde. Cela divise par deux le texte du bandeau
 — une donnée répétée à l'identique n'est pas une donnée — et cela produit l'image juste : les deux
 camps se disputent le même poste.
+
+**Chaque poste porte son icône, dessinée à la main en SVG dans le trait gravé du plateau** — ni
+police d'icônes, ni emoji, ni bibliothèque : le site est servi en statique et rien d'extérieur ne
+peut être chargé. Trois lingots empilés pour les réserves, un pylône pour les centrales, un baril
+et sa goutte pour le pétrole, un toit en shed pour les usines civiles, un obus sur son convoyeur
+pour l'armement, une colonne fendue pour la tenue du pouvoir, une caisse où entre une flèche pour
+le soutien extérieur. Chacune tient dans une boîte de 24 et se dessine à l'encre de son poste :
+l'icône, le nom et les deux masses se lisent alors comme un seul objet. Les sept s'alignent sur la
+même verticale — une colonne de signes se parcourt d'un regard, là où sept signes décalés se
+lisent un par un.
+
+Une seule caisse pour le flux donné et le flux acheté : c'est un seul capital, et ce qui change
+d'un camp à l'autre est le prix, pas la nature — or le prix se lit dans les chiffres.
+
+Les deux usines demandaient chacune leur silhouette : le shed civil et l'obus militaire sont deux
+dessins et non deux variantes du même, parce que c'est précisément l'écart entre ces deux postes —
+onze contre un côté russe — qui est la leçon du bandeau.
 
 Un seul poste par tour reçoit une **pastille pleine `#1a1815`** derrière son nom, texte en papier :
 celui que le moteur désigne comme la pression la plus vive du trimestre, lu dans les
@@ -440,26 +467,28 @@ poste que le moteur n'a pas nommé.
 
 ### 7.4 Anatomie d'un cartouche
 
-Sur 128 px de large, depuis la bande de partage vers l'extérieur :
+Sur 16 px de haut, depuis la gouttière vers le bord du bandeau :
 
-- **La masse** — un bloc plein de la teinte du poste, hauteur = indice, 52 px pour 100, bornée à
-  68 px (130 %). Chant supérieur biseauté en blanc à 0,34, comme les douves du tonneau : la matière
+- **La masse** — un bloc plein de la teinte du poste, longueur = indice, 226 px pour 100, bornée à
+  322 px (142 %). Chant supérieur biseauté en blanc à 0,34, comme les douves du tonneau : la matière
   a une épaisseur.
-- **Le niveau de février 2022** — un filet pointillé à la hauteur 52 px, traversant la colonne, avec
-  aucune étiquette. C'est le repère qui rend toute masse lisible sans échelle, exactement comme le
-  pointillé à 100 % du tonneau.
-- **L'encoche de destruction** — la part détruite ce trimestre est **découpée dans le haut de la
+- **Le niveau de février 2022** — un filet pointillé en travers de la piste, à 226 px de la
+  gouttière, sans aucune étiquette. C'est le repère qui rend toute masse lisible sans échelle,
+  exactement comme le pointillé à 100 % du tonneau.
+- **L'encoche de destruction** — la part détruite ce trimestre est **découpée dans le bout de la
   masse par une arête irrégulière**, non par un trait droit, et remplie d'une hachure `#a8322a` à
   0,45 avec un liseré gravé sur la ligne de coupe. On voit le morceau manquant. C'est la convention
   déjà posée pour les cinq parcs (`05` §9.1) et il n'y a aucune raison d'en avoir deux.
-- **Le filet de variation ordinaire** — un segment creux de 2 px posé au-dessus de la masse quand
-  elle a gagné, en dessous quand elle a perdu. Gravé, jamais plein.
-- **La valeur** — sérif 19 px en `#1a1815`, juste à l'extérieur de la masse. Le delta suit en 11 px,
-  précédé de son signe, **coloré uniquement s'il s'agit d'une destruction**.
+- **Le filet de variation ordinaire** — un trait creux de 2 px en travers de la piste, posé là où la
+  masse se tenait à l'ouverture du trimestre. Gravé, jamais plein.
+- **La valeur** — sérif 19 px en `#1a1815`, au bord du bandeau, dans une bande que la masse
+  n'atteint jamais : le chiffre reste lisible quelle que soit la longueur atteinte, et c'est ce que
+  poser le chiffre au bout de la masse ne garantissait pas. Le delta lui fait face en 11 px, adossé
+  à la piste, précédé de son signe, **coloré uniquement s'il s'agit d'une destruction**.
 - **Le seuil**, sur les trois postes qui en ont un, et seulement ceux-là : les réserves à quatre
   trimestres de ponction restante, les centrales à la demande d'hiver, la tenue du pouvoir à 58.
-  Un pointillé rouge de 1 px traversant la colonne. **Les quatre autres postes n'ont pas de seuil et
-  n'en dessinent pas.**
+  Un pointillé rouge de 1 px en travers de la piste. **Les quatre autres postes n'ont pas de seuil
+  et n'en dessinent pas.**
 - **Le sablier et le cadenas** — repris de `05` §9.1. Un sablier de 16 × 22 quand la perte met des
   tours à mordre, avec un grain par tour ; un cadenas de 14 × 16 en encre pleine quand la perte est
   définitive à l'échelle de la partie. Le cadenas n'apparaît que sur la part permanente des

@@ -1142,6 +1142,38 @@ main {
     border-radius: 1px;
 }
 
+/* Sous la carte : ce que le trimestre a fait, ou ce que le lecteur regarde quand la chronique
+   s'arrête. La bordure gauche change de camp entre l'observé et le projeté — c'est le seul
+   signal permanent que la page donne sur l'origine de ce qu'elle affiche. */
+.map-note {
+    margin: 10px 2px 2px;
+    padding: 9px 13px 10px;
+    border-left: 3px solid var(--ru);
+    background: var(--card);
+    border-radius: 0 5px 5px 0;
+    color: var(--ink-2);
+    font-size: 12.5px;
+    line-height: 1.55;
+}
+
+.map-note strong { color: var(--ink); font-weight: 650; }
+.map-note em { color: var(--ink-3); font-style: italic; }
+
+.map-note.projected {
+    border-left-style: dashed;
+    border-left-color: var(--ink-3);
+}
+
+/* D'où vient ce panneau, dit une fois : le modèle, jamais la chronique. */
+.sector-provenance {
+    margin: -6px 0 12px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink-3);
+}
+
+.sector-provenance b { color: var(--ink-2); font-weight: 650; }
+
 /* Résumé du trimestre, avant la liste : le lecteur sait quoi chercher. */
 .sector-summary {
     font-size: 13px;

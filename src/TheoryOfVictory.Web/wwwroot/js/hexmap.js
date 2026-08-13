@@ -2,17 +2,38 @@
 // render(turn, board, geo, opts) -> SVGElement
 // - turn.sectors[] carries hexesCumulative and hexesMoved per sector
 // - board[] carries lon/lat anchors and push vectors per sector
-// - geo exposes the outline, the rivers, the cities and a projector
-// - opts.frontLine(turn) returns the current contact line as [[lon,lat], ...]
+// - geo exposes the outline, the rivers, the cities, the twenty zones and a projector
+// - opts.frontLine(turn) returns the simulated contact line as [[lon,lat], ...]
+// - opts.turnIndex says which turn of the run is being drawn
 //
 // The country is paved with hexagons. Each one is held, occupied, taken since February 2022,
-// retaken, or crossed by the line. A hexagon here is a reading unit — about 50 km across,
-// five of the ten-kilometre hexes the engine actually moves.
+// retaken, or crossed by the line. A hexagon here is a reading unit — about 40 km across,
+// four of the ten-kilometre hexes the engine actually moves, and roughly 1 400 km².
+//
+// ---------------------------------------------------------------------------
+// WHO DECIDES WHERE THE LINE IS
+//
+// Two authorities, never blended, and the map names the one in force at the bottom left.
+//
+// While frontline.js reports a DOCUMENTED quarter, the ground is read from the chronicle: twenty
+// sourced quarters, twenty named zones, the whole country and not just the eight modelled
+// sectors. That is the only way the column of Kyiv arrives and leaves, Mariupol falls, the right
+// bank of Kherson comes back, Kharkiv breaks through and Kursk appears — none of which happens on
+// a board of eight Donbass sectors.
+//
+// Past the chronicle, or as soon as an army breaks in a run that history never broke, the model
+// governs and the contact line is DASHED. A dashed front is the wargamer's own mark for a
+// position nobody has confirmed, and it costs no legend.
+//
+// The line itself is no longer the eight-point polyline. It is the boundary of the hexagons the
+// invader controls, minus the edges that are the state border — so it follows the ground the map
+// actually paints instead of running beside it.
 window.tovHexMap = (function () {
     "use strict";
 
     var HEX_KM = 40;        // across the flats
     var W = 900, H = 520, PAD = 10;
+    var SEASON_FR = { Winter: "l'hiver", Spring: "le printemps", Summer: "l'été", Autumn: "l'automne" };
 
     var COLOUR = {
         foreign: "#eae5d9",
@@ -99,12 +120,15 @@ window.tovHexMap = (function () {
         var rowH = R * 1.5;
 
         var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-        geo.ukraine.forEach(function (q) {
+        // The Kursk salient is the one piece of the board outside Ukraine, so the sweep has to
+        // cover it: the grid stops at the outline everywhere else.
+        geo.ukraine.concat(geo.kurskSalient || []).forEach(function (q) {
             var xy = p(q[0], q[1]);
             minX = Math.min(minX, xy[0]); maxX = Math.max(maxX, xy[0]);
             minY = Math.min(minY, xy[1]); maxY = Math.max(maxY, xy[1]);
         });
 
+        var salient = geo.kurskSalient || null;
         var cells = [];
         var rows = Math.ceil((maxY - minY) / rowH) + 2;
         var cols = Math.ceil((maxX - minX) / w) + 2;
@@ -115,27 +139,88 @@ window.tovHexMap = (function () {
             for (var c = -1; c < cols; c++) {
                 var cx = minX + c * w + shift;
 
-                var d = "", corners = [], vertsIn = 0;
+                var d = "", corners = [], pts = [], inside = [], vertsIn = 0;
                 for (var k = 0; k < 6; k++) {
                     var a = k * Math.PI / 3;
                     var vx = cx + R * Math.sin(a), vy = cy - R * Math.cos(a);
                     d += (k === 0 ? "M" : "L") + vx.toFixed(1) + " " + vy.toFixed(1);
+                    pts.push([vx, vy]);
                     var g = p.invert(vx, vy);
                     corners.push(g);
-                    if (geo.contains(geo.ukraine, g[0], g[1])) { vertsIn++; }
+                    if (geo.contains(geo.ukraine, g[0], g[1])) { inside.push(g); vertsIn++; }
                 }
 
                 var centre = p.invert(cx, cy);
-                // Kept if the centre is on Ukrainian soil, or if the hex still covers a
-                // decent piece of it — the clip mask trims whatever spills over the border.
-                if (!geo.contains(geo.ukraine, centre[0], centre[1]) && vertsIn < 3) { continue; }
+                var centreIn = geo.contains(geo.ukraine, centre[0], centre[1]);
+                var inSalient = !centreIn && salient && geo.contains(salient, centre[0], centre[1]);
 
-                cells.push({ centre: centre, corners: corners, d: d + "Z" });
+                // Kept if the centre is on Ukrainian soil, or if the hex still covers a
+                // decent piece of it — the clip mask trims whatever spills over the border —
+                // or if it sits in the salient, where the grid is deliberately extended.
+                if (!centreIn && !inSalient && vertsIn < 3) { continue; }
+
+                // The point that speaks for the hexagon. On a border hexagon the centre can be
+                // in a neighbouring country, where no zone answers: the Ukrainian vertices do.
+                var sample = centre;
+                if (!centreIn && !inSalient && inside.length) {
+                    var sx = 0, sy = 0;
+                    inside.forEach(function (g2) { sx += g2[0]; sy += g2[1]; });
+                    sample = [sx / inside.length, sy / inside.length];
+                }
+
+                // Seven samples for the share of the hexagon that is actually land inside the
+                // country: enough to keep a coastal or border hexagon from being counted whole.
+                var land = inSalient ? 1 : (vertsIn + (centreIn ? 1 : 0)) / 7;
+
+                cells.push({
+                    centre: centre, sample: sample, corners: corners, pts: pts,
+                    foreign: !centreIn, land: land, d: d + "Z"
+                });
             }
         }
 
         gridCache = { geo: geo, R: R, cells: cells };
         return cells;
+    }
+
+    /* ---------------- The line, drawn from the hexagons themselves ----------------
+
+       Every edge is keyed by its two endpoints, so the two hexagons that share it meet on the
+       same key. An edge with a single owner is the outline of the board — the state border, the
+       coast — and is never a front, whatever is on the other side of it. An edge with two owners
+       is a front exactly when they disagree. */
+
+    function edgeKey(a, b) {
+        var one = a[0].toFixed(1) + "," + a[1].toFixed(1);
+        var two = b[0].toFixed(1) + "," + b[1].toFixed(1);
+        return one < two ? one + "|" + two : two + "|" + one;
+    }
+
+    function boundary(cells, held, includeOuter) {
+        var edges = {};
+        cells.forEach(function (cell, index) {
+            for (var k = 0; k < 6; k++) {
+                var a = cell.pts[k], b = cell.pts[(k + 1) % 6];
+                var key = edgeKey(a, b);
+                if (!edges[key]) { edges[key] = { a: a, b: b, own: [] }; }
+                edges[key].own.push(index);
+            }
+        });
+
+        var d = "";
+        Object.keys(edges).forEach(function (key) {
+            var e = edges[key];
+            var draw;
+            if (e.own.length === 1) {
+                draw = includeOuter && held(e.own[0]);
+            } else {
+                draw = held(e.own[0]) !== held(e.own[1]);
+            }
+            if (!draw) { return; }
+            d += "M" + e.a[0].toFixed(1) + " " + e.a[1].toFixed(1) +
+                 "L" + e.b[0].toFixed(1) + " " + e.b[1].toFixed(1);
+        });
+        return d;
     }
 
     // Changing hands outranks being crossed: a hexagon that flipped since February 2022 is
@@ -157,8 +242,37 @@ window.tovHexMap = (function () {
             } else {
                 kind = now ? "occupied" : "held";
             }
-            return { kind: kind, d: cell.d };
+            return { kind: kind, d: cell.d, land: cell.land };
         });
+    }
+
+    // The same five states, read from the chronicle instead of from a line: each hexagon asks
+    // frontline.js who controls the point that speaks for it, and whether that changed this
+    // quarter.
+    function classifyHistory(cells, index) {
+        return cells.map(function (cell) {
+            var kind = window.tovFront.kindAt(cell.sample[0], cell.sample[1], index);
+            return {
+                kind: kind || "held",
+                change: window.tovFront.changeAt(cell.sample[0], cell.sample[1], index),
+                d: cell.d,
+                land: cell.land
+            };
+        });
+    }
+
+    // What the quarter's map is worth in square kilometres, measured on the drawing itself
+    // rather than taken from a counter that measures something else. Coastal and border
+    // hexagons count for the share of them that is land.
+    function measure(hexes, hexKm2) {
+        var out = { occupied: 0, contested: 0, incursion: 0 };
+        hexes.forEach(function (h) {
+            var area = hexKm2 * h.land;
+            if (h.kind === "occupied" || h.kind === "gained") { out.occupied += area; }
+            else if (h.kind === "front") { out.contested += area; }
+            else if (h.kind === "incursion") { out.incursion += area; }
+        });
+        return out;
     }
 
     /* ---------------- Sector callouts ---------------- */
@@ -262,6 +376,16 @@ window.tovHexMap = (function () {
         clip.appendChild(svgEl("path", { d: geo.path(geo.ukraine, p, true) }));
         defs.appendChild(clip);
 
+        // A mask of its own for the ground beyond the border. Two masks and not one union: with
+        // a union, a hexagon straddling the frontier would show on both sides of it and the
+        // pocket would read as a smear rather than as a salient resting on the border.
+        var salientId = "tov-kursk-clip-" + seq;
+        if (geo.kurskSalient) {
+            var salientClip = svgEl("clipPath", { id: salientId });
+            salientClip.appendChild(svgEl("path", { d: geo.path(geo.kurskSalient, p, true) }));
+            defs.appendChild(salientClip);
+        }
+
         [["ru", COLOUR.ru, 45], ["ua", COLOUR.ua, -45]].forEach(function (h) {
             var pat = svgEl("pattern", {
                 id: "tov-hatch-" + h[0] + "-" + seq,
@@ -308,40 +432,67 @@ window.tovHexMap = (function () {
             .concat([geo.southAnchor]);
 
         var R = (HEX_KM / project.kmPerPixel) / Math.sqrt(3);
-        var hexes = classify(buildGrid(geo, p, R), classifier(line), classifier(initial));
+        var hexKm2 = 1.5 * Math.sqrt(3) * Math.pow(R * project.kmPerPixel, 2);
+        var cells = buildGrid(geo, p, R);
 
-        var byKind = { held: "", occupied: "", gained: "", retaken: "", front: "" };
+        var index = opts.turnIndex === undefined ? -1 : opts.turnIndex;
+        var history = window.tovFront && window.tovFront.available && index >= 0;
+        var regime = history ? window.tovFront.regimeOf(index) : "model";
+        var hexes = history
+            ? classifyHistory(cells, index)
+            : classify(cells, classifier(line), classifier(initial));
+
+        var byKind = {
+            held: "", occupied: "", gained: "", retaken: "", front: "",
+            foreign: "", incursion: "", incursionFront: ""
+        };
         hexes.forEach(function (h) { byKind[h.kind] += h.d; });
 
         var grid = svgEl("g", { "clip-path": "url(#" + clipId + ")" });
+        var beyond = svgEl("g", { "clip-path": "url(#" + salientId + ")" });
         [
-            { kind: "held", fill: "none", stroke: COLOUR.grid },
-            { kind: "occupied", fill: "rgba(168,50,42,0.26)", stroke: "rgba(125,32,25,0.30)" },
-            { kind: "gained", fill: "rgba(168,50,42,0.10)", stroke: "rgba(125,32,25,0.26)" },
-            { kind: "retaken", fill: "rgba(30,95,168,0.10)", stroke: "rgba(23,71,126,0.26)" },
-            { kind: "front", fill: "rgba(168,50,42,0.13)", stroke: COLOUR.grid }
+            // Russian soil, drawn faintly and never filled: the salient has to be on the board
+            // before it is taken, or its capture would read as new land appearing.
+            { kind: "foreign", fill: "none", stroke: "rgba(140,132,116,0.40)", host: beyond },
+            { kind: "held", fill: "none", stroke: COLOUR.grid, host: grid },
+            { kind: "occupied", fill: "rgba(168,50,42,0.26)", stroke: "rgba(125,32,25,0.30)", host: grid },
+            { kind: "gained", fill: "rgba(168,50,42,0.10)", stroke: "rgba(125,32,25,0.26)", host: grid },
+            { kind: "retaken", fill: "rgba(30,95,168,0.10)", stroke: "rgba(23,71,126,0.26)", host: grid },
+            { kind: "front", fill: "rgba(168,50,42,0.13)", stroke: COLOUR.grid, host: grid },
+            // The mirror image of "occupied", and the only one of its kind on the map: ground
+            // the defender holds in the invader's own country.
+            { kind: "incursion", fill: "rgba(30,95,168,0.30)", stroke: "rgba(23,71,126,0.34)", host: beyond },
+            { kind: "incursionFront", fill: "rgba(30,95,168,0.14)", stroke: COLOUR.grid, host: beyond }
         ].forEach(function (layer) {
             if (!byKind[layer.kind]) { return; }
-            grid.appendChild(svgEl("path", {
+            layer.host.appendChild(svgEl("path", {
                 d: byKind[layer.kind], fill: layer.fill,
                 stroke: layer.stroke, "stroke-width": "0.6"
             }));
         });
-        ["gained", "retaken"].forEach(function (kind) {
-            if (!byKind[kind]) { return; }
-            grid.appendChild(svgEl("path", {
-                d: byKind[kind],
-                fill: "url(#tov-hatch-" + (kind === "gained" ? "ru" : "ua") + "-" + seq + ")",
-                stroke: "none"
-            }));
-        });
+        [["gained", "ru", grid], ["retaken", "ua", grid], ["incursion", "ua", beyond]]
+            .forEach(function (hatch) {
+                if (!byKind[hatch[0]]) { return; }
+                hatch[2].appendChild(svgEl("path", {
+                    d: byKind[hatch[0]],
+                    fill: "url(#tov-hatch-" + hatch[1] + "-" + seq + ")",
+                    stroke: "none"
+                }));
+            });
+        // The disputed ground is ringed, not hatched hexagon by hexagon. A per-hexagon outline
+        // was right when "contested" meant the one row the line ran through; read from the
+        // chronicle it can mean a whole zone, and eight outlined hexagons in a block read as
+        // ground taken rather than ground disputed.
         if (byKind.front) {
             grid.appendChild(svgEl("path", {
-                d: byKind.front, fill: "none",
-                stroke: COLOUR.ru, "stroke-width": "1.1", opacity: "0.7"
+                d: history
+                    ? boundary(cells, function (i) { return hexes[i].kind === "front"; }, false)
+                    : byKind.front,
+                fill: "none", stroke: COLOUR.ru, "stroke-width": "1.1", opacity: "0.7"
             }));
         }
         svg.appendChild(grid);
+        svg.appendChild(beyond);
 
         // Rivers, under the line but over the grid.
         svg.appendChild(svgEl("path", {
@@ -363,24 +514,81 @@ window.tovHexMap = (function () {
             fill: "none", stroke: COLOUR.outline, "stroke-width": "1.5", "stroke-linejoin": "round"
         }));
 
-        // February 2022, for the eye to measure against.
-        svg.appendChild(svgEl("path", {
-            d: geo.path(initial, p, false),
-            fill: "none", stroke: "#5c6470", "stroke-width": "1.5",
-            "stroke-dasharray": "5 4", opacity: "0.85"
-        }));
+        // The line of 2014, for the eye to measure against. Traced round the hexagons the
+        // invader already held in the autumn of 2021, so it sits on the same ground as
+        // everything else rather than beside it.
+        var referenceD = history
+            ? boundary(cells, function (i) {
+                return window.tovFront.baselineInvader(cells[i].sample[0], cells[i].sample[1]);
+            }, false)
+            : geo.path(initial, p, false);
+        if (referenceD) {
+            svg.appendChild(svgEl("path", {
+                d: referenceD, fill: "none", stroke: "#5c6470", "stroke-width": "1.5",
+                "stroke-dasharray": "5 4", opacity: "0.85",
+                "clip-path": history ? "url(#" + clipId + ")" : null
+            }));
+        }
 
-        // Current contact line, on a paper halo so it never drowns in the grid.
-        svg.appendChild(svgEl("path", {
-            d: geo.path(line, p, false),
-            fill: "none", stroke: "#fffdf8", "stroke-width": "5.4",
-            "stroke-linecap": "round", "stroke-linejoin": "round", opacity: "0.7"
-        }));
-        svg.appendChild(svgEl("path", {
-            d: geo.path(line, p, false),
-            fill: "none", stroke: COLOUR.ru, "stroke-width": "3",
-            "stroke-linecap": "round", "stroke-linejoin": "round"
-        }));
+        // Current contact line, on a paper halo so it never drowns in the grid. Dashed as soon
+        // as the model, and not the chronicle, is the one placing it.
+        var contactD = history
+            ? boundary(cells, function (i) {
+                var kind = hexes[i].kind;
+                return kind === "occupied" || kind === "gained";
+            }, false)
+            : geo.path(line, p, false);
+        var projected = history && regime !== "documented";
+
+        if (contactD) {
+            svg.appendChild(svgEl("path", {
+                d: contactD, fill: "none", stroke: "#fffdf8", "stroke-width": "5.4",
+                "stroke-linecap": "round", "stroke-linejoin": "round", opacity: "0.7",
+                "clip-path": history ? "url(#" + clipId + ")" : null
+            }));
+            svg.appendChild(svgEl("path", {
+                d: contactD, fill: "none", stroke: COLOUR.ru, "stroke-width": "3",
+                "stroke-linecap": "round", "stroke-linejoin": "round",
+                "stroke-dasharray": projected ? "7 5" : null,
+                "clip-path": history ? "url(#" + clipId + ")" : null
+            }));
+        }
+
+        // The pocket in Kursk, outlined on all sides because none of its neighbours is on the
+        // board: it is the only ground the defender ever held in the invader's own country, and
+        // an unoutlined blue patch beyond the border would read as a drawing error.
+        if (history && byKind.incursion) {
+            svg.appendChild(svgEl("path", {
+                d: boundary(cells, function (i) { return hexes[i].kind === "incursion"; }, true),
+                fill: "none", stroke: COLOUR.ua, "stroke-width": "2.4",
+                "stroke-linecap": "round", "stroke-linejoin": "round",
+                "stroke-dasharray": projected ? "7 5" : null,
+                "clip-path": "url(#" + salientId + ")"
+            }));
+        }
+
+        // What changed hands THIS quarter, ringed in the colour of whoever gained it. Without
+        // this, a quarter is a state of the world and never an event: the spring of 2022 would
+        // show the northern axes as ordinary reconquered ground rather than as the retreat that
+        // had just happened, and the reader would have to compare two screens to see it.
+        //
+        // Above the contact line on purpose. It is the one mark that answers « what happened »,
+        // and nothing on the map may cover it.
+        if (history) {
+            [["toInvader", COLOUR.ru], ["toDefender", COLOUR.ua]].forEach(function (side) {
+                var d = boundary(cells, function (i) { return hexes[i].change === side[0]; }, true);
+                if (!d) { return; }
+                svg.appendChild(svgEl("path", {
+                    d: d, fill: "none", stroke: "#fffdf8", "stroke-width": "4.6",
+                    "stroke-linejoin": "round", opacity: "0.55"
+                }));
+                svg.appendChild(svgEl("path", {
+                    d: d, fill: "none", stroke: side[1], "stroke-width": "2.2",
+                    "stroke-linejoin": "round",
+                    "stroke-dasharray": projected ? "6 4" : null
+                }));
+            });
+        }
 
         // Cities.
         geo.cities.forEach(function (c) {
@@ -401,12 +609,92 @@ window.tovHexMap = (function () {
         // themselves, on the resolution glyph. The callouts stay as the fallback for a page
         // served without counters.js.
         if (window.tovCounters && typeof window.tovCounters.draw === "function") {
-            window.tovCounters.draw(svg, turn, board, p, { cities: geo.cities });
+            window.tovCounters.draw(svg, turn, board, p, {
+                cities: geo.cities,
+                // The gauges belong on the line the map is drawing, not on the one the model
+                // would have drawn: a piece sitting two hundred kilometres from its own front
+                // is the contradiction this whole change exists to remove.
+                lineAt: history
+                    ? function (lat, anchorLon) { return contactLon(cells, hexes, lat, anchorLon); }
+                    : null,
+                historical: history && regime === "documented",
+                turnIndex: index
+            });
         } else {
             callouts(svg, turn, board, geo, p);
         }
 
+        if (history) { caption(svg, regime); }
+
+        // What this drawing is worth, for whoever prints a figure beside it. Attached to the
+        // element rather than returned, so render() keeps its one-value signature.
+        svg.tovReading = {
+            regime: regime,
+            quarter: window.tovFront.quarterOf(index),
+            handover: window.tovFront.handover(),
+            area: measure(hexes, hexKm2)
+        };
         return svg;
+    }
+
+    /* ---------------- Saying which authority drew the line ----------------
+       One line, bottom left, where the legend used to be. It is not a legend: it names the
+       authority in force and nothing else, because a map of a war still being fought that does
+       not say whether it is reporting or projecting is worse than no map. */
+
+    var NOTE = {
+        documented: "Front réel — position reconstituée, sources dans le dépôt",
+        counterfactual: "Déroulé hypothétique — après {q}, le front est celui du modèle",
+        projection: "Après {q}, le front est projeté par le modèle"
+    };
+
+    function caption(svg, regime) {
+        var quarter = window.tovFront.handover();
+        var when = quarter
+            ? (SEASON_FR[quarter.season] || "") + " " + quarter.year
+            : "la période documentée";
+        var label = (NOTE[regime] || NOTE.projection).replace("{q}", when);
+
+        var y = H - 13;
+        if (regime !== "documented") {
+            svg.appendChild(svgEl("line", {
+                x1: 14, y1: y - 3.5, x2: 34, y2: y - 3.5,
+                stroke: COLOUR.ru, "stroke-width": "2.4", "stroke-dasharray": "7 5"
+            }));
+        } else {
+            svg.appendChild(svgEl("line", {
+                x1: 14, y1: y - 3.5, x2: 34, y2: y - 3.5,
+                stroke: COLOUR.ru, "stroke-width": "2.4"
+            }));
+        }
+
+        svg.appendChild(halo(text(40, y, label, {
+            "font-size": "9", "letter-spacing": "0.05em", fill: "#6f6a5e",
+            "font-family": "Georgia, 'Palatino Linotype', serif"
+        })));
+    }
+
+    // Where the front stands at one latitude: the westernmost longitude the invader holds or
+    // disputes on that row, so a gauge can be hung on the line the reader is looking at rather
+    // than on the one the model would have drawn.
+    //
+    // The search is fenced to the east of the sector's own February 2022 anchor, and for a plain
+    // reason: at the latitude of Kharkiv the map also carries the column of Kyiv, four hundred
+    // kilometres west, and an unfenced minimum would hang the Kharkiv gauge on it.
+    function contactLon(cells, hexes, lat, anchorLon) {
+        var floor = anchorLon - 2.5;
+        var best = null;
+        for (var i = 0; i < cells.length; i++) {
+            var kind = hexes[i].kind;
+            if (kind !== "occupied" && kind !== "gained" && kind !== "front") { continue; }
+            // Mostly-water hexagons are skipped: the western tip of the Kherson left bank is a
+            // sand spit, and hanging a gauge on it puts the piece out at sea.
+            if (cells[i].land < 0.5) { continue; }
+            var sample = cells[i].sample;
+            if (Math.abs(sample[1] - lat) > 0.32 || sample[0] < floor) { continue; }
+            if (best === null || sample[0] < best) { best = sample[0]; }
+        }
+        return best;
     }
 
     return { render: render };
