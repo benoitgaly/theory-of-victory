@@ -92,6 +92,9 @@ public static class UkraineScenario
             // the frozen-front run gives at T27, the defender finally yielding. A longer game
             // would end the demonstration on the wrong lesson.
             TurnCount = 26,
+
+            // Autumn 2021 resolves no front and no strike: it is force generation and nothing else.
+            CombatStartsOnTurn = 2,
             OilPriceCalendar = [.. OilCalendar],
             Invader = BuildRussia(),
             Defender = BuildUkraine(),
@@ -439,8 +442,16 @@ public static class UkraineScenario
     }
 
     /// <summary>
-    /// Anchored on the real February 2022 contact line, north to south. Push vectors point
-    /// along each sector's actual axis of advance, in degrees per ten-kilometre hex.
+    /// Anchored on the real contact line of FEBRUARY 2022 — which in the Donbass is the line of
+    /// 2014, and elsewhere the state border or the administrative edge of Crimea. Push vectors
+    /// point along each sector's actual axis of advance, in degrees per ten-kilometre hex, and
+    /// are set so that four years of modelled advance land the line roughly where it stands today.
+    ///
+    /// These anchors used to sit on TODAY's line, which meant turn one drew the occupied
+    /// territory of 2024 three months before the invasion: the land corridor to Crimea, Kherson
+    /// and Zaporizhzhia already taken. The map is built from these eight points — everything east
+    /// of the interpolated line reads as occupied — so the opening position is a data question,
+    /// not a physics one.
     /// </summary>
     private static List<FrontSector> BuildSectors()
     {
@@ -455,9 +466,9 @@ public static class UkraineScenario
                 Width = 7,
                 StrategicValue = 1.3d,
                 Longitude = 36.95d,
-                Latitude = 50.05d,
-                PushLongitude = -0.095d,
-                PushLatitude = -0.045d,
+                Latitude = 50.35d,
+                PushLongitude = -0.02d,
+                PushLatitude = -0.055d,
             },
             new FrontSector
             {
@@ -467,7 +478,7 @@ public static class UkraineScenario
                 Urbanisation = 0.12d,
                 Width = 6,
                 StrategicValue = 1.1d,
-                Longitude = 37.75d,
+                Longitude = 38.2d,
                 Latitude = 49.55d,
                 PushLongitude = -0.134d,
                 PushLatitude = 0d,
@@ -480,8 +491,8 @@ public static class UkraineScenario
                 Urbanisation = 0.08d,
                 Width = 5,
                 StrategicValue = 0.9d,
-                Longitude = 38.05d,
-                Latitude = 49.0d,
+                Longitude = 38.7d,
+                Latitude = 49d,
                 PushLongitude = -0.134d,
                 PushLatitude = 0d,
             },
@@ -493,8 +504,8 @@ public static class UkraineScenario
                 Urbanisation = 0.4d,
                 Width = 5,
                 StrategicValue = 1.2d,
-                Longitude = 38.15d,
-                Latitude = 48.6d,
+                Longitude = 38.45d,
+                Latitude = 48.55d,
                 PushLongitude = -0.13d,
                 PushLatitude = 0.02d,
             },
@@ -506,8 +517,8 @@ public static class UkraineScenario
                 Urbanisation = 0.22d,
                 Width = 7,
                 StrategicValue = 1.5d,
-                Longitude = 37.8d,
-                Latitude = 48.25d,
+                Longitude = 37.75d,
+                Latitude = 48.14d,
                 PushLongitude = -0.134d,
                 PushLatitude = 0d,
             },
@@ -519,8 +530,8 @@ public static class UkraineScenario
                 Urbanisation = 0.18d,
                 Width = 5,
                 StrategicValue = 0.9d,
-                Longitude = 37.3d,
-                Latitude = 47.75d,
+                Longitude = 37.4d,
+                Latitude = 47.8d,
                 PushLongitude = -0.12d,
                 PushLatitude = 0.035d,
             },
@@ -532,8 +543,8 @@ public static class UkraineScenario
                 Urbanisation = 0.15d,
                 Width = 7,
                 StrategicValue = 1.4d,
-                Longitude = 35.9d,
-                Latitude = 47.45d,
+                Longitude = 37.8d,
+                Latitude = 47.05d,
                 PushLongitude = -0.09d,
                 PushLatitude = 0.055d,
             },
@@ -545,10 +556,10 @@ public static class UkraineScenario
                 Urbanisation = 0.2d,
                 Width = 6,
                 StrategicValue = 1.2d,
-                Longitude = 33.4d,
-                Latitude = 46.75d,
-                PushLongitude = -0.085d,
-                PushLatitude = 0.06d,
+                Longitude = 33.7d,
+                Latitude = 46.16d,
+                PushLongitude = -0.03d,
+                PushLatitude = 0.065d,
             },
         ];
     }
@@ -852,6 +863,52 @@ public static class UkraineScenario
         russianGrinding.WeaponsShare = 0.32d;
         russianGrinding.PrimaryStrikeTarget = StrikeTarget.PowerGrid;
 
+        // February 2022, and the single most consequential line of the whole scenario. Ukraine
+        // held the Donbass — fortified since 2014, dug in, mined — with nearly everything it had,
+        // and the south with one brigade for two hundred kilometres. Russia broke through at
+        // Kherson and not at Avdiivka for that reason and no other: the ground was empty.
+        //
+        // Nothing here scripts a movement. It states where the men stood, and the front model
+        // draws its own conclusions — which is the whole point of doing it this way.
+        Doctrine ukrainianFebruary2022 = UkrainianDoctrine();
+        ukrainianFebruary2022.OffensivePosture = 0.2d;
+        ukrainianFebruary2022.ReserveMobility = 0.15d;
+        ukrainianFebruary2022.SectorDefence["kharkiv"] = 0.5d;
+        ukrainianFebruary2022.SectorDefence["kupiansk"] = 0.5d;
+        ukrainianFebruary2022.SectorDefence["lyman"] = 1.6d;
+        ukrainianFebruary2022.SectorDefence["bakhmut"] = 1.6d;
+        ukrainianFebruary2022.SectorDefence["pokrovsk"] = 1.6d;
+        ukrainianFebruary2022.SectorDefence["vuhledar"] = 1.6d;
+        ukrainianFebruary2022.SectorDefence["zaporizhzhia"] = 0.2d;
+        ukrainianFebruary2022.SectorDefence["kherson"] = 0.15d;
+
+        // And Russia attacked everywhere, with the weight on the two axes that had nothing in
+        // front of them. Everything after this quarter is the grinding war.
+        Doctrine russianInvasion = RussianDoctrine();
+        russianInvasion.OffensivePosture = 0.78d;
+        russianInvasion.SectorEffort["kharkiv"] = 1.2d;
+        russianInvasion.SectorEffort["kupiansk"] = 1d;
+        russianInvasion.SectorEffort["lyman"] = 1d;
+        russianInvasion.SectorEffort["bakhmut"] = 1d;
+        russianInvasion.SectorEffort["pokrovsk"] = 1d;
+        russianInvasion.SectorEffort["vuhledar"] = 1d;
+        russianInvasion.SectorEffort["zaporizhzhia"] = 2.2d;
+        russianInvasion.SectorEffort["kherson"] = 2.4d;
+
+        // Autumn 2022, and the mirror of February. Russia now holds twelve hundred kilometres
+        // with the same dérisoire density it broke through: Kharkiv covered by second-rate units
+        // while everything went to Bakhmut, and a bridgehead on the wrong bank of the Dnipro whose
+        // supply lines had just been cut. Kharkiv fell in a week and Kherson was evacuated — not
+        // because the counter-offensive was brilliant, but because nobody was standing there.
+        // Same mechanism as the rush, read the other way round.
+        Doctrine russianAutumn2022 = RussianDoctrine();
+        russianAutumn2022.SectorDefence["kharkiv"] = 0.4d;
+        russianAutumn2022.SectorDefence["kupiansk"] = 0.5d;
+        russianAutumn2022.SectorDefence["kherson"] = 0.35d;
+        russianAutumn2022.SectorDefence["bakhmut"] = 1.8d;
+        russianAutumn2022.SectorDefence["pokrovsk"] = 1.6d;
+        russianAutumn2022.ReserveMobility = 0.35d;
+
         // Autumn 2021. Nobody attacks: one side is massing, the other is not mobilising.
         // A null offensive posture drops every sector ratio to zero, so no hex moves.
         Doctrine russianPrologue = RussianDoctrine();
@@ -877,20 +934,45 @@ public static class UkraineScenario
                 Reason = "Ni mobilisation ni provocation",
             },
 
-            // The invasion. Both sides return to their standing doctrine.
+            // The invasion, on every axis at once, and weighted south — the only one that ran.
             new DoctrineShift
             {
                 Turn = 2,
                 SideCode = Side.Invader.Code,
-                Doctrine = RussianDoctrine(),
-                Reason = "Invasion",
+                Doctrine = russianInvasion,
+                Reason = "Invasion sur tous les axes",
             },
             new DoctrineShift
             {
                 Turn = 2,
                 SideCode = Side.Defender.Code,
+                Doctrine = ukrainianFebruary2022,
+                Reason = "Tout dans le Donbass fortifié, presque rien au sud",
+            },
+            // Spring 2022. The line has formed, the reserves have arrived, and the defence spreads
+            // back over the whole front: the breach closes because men finally stand in it.
+            new DoctrineShift
+            {
+                Turn = 3,
+                SideCode = Side.Defender.Code,
                 Doctrine = UkrainianDoctrine(),
-                Reason = "Défense générale",
+                Reason = "Le front se stabilise, les réserves arrivent",
+            },
+
+            // Summer 2022. The southern axis has run its course; the war moves to the Donbass.
+            new DoctrineShift
+            {
+                Turn = 4,
+                SideCode = Side.Invader.Code,
+                Doctrine = RussianDoctrine(),
+                Reason = "L'axe sud s'épuise, la guerre repasse au Donbass",
+            },
+            new DoctrineShift
+            {
+                Turn = 5,
+                SideCode = Side.Invader.Code,
+                Doctrine = russianAutumn2022,
+                Reason = "Une ligne trop longue tenue par trop peu d'hommes",
             },
             new DoctrineShift
             {
@@ -919,6 +1001,13 @@ public static class UkraineScenario
                 SideCode = Side.Defender.Code,
                 Doctrine = ukrainianDefensive,
                 Reason = "L'offensive s'enlise, retour à la défense",
+            },
+            new DoctrineShift
+            {
+                Turn = 6,
+                SideCode = Side.Invader.Code,
+                Doctrine = RussianDoctrine(),
+                Reason = "Ligne raccourcie, défense rétablie",
             },
             new DoctrineShift
             {

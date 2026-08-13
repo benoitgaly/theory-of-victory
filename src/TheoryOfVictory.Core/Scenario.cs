@@ -41,6 +41,20 @@ public sealed class Scenario
     public required int TurnCount { get; init; }
 
     /// <summary>
+    /// First turn on which the front and the deep-strike campaigns are resolved at all. Turns
+    /// before it are prologue: forces are generated, budgets are spent, factories run — and not
+    /// a shot is fired.
+    ///
+    /// It has to SKIP the two phases rather than neutralise them. Setting both offensive postures
+    /// to zero stops every hex from moving, but <c>ResolveSector</c> applies its losses before it
+    /// looks at the result: the quietest quarter of the run would still cost tens of thousands of
+    /// men, and the strike phases would still report saturation on campaigns nobody launched.
+    ///
+    /// One means no prologue, which is the historical default for a scenario opening on its war.
+    /// </summary>
+    public int CombatStartsOnTurn { get; init; } = 1;
+
+    /// <summary>
     /// How the war ends once a side breaks. Owned by the scenario because the calendar is: read
     /// <see cref="AftermathRules.QuartersToArmistice"/> to know how many quarters to leave after
     /// the rupture. The default dissolves an army over four quarters.

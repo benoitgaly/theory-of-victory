@@ -36,8 +36,31 @@ public sealed class Doctrine
     /// <summary>Offensive effort per sector code. Values are relative weights.</summary>
     public Dictionary<string, double> SectorEffort { get; init; } = [];
 
+    /// <summary>
+    /// Standing defensive weight per sector, a different question from where one attacks: an
+    /// army that concentrates its assaults on one axis still has to hold everywhere else. Empty
+    /// means uniform, which is the normal answer — a defender covers the whole line.
+    ///
+    /// February 2022 is the exception the model needs, and it is the reason this exists. Ukraine
+    /// held the fortified Donbass with nearly everything it had and the south with one brigade
+    /// for two hundred kilometres. That distribution, not any failure of arms, is why the breach
+    /// happened at Kherson and not at Avdiivka.
+    /// </summary>
+    public Dictionary<string, double> SectorDefence { get; init; } = [];
+
     /// <summary>Share of combat power committed to attacking rather than holding.</summary>
     public double OffensivePosture { get; set; } = 0.5d;
+
+    /// <summary>
+    /// How freely reserves can be shifted towards enemy pressure this quarter, as a multiplier on
+    /// the redeployment the logistics allow. One is the standing army that knows where the war is.
+    ///
+    /// Near zero is the army that does not: in the first weeks of an invasion nobody redeploys,
+    /// because nobody yet knows which axis is the feint. The south of Ukraine fell in three weeks,
+    /// well inside the time it takes to move a reserve — and a model where reserves always arrive
+    /// can never show a breakthrough, however empty the ground.
+    /// </summary>
+    public double ReserveMobility { get; set; } = 1d;
 
     /// <summary>Innovation split across the three edges.</summary>
     public double InnovationTacticalShare { get; set; } = 0.5d;
@@ -73,6 +96,7 @@ public sealed class Doctrine
             RearDefenceShare = RearDefenceShare,
             PrimaryStrikeTarget = PrimaryStrikeTarget,
             OffensivePosture = OffensivePosture,
+            ReserveMobility = ReserveMobility,
             InnovationTacticalShare = InnovationTacticalShare,
             InnovationStrikeShare = InnovationStrikeShare,
             InnovationCounterShare = InnovationCounterShare,
@@ -81,6 +105,11 @@ public sealed class Doctrine
         foreach (KeyValuePair<string, double> entry in SectorEffort)
         {
             copy.SectorEffort[entry.Key] = entry.Value;
+        }
+
+        foreach (KeyValuePair<string, double> entry in SectorDefence)
+        {
+            copy.SectorDefence[entry.Key] = entry.Value;
         }
 
         return copy;

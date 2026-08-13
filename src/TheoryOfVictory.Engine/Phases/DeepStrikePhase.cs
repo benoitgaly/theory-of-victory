@@ -15,6 +15,13 @@ public sealed class DeepStrikePhase : ITurnPhase
 
     public void Execute(TurnContext context)
     {
+        // Nobody strikes before the war starts. Without this, the prologue announces a saturated
+        // campaign against a refinery nobody has attacked and gigawatts lost off an intact grid.
+        if (context.State.Turn < context.Scenario.CombatStartsOnTurn)
+        {
+            return;
+        }
+
         StrikeResolution? invader = Launch(context, Side.Invader);
         StrikeResolution? defender = Launch(context, Side.Defender);
 

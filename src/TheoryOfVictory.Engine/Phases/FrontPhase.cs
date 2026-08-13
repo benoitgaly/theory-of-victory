@@ -11,6 +11,25 @@ public sealed class FrontPhase : ITurnPhase
     private const double BaseDefenderLossRate = 0.021d;
     private const double CollapseMovementMultiplier = 3.5d;
 
+    /// <summary>Hexes a HELD line yields in a quarter — thirty kilometres, a historic breakthrough.</summary>
+    private const double BaseMovementCeiling = 3d;
+
+    /// <summary>Hexes an EMPTY line yields — a hundred and eighty kilometres, March 2022 in the south.</summary>
+    private const double MaxMovementCeiling = 18d;
+
+    private const double SectorKilometresPerHex = 10d;
+
+    /// <summary>
+    /// Men in contact per kilometre on a line that is actually held. The model produces 312 for
+    /// the invader and 325 for the defender on the quarter of the invasion, spread evenly over
+    /// the 480 km modelled, and climbs past 700 by 2026. The real breakthroughs of 2022 happened
+    /// where the figure was far below two hundred.
+    /// </summary>
+    private const double HeldLineDensity = 300d;
+
+    /// <summary>An empty line is six times thinner than a held one, and never more.</summary>
+    private const double MaxThinness = 6d;
+
     public string Name
     {
         get { return "Front"; }
@@ -18,8 +37,15 @@ public sealed class FrontPhase : ITurnPhase
 
     public void Execute(TurnContext context)
     {
+        // Combat power is still read every turn — the board draws it, and the prologue is
+        // precisely about watching a force being built. Only the resolution is skipped.
         ComputeCombatPower(context, Side.Invader);
         ComputeCombatPower(context, Side.Defender);
+
+        if (context.State.Turn < context.Scenario.CombatStartsOnTurn)
+        {
+            return;
+        }
 
         Belligerent invader = context.State.Invader;
         Belligerent defender = context.State.DefenderSide;
@@ -169,7 +195,7 @@ public sealed class FrontPhase : ITurnPhase
         // Redeployment is always late and partial: this is what leaves room for concentration.
         double reactivity = belligerent.HasCollapsed
             ? 0d
-            : Math.Clamp(belligerent.Politics.LogisticsIntegrity * 0.45d, 0d, 0.45d);
+            : Math.Clamp(belligerent.Politics.LogisticsIntegrity * 0.45d * doctrine.ReserveMobility, 0d, 0.45d);
 
         double totalPressure = 0d;
         foreach (double value in enemyPressure.Values)
@@ -177,21 +203,54 @@ public sealed class FrontPhase : ITurnPhase
             totalPressure += value;
         }
 
+        // The standing share is the doctrine's, not a flat eighth: a defender also decides where
+        // his men stand. With uniform weights this is exactly the old 1/count, so nothing moves
+        // until a scenario says otherwise — and February 2022 says otherwise very loudly, with
+        // everything in the fortified Donbass and one brigade for two hundred kilometres of south.
         int count = context.State.Sectors.Count;
         Dictionary<string, double> cover = [];
 
         foreach (FrontSector sector in context.State.Sectors)
         {
-            double uniform = count <= 0 ? 0d : 1d / count;
+            double standing = DefenceShare(context, doctrine, sector);
+
             double reactive = totalPressure <= 0d
-                ? uniform
+                ? standing
                 : enemyPressure.GetValueOrDefault(sector.Code) / totalPressure;
 
-            double share = (uniform * (1d - reactivity)) + (reactive * reactivity);
+            double share = (standing * (1d - reactivity)) + (reactive * reactivity);
             cover[sector.Code] = available * share;
         }
 
         return cover;
+    }
+
+    /// <summary>
+    /// Share of the standing defence this sector holds. Uniform unless the doctrine says
+    /// otherwise — a defender covers the whole line, and only February 2022 says otherwise.
+    /// </summary>
+    private static double DefenceShare(TurnContext context, Doctrine doctrine, FrontSector sector)
+    {
+        int count = context.State.Sectors.Count;
+        if (doctrine.SectorDefence.Count == 0)
+        {
+            return count <= 0 ? 0d : 1d / count;
+        }
+
+        double total = 0d;
+        foreach (FrontSector candidate in context.State.Sectors)
+        {
+            total += DefenceWeight(doctrine, candidate.Code);
+        }
+
+        return total <= 0d
+            ? (count <= 0 ? 0d : 1d / count)
+            : DefenceWeight(doctrine, sector.Code) / total;
+    }
+
+    private static double DefenceWeight(Doctrine doctrine, string sectorCode)
+    {
+        return doctrine.SectorDefence.TryGetValue(sectorCode, out double value) ? value : 1d;
     }
 
     private static double Weight(Doctrine doctrine, string sectorCode)
@@ -246,12 +305,8 @@ public sealed class FrontPhase : ITurnPhase
             / seasonModifier;
 
         double ratio = push / resistance;
-        double hexes = MovementFor(ratio);
-
-        if (holder.HasCollapsed)
-        {
-            hexes *= CollapseMovementMultiplier;
-        }
+        double ceiling = PenetrationCeiling(context, holder, sector, droneFriction);
+        double hexes = MovementFor(ratio, ceiling);
 
         double engagedHolder = holder.Manpower.AtFront * SectorManpowerShare(context, holder, sector);
         double holderLosses = engagedHolder * BaseDefenderLossRate;
@@ -314,8 +369,13 @@ public sealed class FrontPhase : ITurnPhase
         return total <= 0d ? 0d : Weight(doctrine, sector.Code) / total;
     }
 
-    /// <summary>The table a board game can print: ratio in, hexes out.</summary>
-    private static double MovementFor(double ratio)
+    /// <summary>
+    /// The table a board game can print: ratio in, hexes out. Everything up to a ratio of three
+    /// is unchanged — that is the grinding war, and it is calibrated. Past three, the advance
+    /// runs into how much line there is left to break, which is what <paramref name="ceiling"/>
+    /// carries: a thin line does not merely yield its first hex faster, it yields the next ten.
+    /// </summary>
+    private static double MovementFor(double ratio, double ceiling)
     {
         if (ratio < 1.1d)
         {
@@ -332,8 +392,49 @@ public sealed class FrontPhase : ITurnPhase
             return 1d + (ratio - 2d);
         }
 
-        // Thirty kilometres a quarter is already a historic breakthrough: cap it there.
-        return Math.Min(3d, 2d + ((ratio - 3d) * 0.5d));
+        double slope = 0.5d * (ceiling / BaseMovementCeiling);
+        return Math.Min(ceiling, 2d + ((ratio - 3d) * slope));
+    }
+
+    /// <summary>
+    /// How deep a breakthrough can run this quarter, in hexes. THE point of the whole model: the
+    /// rush of March 2022 and the collapse of Kharkiv six months later were not battles won, they
+    /// were empty ground. A line is not broken by brilliance, it is broken where nobody is
+    /// standing — so what caps an advance is what the holder has in depth, and nothing else.
+    ///
+    /// Three things put depth on a line, and the engine already carries all three: men per
+    /// kilometre, trenches, and drones. Thirty kilometres a quarter — the historic breakthrough
+    /// the old fixed cap encoded — is what a HELD line yields. It is the floor here, never the
+    /// ceiling: this function can only open the cap, never close it, so the grinding war of
+    /// 2024-2026 is untouched by construction.
+    ///
+    /// It also says, without anyone writing it down, that the drone ended the war of movement.
+    /// In 2022 the friction is 1,0 and the cap can open; from 2023 it climbs towards 1,45 and
+    /// shuts it for good, whatever the headcount.
+    /// </summary>
+    private static double PenetrationCeiling(
+        TurnContext context,
+        Belligerent holder,
+        FrontSector sector,
+        double droneFriction)
+    {
+        double kilometres = Math.Max(1d, sector.Width * SectorKilometresPerHex);
+        double density =
+            ManCount.ExactFromThousands(holder.Manpower.InContact)
+            * DefenceShare(context, context.DoctrineFor(holder.Side), sector)
+            / kilometres;
+
+        double thinness = Math.Clamp(HeldLineDensity / Math.Max(1d, density), 1d, MaxThinness);
+        double depth = thinness
+            / ((1d + sector.FortificationOf(holder.Side)) * Math.Max(1d, droneFriction));
+
+        double ceiling = Math.Clamp(BaseMovementCeiling * depth, BaseMovementCeiling, MaxMovementCeiling);
+
+        // A broken defence and an empty one are the same statement, so take the larger of the two
+        // and never their product: multiplied, they would move six hundred kilometres in a quarter.
+        return holder.HasCollapsed
+            ? Math.Max(ceiling, BaseMovementCeiling * CollapseMovementMultiplier)
+            : ceiling;
     }
 
     /// <summary>Attacking costs three to five times holding, unless the defence has broken.</summary>
