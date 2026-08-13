@@ -78,12 +78,16 @@ place de tout ce qui ne se joue pas — et c'est pour cela que l'Occident, dans 
 victoire, paie son étranglement de dix trimestres d'intercepteurs qu'il ne livre pas. Le détail des
 arbitrages est dans le [calendrier](docs/design/06-calendrier-propose.md).
 
-La conception détaillée est répartie en douze documents, du [modèle de jeu](docs/design/01-modele-de-jeu.md)
-à la [carte historique](docs/design/12-carte-historique.md), en passant par la
+La conception détaillée est répartie en treize documents, du [modèle de jeu](docs/design/01-modele-de-jeu.md)
+au [soutien extérieur](docs/design/13-soutien-exterieur-source.md), en passant par la
 [calibration des effectifs](docs/design/04-calibration-effectifs.md), le
-[front historique](docs/design/11-front-historique.md) — les vingt trimestres sourcés — et l'
+[front historique](docs/design/11-front-historique.md) — les vingt trimestres sourcés —, la
+[carte historique](docs/design/12-carte-historique.md) et l'
 [audit de réalisme](docs/design/09-audit-realisme.md), qui nomme les écarts entre le jeu et le réel
-sans les excuser.
+sans les excuser. Le dernier confronte le poste d'aide occidentale au tracker de l'Institut de Kiel
+et y trouve la bascule que le modèle ne sait pas représenter : entre 2022 et 2026, la part
+américaine de l'aide militaire passe de 58 % à presque rien, l'Europe plus que double, et le total
+ne bouge pas.
 
 ## Lancer
 

@@ -56,9 +56,15 @@ seconde vient en premier.
 | 11 | Réserves souveraines russes de départ presque triples du réel liquide | Volontaire | Faible |
 | 12 | La solde disparaît du tableau d'allocation : 63 % de la dépense est invisible | **Subi (bug)** | Faible mais visible |
 | 13 | Les parts « du PIB » rapportent un flux trimestriel à un PIB annuel | Subi | Faible, interne |
+| 14 | Le soutien extérieur n'a qu'un donateur : une substitution entre soutiens est indicible | **Subi (lacune de nature)** | Élevée |
 
 Les quatre premières lignes forment un seul dossier : **les mécanismes que le jeu annonce comme
 son cœur ne se déclenchent pas.** C'est le résultat principal de cet audit.
+
+La quatorzième ligne est d'une autre espèce et a été ajoutée après coup, le jour où le poste de
+soutien extérieur a reçu une source (voir [§6](#6-ce-que-le-modèle-ne-sait-pas-dire--le-donateur-change-le-flux-tient)).
+Ce n'est ni un écart de valeur ni un mécanisme qui ne se déclenche pas : c'est une dimension qui
+manque. Le modèle n'a pas tort sur ce qu'il dit ; il ne peut pas dire ce que la guerre a fait.
 
 ---
 
@@ -407,7 +413,122 @@ par quatre au point d'usage. À faire avant, et non après, que le chiffre n'att
 
 ---
 
-## 6. Ce que le modèle réussit
+## 6. Ce que le modèle ne sait pas dire : le donateur change, le flux tient
+
+*Cette section est postérieure à l'audit initial. Elle a été écrite le jour où le poste de soutien
+extérieur a reçu sa source — le [tracker de l'Institut de Kiel](13-soutien-exterieur-source.md), qui
+mesure l'aide allouée à l'Ukraine mois par mois et par groupe de donateurs. Les mesures du moteur
+citées ici portent sur la version courante et non sur l'instantané du 13 août 2026 : l'aide y vaut
+16,2 Md$ par trimestre et non 11,3.*
+
+### 6.1 Le fait
+
+Le tracker sépare trois groupes de donateurs — l'Europe, les États-Unis, les autres. Sur l'aide
+militaire, en moyenne mensuelle corrigée de l'inflation :
+
+| | 2022 | 2023 | 2024 | 2025 | 2026 (jan.–juin) |
+|---|---:|---:|---:|---:|---:|
+| Europe, Md€/mois | 0,92 | 1,44 | 1,46 | 2,36 | 2,23 |
+| États-Unis, Md€/mois | 1,44 | 1,57 | 1,33 | 0,06 | ~0,02 |
+| Autres, Md€/mois | 0,14 | 0,08 | 0,06 | 0,14 | 0,07 |
+| **Total** | **2,50** | **3,09** | **2,85** | **2,56** | **2,32** |
+| *Part des États-Unis* | *58 %* | *51 %* | *47 %* | *2 %* | *1 %* |
+
+**Le premier soutien de l'Ukraine est sorti, l'Europe a plus que doublé, et le total a bougé de
+−7 % en cinq ans.**
+
+Côté financier et humanitaire, la même bascule est engagée — les États-Unis passent de 0,98 Md€
+par mois en 2022 à zéro après 2024 — mais **elle échoue** : l'Europe culmine à 2,71 en 2025 puis
+retombe à 1,54 en 2026, sous son niveau de 2022, et le total du panneau perd 39 %, de 2,88 à
+1,77 Md€ par mois. Les deux panneaux ensemble, l'aide totale recule de 24 %. La source titre
+elle-même, sur une livraison antérieure, *« Europe fails to offset US aid drop »*.
+
+Le fait à retenir n'est donc pas « la substitution marche », mais **« elle marche sur les armes et
+manque sur l'argent »** — et c'est une raison de plus de vouloir le mécanisme : un moteur qui
+saurait représenter une substitution saurait aussi représenter son échec, ce qui est le cas le
+plus dangereux pour l'Ukraine et celui qu'aucun des trois déroulés ne met en scène.
+
+### 6.2 Ce que le moteur peut en dire : rien
+
+Le jeu connaît trois avenirs pour le soutien extérieur, et ce sont ses trois déroulés : **il tient,
+il s'intensifie, il s'arrête.** Ils ont tous les trois la même grammaire — une quantité qui monte
+ou qui descend. La réalité a pris un quatrième chemin, qui n'est pas une variation de quantité :
+**le donateur a changé et le flux a tenu.** C'est une substitution entre soutiens.
+
+Le moteur ne peut pas la représenter, et la raison est structurelle, pas paramétrique.
+
+- `Politics.ExternalWill` est **un scalaire unique**, de 0 à 100, documenté comme *la volonté
+  politique étrangère de continuer à financer ce camp*. Il n'a pas de dimension donateur.
+- `Foreign.DisbursementRate` est **un second scalaire unique**, et `Foreign.PledgedPerTurnBillions`
+  un troisième. `EffectiveGrantBillions` est leur produit : une quantité, jamais une composition.
+- `Foreign.InKindShare` est **un quatrième scalaire unique**. Le panier livré ne dépend donc pas de
+  qui livre — alors que c'est là que la substitution réelle se paie.
+
+Un bloc unique ne sait que monter ou descendre. Il ne sait pas se recomposer à somme constante.
+
+### 6.3 La preuve est déjà dans le deck
+
+Ce n'est pas une lacune théorique : **le jeu bute dessus, et la trace est visible dans ses propres
+cartes.** Le deck porte deux cartes qui nomment les deux donateurs séparément :
+
+| Carte | Effets |
+|---|---|
+| `us_election_swing` — « Bascule électorale américaine » | `ExternalWillDelta` −28, `AidDisbursementRate` −0,45, `MoraleDelta` −8 |
+| `european_election_swing` — « Bascule électorale européenne » | `ExternalWillDelta` −14, `AidPledgeDelta` −3,0 |
+
+Elles sont toutes les deux au bénéfice de l'envahisseur, toutes les deux purement soustractives, et
+toutes les deux poussent **le même curseur unique**. Le vocabulaire d'effets ne contient aucun verbe
+capable de dire « ce donateur se retire *et* cet autre reprend ». Il ne sait écrire que « l'aide
+baisse ». La conception a vu les deux donateurs ; le modèle ne pouvait leur donner qu'une seule
+poignée.
+
+Le chiffrage rend la chose gênante. La carte `aid_blocked` retire 62 % du versement, ce qui est
+l'ordre de grandeur exact de la part américaine de l'aide militaire en 2022-2023 : **la carte est
+bien calibrée sur le retrait qui a effectivement eu lieu.** Or ce retrait s'est produit, en 2025, et
+le total n'a perdu que 7 %. Jouée sur le calendrier réel, la carte ferait s'effondrer un flux que la
+guerre a vu tenir. Le déroulé « Le soutien s'arrête » n'est donc pas la modélisation de ce qui
+menaçait l'Ukraine en 2025 : c'est la modélisation d'un scénario dont la réalité a montré qu'il
+n'était pas le seul possible, et le jeu ne propose rien entre les deux.
+
+### 6.4 Ce que le modèle ne peut donc pas dire
+
+Quatre affirmations, toutes vraies de la guerre réelle, qu'aucune sortie du moteur ne peut porter :
+
+1. **Qu'un soutien majeur peut sortir sans que le front cède.** Le jeu enseigne l'inverse, et il
+   l'enseigne bien pour le cas où personne ne reprend — mais il ne sait pas poser la question de la
+   reprise, donc il ne sait pas enseigner que le résultat en dépend.
+2. **Que le délai de reprise est la vraie variable.** Une substitution instantanée ne coûte rien ;
+   une substitution qui met trois trimestres creuse un trou par lequel un front cède. C'est le
+   paramètre décisif du quatrième avenir, et le moteur n'a pas d'endroit où l'écrire.
+3. **Qu'un flux constant en euros peut être dégradant en capacité.** Le donateur sortant livrait de
+   la défense antiaérienne haut de gamme et de la frappe longue portée ; celui qui reprend livre
+   davantage d'argent. Avec un `InKindShare` unique, remplacer un donateur par un autre à volume
+   égal est, dans le moteur, un événement rigoureusement nul.
+4. **Que la volonté extérieure n'est pas une, mais plusieurs, et qu'elles ne bougent pas ensemble.**
+   Le §8 de cet audit range déjà la « volonté extérieure » parmi les constructions sans référent
+   mesurable. C'est vrai de son niveau ; ça ne l'est plus de sa **composition**, que le tracker de
+   Kiel mesure, publie et met à jour. Une grandeur du modèle vient de sortir de la colonne « on peut
+   juger son comportement, pas son niveau ».
+
+### 6.5 Ce que cela vaut, et ce que ça coûterait
+
+C'est la lacune la plus lourde de cet audit qui ne soit pas un défaut : les treize autres lignes du
+tableau du §2 disent que le modèle se trompe ou ne se déclenche pas. Celle-ci dit qu'il **manque un
+avenir** — et cet avenir-là est celui que la guerre a effectivement pris. Un jeu qui se donne pour
+sujet la génération de force et la politique des soutiens ne peut pas rester longtemps incapable de
+poser la question qui a occupé les capitales européennes de 2024 à 2026.
+
+La correction n'est pas une constante à changer : c'est une dimension à ajouter, et elle est
+spécifiée — phasage, fichiers, coût, et l'ordre dans lequel s'y prendre — au
+[§7 du document de source du soutien extérieur](13-soutien-exterieur-source.md). Elle n'est pas
+implémentée, et elle ne doit pas l'être sans la relecture de la marge de l'asphyxie que réclame le
+[§12 du calendrier](06-calendrier-propose.md) : quarante-neuf pour cent contre un seuil à cinquante,
+un point, et toute modification de l'aide traverse le budget de guerre puis la production avant
+d'atteindre cette valeur.
+
+---
+
+## 7. Ce que le modèle réussit
 
 Un audit qui ne trouverait que des fautes serait suspect. Plusieurs grandeurs sont bien calibrées,
 et certaines remarquablement.
@@ -439,6 +560,10 @@ construction du modèle qu'aucune série ne peut valider, mais elle raconte le b
 contre une moyenne de 41,6 Md€ par an alloués entre 2022 et 2024 et 32,5 Md€ en 2025. Le mécanisme
 de conditionnalité et de décaissement partiel (`DisbursementRate`, `Conditionality`) est
 exactement la bonne forme : la réalité est bien un écart entre le promis et le versé.
+*Ce constat a depuis été repris sur la version courante du moteur, où l'aide vaut 16,2 Md$ par
+trimestre, et confronté année par année au tracker de Kiel : il en sort renforcé — la valeur tombe
+dans le bon encadrement sur les cinq années, et le seul décrochage, 2024, est un mérite du modèle
+plutôt qu'un défaut. Le détail est au [§5 du document de source](13-soutien-exterieur-source.md).*
 
 **La géographie du front est juste.** À la fin de la partie de référence, le secteur le plus
 enfoncé est **Pokrovsk** (5,9 hexagones), suivi de Bakhmout-Tchassiv Iar (1,2), les six autres
@@ -452,7 +577,7 @@ les trois enseignements que le jeu veut transmettre, et le moteur les produit.
 
 ---
 
-## 7. Ce que cet audit ne peut pas trancher
+## 8. Ce que cet audit ne peut pas trancher
 
 | Grandeur | Pourquoi elle échappe |
 |---|---|
@@ -460,12 +585,12 @@ les trois enseignements que le jeu veut transmettre, et le moteur les produit.
 | **Stocks de munitions réellement détenus** | Aucun des deux camps ne publie, et les estimations occidentales portent sur les flux, pas sur les dépôts. Le stock ukrainien de départ (2 400 unités, l'héritage soviétique) est une hypothèse de travail assumée |
 | **Cadences de production réelles** | Les chiffres russes viennent du renseignement estonien ou ukrainien ; ceux de l'Ukraine sont classifiés. Le facteur d'incertitude est d'au moins deux |
 | **Part en ligne de contact** | Le paramètre le plus faible de tout le modèle, à ±30 % — déjà signalé comme tel dans `04` |
-| **Corruption, transmission, cohésion des élites, volonté extérieure** | Constructions sans référent mesurable. On peut juger leur comportement, pas leur niveau |
+| **Corruption, transmission, cohésion des élites, volonté extérieure** | Constructions sans référent mesurable. On peut juger leur comportement, pas leur niveau. **Réserve depuis le §6** : cela reste vrai du *niveau* de la volonté extérieure, mais ne l'est plus de sa *composition*, que le tracker de Kiel mesure et publie par groupe de donateurs |
 | **Prix effectif du baril russe** | La décote Urals est publiée par plusieurs agences avec des écarts de 5 à 10 $ selon la méthode et le point de livraison. Les ordres de grandeur du §5.1 restent robustes ; le détail au dollar près, non |
 
 ---
 
-## 8. Plan de correction, par ordre de rendement
+## 9. Plan de correction, par ordre de rendement
 
 Les quatre premières corrections font toutes partie du même dossier — les dépôts qui ne se vident
 jamais — et se tiennent : appliquées ensemble, elles rendent opérants les trois mécanismes que le
@@ -483,6 +608,7 @@ jeu annonce et rétablissent le critère de validation du §18.
 | 8 | Donner sa forme au PIB ukrainien | `Engine/Scenarios/UkraineScenario.cs` + une carte | Choc concentré en 2022, croissance légère ensuite |
 | 9 | Ajouter le durcissement des sanctions de 2025 | `Engine/data/cards.fr.json` | Carte au T15-T16, `SanctionsPriceDelta` +0,5 |
 | 10 | Nommer correctement les parts de PIB | `Core/Economy.cs` | Renommage, ou division par quatre au point d'usage |
+| 11 | Donner une dimension donateur au soutien extérieur | `Core/ForeignSupport.cs`, `Engine/CardEffectApplier.cs`, `Engine/data/cards.fr.json` | Trois phases spécifiées au [§7 du document de source](13-soutien-exterieur-source.md) : décomposition inerte, effet `AidSubstitution` avec délai, puis `InKindShare` par bloc |
 
 **Après les corrections 1 à 3, les trois issues devront être revérifiées tour par tour** : ce sont
 les seules qui touchent la dynamique. Les corrections 1 et 2 vont dans le sens d'une guerre plus
@@ -492,7 +618,7 @@ tours qu'ils occupent aujourd'hui.
 
 ---
 
-## 9. Sources
+## 10. Sources
 
 Territoire :
 
@@ -537,10 +663,14 @@ Aide occidentale :
 
 - [Ukraine Support Tracker, quatre ans de guerre — Institut de Kiel](https://www.kielinstitut.de/publications/news/ukraine-support-after-4-years-of-war-europe-steps-up/)
 - [L'Europe ne compense pas le retrait américain — Institut de Kiel](https://www.kielinstitut.de/publications/news/ukraine-support-tracker-europe-fails-to-offset-us-aid-drop/)
+- [Ukraine Support Tracker, Release 30 — Institut de Kiel, Trebesch *et al.*, 13 août 2026](https://www.kielinstitut.de/ukrainetracker)
+  — graphique « Aid allocations by donor group », source du §6. Le sourçage complet du poste, sa
+  conversion en dollars et son degré de confiance sont dans
+  [`13-soutien-exterieur-source.md`](13-soutien-exterieur-source.md).
 
 ---
 
-## 10. Conclusion
+## 11. Conclusion
 
 Le modèle est **plus juste sur les grandeurs qu'il calcule que sur les mécanismes qu'il
 revendique**. Les obus, les recettes pétrolières, la dépense militaire, le PIB russe, l'aide
@@ -558,3 +688,8 @@ Le seul chiffre qui rende aujourd'hui le site franchement attaquable est le terr
 le plus facile à traiter : le nombre est honnête, l'étiquette ne l'est pas. Un lecteur informé qui
 lit « 3 061 km² pris depuis février 2022 » n'ira pas plus loin, et n'apprendra jamais que le
 modèle a raison sur les obus.
+
+Le §6, ajouté après coup, dit une chose d'une autre nature et qui ne se corrige pas par une
+constante : **le modèle ne connaît qu'un donateur.** Il sait faire monter le soutien, le faire
+tenir, le faire cesser — pas le faire changer de main. Or c'est ce que la guerre a fait entre 2022
+et 2026, et c'est le seul de ses quatre avenirs que le jeu ne sait pas raconter.
