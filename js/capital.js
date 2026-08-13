@@ -6,10 +6,10 @@
    annonce la fin depuis plusieurs trimestres.
 
    Deux pièces, et elles ne disent pas la même chose :
-     · le bandeau dit le trimestre — huit postes, leur variation, sa cause ;
+     · le bandeau dit le trimestre — sept postes, leur variation, sa cause ;
      · le ciseau dit la guerre — la puissance au front contre le capital qui la nourrit.
 
-   Mélanger les deux produirait huit petites courbes illisibles et une pièce maîtresse
+   Mélanger les deux produirait sept petites courbes illisibles et une pièce maîtresse
    diluée, alors on les sépare.
 
    Aucun rang de tour n'apparaît ici : ce qui situe un trimestre, c'est sa date. Les
@@ -20,8 +20,8 @@
 
     var NS = "http://www.w3.org/2000/svg";
 
-    // La teinte porte le poste, la position porte le camp : huit postes doivent se
-    // distinguer dans une rangée, les deux camps le sont déjà par le haut et le bas.
+    // La teinte porte le poste, la position porte le camp : sept postes doivent se
+    // distinguer dans une rangée, les deux camps le sont déjà par la gauche et la droite.
     var POSTS = [
         { code: "reserves", colour: "#8a6f2b", yield: "comble ce que la recette du trimestre ne finance plus" },
         { code: "grid", colour: "#c2621a", yield: "ne va jamais au front : ouvre ou ferme les usines, le raffinage, le chauffage" },
@@ -29,15 +29,22 @@
         { code: "civilian", colour: "#6f8060", yield: "le niveau de vie, donc le consentement à la guerre" },
         { code: "arms", colour: "#4a6070", yield: "les obus, les drones, les missiles, les intercepteurs" },
         { code: "regime", colour: "#8a4b2a", yield: "le capital politique du trimestre, celui qui paie les cartes" },
-        { code: "foreign", colour: "#2f8f8f", yield: "du matériel obtenu hors de la capacité nationale" },
-        { code: "international", colour: "#8a6a9c", yield: "qui vote quoi, qui sanctionne, qui achète encore le pétrole" }
+        // Un flux donné à l'un, acheté par l'autre — et dans les deux cas c'est la position
+        // diplomatique qui décide s'il se resserre ou se relâche. Cette position est mesurée
+        // par le moteur et se lit sur ce poste, dans l'infobulle : elle n'a plus de colonne.
+        { code: "foreign", colour: "#2f8f8f", yield: "du matériel obtenu hors de la capacité nationale : donné à l'un, acheté par l'autre, et c'est la position diplomatique qui décide s'il continue" }
     ];
 
     var NAMES = {
         reserves: "Réserves", grid: "Centrales", oil: "Pétrole", civilian: "Usines civiles",
-        arms: "Armement", regime: "Tenue du pouvoir", foreign: "Soutien étranger",
-        international: "Soutien international"
+        arms: "Armement", regime: "Tenue du pouvoir", foreign: "Soutien extérieur"
     };
+
+    // Le poste que le moteur mesure encore, et que le bandeau ne dessine plus : le soutien
+    // étranger et le soutien international sont un seul capital, vu à deux étages. La colonne
+    // disparaît, la mesure reste — c'est elle qui explique le resserrement du flux, et elle
+    // descend donc dans l'infobulle du poste fusionné plutôt que de se perdre.
+    var DIPLOMATIC = "international";
 
     // Le poste que l'alerte la plus vive du trimestre désigne. Une seule autorité par
     // information : le dessin ne met en avant que ce que le moteur a déjà nommé.
@@ -50,19 +57,24 @@
     };
 
     var W = 1240;
-    // Les huit colonnes commencent après le cartouche de date, qui occupe la gauche de la
-    // bande de partage : un nom de poste ne doit jamais buter contre la saison.
-    var COL_W = 118, COL_PITCH = 126, COL_X0 = 228;
-    var RU_BASE = 134, UA_BASE = 170;
-    var ROW_TOP = 20, ROW_BOTTOM = 284, H = 296;
-    var PX_PER_100 = 0.52, MAX_H = 68;
+
+    // Deux colonnes qui se font face. La Russie tient la moitié gauche et s'aligne à gauche,
+    // l'Ukraine tient la moitié droite et s'aligne à droite ; les sept postes se lisent l'un
+    // sous l'autre, chacun en vis-à-vis de son homologue. L'œil compare alors poste par poste
+    // d'un balayage horizontal, ce que l'empilement en miroir haut/bas ne permettait pas.
+    //
+    // La bande de partage devient une gouttière centrale : le poste y est nommé une seule
+    // fois, avec son icône, et les deux masses le tirent de part et d'autre comme une corde.
+    var GUT_L = 528, GUT_R = 712;
+    var HEAD_H = 54, ROW_H = 36, H = HEAD_H + POSTS.length * ROW_H + 12;
+
+    // Les chiffres ont leur bande à eux, au bord extérieur du bandeau : quelle que soit la
+    // longueur de la masse, le chiffre reste lisible et jamais recouvert.
+    var NUM_IN = 186, NUM_OUT = 22;
+    var BAR_H = 16, PX_PER_100 = 2.26, MAX_LEN = 322;
     var RUINED_INDEX = 25;
 
-    // Les chiffres ont leur bande à eux, hors d'atteinte des masses. Les poser au bord de
-    // la masse les rendait illisibles dès qu'une colonne montait — et ce sont justement les
-    // colonnes hautes qu'on veut lire.
-    var RU_DELTA_Y = 32, RU_VALUE_Y = 50;
-    var UA_VALUE_Y = 258, UA_DELTA_Y = 274;
+    var ICON_X = GUT_L + 7, ICON_S = 22, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
 
     var seq = 0;
 
@@ -109,7 +121,22 @@
         return "";
     }
 
-    // Les huit postes viennent du moteur, dans l'ordre du bandeau. Une seule autorité par
+    // Le nom du poste fusionné. Le moteur mesure encore « soutien étranger » et « soutien
+    // international » séparément, et on ne touche pas à la mesure pour renommer un cartouche :
+    // la vue les réunit sous le nom que le bandeau porte.
+    function nameOf(post) {
+        return post.name.replace(/^Soutien étranger/, "Soutien extérieur");
+    }
+
+    function postIn(side, code) {
+        var found = null;
+        (side.capital || []).forEach(function (post) {
+            if (post.code === code) { found = post; }
+        });
+        return found;
+    }
+
+    // Les sept postes viennent du moteur, dans l'ordre du bandeau. Une seule autorité par
     // information : le lecteur de capital les mesure, les indexe et les attribue — la vue ne
     // recalcule rien, sinon deux chiffres finiraient par répondre à la même question sans
     // qu'on sache lequel croire.
@@ -126,6 +153,124 @@
         return out;
     }
 
+    /* ---------------- Les sept icônes ----------------
+
+       Dessinées à la main, dans le trait gravé du plateau — ni police d'icônes, ni emoji, ni
+       bibliothèque : le site est servi en statique et rien d'extérieur ne peut être chargé.
+       Même main que les cent une scènes de cartes, à ceci près qu'on est ici sur du papier et
+       non dans une nuit : le trait porte tout, la matière ne sert qu'à donner du poids.
+
+       Chacune tient dans une boîte de 24 et se dessine à l'encre de son poste, de sorte que
+       l'icône, le nom et les deux masses se lisent comme un seul objet. */
+
+    function ink(g, d, colour, w, op) {
+        g.appendChild(svg("path", {
+            d: d, fill: "none", stroke: colour, "stroke-width": String(w || 1.3),
+            "stroke-linecap": "round", "stroke-linejoin": "round",
+            opacity: op === undefined ? "1" : String(op)
+        }));
+    }
+
+    // Un lavis très pâle sous le trait : la forme a une masse, sans jamais devenir un aplat
+    // qui rivaliserait avec celui de la colonne.
+    function wash(g, d, colour) {
+        g.appendChild(svg("path", { d: d, fill: colour, opacity: "0.14" }));
+    }
+
+    function solid(g, d, colour, w) {
+        wash(g, d, colour);
+        ink(g, d, colour, w);
+    }
+
+    var ICONS = {
+        // Trois lingots empilés : une réserve, c'est du métal qu'on met de côté.
+        reserves: function (g, c) {
+            var ingot = function (x, y, w, h) {
+                return "M" + x + " " + (y + h) + " L" + (x + w) + " " + (y + h) +
+                    " L" + (x + w - 2.2) + " " + y + " L" + (x + 2.2) + " " + y + " Z";
+            };
+            [ingot(1.6, 14, 9.6, 6.6), ingot(12.8, 14, 9.6, 6.6), ingot(7.2, 6.6, 9.6, 6.6)]
+                .forEach(function (d) { solid(g, d, c, 1.3); });
+        },
+
+        // Le pylône à haute tension : le réseau ne va jamais au front, il ouvre ou ferme tout
+        // le reste. Les câbles sortent du cadre — la ligne continue au-delà.
+        grid: function (g, c) {
+            ink(g, "M4 21.6 L12 2.6 L20 21.6", c, 1.3);
+            ink(g, "M7 14.6 L17 14.6 M9.2 9.6 L14.8 9.6", c, 1);
+            ink(g, "M5.4 6.8 L18.6 6.8", c, 1.3);
+            ink(g, "M0.4 9.6 Q3 6.9 5.4 6.8 M23.6 9.6 Q21 6.9 18.6 6.8", c, 1, 0.7);
+            ink(g, "M6.2 18.2 L17.8 18.2", c, 1, 0.55);
+        },
+
+        // Le baril et la goutte : recette pour qui l'exporte, facture pour qui l'importe.
+        oil: function (g, c) {
+            var drop = "M12 0.4 L14.2 3.4 A2.7 2.7 0 1 1 9.8 3.4 Z";
+            solid(g, drop, c, 1.1);
+            var body = "M6 9.4 Q12 7.4 18 9.4 L18 21 Q12 23 6 21 Z";
+            solid(g, body, c, 1.3);
+            ink(g, "M6 9.4 Q12 11.4 18 9.4 M6 13.4 Q12 15.4 18 13.4 M6 17.2 Q12 19.2 18 17.2", c, 1);
+        },
+
+        // Le toit en shed : l'atelier civil se reconnaît à ses sheds, l'usine d'armement à
+        // ce qu'elle produit. Deux usines, deux silhouettes — sinon les deux postes se
+        // confondent, et c'est justement leur écart qui est la leçon.
+        civilian: function (g, c) {
+            var body = "M3 12.8 L21 12.8 L21 21.4 L3 21.4 Z";
+            solid(g, body, c, 1.3);
+            ink(g, "M3 12.8 L3 7.4 L7.5 12.8 L7.5 7.4 L12 12.8 L12 7.4 L16.5 12.8 L16.5 7.4 L21 12.8", c, 1.3);
+            ink(g, "M5.8 15.6 L8.8 15.6 L8.8 18.2 L5.8 18.2 Z M11 15.6 L14 15.6 L14 18.2 L11 18.2 Z", c, 0.9);
+            ink(g, "M16.6 21.4 L16.6 16.2 L19.4 16.2 L19.4 21.4", c, 0.9);
+        },
+
+        // L'obus sur la chaîne : le seul poste qui produit du matériel, et il en sort à la
+        // pièce, sur un convoyeur.
+        arms: function (g, c) {
+            var shell = "M12 2 Q15.4 5.8 15.4 9.6 L15.4 17.2 L8.6 17.2 L8.6 9.6 Q8.6 5.8 12 2 Z";
+            solid(g, shell, c, 1.3);
+            ink(g, "M8.6 12.4 L15.4 12.4", c, 1);
+            ink(g, "M7.8 17.2 L16.2 17.2 L16.2 19.2 L7.8 19.2 Z", c, 1.1);
+            ink(g, "M1.6 20.8 L22.4 20.8", c, 1.2);
+            [5, 12, 19].forEach(function (x) {
+                g.appendChild(svg("circle", {
+                    cx: x, cy: "22.2", r: "1.4", fill: "none", stroke: c, "stroke-width": "1"
+                }));
+            });
+        },
+
+        // La colonne fendue : le régime ne tombe pas par la rue, il se fissure de l'intérieur.
+        // La fissure part du haut, là où l'appareil décide.
+        regime: function (g, c) {
+            solid(g, "M3.4 2.4 L20.6 2.4 L20.6 5.2 L3.4 5.2 Z", c, 1.3);
+            solid(g, "M2.6 18.8 L21.4 18.8 L21.4 21.8 L2.6 21.8 Z", c, 1.3);
+            solid(g, "M7 5.2 L17 5.2 L17 18.8 L7 18.8 Z", c, 1.3);
+            ink(g, "M9.6 6.6 L9.6 17.4 M14.4 6.6 L14.4 17.4", c, 0.8, 0.5);
+            ink(g, "M17 8.2 L11.4 11.4 L14.2 12.8 L7 16.6", c, 1.6);
+        },
+
+        // La caisse et la flèche qui entre : le soutien extérieur est ce qu'on REÇOIT, et il
+        // arrive de l'extérieur du cadre. Un seul dessin pour le flux donné et le flux acheté,
+        // parce que c'est un seul capital — ce qui change d'un camp à l'autre est le prix, pas
+        // la nature, et le prix se lit dans les chiffres.
+        foreign: function (g, c) {
+            var crate = "M6 9.6 L21.4 9.6 L21.4 21.4 L6 21.4 Z";
+            solid(g, crate, c, 1.3);
+            ink(g, "M6 9.6 L21.4 21.4 M21.4 9.6 L6 21.4", c, 0.9, 0.6);
+            ink(g, "M6 12.4 L21.4 12.4", c, 1);
+            ink(g, "M0.8 2.4 L5.4 7.6 M5.4 7.6 L1.4 7.2 M5.4 7.6 L5 3.6", c, 1.4);
+        }
+    };
+
+    function icon(host, code, colour, x, y, size) {
+        var g = svg("g", {
+            class: "cap-icon",
+            transform: "translate(" + x + " " + y + ") scale(" + (size / 24).toFixed(4) + ")"
+        });
+        if (ICONS[code]) { ICONS[code](g, colour); }
+        host.appendChild(g);
+        return g;
+    }
+
     /* ---------------- Le bandeau ---------------- */
 
     function hatch(defs, id) {
@@ -139,13 +284,14 @@
     }
 
     // L'arête de coupe n'est jamais droite : on doit voir le morceau arraché, pas un
-    // rectangle propre. Même convention que les cinq parcs.
-    function tornEdge(x, y, w, amplitude, down) {
-        var steps = 6, d = "M" + x + " " + y;
+    // rectangle propre. Même convention que les cinq parcs — elle est ici verticale, puisque
+    // les masses poussent à l'horizontale.
+    function tornEdge(x, y, h, amplitude) {
+        var steps = 5, d = "M" + x + " " + y;
         for (var i = 1; i <= steps; i++) {
-            var px = x + (w * i / steps);
-            var wobble = (i % 2 === 0 ? amplitude : -amplitude) * (down ? -1 : 1);
-            d += " L" + px.toFixed(1) + " " + (y + (i === steps ? 0 : wobble)).toFixed(1);
+            var py = y + (h * i / steps);
+            var wobble = i % 2 === 0 ? amplitude : -amplitude;
+            d += " L" + (x + (i === steps ? 0 : wobble)).toFixed(1) + " " + py.toFixed(1);
         }
         return d;
     }
@@ -156,89 +302,107 @@
         return value / post.reference * 100;
     }
 
-    function cartouche(host, post, colour, invader, hatchId, alerted, column) {
-        var x = COL_X0 + column * COL_PITCH - COL_W / 2;
-        var base = invader ? RU_BASE : UA_BASE;
+    // Un poste, un camp, une ligne. La masse est ancrée à la gouttière centrale et pousse vers
+    // le bord du bandeau ; les chiffres l'attendent dans leur bande réservée, où rien ne vient
+    // jamais les recouvrir quelle que soit la longueur atteinte.
+    function cartouche(host, post, colour, invader, hatchId, alerted, row, diplomatic) {
+        var yc = HEAD_H + row * ROW_H + ROW_H / 2;
+        var top = yc - BAR_H / 2, bottom = yc + BAR_H / 2;
+        var anchor = invader ? GUT_L : GUT_R;
         var dir = invader ? -1 : 1;
         var index = post.index;
-        var h = Math.min(Math.max(index, 0) * PX_PER_100, MAX_H);
+        var len = Math.min(Math.max(index, 0) * PX_PER_100, MAX_LEN);
         var ruined = index < RUINED_INDEX;
+        var edge = anchor + dir * len;
+
+        var span = function (from, to) {
+            return { x: Math.min(from, to), width: Math.abs(to - from) };
+        };
 
         var g = svg("g", { class: "cap-post" + (alerted ? " alerted" : "") });
 
         var tip = svg("title", {});
-        tip.textContent = post.name + " — " + num(post.value, post.decimals) + " " + post.unit +
+        tip.textContent = nameOf(post) + " — " + num(post.value, post.decimals) + " " + post.unit +
             " (indice " + num(index, 0) + ", base 100 au premier trimestre)\n" + yieldOf(post.code) +
             "\nVariation du trimestre : " + signed(post.displayDelta, Math.max(post.decimals, 1)) + " " + post.unit +
             (post.destructionCause ? "\nDétruit par : " + post.destructionCause : "") +
-            (post.secondaryLabel ? "\n" + post.secondaryLabel + " : " + num(post.secondary, 2) : "");
+            (post.secondaryLabel ? "\n" + post.secondaryLabel + " : " + num(post.secondary, 2) : "") +
+            // La position diplomatique n'a plus de colonne, mais elle reste mesurée et elle
+            // reste la raison du resserrement : elle se lit ici, du point de vue du camp qui
+            // la lit — un verrou que le monde referme est une perte à Moscou et un gain à Kyiv.
+            (diplomatic
+                ? "\n" + diplomatic.name.replace(/^Soutien international/, "Position diplomatique") +
+                  " : " + num(diplomatic.value, 0) + " " + diplomatic.unit +
+                  " (" + signed(diplomatic.displayDelta, 1) + " ce trimestre)" +
+                  (diplomatic.secondaryLabel ? "\n" + diplomatic.secondaryLabel + " : " + num(diplomatic.secondary, 2) : "")
+                : "");
         g.appendChild(tip);
 
         // Le repère du premier trimestre : le pointillé qui rend toute masse lisible sans
         // échelle. Aucune étiquette — c'est le 100 % du tonneau, et il se lit pareil.
-        var refY = base + dir * (100 * PX_PER_100);
+        var refX = anchor + dir * (100 * PX_PER_100);
         g.appendChild(svg("line", {
-            x1: x - 4, y1: refY, x2: x + COL_W + 4, y2: refY,
+            x1: refX, y1: top - 5, x2: refX, y2: bottom + 5,
             stroke: "#8b8578", "stroke-width": "1", "stroke-dasharray": "2 4", opacity: "0.9"
         }));
 
-        var top = invader ? base - h : base;
-        var bottom = invader ? base : base + h;
+        var body = span(anchor, edge);
 
         if (ruined) {
             // Sous le quart de son indice de départ, un poste cesse d'être une masse : il
             // devient un trou dans le bandeau, et un trou se repère avant d'être lu.
-            var ghostH = Math.abs(refY - base);
+            var ghost = span(anchor, refX);
             g.appendChild(svg("rect", {
-                x: x, y: invader ? base - ghostH : base, width: COL_W, height: ghostH,
-                fill: "url(#" + hatchId + ")"
+                x: ghost.x, y: top, width: ghost.width, height: BAR_H,
+                class: "cap-mass", fill: "url(#" + hatchId + ")"
             }));
             g.appendChild(svg("rect", {
-                x: x, y: invader ? base - ghostH : base, width: COL_W, height: ghostH,
+                x: ghost.x, y: top, width: ghost.width, height: BAR_H,
                 fill: "none", stroke: colour, "stroke-width": "1.2", "stroke-dasharray": "3 3", opacity: "0.8"
             }));
-            if (h > 1) {
-                g.appendChild(svg("rect", { x: x, y: top, width: COL_W, height: h, fill: colour, opacity: "0.95" }));
+            if (len > 1) {
+                g.appendChild(svg("rect", {
+                    x: body.x, y: top, width: body.width, height: BAR_H, fill: colour, opacity: "0.95"
+                }));
             }
         } else {
             g.appendChild(svg("rect", {
-                x: x, y: top, width: COL_W, height: Math.max(h, 1.5),
+                x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
                 fill: colour, stroke: "rgba(26,24,21,0.3)", "stroke-width": "0.7"
             }));
-            // Chant extérieur biseauté : la matière a une épaisseur, comme les douves.
+            // Chant supérieur biseauté : la matière a une épaisseur, comme les douves.
             g.appendChild(svg("rect", {
-                x: x + 1.4, y: invader ? top + 1.2 : bottom - 4.6, width: COL_W - 2.8, height: 3.4,
+                x: body.x + 1.2, y: top + 1.2, width: Math.max(body.width - 2.4, 0), height: 3.2,
                 fill: "#fff", opacity: "0.34"
             }));
         }
 
-        // L'encoche de destruction : la part détruite est découpée dans le haut de la masse
+        // L'encoche de destruction : la part détruite est découpée dans le bout de la masse
         // par une arête irrégulière. On voit le morceau manquant.
         var destroyedIndex = post.reference ? Math.abs(post.destruction) / post.reference * 100 : 0;
-        var hd = Math.min(destroyedIndex * PX_PER_100, h);
-        if (post.destruction > 0 && hd > 0.6 && !ruined) {
-            var cutY = invader ? top + hd : bottom - hd;
+        var ld = Math.min(destroyedIndex * PX_PER_100, len);
+        if (post.destruction > 0 && ld > 0.6 && !ruined) {
+            var notch = span(edge, edge - dir * ld);
             g.appendChild(svg("rect", {
-                x: x, y: invader ? top : bottom - hd, width: COL_W, height: hd,
-                fill: "url(#" + hatchId + ")"
+                x: notch.x, y: top, width: notch.width, height: BAR_H, fill: "url(#" + hatchId + ")"
             }));
             g.appendChild(svg("path", {
-                d: tornEdge(x, cutY, COL_W, 2.4, !invader),
+                d: tornEdge(edge - dir * ld, top, BAR_H, 2.2),
                 fill: "none", stroke: "#a8322a", "stroke-width": "1.1", opacity: "0.85"
             }));
         }
 
-        // Le filet de variation ordinaire : gravé, jamais plein. Le gravé est ordinaire,
-        // le plein est une destruction — aucune légende à consulter.
+        // Le filet de variation ordinaire : gravé, jamais plein. Il marque où la masse se
+        // tenait à l'ouverture du trimestre — le gravé est ordinaire, le plein est une
+        // destruction, et aucune légende n'est à consulter.
         var ordinary = post.regeneration - post.consumption;
         if (Math.abs(ordinary) > 0.0001 && post.reference) {
-            var ho = Math.min(Math.abs(ordinary) / post.reference * 100 * PX_PER_100, MAX_H);
-            if (ho > 0.8) {
-                var fy = ordinary > 0
-                    ? (invader ? top - 3 : bottom + 3)
-                    : (invader ? top + ho : bottom - ho);
+            var lo = Math.abs(ordinary) / post.reference * 100 * PX_PER_100;
+            var opened = Math.min(Math.max(len + (ordinary > 0 ? -lo : lo), 0), MAX_LEN);
+            if (lo > 0.8) {
+                var fx = anchor + dir * opened;
                 g.appendChild(svg("line", {
-                    x1: x + 10, y1: fy, x2: x + COL_W - 10, y2: fy,
+                    x1: fx, y1: top - 2, x2: fx, y2: bottom + 2,
                     stroke: "#8b8578", "stroke-width": "2", "stroke-dasharray": "1 2"
                 }));
             }
@@ -246,18 +410,44 @@
 
         // Le seuil, sur les postes qui en ont un, et seulement ceux-là.
         if (post.threshold !== null && post.threshold !== undefined) {
-            var ht = Math.min(toIndex(post, post.threshold) * PX_PER_100, MAX_H);
-            var ty = base + dir * ht;
+            var tx = anchor + dir * Math.min(toIndex(post, post.threshold) * PX_PER_100, MAX_LEN);
             g.appendChild(svg("line", {
-                x1: x - 4, y1: ty, x2: x + COL_W + 4, y2: ty,
+                x1: tx, y1: top - 4, x2: tx, y2: bottom + 4,
                 stroke: "#a8322a", "stroke-width": "1", "stroke-dasharray": "3 2", opacity: "0.85"
             }));
         }
 
-        // La valeur et son delta occupent une bande qui leur est réservée : quelle que soit
-        // la hauteur de la colonne, le chiffre reste lisible.
-        text(g, x + COL_W / 2, invader ? RU_VALUE_Y : UA_VALUE_Y, num(post.value, post.decimals), {
-            "text-anchor": "middle", class: "cap-value"
+        // La masse bute sur son plafond : le chevron dit que la ligne est hors d'échelle, et
+        // le chiffre de sa bande dit de combien. Il se grave DANS le chant de la masse, jamais
+        // au-delà — posé dehors, il viendrait buter contre le chiffre.
+        if (index * PX_PER_100 > MAX_LEN) {
+            var cx = edge - dir * 9;
+            g.appendChild(svg("path", {
+                d: "M" + cx + " " + (yc - 5) + " l" + (dir * 5) + " 5 l" + (-dir * 5) + " 5",
+                fill: "none", stroke: "#fff", "stroke-width": "2", "stroke-linecap": "round", opacity: "0.8"
+            }));
+        }
+
+        // Le cadenas : la perte est définitive à l'échelle de la partie. Il dit
+        // « irréparable » mieux qu'un chiffre. Posé contre la gouttière, où la masse est
+        // toujours présente, il ne bouge jamais d'un trimestre à l'autre.
+        if (post.permanentLoss) {
+            var lx = invader ? anchor - 17 : anchor + 6;
+            g.appendChild(svg("rect", { x: lx, y: yc - 1, width: 11, height: 8, rx: "1.5", fill: "#1a1815" }));
+            g.appendChild(svg("path", {
+                d: "M" + (lx + 2.2) + " " + (yc - 1) + " v-2.6 a3.3 3.3 0 0 1 6.6 0 V" + (yc - 1),
+                fill: "none", stroke: "#1a1815", "stroke-width": "1.5"
+            }));
+        }
+
+        // La valeur au bord du bandeau, le delta contre elle : la Russie se lit de gauche à
+        // droite, l'Ukraine de droite à gauche, et chaque camp aligne ses chiffres sur son
+        // propre bord.
+        var out = invader ? NUM_OUT : W - NUM_OUT;
+        var inner = invader ? NUM_IN : W - NUM_IN;
+
+        text(g, out, yc + 6, num(post.value, post.decimals), {
+            "text-anchor": invader ? "start" : "end", class: "cap-value"
         });
 
         // Un poste qui n'a pas bougé le dit : « −0,0 » n'est pas une variation, c'est un
@@ -265,50 +455,31 @@
         var precision = Math.max(post.decimals, 1);
         var moved = Math.abs(post.displayDelta) >= 0.5 / Math.pow(10, precision);
 
-        text(g, x + COL_W / 2, invader ? RU_DELTA_Y : UA_DELTA_Y,
+        text(g, inner, yc + 5,
             moved ? signed(post.displayDelta, precision) + " " + post.unit : "inchangé", {
-                "text-anchor": "middle",
+                "text-anchor": invader ? "end" : "start",
                 class: "cap-delta" + (moved ? (post.destruction > 0 ? " destroyed" : "") : " flat")
             });
-
-        // La masse bute sur son plafond : le chevron dit que la colonne est hors d'échelle,
-        // et le chiffre imprimé dans sa bande dit de combien. Il se grave DANS le chant de la
-        // masse, jamais au-dessus : posé à l'extérieur, il venait buter contre le chiffre sur
-        // les colonnes les plus hautes — c'est-à-dire précisément celles qu'il annote.
-        if (index * PX_PER_100 > MAX_H) {
-            var cy = invader ? top + 10 : bottom - 10;
-            g.appendChild(svg("path", {
-                d: "M" + (x + COL_W / 2 - 7) + " " + cy + " l7 " + (invader ? -5 : 5) + " l7 " + (invader ? 5 : -5),
-                fill: "none", stroke: "#fff", "stroke-width": "2", "stroke-linecap": "round", opacity: "0.8"
-            }));
-        }
-
-        // Le cadenas : la perte est définitive à l'échelle de la partie. Il dit
-        // « irréparable » mieux qu'un chiffre.
-        if (post.permanentLoss) {
-            var lx = x + COL_W - 15, ly = invader ? base - 20 : base + 6;
-            g.appendChild(svg("rect", { x: lx, y: ly + 6, width: 11, height: 8, rx: "1.5", fill: "#1a1815" }));
-            g.appendChild(svg("path", {
-                d: "M" + (lx + 2.2) + " " + (ly + 6) + " v-2.6 a3.3 3.3 0 0 1 6.6 0 V" + (ly + 6),
-                fill: "none", stroke: "#1a1815", "stroke-width": "1.5"
-            }));
-        }
 
         host.appendChild(g);
     }
 
+    // Le cartouche du trimestre coiffe la gouttière : il tient la date et le baril au-dessus
+    // de la colonne des noms, à égale distance des deux camps, parce qu'il n'appartient à
+    // aucun des deux.
     function quarterCartouche(host, t) {
         var g = svg("g", {});
         g.appendChild(svg("rect", {
-            x: 22, y: 132, width: 136, height: 40, rx: "2",
+            x: GUT_L, y: 8, width: GUT_R - GUT_L, height: 38, rx: "2",
             fill: "#fbf9f4", stroke: "#d9d1be", "stroke-width": "1"
         }));
-        text(g, 30, 146, dateOf(t), { class: "cap-quarter" });
-        text(g, 30, 164, num(t.oilPrice, 0) + " $", { class: "cap-brent" });
+        text(g, GUT_L + 12, 25, dateOf(t), { class: "cap-quarter" });
+        text(g, GUT_L + 12, 41, num(t.oilPrice, 0) + " $", { class: "cap-brent" });
+        text(g, GUT_R - 12, 41, "le baril", { "text-anchor": "end", class: "cap-label" });
 
         // La saison décide : elle mérite un signe et pas un mot.
         if (t.season === "Winter") {
-            var cx = 140, cy = 158;
+            var cx = GUT_R - 18, cy = 21;
             [0, 60, 120].forEach(function (a) {
                 var r = a * Math.PI / 180, dx = Math.cos(r) * 6, dy = Math.sin(r) * 6;
                 g.appendChild(svg("line", {
@@ -340,40 +511,47 @@
         return best.lines;
     }
 
-    // Le nom du poste est écrit une seule fois, dans la bande de partage, et les deux masses
-    // le tirent de part et d'autre comme une corde. Un nom de deux mots passe sur deux lignes
-    // plutôt que de déborder sur la colonne voisine : « Soutien étranger » et « Soutien
-    // international » sont deux postes distincts, et deux libellés qui se chevauchent
-    // annuleraient précisément la distinction qu'on vient d'établir.
-    function sharedNames(host, alertedCode) {
+    // La gouttière : le nom du poste y est écrit une seule fois, précédé de son icône, et les
+    // deux masses le tirent de part et d'autre comme une corde. Les icônes s'alignent toutes
+    // sur la même verticale — une colonne de signes se parcourt d'un regard, là où sept signes
+    // décalés se lisent un par un. Un nom de deux mots passe sur deux lignes plutôt que de
+    // déborder sur la piste voisine : un libellé qui empiète sur la masse du camp d'en face
+    // fait douter de qui possède quoi, et c'est la seule question que le bandeau pose.
+    function spine(host, alertedCode) {
         POSTS.forEach(function (p, i) {
-            var cx = COL_X0 + i * COL_PITCH;
+            var yc = HEAD_H + i * ROW_H + ROW_H / 2;
             var lines = splitName(NAMES[p.code]);
+            var alerted = p.code === alertedCode;
 
             var widest = Math.max.apply(null, lines.map(function (line) { return line.length; }));
-            var top = lines.length > 1 ? 150 : 156;
+            var top = lines.length > 1 ? yc - 4 : yc + 3.5;
 
-            if (p.code === alertedCode) {
+            // La pastille du poste sous pression enveloppe l'icône ET le nom : elle laisse
+            // l'un dehors et l'icône, dessinée en papier, disparaîtrait sur le papier.
+            if (alerted) {
                 host.appendChild(svg("rect", {
-                    x: cx - widest * 3.1 - 8, y: top - 10,
-                    width: widest * 6.2 + 16, height: lines.length > 1 ? 26 : 15,
-                    rx: "7.5", fill: "#1a1815"
+                    x: ICON_X - 6, y: yc - 14,
+                    width: Math.min(NAME_X - ICON_X + widest * 6.2 + 12, NAME_MAX - ICON_X + 6),
+                    height: 28, rx: "8", fill: "#1a1815"
                 }));
             }
 
+            var g = svg("g", { class: "cap-post" });
+            var tip = svg("title", {});
+            tip.textContent = NAMES[p.code] + " — " + yieldOf(p.code);
+            g.appendChild(tip);
+
+            icon(g, p.code, alerted ? "#fbf9f4" : p.colour, ICON_X, yc - ICON_S / 2, ICON_S);
+
+            // Quatorze points d'interligne, pas onze : à onze, les deux lignes d'un même nom
+            // se touchaient de deux points — mesuré sur les soixante-dix-huit trimestres.
             lines.forEach(function (line, row) {
-                text(host, cx, top + row * 11, line, {
-                    "text-anchor": "middle",
-                    class: "cap-name" + (p.code === alertedCode ? " alerted" : "")
+                text(g, NAME_X, top + row * 14, line, {
+                    class: "cap-name" + (alerted ? " alerted" : "")
                 });
             });
 
-            host.appendChild(svg("line", {
-                x1: cx, y1: 134, x2: cx, y2: 138, stroke: "#d9d1be", "stroke-width": "1"
-            }));
-            host.appendChild(svg("line", {
-                x1: cx, y1: 166, x2: cx, y2: 170, stroke: "#d9d1be", "stroke-width": "1"
-            }));
+            host.appendChild(g);
         });
     }
 
@@ -398,7 +576,7 @@
         (side.chain.links || []).forEach(function (link) {
             row.appendChild(el("span", "cr-arrow", "→"));
             var box = el("span", "cr-link");
-            box.appendChild(el("b", null, link.label));
+            box.appendChild(el("b", null, link.label.replace(/^Soutien étranger/, "Soutien extérieur")));
             box.appendChild(el("i", null, signed(link.percentDelta, 1) + " %"));
             row.appendChild(box);
         });
@@ -414,8 +592,9 @@
         head.appendChild(el("h3", null, "Le capital de guerre"));
         head.appendChild(el("p", null,
             "Ce que chaque camp possède encore pour faire la guerre, et ce que le trimestre lui a pris. " +
-            "Chaque masse est un indice base 100 au premier trimestre de son propre camp : on compare " +
-            "des trajectoires, jamais des masses."));
+            "La Russie à gauche, l'Ukraine à droite, poste par poste en vis-à-vis. Chaque masse est un " +
+            "indice base 100 au premier trimestre de son propre camp : on compare des trajectoires, " +
+            "jamais des masses."));
         host.appendChild(head);
 
         var s = svg("svg", { viewBox: "0 0 " + W + " " + H, class: "cap-svg", role: "img" });
@@ -424,29 +603,52 @@
         var hatchId = "capHatch" + (seq++);
         hatch(defs, hatchId);
 
-        // Le camp est rappelé par un filet sur le bord extérieur de sa rangée, et par son
-        // nom une seule fois à l'extrémité gauche.
-        s.appendChild(svg("rect", { x: 22, y: ROW_TOP - 3, width: W - 44, height: 3, fill: "#a8322a" }));
-        s.appendChild(svg("rect", { x: 22, y: ROW_BOTTOM, width: W - 44, height: 3, fill: "#1e5fa8" }));
-        text(s, 22, ROW_TOP + 12, t.invader.name.toUpperCase(), { class: "cap-side ru" });
-        text(s, 22, ROW_BOTTOM - 4, t.defender.name.toUpperCase(), { class: "cap-side ua" });
+        // Le camp est rappelé par son nom au bord qui lui revient et par le filet qui court
+        // sous lui : à gauche l'envahisseur, à droite l'envahi, et plus rien à chercher.
+        s.appendChild(svg("rect", { x: 22, y: 46, width: GUT_L - 36, height: 3, fill: "#a8322a" }));
+        s.appendChild(svg("rect", { x: GUT_R + 14, y: 46, width: W - 36 - GUT_R, height: 3, fill: "#1e5fa8" }));
+        text(s, 22, 38, t.invader.name.toUpperCase(), { class: "cap-side ru" });
+        text(s, W - 22, 38, t.defender.name.toUpperCase(), { "text-anchor": "end", class: "cap-side ua" });
 
-        s.appendChild(svg("line", { x1: 22, y1: RU_BASE, x2: W - 22, y2: RU_BASE, stroke: "#d9d1be", "stroke-width": "1" }));
-        s.appendChild(svg("line", { x1: 22, y1: UA_BASE, x2: W - 22, y2: UA_BASE, stroke: "#d9d1be", "stroke-width": "1" }));
+        // Les deux bords de la gouttière : c'est le sol commun, et c'est de là que les deux
+        // masses partent en sens contraire.
+        [GUT_L, GUT_R].forEach(function (x) {
+            s.appendChild(svg("line", {
+                x1: x, y1: HEAD_H - 2, x2: x, y2: H - 6, stroke: "#d9d1be", "stroke-width": "1"
+            }));
+        });
+
+        // Un filet entre deux postes : c'est lui qui tient le regard sur sa ligne quand il
+        // traverse le bandeau d'un camp à l'autre.
+        for (var r = 1; r < POSTS.length; r++) {
+            s.appendChild(svg("line", {
+                x1: 22, y1: HEAD_H + r * ROW_H, x2: W - 22, y2: HEAD_H + r * ROW_H,
+                stroke: "#d9d1be", "stroke-width": "1", opacity: "0.55"
+            }));
+        }
 
         var alerted = alertedPost(t);
         quarterCartouche(s, t);
-        sharedNames(s, alerted);
+        spine(s, alerted);
 
         var ru = postsOf(game, turnIndex, true);
         var ua = postsOf(game, turnIndex, false);
 
+        // La position diplomatique n'accompagne que le poste qu'elle commande.
+        var ruDiplomatic = postIn(t.invader, DIPLOMATIC);
+        var uaDiplomatic = postIn(t.defender, DIPLOMATIC);
+
         POSTS.forEach(function (p, i) {
+            var carries = p.code === "foreign";
             ru.forEach(function (post) {
-                if (post.code === p.code) { cartouche(s, post, p.colour, true, hatchId, p.code === alerted, i); }
+                if (post.code === p.code) {
+                    cartouche(s, post, p.colour, true, hatchId, p.code === alerted, i, carries ? ruDiplomatic : null);
+                }
             });
             ua.forEach(function (post) {
-                if (post.code === p.code) { cartouche(s, post, p.colour, false, hatchId, p.code === alerted, i); }
+                if (post.code === p.code) {
+                    cartouche(s, post, p.colour, false, hatchId, p.code === alerted, i, carries ? uaDiplomatic : null);
+                }
             });
         });
 

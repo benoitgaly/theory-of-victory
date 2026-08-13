@@ -189,6 +189,16 @@
         return season.charAt(0).toUpperCase() + season.slice(1) + " " + t.year;
     }
 
+    // « l'été 2026 », « le printemps 2027 » — la saison porte son article, ce qui laisse la
+    // phrase libre de choisir sa préposition.
+    var SEASON_ARTICLE = {
+        Winter: "l'hiver", Spring: "le printemps", Summer: "l'été", Autumn: "l'automne"
+    };
+
+    function namedQuarter(q) {
+        return (SEASON_ARTICLE[q.season] || SEASONS[q.season] || q.season) + " " + q.year;
+    }
+
     function dateInOf(t) {
         var articles = { Winter: "à l'hiver ", Spring: "au printemps ", Summer: "à l'été ", Autumn: "à l'automne " };
         return (articles[t.season] || "en ") + t.year;
@@ -2749,23 +2759,93 @@
         return wrap;
     }
 
+    /* ---------------- What the map is worth, said once ----------------
+
+       The head used to print « X km² pris sur les secteurs simulés » above a map that is now
+       drawing the whole country from the chronicle. Two measurements of two different things,
+       side by side, is exactly the contradiction the map was rebuilt to remove.
+
+       So the head carries the ONE figure the reader can check against the drawing — the ground
+       under Russian control, measured on the hexagons themselves and rounded hard, because a
+       reading grid of forty kilometres cannot honour a thousand. The model's own cumulative gain
+       has not disappeared: it moved down to the sector panel, which is where the eight simulated
+       sectors are discussed and the only place that number means anything. */
+
+    function occupationTag(reading, t) {
+        if (!reading || !reading.area) {
+            return fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés";
+        }
+        var rounded = Math.round(reading.area.occupied / 1000) * 1000;
+        var suffix = reading.regime === "documented"
+            ? "sous contrôle russe"
+            : (reading.regime === "counterfactual"
+                ? "sous contrôle russe — déroulé hypothétique"
+                : "sous contrôle russe — projection du modèle");
+        return "≈ " + fmt(rounded) + " km² " + suffix;
+    }
+
+    // Under the map, the one sentence that says what happened this quarter — or, past the
+    // chronicle, what the reader is looking at instead.
+    function mapNote(reading) {
+        if (!reading) { return null; }
+        var box = el("div", "map-note");
+
+        if (reading.regime === "documented" && reading.quarter) {
+            var q = reading.quarter;
+            box.innerHTML = "<strong>" + dateOf(q) + ".</strong> " + escapeHtml(q.headline);
+            if (q.confidence && q.confidence !== "haute") {
+                box.innerHTML += " <em>Confiance " + escapeHtml(q.confidence) +
+                    " : le trimestre n'est pas terminé.</em>";
+            }
+            return box;
+        }
+
+        // « après » plutôt que « au-delà de », qui produirait « au-delà de le printemps » un
+        // trimestre sur quatre : la saison porte son propre article.
+        var from = reading.handover ? namedQuarter(reading.handover) : "la période documentée";
+        box.classList.add("projected");
+        box.innerHTML = reading.regime === "counterfactual"
+            ? "<strong>Déroulé hypothétique.</strong> Une armée a rompu dans ce déroulé, ce qui " +
+              "n'est pas arrivé. Après " + from + ", le front affiché n'est plus celui de la " +
+              "guerre réelle : c'est celui que produisent les rapports de force du modèle."
+            : "<strong>Projection.</strong> Après " + from + ", plus rien n'est observé. La " +
+              "position réelle de ce trimestre-là sert de plateau, et seuls les huit secteurs " +
+              "simulés la déplacent — le reste de la carte est laissé où l'histoire l'a laissé.";
+        return box;
+    }
+
+    function escapeHtml(value) {
+        var n = document.createElement("div");
+        n.textContent = value === undefined || value === null ? "" : value;
+        return n.innerHTML;
+    }
+
     function renderBattlefield() {
         var stage = document.getElementById("stage");
         var t = turn();
 
+        // The map is drawn first because it is the one piece that MEASURES something: the head
+        // used to print the model's own square kilometres beside a map that was showing other
+        // ground entirely. One authority per number — the figure in the head is now read off the
+        // drawing the reader is looking at, whichever authority drew it.
+        var g = game();
+        if (window.tovFront) { window.tovFront.prepare(g.turns, board); }
+        var hexMap = window.tovHexMap && window.tovHexMap.render;
+        var mapSvg = hexMap
+            ? window.tovHexMap.render(t, board, geo, {
+                frontLine: frontLine,
+                turnIndex: state.turnIndex
+            })
+            : renderMap(t);
+        var reading = mapSvg.tovReading || null;
+
         var head = el("div", "stage-head");
         head.appendChild(el("h2", null, "Résolution — champ de bataille"));
-        // Only the movement of the eight simulated sectors is counted, never the initial
-        // rush of 2022 nor the ground given back that autumn. Saying « depuis février 2022 »
-        // invited the reader to compare it with the seventy thousand square kilometres of
-        // the real war, which is not what this number measures.
-        head.appendChild(el("div", "turn-tag",
-            dateOf(t) + " · " + fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés"));
+        head.appendChild(el("div", "turn-tag", dateOf(t) + " · " + occupationTag(reading, t)));
         stage.appendChild(head);
 
         // On the last turn of a run that stopped early, say so: the timeline stops here
         // because the war did, not because the button failed.
-        var g = game();
         if (g.endedEarly && state.turnIndex === g.turns.length - 1) {
             var stop = el("div", "run-ended");
             stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine " +
@@ -2789,13 +2869,11 @@
 
         var field = el("div", "field");
 
-        var mapPanel = el("section", "panel map-panel");
         // The hex map owns its own file so it can be reworked without touching the rest.
-        var hexMap = window.tovHexMap && window.tovHexMap.render;
-        var mapSvg = hexMap
-            ? window.tovHexMap.render(t, board, geo, { frontLine: frontLine })
-            : renderMap(t);
+        var mapPanel = el("section", "panel map-panel");
         mapPanel.appendChild(mapSvg);
+        var note = mapNote(reading);
+        if (note) { mapPanel.appendChild(note); }
 
         var leftCol = el("div");
         leftCol.appendChild(mapPanel);
@@ -2820,6 +2898,18 @@
               (netKm >= 0 ? "ru" : "ua") + "\">" +
               (netKm >= 0 ? "+" : "−") + fmt(Math.abs(netKm), 1) + " km</b>.";
         sectorPanel.appendChild(summary);
+
+        // This panel is the model's reading of ITS eight sectors, and during the documented
+        // quarters that is not what the map above is showing. Saying so once, here, is what
+        // keeps the two from being read as a single claim — and it is the right home for the
+        // model's cumulative gain, which measures the sectors and nothing else.
+        var provenance = el("div", "sector-provenance");
+        provenance.innerHTML = (reading && reading.regime === "documented"
+            ? "Rapports de force <b>calculés par le modèle</b> sur ses huit secteurs ; la carte, " +
+              "elle, porte la position réelle du trimestre. "
+            : "") + "Cumul du modèle depuis février 2022 : <b>" +
+            fmt(t.squareKilometresGained) + " km²</b>.";
+        sectorPanel.appendChild(provenance);
 
         // Face à une défense effondrée le rapport tend vers l'infini : le chiffre exact
         // n'apprend plus rien, seul compte le fait que plus rien ne tient en face.
@@ -2888,7 +2978,7 @@
         }
 
         var foot = el("p", "footnote");
-        foot.innerHTML = "Un secteur ne bouge qu'au-delà d'un rapport de <b>1,1</b>, et attaquer coûte trois à cinq fois ce que coûte tenir. Le tracé du front et les contours sont approximatifs, posés pour la lecture.";
+        foot.innerHTML = "Un secteur ne bouge qu'au-delà d'un rapport de <b>1,1</b>, et attaquer coûte trois à cinq fois ce que coûte tenir. Un hexagone de lecture fait <b>40 km</b> de large, soit environ 1 400 km² : rien de plus fin ne survit au dessin, et les contours sont approximatifs, posés pour la lecture.";
         stage.appendChild(foot);
     }
 
@@ -2918,7 +3008,153 @@
         } else {
             renderBattlefield();
         }
+
+        syncAddress(false);
     }
+
+    /* ---------------- L'adresse porte l'état consulté ----------------
+
+       Sans cela, une seule adresse pour vingt-six trimestres, trois déroulés et trois écrans :
+       on ne peut ni partager ce qu'on regarde, ni y revenir, ni ouvrir deux trimestres côte à
+       côte. L'adresse dit donc le déroulé, le trimestre et l'écran, et remet la page dans cet
+       état exact à l'ouverture.
+
+       Trois contraintes de forme, et elles se voient dans le code.
+
+       PAS DE RANG DE TOUR, MÊME ICI. « 2022-printemps » se lit, « t=6 » non — c'est la même
+       règle que la frise, qui porte la saison et jamais le numéro. Un rang est accepté EN
+       ENTRÉE, parce qu'une adresse tapée à la main ou héritée doit marcher, mais il n'est
+       jamais écrit.
+
+       TOUT DANS LA QUERY STRING. Le site est publié en statique sur GitHub Pages : un chemin
+       « /2022/printemps/ » y donnerait un 404, alors qu'un paramètre ne touche pas à la
+       résolution du fichier. `pushState` garde le retour arrière du navigateur.
+
+       UNE ADRESSE ILLISIBLE NE CASSE RIEN. Chaque paramètre est lu séparément, ce qu'on ne sait
+       pas relire est ignoré en silence, et l'adresse est réécrite sur ce qui est réellement
+       affiché — de sorte que la barre ne ment jamais, même quand elle a été mal remplie. */
+
+    var VARIANT_SLUG = {
+        ukraine_2022_resolve: "victoire",
+        ukraine_2022_holds: "front-fige",
+        ukraine_2022_collapse: "effondrement"
+    };
+
+    // Sans accent : « été » partagé par courriel revient en %C3%A9t%C3%A9, et une adresse qu'on
+    // n'ose pas recopier à la main n'est pas une adresse partageable. L'accent est accepté en
+    // entrée, il n'est jamais écrit.
+    var SEASON_SLUG = { Winter: "hiver", Spring: "printemps", Summer: "ete", Autumn: "automne" };
+    var PHASE_SLUG = ["russie", "ukraine", "front"];
+
+    // Vrai pendant qu'on applique une adresse : rendre ne doit pas réécrire ce qu'on vient de
+    // lire, sinon un retour arrière repousserait aussitôt l'entrée qu'il vient de quitter.
+    var addressLocked = false;
+
+    function slugify(value) {
+        var s = String(value === undefined || value === null ? "" : value);
+        s = s.normalize ? s.normalize("NFD").replace(/[̀-ͯ]/g, "") : s;
+        return s.trim().toLowerCase();
+    }
+
+    function addressOf() {
+        var g = game();
+        var t = g.turns[state.turnIndex];
+        return location.pathname +
+            "?deroule=" + (VARIANT_SLUG[g.scenarioCode] || slugify(g.scenarioCode)) +
+            "&trimestre=" + t.year + "-" + (SEASON_SLUG[t.season] || slugify(t.season)) +
+            "&ecran=" + (PHASE_SLUG[state.phase] || PHASE_SLUG[0]);
+    }
+
+    function syncAddress(replace) {
+        if (addressLocked || !window.history || !history.pushState) { return; }
+        var url = addressOf();
+        if (url === location.pathname + location.search) { return; }
+        history[replace ? "replaceState" : "pushState"](null, "", url);
+    }
+
+    // Le déroulé, par son slug, son code de scénario, ou le suffixe de celui-ci.
+    function gameIndexFrom(value) {
+        var wanted = slugify(value);
+        if (!wanted) { return -1; }
+        for (var i = 0; i < games.length; i++) {
+            var code = slugify(games[i].scenarioCode);
+            if (wanted === slugify(VARIANT_SLUG[games[i].scenarioCode]) ||
+                wanted === code ||
+                code.lastIndexOf("_" + wanted) === code.length - wanted.length - 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // « 2022-printemps », dans un sens ou dans l'autre, ou un rang de tour. Le trimestre est
+    // cherché DANS ce déroulé-là : la guerre s'y est peut-être terminée avant.
+    function turnIndexFrom(value, g) {
+        var wanted = slugify(value);
+        if (!wanted) { return -1; }
+
+        if (/^\d+$/.test(wanted)) {
+            for (var r = 0; r < g.turns.length; r++) {
+                if (g.turns[r].turn === parseInt(wanted, 10)) { return r; }
+            }
+            return -1;
+        }
+
+        var parts = wanted.split("-");
+        if (parts.length !== 2) { return -1; }
+        var year = /^\d{4}$/.test(parts[0]) ? parts[0] : parts[1];
+        var season = year === parts[0] ? parts[1] : parts[0];
+
+        for (var i = 0; i < g.turns.length; i++) {
+            var t = g.turns[i];
+            if (String(t.year) === year &&
+                (SEASON_SLUG[t.season] === season || slugify(t.season) === season ||
+                 slugify(SEASONS[t.season]) === season)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function phaseFrom(value) {
+        var wanted = slugify(value);
+        var slug = PHASE_SLUG.indexOf(wanted);
+        if (slug >= 0) { return slug; }
+        // Le rang d'écran, comme au clavier : 1, 2, 3.
+        if (/^[1-3]$/.test(wanted)) { return parseInt(wanted, 10) - 1; }
+        return -1;
+    }
+
+    function applyAddress() {
+        var query;
+        try {
+            query = new URLSearchParams(location.search);
+        } catch (ignored) {
+            return;
+        }
+
+        var variant = gameIndexFrom(query.get("deroule"));
+        if (variant >= 0) {
+            state.gameIndex = variant;
+            state.turnIndex = openingTurnIndex(game());
+        }
+
+        var quarter = turnIndexFrom(query.get("trimestre"), game());
+        if (quarter >= 0) { state.turnIndex = quarter; }
+
+        var phase = phaseFrom(query.get("ecran"));
+        if (phase >= 0) { state.phase = phase; }
+
+        // Un déroulé qui s'est arrêté plus tôt que le trimestre demandé : on s'arrête avec lui.
+        state.turnIndex = Math.max(0, Math.min(state.turnIndex, game().turns.length - 1));
+    }
+
+    window.addEventListener("popstate", function () {
+        addressLocked = true;
+        applyAddress();
+        render();
+        addressLocked = false;
+    });
 
     document.getElementById("firstTurn").addEventListener("click", function () {
         state.turnIndex = 0;
@@ -2960,5 +3196,13 @@
 
     bindPhases();
     state.turnIndex = openingTurnIndex(game());
+
+    // L'adresse d'ouverture est appliquée avant le premier rendu, et ce rendu-là REMPLACE
+    // l'entrée d'historique au lieu d'en ajouter une : sans quoi le retour arrière commencerait
+    // par revenir sur la même page.
+    applyAddress();
+    addressLocked = true;
     render();
+    addressLocked = false;
+    syncAddress(true);
 })();
