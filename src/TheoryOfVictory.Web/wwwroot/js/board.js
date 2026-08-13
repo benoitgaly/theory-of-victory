@@ -94,6 +94,39 @@
         });
     }
 
+    var HAND_SIZE = 7;
+
+    function cardsOf(t, sideCode) {
+        return (t.cardsPlayed || []).filter(function (c) { return c.ownerSideCode === sideCode; });
+    }
+
+    // Cards nobody chose: what the side is dealt, not what it decides.
+    function worldCards(t) {
+        return (t.cardsPlayed || []).filter(function (c) { return !c.ownerSideCode; });
+    }
+
+    // The hand a side would have been choosing from: what it played this quarter, filled
+    // up from its own deck. Deterministic — the run must stay reproducible — and rotated
+    // by turn so the hand is not the same seven cards every time.
+    function handFor(t, sideCode) {
+        var played = cardsOf(t, sideCode);
+        var playedCodes = played.map(function (c) { return c.code; });
+
+        var pool = (window.tovDeck || []).filter(function (c) {
+            return c.ownerSideCode === sideCode && playedCodes.indexOf(c.code) === -1;
+        });
+
+        var hand = played.map(function (c) {
+            return { card: c, played: true };
+        });
+
+        for (var i = 0; hand.length < HAND_SIZE && i < pool.length; i++) {
+            hand.push({ card: pool[(t.turn * 3 + i) % pool.length], played: false });
+        }
+
+        return hand;
+    }
+
     // February 2022 is turn 1, so turn N is a known quarter of a known year.
     function quarterOf(turn) {
         var index = turn - 1;
@@ -109,6 +142,21 @@
         host.innerHTML = "";
 
         var g = game();
+
+        // A control that cannot do anything says so, otherwise it reads as broken.
+        var atStart = state.turnIndex <= 0;
+        var atEnd = state.turnIndex >= g.turns.length - 1;
+        document.getElementById("firstTurn").disabled = atStart;
+        document.getElementById("prevTurn").disabled = atStart;
+
+        var next = document.getElementById("nextTurn");
+        next.disabled = atEnd;
+        next.title = atEnd
+            ? (g.endedEarly
+                ? "La guerre s'est terminée au tour " + g.turns.length + " : il n'y a pas de trimestre suivant."
+                : "Dernier trimestre de la partie.")
+            : "Trimestre suivant";
+
         var planned = g.plannedTurns || g.turns.length;
 
         for (var i = 0; i < planned; i++) {
@@ -524,6 +572,70 @@
         return svg;
     }
 
+    // The hand of the quarter: what this side played, and what it was holding instead.
+    // V1.0 follows a calendar, so the unplayed cards are shown face down — in V2 this is
+    // the row the player picks from.
+    function renderHand(t, sideCode, isInvader) {
+        var hand = handFor(t, sideCode);
+        var played = hand.filter(function (h) { return h.played; });
+
+        var panel = el("section", "panel hand-panel");
+        var head = el("div", "hand-head");
+        head.appendChild(el("div", "panel-title", "La main de ce trimestre"));
+
+        var note = el("div", "hand-note");
+        note.innerHTML = played.length
+            ? "<strong>" + played.length + "</strong> carte" + (played.length > 1 ? "s jouées" : " jouée") +
+              " sur " + hand.length + " en main."
+            : "Aucune carte jouée ce trimestre — " + hand.length + " en main.";
+        head.appendChild(note);
+        panel.appendChild(head);
+
+        var rail = el("div", "card-rail hand");
+        hand.forEach(function (h) {
+            if (h.played) {
+                var node = renderCard(h.card);
+                node.classList.add("is-played");
+                rail.appendChild(node);
+                return;
+            }
+
+            rail.appendChild(renderCardBack(h.card, isInvader));
+        });
+        panel.appendChild(rail);
+
+        return panel;
+    }
+
+    // Face-down card: the title and cost are legible, the effects are not. Enough to
+    // show there was a choice, without pretending V1 made one.
+    function renderCardBack(card, isInvader) {
+        var wrap = el("div", "mtg back " + (isInvader ? "ru" : "ua"));
+        var inner = el("div", "mtg-inner");
+
+        var title = el("div", "mtg-title");
+        title.appendChild(el("div", "mtg-name", card.title));
+        var cost = el("div", "mtg-cost");
+        if (card.politicalCost > 0) {
+            cost.appendChild(el("span", "pip pol", String(Math.round(card.politicalCost))));
+        }
+        title.appendChild(cost);
+        inner.appendChild(title);
+
+        var art = el("div", "mtg-art muted");
+        var svg = svgEl("svg", { viewBox: "0 0 100 60", preserveAspectRatio: "xMidYMid slice" });
+        (ART[card.family] || ART["Économique"])(svg);
+        art.appendChild(svg);
+        inner.appendChild(art);
+
+        inner.appendChild(el("div", "mtg-type", card.typeLine));
+        inner.appendChild(el("div", "mtg-held", "En main"));
+
+        wrap.appendChild(inner);
+        wrap.title = card.title + " — non jouée ce trimestre";
+        return wrap;
+    }
+
     function renderGeneration(side, isInvader) {
         var stage = document.getElementById("stage");
         var t = turn();
@@ -539,6 +651,7 @@
             "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year + " · Brent " + fmt(t.oilPrice) + " $"));
         stage.appendChild(head);
 
+        stage.appendChild(renderHand(t, side.sideCode, isInvader));
         stage.appendChild(renderChain(side, isInvader));
 
         // The barrel
@@ -1123,9 +1236,17 @@
             stage.appendChild(stop);
         }
 
-        if (t.cardsPlayed && t.cardsPlayed.length) {
+        // Only what neither side chose: the cards each camp played are shown on its own
+        // screen, where the decision belongs. What is left here is what the world imposed.
+        var world = worldCards(t);
+        if (world.length) {
+            var worldHead = el("div", "world-head");
+            worldHead.innerHTML = "<strong>Ce que personne n'a choisi</strong> — " + world.length +
+                " carte" + (world.length > 1 ? "s subies" : " subie") + " ce trimestre.";
+            stage.appendChild(worldHead);
+
             var rail = el("div", "card-rail");
-            t.cardsPlayed.forEach(function (c) { rail.appendChild(renderCard(c)); });
+            world.forEach(function (c) { rail.appendChild(renderCard(c)); });
             stage.appendChild(rail);
         }
 
@@ -1291,6 +1412,11 @@
             renderBattlefield();
         }
     }
+
+    document.getElementById("firstTurn").addEventListener("click", function () {
+        state.turnIndex = 0;
+        render();
+    });
 
     document.getElementById("prevTurn").addEventListener("click", function () {
         state.turnIndex = Math.max(0, state.turnIndex - 1);

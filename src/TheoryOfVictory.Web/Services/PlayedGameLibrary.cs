@@ -1,6 +1,7 @@
 using TheoryOfVictory.Core;
 using TheoryOfVictory.Engine;
 using TheoryOfVictory.Engine.Scenarios;
+using System.Linq;
 
 namespace TheoryOfVictory.Web.Services;
 
@@ -39,4 +40,11 @@ public sealed class PlayedGameLibrary
     {
         get { return _games.Values.First().FinalSectors; }
     }
+
+    /// <summary>
+    /// The full printed deck. V1.0 plays a calendar, but the page shows each side the hand
+    /// it would have been choosing from — which is the whole V2 gesture, previewed.
+    /// </summary>
+    public IReadOnlyList<PlayedCard> Deck { get; } =
+        [.. CardLibrary.Load().Select(CardPrinter.Print)];
 }

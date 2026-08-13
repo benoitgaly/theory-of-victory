@@ -270,6 +270,106 @@ h1, h2, h3, h4 {
     opacity: 0.68;
 }
 
+.step:disabled {
+    opacity: 0.28;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+.step:disabled:hover {
+    background: var(--paper);
+    border-color: var(--rule);
+    color: var(--ink-2);
+}
+
+/* ---------- La main du trimestre ---------- */
+
+.hand-panel {
+    padding: 16px 18px;
+    margin-bottom: 20px;
+}
+
+.hand-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.hand-head .panel-title {
+    margin-bottom: 0;
+}
+
+.hand-note {
+    font-size: 12.5px;
+    color: var(--ink-3);
+}
+
+.hand-note strong {
+    color: var(--ink);
+}
+
+.card-rail.hand {
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.card-rail.hand .mtg {
+    width: 176px;
+    flex-shrink: 0;
+}
+
+/* La carte jouée sort du rang. */
+.card-rail.hand .mtg.is-played {
+    width: 208px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 14px 30px rgba(23,25,30,0.24);
+    transform: translateY(-4px);
+}
+
+/* Les cartes gardées en main : lisibles, mais visiblement en retrait. */
+.mtg.back {
+    opacity: 0.62;
+    filter: saturate(0.55);
+}
+
+.mtg.back:hover {
+    opacity: 0.9;
+    filter: saturate(0.8);
+}
+
+.mtg.back .mtg-art {
+    height: 62px;
+}
+
+.mtg.back .mtg-art.muted {
+    filter: grayscale(0.5) brightness(0.92);
+}
+
+.mtg-held {
+    margin-top: 6px;
+    padding: 5px 0;
+    text-align: center;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: rgba(35, 30, 22, 0.5);
+    border-top: 1px dashed rgba(0, 0, 0, 0.18);
+}
+
+.world-head {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--ink-2);
+}
+
+.world-head strong {
+    color: var(--ink);
+}
+
 .run-ended {
     margin: 0 0 16px;
     padding: 10px 16px;

@@ -9,10 +9,24 @@
       "politicalCost": 3,
       "baseProbability": 0.95,
       "effects": [
-        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": 0.45 },
-        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": 0.35 },
-        { "kind": "SanctionsComponentDelta", "targetSideCode": "invader", "value": 0.4, "delayTurns": 2 }
-      ]
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": 0.45
+        },
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": 0.35
+        },
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": 0.4,
+          "delayTurns": 2
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "western_aid_opens",
@@ -23,9 +37,18 @@
       "politicalCost": 4,
       "baseProbability": 0.9,
       "effects": [
-        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": 11.0 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 6 }
-      ]
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 11.0
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 6
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "himars_deep_strike",
@@ -36,9 +59,18 @@
       "politicalCost": 2,
       "baseProbability": 0.7,
       "effects": [
-        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": 0.45 },
-        { "kind": "LogisticsIntegrityDelta", "targetSideCode": "invader", "value": -0.18 }
-      ]
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "defender",
+          "value": 0.45
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.18
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "partial_mobilisation",
@@ -50,9 +82,21 @@
       "politicalCost": 9,
       "baseProbability": 0.4,
       "effects": [
-        { "kind": "MobilisationWave", "targetSideCode": "invader", "value": 300 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 14 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -4 }
+        {
+          "kind": "MobilisationWave",
+          "targetSideCode": "invader",
+          "value": 300
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 14
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -4
+        }
       ]
     },
     {
@@ -65,10 +109,26 @@
       "politicalCost": 6,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 10 },
-        { "kind": "MoraleDelta", "targetSideCode": "invader", "value": -8 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -7 },
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": 8 }
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 10
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -8
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -7
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 8
+        }
       ]
     },
     {
@@ -81,8 +141,16 @@
       "politicalCost": 3,
       "baseProbability": 0.6,
       "effects": [
-        { "kind": "GridPermanentDamage", "targetSideCode": "defender", "value": 4.5 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -5 }
+        {
+          "kind": "GridPermanentDamage",
+          "targetSideCode": "defender",
+          "value": 4.5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -5
+        }
       ]
     },
     {
@@ -94,8 +162,13 @@
       "politicalCost": 5,
       "baseProbability": 0.55,
       "effects": [
-        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": 0.4 }
-      ]
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": 0.4
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "failed_offensive",
@@ -107,8 +180,16 @@
       "politicalCost": 7,
       "baseProbability": 0.5,
       "effects": [
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -7 },
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -9 }
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -7
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -9
+        }
       ]
     },
     {
@@ -120,8 +201,17 @@
       "politicalCost": 0,
       "baseProbability": 0.3,
       "effects": [
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -12 },
-        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "heavy_interceptors", "value": -180 }
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -12
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "heavy_interceptors",
+          "value": -180
+        }
       ]
     },
     {
@@ -133,8 +223,16 @@
       "politicalCost": 0,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": -0.62 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 }
+        {
+          "kind": "AidDisbursementRate",
+          "targetSideCode": "defender",
+          "value": -0.62
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        }
       ]
     },
     {
@@ -146,8 +244,16 @@
       "politicalCost": 0,
       "baseProbability": 0.6,
       "effects": [
-        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": 0.62 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 5 }
+        {
+          "kind": "AidDisbursementRate",
+          "targetSideCode": "defender",
+          "value": 0.62
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 5
+        }
       ]
     },
     {
@@ -159,9 +265,21 @@
       "politicalCost": 0,
       "baseProbability": 0.2,
       "effects": [
-        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": -1.0 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -12 },
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -35 }
+        {
+          "kind": "AidDisbursementRate",
+          "targetSideCode": "defender",
+          "value": -1.0
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -12
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -35
+        }
       ]
     },
     {
@@ -174,8 +292,16 @@
       "politicalCost": 3,
       "baseProbability": 0.55,
       "effects": [
-        { "kind": "RefiningIntegrityDelta", "targetSideCode": "invader", "value": -0.22 },
-        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": 0.3 }
+        {
+          "kind": "RefiningIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.22
+        },
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "defender",
+          "value": 0.3
+        }
       ]
     },
     {
@@ -188,7 +314,11 @@
       "politicalCost": 4,
       "baseProbability": 0.5,
       "effects": [
-        { "kind": "ForeignSupplyCeilingDelta", "targetSideCode": "invader", "value": 6.0 }
+        {
+          "kind": "ForeignSupplyCeilingDelta",
+          "targetSideCode": "invader",
+          "value": 6.0
+        }
       ]
     },
     {
@@ -201,7 +331,12 @@
       "politicalCost": 5,
       "baseProbability": 0.4,
       "effects": [
-        { "kind": "ProductionCapacityMultiplier", "targetSideCode": "invader", "value": 1.22, "delayTurns": 2 }
+        {
+          "kind": "ProductionCapacityMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.22,
+          "delayTurns": 2
+        }
       ]
     },
     {
@@ -213,9 +348,18 @@
       "politicalCost": 2,
       "baseProbability": 0.45,
       "effects": [
-        { "kind": "InnovationTacticalJump", "targetSideCode": "invader", "value": 0.35 },
-        { "kind": "InnovationTacticalJump", "targetSideCode": "defender", "value": 0.4 }
-      ]
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "invader",
+          "value": 0.35
+        },
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "defender",
+          "value": 0.4
+        }
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "shadow_fleet_sanctions",
@@ -226,10 +370,23 @@
       "politicalCost": 6,
       "baseProbability": 0.4,
       "effects": [
-        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": 0.3 },
-        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": 0.25 },
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -4 }
-      ]
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": 0.3
+        },
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": 0.25
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -4
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "anticorruption_crisis",
@@ -241,9 +398,21 @@
       "politicalCost": 4,
       "baseProbability": 0.3,
       "effects": [
-        { "kind": "CorruptionDelta", "targetSideCode": "defender", "value": -9 },
-        { "kind": "ConditionalityDelta", "targetSideCode": "defender", "value": 0.12 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -4 }
+        {
+          "kind": "CorruptionDelta",
+          "targetSideCode": "defender",
+          "value": -9
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": 0.12
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -4
+        }
       ]
     },
     {
@@ -255,8 +424,16 @@
       "politicalCost": 0,
       "baseProbability": 0.12,
       "effects": [
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -18 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 6 }
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -18
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 6
+        }
       ]
     },
     {
@@ -268,8 +445,14 @@
       "politicalCost": 4,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "SanctionsComponentDelta", "targetSideCode": "invader", "value": 0.45, "delayTurns": 3 }
-      ]
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": 0.45,
+          "delayTurns": 3
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "aid_predictable",
@@ -280,10 +463,23 @@
       "politicalCost": 8,
       "baseProbability": 0.3,
       "effects": [
-        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": 9.0 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 8 },
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": 12 }
-      ]
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 9.0
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 8
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 12
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "frozen_assets_released",
@@ -294,10 +490,23 @@
       "politicalCost": 10,
       "baseProbability": 0.25,
       "effects": [
-        { "kind": "TreasuryDelta", "targetSideCode": "defender", "value": 30 },
-        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": 5.0 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -6 }
-      ]
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": 30
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 5.0
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -6
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "component_embargo_total",
@@ -308,9 +517,19 @@
       "politicalCost": 7,
       "baseProbability": 0.25,
       "effects": [
-        { "kind": "SanctionsComponentDelta", "targetSideCode": "invader", "value": 0.5, "delayTurns": 2 },
-        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": 0.3 }
-      ]
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": 0.5,
+          "delayTurns": 2
+        },
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": 0.3
+        }
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "refinery_campaign_sustained",
@@ -322,9 +541,21 @@
       "politicalCost": 4,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "RefiningIntegrityDelta", "targetSideCode": "invader", "value": -0.34 },
-        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": 0.35 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -4 }
+        {
+          "kind": "RefiningIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.34
+        },
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "defender",
+          "value": 0.35
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -4
+        }
       ]
     },
     {
@@ -336,9 +567,20 @@
       "politicalCost": 0,
       "baseProbability": 0.2,
       "effects": [
-        { "kind": "OilPriceDelta", "value": -26 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -9 },
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": 6 }
+        {
+          "kind": "OilPriceDelta",
+          "value": -26
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -9
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 6
+        }
       ]
     },
     {
@@ -350,9 +592,21 @@
       "politicalCost": 0,
       "baseProbability": 0.2,
       "effects": [
-        { "kind": "TreasuryDelta", "targetSideCode": "invader", "value": -25 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -12 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 10 }
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "invader",
+          "value": -25
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -12
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 10
+        }
       ]
     },
     {
@@ -364,9 +618,21 @@
       "politicalCost": 0,
       "baseProbability": 0.1,
       "effects": [
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -26 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 18 },
-        { "kind": "MoraleDelta", "targetSideCode": "invader", "value": -14 }
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -26
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 18
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -14
+        }
       ]
     },
     {
@@ -378,8 +644,16 @@
       "politicalCost": 6,
       "baseProbability": 0.15,
       "effects": [
-        { "kind": "ForeignSupplyCeilingDelta", "targetSideCode": "invader", "value": -6.0 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -8 }
+        {
+          "kind": "ForeignSupplyCeilingDelta",
+          "targetSideCode": "invader",
+          "value": -6.0
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -8
+        }
       ]
     },
     {
@@ -391,8 +665,16 @@
       "politicalCost": 0,
       "baseProbability": 0.25,
       "effects": [
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "defender", "value": 7 }
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "defender",
+          "value": 7
+        }
       ]
     },
     {
@@ -406,8 +688,16 @@
       "politicalCost": 3,
       "baseProbability": 0.4,
       "effects": [
-        { "kind": "InnovationCounterJump", "targetSideCode": "invader", "value": 0.4 },
-        { "kind": "InnovationTacticalJump", "targetSideCode": "defender", "value": -0.25 }
+        {
+          "kind": "InnovationCounterJump",
+          "targetSideCode": "invader",
+          "value": 0.4
+        },
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "defender",
+          "value": -0.25
+        }
       ]
     },
     {
@@ -421,8 +711,17 @@
       "politicalCost": 5,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "heavy_interceptors", "value": -220 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": 4 }
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "heavy_interceptors",
+          "value": -220
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 4
+        }
       ]
     },
     {
@@ -436,8 +735,16 @@
       "politicalCost": 2,
       "baseProbability": 0.5,
       "effects": [
-        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": -0.2 },
-        { "kind": "SanctionsPriceDelta", "targetSideCode": "invader", "value": -0.15 }
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": -0.2
+        },
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": -0.15
+        }
       ]
     },
     {
@@ -451,8 +758,17 @@
       "politicalCost": 3,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "missiles", "value": -25 },
-        { "kind": "InnovationStrikeJump", "targetSideCode": "defender", "value": -0.2 }
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "missiles",
+          "value": -25
+        },
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "defender",
+          "value": -0.2
+        }
       ]
     },
     {
@@ -464,9 +780,21 @@
       "politicalCost": 0,
       "baseProbability": 0.3,
       "effects": [
-        { "kind": "ExternalWillDelta", "targetSideCode": "defender", "value": -28 },
-        { "kind": "AidDisbursementRate", "targetSideCode": "defender", "value": -0.45 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -8 }
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -28
+        },
+        {
+          "kind": "AidDisbursementRate",
+          "targetSideCode": "defender",
+          "value": -0.45
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -8
+        }
       ]
     },
     {
@@ -478,8 +806,16 @@
       "politicalCost": 0,
       "baseProbability": 0.45,
       "effects": [
-        { "kind": "AidPledgeDelta", "targetSideCode": "defender", "value": -4.0 },
-        { "kind": "ConditionalityDelta", "targetSideCode": "defender", "value": 0.1 }
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -4.0
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": 0.1
+        }
       ]
     },
     {
@@ -492,9 +828,21 @@
       "politicalCost": 0,
       "baseProbability": 0.25,
       "effects": [
-        { "kind": "ForeignSupplyCeilingDelta", "targetSideCode": "invader", "value": 3.0 },
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -5 },
-        { "kind": "SanctionsFrictionDelta", "targetSideCode": "invader", "value": -0.12 }
+        {
+          "kind": "ForeignSupplyCeilingDelta",
+          "targetSideCode": "invader",
+          "value": 3.0
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -5
+        },
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": -0.12
+        }
       ]
     },
     {
@@ -506,8 +854,18 @@
       "politicalCost": 0,
       "baseProbability": 0.3,
       "effects": [
-        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "heavy_interceptors", "value": -160 },
-        { "kind": "StockDelta", "targetSideCode": "defender", "resourceCode": "cheap_interceptors", "value": -500 }
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "heavy_interceptors",
+          "value": -160
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "cheap_interceptors",
+          "value": -500
+        }
       ]
     },
     {
@@ -520,9 +878,21 @@
       "politicalCost": 8,
       "baseProbability": 0.1,
       "effects": [
-        { "kind": "EliteCohesionDelta", "targetSideCode": "invader", "value": -9 },
-        { "kind": "LogisticsIntegrityDelta", "targetSideCode": "invader", "value": -0.1 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "invader", "value": 5 }
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -9
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.1
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 5
+        }
       ]
     },
     {
@@ -535,8 +905,18 @@
       "politicalCost": 4,
       "baseProbability": 0.4,
       "effects": [
-        { "kind": "InnovationTacticalJump", "targetSideCode": "defender", "value": 0.5, "delayTurns": 2 },
-        { "kind": "ProductionCapacityMultiplier", "targetSideCode": "defender", "value": 1.15, "delayTurns": 2 }
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "defender",
+          "value": 0.5,
+          "delayTurns": 2
+        },
+        {
+          "kind": "ProductionCapacityMultiplier",
+          "targetSideCode": "defender",
+          "value": 1.15,
+          "delayTurns": 2
+        }
       ]
     },
     {
@@ -549,7 +929,11 @@
       "politicalCost": 3,
       "baseProbability": 0.4,
       "effects": [
-        { "kind": "LogisticsIntegrityDelta", "targetSideCode": "invader", "value": -0.22 }
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.22
+        }
       ]
     },
     {
@@ -562,9 +946,21 @@
       "politicalCost": 7,
       "baseProbability": 0.35,
       "effects": [
-        { "kind": "MobilisationWave", "targetSideCode": "defender", "value": 120 },
-        { "kind": "PopularDiscontentDelta", "targetSideCode": "defender", "value": 11 },
-        { "kind": "MoraleDelta", "targetSideCode": "defender", "value": -6 }
+        {
+          "kind": "MobilisationWave",
+          "targetSideCode": "defender",
+          "value": 120
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "defender",
+          "value": 11
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        }
       ]
     }
   ]

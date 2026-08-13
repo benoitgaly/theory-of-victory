@@ -14,9 +14,10 @@
 </header>
 
 <nav class="timeline">
-    <button type="button" class="step" id="prevTurn" aria-label="Tour précédent">◀</button>
+    <button type="button" class="step" id="firstTurn" title="Revenir à février 2022" aria-label="Premier tour">⏮</button>
+    <button type="button" class="step" id="prevTurn" title="Trimestre précédent" aria-label="Tour précédent">◀</button>
     <div class="ticks" id="turnTicks"></div>
-    <button type="button" class="step" id="nextTurn" aria-label="Tour suivant">▶</button>
+    <button type="button" class="step" id="nextTurn" title="Trimestre suivant" aria-label="Tour suivant">▶</button>
 </nav>
 
 <nav class="phases" id="phasePicker">
@@ -41,6 +42,7 @@
         window.tovGames = @Html.Raw(ViewBag.GamesJson);
         window.tovBoard = @Html.Raw(ViewBag.BoardJson);
         window.tovCurrentTurn = @ViewBag.CurrentTurn;
+        window.tovDeck = @Html.Raw(ViewBag.DeckJson);
     </script>
     <script src="~/js/geography.js" asp-append-version="true"></script>
     <script src="~/js/hexmap.js" asp-append-version="true"></script>

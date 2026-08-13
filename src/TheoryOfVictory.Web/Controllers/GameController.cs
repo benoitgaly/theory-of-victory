@@ -42,6 +42,7 @@ public sealed class GameController : Controller
 
         ViewBag.GamesJson = JsonSerializer.Serialize(games, JsonOptions);
         ViewBag.BoardJson = JsonSerializer.Serialize(board, JsonOptions);
+        ViewBag.DeckJson = JsonSerializer.Serialize(_library.Deck, JsonOptions);
         ViewBag.CurrentTurn = Math.Max(1, quartersSinceStart + 1);
         return View();
     }
