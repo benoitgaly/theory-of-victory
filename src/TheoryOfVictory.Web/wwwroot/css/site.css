@@ -311,8 +311,11 @@ h1, h2, h3, h4 {
     color: var(--ink);
 }
 
+/* Une main se tient sur une seule ligne, comme un éventail de cartes tenu en main :
+   si elle déborde, elle glisse, elle ne se replie pas sur un second rang. */
 .card-rail.hand {
     gap: 10px;
+    flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 4px;
 }
