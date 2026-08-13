@@ -12,14 +12,18 @@ succession de batailles. Outil pédagogique inspiré des travaux de **Phillips P
 
 ## Ce que la V1 démontre
 
-Le même départ — février 2022, dix-neuf tours de trois mois jusqu'à l'été 2026, mêmes forces,
-même carte — est rejoué **trois fois**. Ce qui change, ce sont les cartes que l'Occident joue.
+Le même départ — l'automne 2021, l'armée russe qui se masse aux frontières sans qu'un coup soit
+tiré — est rejoué **trois fois**, trimestre par trimestre jusqu'à la fin de la guerre. Ce qui
+change, ce sont les cartes que l'Ukraine et ses soutiens jouent.
 
 | Déroulé | Ce que l'Occident fait | Issue |
 |---|---|---|
-| **L'Occident joue ses cartes** | Embargo sur les composants, campagne sur le raffinage entretenue, avoirs gelés transférés, baril effondré | **L'Ukraine l'emporte** — chute du régime russe à l'été 2026 |
-| **Le soutien tient, sans plus** | Le flux ne rompt jamais, sans jamais s'intensifier | **Front figé** — personne ne gagne, quatre ans plus tard |
-| **Le soutien s'arrête** | Le flux gratuit cesse au tour 6 | **L'Ukraine cède** — effondrement au printemps 2024 |
+| **L'Occident joue ses cartes** | Embargo sur les composants, campagne sur le raffinage entretenue, avoirs gelés transférés, baril effondré | **L'Ukraine l'emporte** — le régime russe tombe au printemps 2027, armistice à l'automne |
+| **Le soutien tient, sans plus** | Le flux ne rompt jamais, sans jamais s'intensifier | **Front figé** — personne ne gagne, six ans plus tard |
+| **Le soutien s'arrête** | Le flux gratuit cesse au tour 7 | **L'Ukraine cède** — effondrement au printemps 2024 |
+
+Tout ce qui suit l'été 2026 est une **projection du modèle**, marquée comme telle sur la frise.
+Une projection est une conséquence des règles du jeu ; elle se discute, elle ne s'annonce pas.
 
 Le déroulé de victoire ne prend pas un hexagone de plus que les autres : il **coupe la caisse**.
 Le raffinage est frappé tous les trois trimestres sans relâche, le baril s'effondre, le fonds
@@ -46,16 +50,25 @@ Le **tonneau de Liebig** porte la règle centrale : chaque douve est un flux con
 carburant, nourriture — sa hauteur est son taux de couverture, et l'eau ne monte jamais au-dessus
 de la plus courte. Les hommes, eux, ne sont pas une douve : ils sont la **taille du tonneau**,
 puisque c'est l'effectif tenu en ligne qui dimensionne le front et fabrique donc le besoin
-matériel. La **carte** est une
-vraie carte d'Ukraine pavée d'hexagones, où l'on distingue le territoire occupé avant février 2022
-de celui pris depuis. Les cartes événement sont imprimées au format Magic — cadre, coût en capital
-politique, illustration, ligne de type, boîte de règles et texte d'ambiance — parce que la V2 les
-mettra en main des joueurs.
+matériel.
 
-La conception détaillée est répartie en cinq documents : le [modèle de jeu](docs/design/01-modele-de-jeu.md),
-la [direction artistique](docs/design/02-direction-artistique.md), le [gameplay](docs/design/03-gameplay.md),
-la [calibration des effectifs](docs/design/04-calibration-effectifs.md) et les
-[cinq composantes d'armée](docs/design/05-composantes-armee.md).
+La **carte** est une vraie carte d'Ukraine pavée d'hexagones, lue comme un wargame : des pions à
+crans qui distinguent les crans alimentés des crans à sec — les hommes présents que rien ne pourvoit
+—, une butée là où deux armées se poussent sans bouger, la table de résolution imprimée dans la
+légende, et un bandeau d'arrière pour chaque camp, hors du champ de bataille, où se lisent les
+frappes profondes. Le terrain suit la **densité d'hommes en ligne de contact par kilomètre** : on
+prend du terrain là où il n'y a personne, et on le perd de la même façon.
+
+Chaque camp tient une **main de six cartes**, imprimées au format Magic — cadre, coût en capital
+politique, illustration propre à chaque carte, ligne de type, boîte de règles et texte d'ambiance.
+Celles qu'il a jouées portent leur bandeau ; les autres attendent, parce que la V2 les mettra en
+main des joueurs.
+
+La conception détaillée est répartie en neuf documents, du [modèle de jeu](docs/design/01-modele-de-jeu.md)
+à la [fin de guerre](docs/design/10-fin-de-guerre.md), en passant par la
+[calibration des effectifs](docs/design/04-calibration-effectifs.md) et l'
+[audit de réalisme](docs/design/09-audit-realisme.md), qui nomme les écarts entre le jeu et le réel
+sans les excuser.
 
 ## Lancer
 
