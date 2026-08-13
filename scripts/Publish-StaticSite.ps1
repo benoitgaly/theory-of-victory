@@ -63,7 +63,7 @@ try {
     }
 
     # Les actifs sont référencés en absolu ; GitHub Pages sert depuis /<dépôt>/, donc en relatif.
-    $html = $page.Content -replace '(?<=(?:src|href)=")/(css|js)/', '$1/'
+    $html = $page.Content -replace '(?<=(?:src|href)=")/(css/|js/|favicon)', '$1'
 
     Set-Content -Path (Join-Path $OutputPath "index.html") -Value $html -Encoding UTF8
 
