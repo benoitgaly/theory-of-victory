@@ -132,7 +132,7 @@ parce qu'elle est dérivée de dépenses engagées et non d'une annonce.
 
 | Tour | Période | Modèle | Repère | Écart |
 |---|---|---|---|---|
-| T2 | 2022 Q1 | 279 000 | ≈ 190 000 | +47 % |
+| T2 | 2022 Q1 | 293 000 | ≈ 190 000 | +54 % |
 | T8 | été 2023 | 595 000 | 523 548 | +13,7 % |
 | T12 | été 2024 | 586 000 | 667 114 | −12,2 % |
 | T16 | été 2025 | 673 000 | 723 477 | −7,0 % |
@@ -475,7 +475,62 @@ saturation que le jeu existe pour démontrer se joue en 2025. **Signalé, non co
 
 ---
 
-## 12. Sources
+## 12. Le front, désormais fonction des effectifs
+
+Le mouvement du front dépend maintenant de la **densité d'hommes au kilomètre**, et non plus de la
+seule puissance de combat. Le terrain devient donc une conséquence directe de la calibration des
+effectifs, ce qui est la raison pour laquelle il est confronté au réel ici et non dans un document
+séparé : la grandeur qui le pilote est `InContact`, l'infanterie en ligne de contact du § 2.
+
+### 12.1 Ce que le modèle produit, et ce que la guerre a produit
+
+Le front modélisé fait **480 km** — huit secteurs, 48 hexagones de 10 km — contre une ligne de
+contact réelle de l'ordre de 1 200 km. Les axes du nord, Kyiv, Tchernihiv et Soumy, n'existent pas
+dans le modèle. Toute comparaison d'amplitude doit être lue avec cet écart de périmètre en tête.
+
+| Phase | Modèle (partie de référence) | Réel | Écart |
+|---|---|---|---|
+| **Ruée** — trimestre de l'invasion | +4 183 km² en un trimestre | ≈ +114 000 km² : de 7 % du pays occupé avant l'invasion à un pic de 26 % en mars 2022 | ÷ 27 |
+| **Reflux** — automne 2022 | −3 613 km², soit **86 %** du gain initial rendu | ≈ −43 000 km² repris par l'Ukraine, soit **38 %** du gain initial | Reflux 2,3 fois trop profond en proportion |
+| **Grignotage** — 2023 à 2028 | +1 021 km² sur 21 trimestres, soit ≈ 200 km²/an | Moins de 1 % du pays depuis novembre 2022, soit ≈ 2 000 km²/an | ÷ 10, et ÷ 4 seulement à périmètre de front égal |
+
+**La forme est juste, et c'est ce qu'on demandait.** Les trois phases apparaissent, dans le bon
+ordre, avec les bonnes proportions relatives : la ruée du premier trimestre est de loin le plus
+grand mouvement de la guerre, le reflux d'automne 2022 lui répond, puis le front se fige en un
+grignotage qui ne rend plus jamais l'échelle des deux premiers. **Aucune date n'est écrite à la
+main** : les deux inflexions sortent du seul rapport de densité.
+
+**Les amplitudes sont d'un ordre de grandeur trop faibles**, et c'est structurel. Le facteur 27 sur
+la ruée tient surtout à ce que le modèle ignore les axes du nord, qui font l'essentiel de la surface
+de mars 2022 — et qui ont d'ailleurs été *abandonnés* plutôt que perdus au combat, ce que le modèle
+ne sait pas représenter. Le facteur 10 sur le grignotage se réduit à 4 une fois rapporté aux 480 km
+réellement simulés, ce qui reste un écart mais un écart ordinaire de calibration.
+
+**Le reflux est la seule anomalie de forme** : le modèle rend 86 % de ce qu'il a pris là où
+l'Ukraine en a repris 38 %. La densité russe tombe trop bas trop vite après la ruée, faute d'un
+mécanisme qui distingue le terrain tenu en profondeur du terrain simplement traversé. **Signalé,
+non corrigé** : le resserrer demanderait un modèle de contrôle du territoire que le jeu n'a pas.
+
+### 12.2 Ce que le changement de densité a apporté au reste du modèle
+
+Un résultat qu'il faut noter parce qu'il valide la thèse plutôt qu'un paramètre. Dans le déroulé de
+victoire, entre le pic de puissance russe et la veille de la chute du régime :
+
+| Grandeur | Au pic | Veille de la chute |
+|---|---|---|
+| Puissance de combat russe | 294 000 | 30 000 (**−90 %**) |
+| Infanterie de contact russe | 370 000 | 346 000 (−6 %) |
+| Terrain tenu | 1 435 km² | 1 435 km² (**inchangé**) |
+
+Le front est désormais libre de bouger, et il ne bouge pas. La raison est exactement celle que le
+modèle veut enseigner : **l'envahisseur a perdu ses obus, pas son infanterie.** Une armée privée de
+munitions tient le terrain sur lequel elle est posée — elle ne peut simplement plus en prendre. La
+ligne ne cède qu'au trimestre où les hommes s'en vont, et les hommes s'en vont quand l'État cesse de
+les payer. Le terrain reste une conséquence de l'assèchement, et un test le verrouille.
+
+---
+
+## 13. Sources
 
 Effectifs et groupements :
 
@@ -516,7 +571,7 @@ Munitions :
 
 ---
 
-## 13. Ce que ce document ne prétend pas être
+## 14. Ce que ce document ne prétend pas être
 
 Aucun chiffre ci-dessus n'est une mesure. Ce sont des estimations de sources ouvertes, produites
 pendant une guerre en cours, par des acteurs qui ont tous un intérêt dans le résultat — y compris

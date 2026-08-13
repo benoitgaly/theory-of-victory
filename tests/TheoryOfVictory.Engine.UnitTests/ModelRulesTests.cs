@@ -638,6 +638,24 @@ public sealed class ModelRulesTests
             $"Puissance russe {atPeak.CombatPower:F0} au pic contre {beforeFall.CombatPower:F0} à la veille "
                 + "de la chute : l'étranglement ne se voit pas.");
 
+        // WHY the line does not move, now that it is free to. Ground follows the density of
+        // men per kilometre, and the men are still there: the invader has lost its shells, not
+        // its infantry. An army starved of ammunition holds the ground it stands on — it simply
+        // cannot take any more. The line gives when the MEN go, and the men go when the state
+        // stops paying them, which is the quarter the regime falls.
+        //
+        // This is the guarantee that ground stayed a consequence and did not become the engine:
+        // a front reactive enough to drift on its own would have moved during these quarters.
+        Assert.True(
+            beforeFall.MenInContact > atPeak.MenInContact * 0.85d,
+            $"Infanterie de contact {atPeak.MenInContact:N0} au pic contre {beforeFall.MenInContact:N0} "
+                + "à la veille de la chute : le terrain a bougé parce que les hommes étaient déjà partis, "
+                + "et l'étranglement n'y est pour rien.");
+
+        Assert.True(
+            resolve.Turns[^1].Invader.MenInContact < beforeFall.MenInContact * 0.75d,
+            "L'armée vaincue n'a jamais lâché la ligne : le terrain n'est pas rendu par la fonte des effectifs.");
+
         // On the eve of its collapse the invader is still holding ground it took: the defender
         // has not conquered its way to this victory, it has waited for the rear to give.
         double kmBeforeFall = resolve.Turns[eve].SquareKilometresGained;
