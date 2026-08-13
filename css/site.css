@@ -222,7 +222,7 @@ h1, h2, h3, h4 {
 
 .ticks {
     display: flex;
-    gap: 3px;
+    gap: 2px;
     flex: 1;
 }
 
@@ -271,10 +271,12 @@ h1, h2, h3, h4 {
     white-space: nowrap;
 }
 
+/* Calé sur « Printemps », le plus long des quatre : la saison doit tenir sur une ligne
+   dans la case la plus étroite, sinon la frise se déforme de trimestre en trimestre. */
 .tick .t-quarter b {
-    font-size: 13px;
+    font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.03em;
+    letter-spacing: -0.01em;
 }
 
 .tick .t-quarter i {

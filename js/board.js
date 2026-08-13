@@ -34,7 +34,6 @@
     var state = { gameIndex: 0, turnIndex: 0, phase: 0 };
 
     var SEASONS = { Winter: "hiver", Spring: "printemps", Summer: "été", Autumn: "automne" };
-    var QUARTERS = { Winter: 1, Spring: 2, Summer: 3, Autumn: 4 };
 
     // The three flows the front consumes, and only those: a stave is a resource with a need
     // and therefore a coverage. Men have neither — they are the size of the barrel, since it
@@ -169,17 +168,18 @@
     function quarterAfter(last, steps) {
         var order = ["Winter", "Spring", "Summer", "Autumn"];
         var from = order.indexOf(last.season);
-        if (from < 0) { return { quarter: 0, year: last.year }; }
+        if (from < 0) { return { season: "", year: last.year }; }
 
         var total = from + steps;
-        return { quarter: (total % 4) + 1, year: last.year + Math.floor(total / 4) };
+        return { season: seasonName(order[total % 4]), year: last.year + Math.floor(total / 4) };
     }
 
-    // La frise se lit au calendrier, pas au compteur de parties : « T1 22 » est le premier
-    // trimestre de 2022, quel que soit le rang de ce trimestre dans le scénario. Le numéro
-    // de tour reste dans l'infobulle, pour qui suit la mécanique.
-    function quarterLabel(q) {
-        return "T" + q.quarter + " " + String(q.year).slice(2);
+    // La frise se lit au calendrier : la saison, puis son millésime. Une saison porte ce
+    // qu'un rang de trimestre oblige à traduire — l'hiver est le chauffage et le gel, le
+    // printemps la boue de la fonte.
+    function seasonName(code) {
+        var season = SEASONS[code] || code;
+        return season.charAt(0).toUpperCase() + season.slice(1);
     }
 
     // Le rang du tour n'intéresse personne : ce qui situe un trimestre, c'est sa date. Les
@@ -225,7 +225,7 @@
             // reached have to be deduced from their position.
             var number = played ? t.turn : last.turn + (i - lastIndex);
             var q = played
-                ? { quarter: QUARTERS[t.season] || 0, year: t.year }
+                ? { season: seasonName(t.season), year: t.year }
                 : quarterAfter(last, i - lastIndex);
 
             var hasCard = played && t.cardsPlayed && t.cardsPlayed.length > 0;
@@ -242,10 +242,11 @@
             var b = el("button", cls);
             b.type = "button";
             b.disabled = !played;
-            // Trimestre au-dessus, millésime au-dessous : « T4 21 » d'un seul tenant se lit
-            // « 14 21 » dans une graisse de titre. Deux lignes, et chacune respire.
+            // Saison au-dessus, millésime au-dessous. « T4 » est un rang de trimestre, pas
+            // une date : l'hiver dit tout de suite ce que le rang oblige à traduire — le gel,
+            // le chauffage, la boue de la fonte.
             var label = el("span", "t-quarter");
-            label.appendChild(el("b", null, "T" + q.quarter));
+            label.appendChild(el("b", null, q.season));
             label.appendChild(el("i", null, String(q.year)));
             b.appendChild(label);
 
