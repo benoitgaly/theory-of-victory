@@ -34,6 +34,7 @@
     var state = { gameIndex: 0, turnIndex: 0, phase: 0 };
 
     var SEASONS = { Winter: "hiver", Spring: "printemps", Summer: "été", Autumn: "automne" };
+    var QUARTERS = { Winter: 1, Spring: 2, Summer: 3, Autumn: 4 };
 
     // The three flows the front consumes, and only those: a stave is a resource with a need
     // and therefore a coverage. Men have neither — they are the size of the barrel, since it
@@ -167,12 +168,18 @@
     // and that origin would have dated every unplayed quarter one season off.
     function quarterAfter(last, steps) {
         var order = ["Winter", "Spring", "Summer", "Autumn"];
-        var short = ["hiver", "print", "été", "autom"];
         var from = order.indexOf(last.season);
-        if (from < 0) { return { season: "", year: last.year }; }
+        if (from < 0) { return { quarter: 0, year: last.year }; }
 
         var total = from + steps;
-        return { season: short[total % 4], year: last.year + Math.floor(total / 4) };
+        return { quarter: (total % 4) + 1, year: last.year + Math.floor(total / 4) };
+    }
+
+    // La frise se lit au calendrier, pas au compteur de parties : « T1 22 » est le premier
+    // trimestre de 2022, quel que soit le rang de ce trimestre dans le scénario. Le numéro
+    // de tour reste dans l'infobulle, pour qui suit la mécanique.
+    function quarterLabel(q) {
+        return "T" + q.quarter + " " + String(q.year).slice(2);
     }
 
     function renderTimeline() {
@@ -206,7 +213,7 @@
             // reached have to be deduced from their position.
             var number = played ? t.turn : last.turn + (i - lastIndex);
             var q = played
-                ? { season: (SEASONS[t.season] || "").slice(0, 5), year: t.year }
+                ? { quarter: QUARTERS[t.season] || 0, year: t.year }
                 : quarterAfter(last, i - lastIndex);
 
             var hasCard = played && t.cardsPlayed && t.cardsPlayed.length > 0;
@@ -223,8 +230,12 @@
             var b = el("button", cls);
             b.type = "button";
             b.disabled = !played;
-            b.appendChild(el("span", null, "T" + number));
-            b.appendChild(el("span", "t-season", q.season + " " + String(q.year).slice(2)));
+            // Le millésime s'écrit en retrait : « T4 21 » d'un seul tenant se lit « 14 21 »
+            // dans une graisse de titre, et la frise devient illisible d'un coup d'œil.
+            var label = el("span", "t-quarter");
+            label.appendChild(el("b", null, "T" + q.quarter));
+            label.appendChild(el("i", null, String(q.year).slice(2)));
+            b.appendChild(label);
 
             if (played) {
                 b.title = "Tour " + number + " · " + (SEASONS[t.season] || t.season) + " " + t.year;
@@ -2764,44 +2775,9 @@
             : renderMap(t);
         mapPanel.appendChild(mapSvg);
 
-        // La carte hexagonale porte sa propre légende : n'en afficher une seconde
-        // que pour le tracé de repli, sinon les deux se contredisent.
-        if (!hexMap) {
-            var legend = el("div", "map-legend");
-            [
-                { label: "Territoire occupé", colour: "rgba(168,50,42,0.25)" },
-                { label: "Ligne de contact", colour: "#a8322a" },
-                { label: "Ligne de février 2022", colour: "#6b7280" }
-            ].forEach(function (l) {
-                var c = el("div", "chip");
-                var i = el("i");
-                i.style.background = l.colour;
-                c.appendChild(i);
-                c.appendChild(el("span", null, l.label));
-                legend.appendChild(c);
-            });
-            mapPanel.appendChild(legend);
-        }
         var leftCol = el("div");
         leftCol.appendChild(mapPanel);
         field.appendChild(leftCol);
-
-        // Le journal appartient à la colonne de la carte : les deux racontent le même trimestre.
-        if (t.narrative && t.narrative.length) {
-            var narr = el("section", "panel narrative");
-            narr.style.marginTop = "16px";
-            narr.appendChild(el("div", "panel-title", "Journal du trimestre"));
-            var ul = el("ul");
-            t.narrative.forEach(function (n) {
-                var li = el("li", null, n);
-                // Chaque ligne s'ouvre sur un camp : on le rend repérable au liseré.
-                if (/^Russie\b/.test(n)) { li.className = "ru"; }
-                else if (/^Ukraine\b/.test(n)) { li.className = "ua"; }
-                ul.appendChild(li);
-            });
-            narr.appendChild(ul);
-            leftCol.appendChild(narr);
-        }
 
         var right = el("div");
         var sectorPanel = el("section", "panel");
@@ -2906,6 +2882,11 @@
 
         var stage = document.getElementById("stage");
         stage.innerHTML = "";
+
+        // Les deux écrans de génération portent la même chaîne : sans teinte de camp, on ne
+        // sait plus lequel on lit. La couleur du camp habille l'écran entier, pas seulement
+        // le fanion du titre.
+        stage.className = state.phase === 0 ? "side-ru" : (state.phase === 1 ? "side-ua" : "");
 
         var t = turn();
         if (state.phase === 0) {

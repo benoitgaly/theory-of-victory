@@ -244,115 +244,6 @@ window.tovHexMap = (function () {
         });
     }
 
-    /* ---------------- Legend and scale ---------------- */
-
-    // A player aid, not a press caption: it teaches how to read the board in ten seconds.
-    // Terrain states first, then the resolution table the engine already applies but has
-    // never shown — a printed table turns a spectator into a reader, because he predicts
-    // the result instead of suffering it.
-    function legend(svg, kmPerPixel) {
-        var x = 16, y = 214, w = 248;
-        svg.appendChild(svgEl("rect", {
-            x: x, y: y, width: w, height: 268, rx: 6,
-            fill: "#fffdf8", stroke: "#ded8ca", "stroke-width": "1", opacity: "0.95"
-        }));
-
-        // A running baseline rather than offsets from the panel: blocks grow and shrink as
-        // the aid gains pieces, and nothing must ever land on top of anything else.
-        var cy = y + 18;
-
-        function heading(label) {
-            svg.appendChild(text(x + 14, cy, label, {
-                "font-size": "8.5", "font-weight": "700", "letter-spacing": "0.13em", fill: "#8a8172"
-            }));
-        }
-
-        heading("TERRAIN");
-        cy += 16;
-
-        var rows = [
-            { label: "Sous contrôle ukrainien", fill: COLOUR.land, hatch: null, stroke: COLOUR.grid },
-            { label: "Sous contrôle russe", fill: "rgba(168,50,42,0.28)", hatch: null, stroke: COLOUR.grid },
-            { label: "Conquis depuis février 2022", fill: "rgba(168,50,42,0.12)", hatch: "ru", stroke: COLOUR.grid },
-            { label: "Reconquis", fill: "rgba(30,95,168,0.12)", hatch: "ua", stroke: COLOUR.grid },
-            { label: "Contesté — ligne de contact", fill: "rgba(168,50,42,0.14)", hatch: null, stroke: COLOUR.ru }
-        ];
-
-        rows.forEach(function (row) {
-            var ry = cy, cx = x + 20, r = 6.4;
-            var d = "";
-            for (var k = 0; k < 6; k++) {
-                var a = k * Math.PI / 3;
-                d += (k === 0 ? "M" : "L") + (cx + r * Math.sin(a)).toFixed(1) + " " + (ry - r * Math.cos(a)).toFixed(1);
-            }
-            d += "Z";
-            svg.appendChild(svgEl("path", { d: d, fill: COLOUR.land, stroke: "none" }));
-            svg.appendChild(svgEl("path", {
-                d: d, fill: row.fill, stroke: row.stroke,
-                "stroke-width": row.stroke === COLOUR.ru ? "1.1" : "0.7"
-            }));
-            if (row.hatch) {
-                svg.appendChild(svgEl("path", { d: d, fill: "url(#tov-hatch-" + row.hatch + "-" + seq + ")", stroke: "none" }));
-            }
-            svg.appendChild(text(cx + 13, ry + 3.4, row.label, {
-                "font-size": "9.5", fill: "#4a5259"
-            }));
-            cy += 17.5;
-        });
-
-        // The resolution table. Deterministic — these are the engine's own thresholds, not
-        // a die roll: the same ratio always gives the same result.
-        cy += 12;
-        heading("RAPPORT DE FORCE ET RÉSULTAT");
-        cy += 15;
-
-        var crt = [
-            ["< 1,1", "Butée — aucun mouvement", "×5"],
-            ["1,1–2,0", "Grignotage — 0 à 10 km", "×4"],
-            ["2,0–3,0", "Avance — 10 à 20 km", "×2,5"],
-            ["> 3,0", "Percée — jusqu'à 30 km", "×1,2"],
-            ["Rompue", "Avance libre — mouvement ×3,5", "—"]
-        ];
-
-        crt.forEach(function (row) {
-            svg.appendChild(text(x + 14, cy, row[0], {
-                "font-size": "8.5", "font-weight": "700", fill: "#4a5259"
-            }));
-            svg.appendChild(text(x + 56, cy, row[1], { "font-size": "8.5", fill: "#4a5259" }));
-            svg.appendChild(text(x + w - 14, cy, row[2], {
-                "font-size": "8.5", fill: "#8a8172", "text-anchor": "end"
-            }));
-            cy += 12.5;
-        });
-
-        // Scale bar, 100 km. The drawn hexagon is a reading unit: the engine moves ten-kilometre
-        // hexes, so distances are always given in kilometres and never in hexagons.
-        cy += 5;
-        var barX = x + 14, barW = 100 / kmPerPixel;
-        svg.appendChild(svgEl("path", {
-            d: "M" + barX + " " + (cy - 4) + "V" + cy + "H" + (barX + barW) + "V" + (cy - 4),
-            fill: "none", stroke: "#5c6470", "stroke-width": "1.2"
-        }));
-        svg.appendChild(text(barX + barW + 7, cy + 3, "100 km · 1 hex de lecture = " + HEX_KM + " km", {
-            "font-size": "9", fill: "#6b7280"
-        }));
-        cy += 18;
-
-        // The sentence the whole game turns on: the line is not where a war is decided.
-        [
-            "La défense ne se rompt jamais ici. Elle se rompt",
-            "quand la génération de force passe sous le seuil",
-            "trois trimestres de suite."
-        ].forEach(function (line) {
-            svg.appendChild(text(x + 14, cy, line, { "font-size": "8", fill: "#6b7280" }));
-            cy += 10.5;
-        });
-
-        svg.appendChild(text(x, y + 288, "Le front est un thermomètre. Ce qui décide se passe derrière.", {
-            "font-size": "10", "font-style": "italic", "font-family": "Georgia, serif", fill: "#8a8172"
-        }));
-    }
-
     /* ---------------- Render ---------------- */
 
     function render(turn, board, geo, opts) {
@@ -514,8 +405,6 @@ window.tovHexMap = (function () {
         } else {
             callouts(svg, turn, board, geo, p);
         }
-
-        legend(svg, project.kmPerPixel);
 
         return svg;
     }
