@@ -179,8 +179,18 @@ public static class CardEffectApplier
         manpower.TotalMobilisedEver += taken;
         manpower.TrainingPipeline.Enqueue(taken);
 
-        // A mobilisation also raises the force the command intends to sustain.
-        manpower.TargetForceSize += taken * 0.6d;
+        // A mobilisation raises the force the command intends to sustain — but far less than
+        // its own size, because most of the men it produces go to REPLACE losses rather than
+        // to enlarge the order of battle. Russia mobilised 300 000 men in the autumn of 2022
+        // and its grouping in Ukraine did not grow by 300 000: the budget-derived series puts
+        // it at 523 548 in mid-2023, 667 114 in mid-2024, 723 477 in mid-2025.
+        //
+        // At the 0,6 this used to carry, the three mobilisation cards of the opening turns
+        // added 267 000 to the establishment between them and the army hit its wartime ceiling
+        // by the summer of 2023, three years early — 671 000 modelled against 523 548 observed.
+        // At 0,25 the same three cards track the series to within five per cent all the way to
+        // 2025. See docs/design/04-calibration-effectifs.md §4.1.
+        manpower.TargetForceSize += taken * 0.25d;
 
         double gdpHit = manpower.MarginalGdpCost(taken);
         belligerent.Economy.ProductiveCapacityBillions =

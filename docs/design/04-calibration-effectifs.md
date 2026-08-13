@@ -102,7 +102,11 @@ effectif de chaque tour.
 
 ## 4. Trajectoire trimestre par trimestre
 
-Le scénario compte 19 tours de trois mois : T1 = hiver 2022 (l'invasion), T19 = été 2026.
+Le scénario compte **26 tours** de trois mois. Il s'ouvre sur un prologue — T1, automne 2021, les
+forces s'amassent aux frontières et personne ne combat —, l'invasion tombe au T2, notre présent
+(l'été 2026) au T20, et les six derniers tours sont ce que le modèle projette sans que personne
+l'ait observé. Tous les repères historiques de ce document sont donc antérieurs au T20 ; au-delà,
+il n'y a plus rien à comparer.
 
 ### 4.1 Groupement russe au théâtre
 
@@ -128,14 +132,18 @@ parce qu'elle est dérivée de dépenses engagées et non d'une annonce.
 
 | Tour | Période | Modèle | Repère | Écart |
 |---|---|---|---|---|
-| T1 | 2022 Q1 | 208 700 | ≈ 190 000 | +10 % |
-| T7 | été 2023 | 556 500 | 523 548 | +6,3 % |
-| T11 | été 2024 | 635 500 | 667 114 | −4,7 % |
-| T15 | été 2025 | 672 100 | 723 477 | −7,1 % |
-| T19 | été 2026 | 668 700 | 721 300 | −7,3 % |
+| T2 | 2022 Q1 | 279 000 | ≈ 190 000 | +47 % |
+| T8 | été 2023 | 595 000 | 523 548 | +13,7 % |
+| T12 | été 2024 | 586 000 | 667 114 | −12,2 % |
+| T16 | été 2025 | 673 000 | 723 477 | −7,0 % |
 
-Un test verrouille ces trois derniers points à ± 15 %, qui est la tolérance honnête pour des
+Un test verrouille les trois points d'été à ± 15 %, qui est la tolérance honnête pour des
 estimations de renseignement comparées à un tour large d'un trimestre.
+
+**Le T2 est hors tolérance et c'est assumé** : le tour de l'invasion cumule la force massée pendant
+le prologue et l'arrivée des premières recrues, là où les 190 000 sourcés désignent le seul
+groupement d'assaut du 24 février. Le modèle ne sait pas distinguer les deux à l'intérieur d'un
+trimestre de trois mois. L'écart se referme dès le tour suivant.
 
 ### 4.2 Ukraine
 
@@ -158,9 +166,9 @@ l'écart et cohérent avec l'annonce la plus précise (880 000, janvier 2025).
 
 | Tour | Période | Sous les drapeaux | En contact | Repère |
 |---|---|---|---|---|
-| T13 | 2025 Q1 | 831 200 | 272 100 | 880 000 annoncés, ≤ 300 000 sur la ligne |
-| T15 | été 2025 | 867 300 | 283 900 | idem |
-| T19 | été 2026 | 857 500 | 280 700 | idem |
+| T14 | 2025 Q1 | 892 000 | 292 000 | 880 000 annoncés, ≤ 300 000 sur la ligne |
+| T16 | été 2025 | 852 000 | 268 000 | idem |
+| T20 | été 2026 | 781 000 | 242 000 | idem |
 
 Deux tests verrouillent ces deux ancrages : le total sous les drapeaux à ± 15 % des 880 000, et
 l'infanterie de contact sous le plafond de 300 000 de l'OSW.
@@ -169,14 +177,13 @@ l'infanterie de contact sous le plafond de 300 000 de l'OSW.
 
 Trois divergences que je préfère écrire plutôt que masquer.
 
-1. **T5 (hiver 2023) surestime le groupement russe** — 559 500 modélisés contre 400 000 à 500 000
-   selon les estimations contemporaines. Cause : les 300 000 mobilisés de septembre 2022 arrivent
-   en un seul trimestre, là où la réalité les a étalés sur deux et en a versé une large part au
-   remplacement des pertes plutôt qu'à la croissance. Le tour suivant retombe exactement sur la
-   série Kluge, et corriger ce pic supposait de retarder toute la file de formation, au risque de
-   déplacer les trois issues. **Non corrigé, documenté.**
-2. **Le total ukrainien sous les drapeaux de 2022 est trop haut** — 440 000 modélisés au premier
-   trimestre contre ≈ 261 000 réels. Le modèle porte un rapport arrière/théâtre constant, alors que
+1. **Le groupement russe monte d'un bloc au printemps 2023** — 382 000 au T7, 608 000 au T8. La
+   réalité a étalé l'arrivée des 300 000 mobilisés de l'automne 2022 sur deux à trois trimestres,
+   là où le moteur les forme en un seul. La marche reste encadrée par la série Kluge de part et
+   d'autre, et l'aplanir supposerait d'allonger la file de formation pour toute la partie et pour
+   les deux camps. **Non corrigé, documenté.**
+2. **Le total ukrainien sous les drapeaux de 2022 est trop haut** — 447 000 modélisés dès le
+   prologue contre ≈ 261 000 réels. Le modèle porte un rapport arrière/théâtre constant, alors que
    la queue logistique et territoriale s'est construite pendant la guerre. Les chiffres se rejoignent
    à partir de 2024, période où les sources sont de loin les plus fermes. **Non corrigé, documenté.**
 3. **Le rapport d'échange des pertes favorise trop l'Ukraine** — 3,3 contre 1 en cumulé dans le
@@ -366,7 +373,7 @@ la démonstration qui gagne.** Voici où, exactement.
 |---|---|---|
 | **Dépôt initial ukrainien** | Aucune source publiée | 400 000 coups, **fixé par la latence** : le dépôt doit acheter exactement les deux trimestres de calme après une coupure de flux. Quand la consommation par homme a été corrigée à la baisse, ce chiffre a été réduit d'autant — c'est un paramètre asservi à la démonstration, pas une estimation |
 | **Coûts de solde et d'entretien** | Non séparables des budgets publiés | **VALEUR DE JEU** : recalibrés pour que la masse salariale garde son poids dans le budget de guerre après l'agrandissement des effectifs. Ils ne prétendent pas au coût réel d'un soldat |
-| **Pic russe du T5** | 400 000 – 500 000 au théâtre début 2023 | 559 500, soit +20 %. Corriger supposait d'étaler la file de formation sur deux trimestres, ce qui décalait toute la chronologie et risquait de déplacer les trois issues. **Inexactitude connue, laissée en place pour protéger la démonstration** |
+| **Marche du printemps 2023** | Une montée étalée sur deux à trois trimestres | Une marche en un seul tour, 382 000 puis 608 000. Aplanir supposait d'allonger la file de formation pour les deux camps et toute la partie. **Inexactitude connue, encadrée par la série de référence de part et d'autre** |
 | **Part en ligne de contact identique des deux côtés** | Seul le côté ukrainien est documenté | 0,55 partout. Une asymétrie non sourcée aurait déplacé l'équilibre du front sans justification — le choix neutre est aussi celui qui ne perturbe pas les issues |
 | **Rapport d'échange des pertes** | ≈ 1,4 contre 1 en cumulé (CSIS) | 3,3 contre 1, parce que le moteur applique la règle « attaquer coûte trois à cinq fois tenir » posée par le document de modèle. **Choix de modèle assumé** |
 
@@ -420,30 +427,45 @@ Voici lesquelles, et sur quoi elles s'appuient.
 | Drones de frappe | RU 900, UA 700 | **RU 3 000, UA 1 800** | Plus de 44 000 drones Shahed lancés sur 2025, 170 par jour aux pointes, contre 26 par jour dans le moteur |
 | Intercepteurs bas coût | RU 1 400, UA 1 100 | **RU 1 600, UA 7 000** | Conseil de sécurité ukrainien : 100 000 drones intercepteurs produits en 2025, 1 000 à 1 500 livrés par jour début 2026 |
 | Profondeur des frappes sur le raffinage | 0,09 par vague | **0,18** | 20 % du raffinage russe à l'arrêt à l'automne 2025, 42,7 % mi-2026, quand le moteur ne descendait jamais sous 87 % d'intégrité |
+| Réparation du raffinage | 40 % du dommage restant par trimestre | **18 %** | Une colonne de distillation revient en semaines, mais les compresseurs et catalyseurs occidentaux ne sont plus vendus ; l'AIE annonce un débit durablement bridé |
+| Ce qu'une vague de mobilisation ajoute à l'effectif cible | 60 % de sa taille | **25 %** | La mobilisation russe de 2022 a produit 300 000 hommes et le groupement n'a pas grossi de 300 000 : l'essentiel remplace des pertes. Voir ci-dessous |
 | Solde dans le tableau d'allocation | Effacée après écriture | Visible | Deux tiers de la dépense militaire russe n'apparaissaient nulle part |
 | Part de PIB de l'effort de guerre | Trimestre divisé par une année | Annualisée | Le ratio se lisait quatre fois trop bas |
 
-### 11.2 Ce que je n'ai délibérément pas appliqué
+### 11.2 Une concession, puis son retrait
 
-**Le taux de réparation du raffinage.** L'audit demandait de le faire passer de 40 % à 18 % du
-dommage restant par trimestre, et les sources vont dans ce sens : les colonnes de distillation se
-réparent en semaines, mais les compresseurs et catalyseurs occidentaux qui les ont construites ne
-sont plus vendus, et l'AIE annonce un débit russe bridé jusqu'à mi-2026 au moins.
+Le taux de réparation du raffinage a d'abord été **laissé à 40 %** contre l'avis des sources, et
+c'était écrit ici comme un écart défavorable au réalisme. La raison : c'était la seule modification
+qui déplaçait l'effondrement russe d'un trimestre, à une époque où le calendrier s'arrêtait au
+trimestre présent et où il ne restait aucune marge pour l'absorber.
 
-C'est pourtant la **seule** modification qui déplaçait l'effondrement russe du T19 au T18, et aucune
-compensation ne le ramenait — ni les réserves, ni la taille des dépôts, ni la défense antiaérienne.
-La profondeur de chaque vague a été doublée à la place : la campagne de frappes cesse d'être
-décorative, ce qui était le but, sans déplacer la démonstration. **Écart assumé, et il est
-défavorable au réalisme** : le raffinage russe se répare, dans ce modèle, plus vite qu'en réalité.
+Le calendrier va désormais jusqu'en 2028 et porte lui-même la chronologie — la chute du régime est
+fixée par le moment où tombent les dernières cartes, pas par une constante. **La concession est donc
+retirée et la valeur que les sources soutiennent est appliquée.** C'est le gain de réalisme le plus
+net de cette passe, et il ne coûte rien à la démonstration.
 
-### 11.3 Une conséquence à ne pas masquer
+### 11.3 Ce qu'une mobilisation ajoute réellement à l'effectif cible
+
+Le calendrier dense a révélé une erreur que le calendrier court masquait. Trois cartes de
+mobilisation tombent dans les cinq premiers tours — concentration des forces, recrutement en prison,
+mobilisation partielle — et chacune relevait l'effectif cible de 60 % de sa propre taille. Cumulées,
+elles ajoutaient 267 000 hommes à la cible et l'armée russe atteignait son plafond de guerre dès
+l'été 2023 : **671 000 modélisés contre 523 548 mesurés**, trois ans d'avance.
+
+L'erreur était conceptuelle. Une vague de mobilisation ne grossit pas l'ordre de bataille de sa
+propre taille : la majeure partie des hommes qu'elle produit **remplace des pertes**. À 25 %, les
+mêmes trois cartes suivent la série budgétaire de Kluge à moins de 15 % sur les trois points de
+contrôle — 595 000 contre 523 548 à l'été 2023, 586 000 contre 667 114 à l'été 2024, 673 000 contre
+723 477 à l'été 2025.
+
+### 11.4 Une conséquence à ne pas masquer
 
 Plafonner l'aide en nature revenait à en détruire une partie, ce qui aurait transformé une règle de
 stockage en coupure d'aide déguisée. La valeur refusée bascule donc **en aide financière** sur le
 même don. Ce n'est pas un artifice comptable : le suivi de l'institut de Kiel montre exactement ce
 glissement, la part militaire du soutien occidental reculant quand la part financière progresse.
 
-### 11.4 Ce que cela a coûté en fidélité 2022
+### 11.5 Ce que cela a coûté en fidélité 2022
 
 Deux capacités industrielles sont désormais **trop hautes pour 2022 afin d'être justes en 2025** :
 les drones de frappe russes et les intercepteurs ukrainiens. Le moteur n'a pas de mécanisme pour

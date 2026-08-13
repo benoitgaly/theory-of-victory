@@ -602,46 +602,104 @@ d'obus. Le piège central du scénario devient jouable.
 
 ---
 
-## 14. Le front de 2022 doit bouger — ce que le modèle peut, et ce qu'il ne peut pas
+## 14. Le front de 2022 — état initial, trajectoire, et ce que le modèle peut en produire
 
-La demande est juste : un joueur qui ouvre la frise sur 2022 doit voir la ruée, puis le reflux. C'est
-le trimestre le plus connu de la guerre et le seul où la carte a vraiment bougé. Aujourd'hui elle ne
-bouge pas.
+### Le défaut observé
 
-**Les bons rapports de force n'y suffiront pas, et l'arithmétique le dit avant toute simulation.**
+La carte du tour 1, automne 2021, affiche le territoire occupé de 2024 : le corridor terrestre
+complet vers la Crimée, Kherson et Zaporijjia sous contrôle russe, des pions engagés à Bakhmout,
+Pokrovsk et Vouhledar, une légende « Conquis depuis février 2022 » — trois mois avant l'invasion — et
+un bandeau d'arrière russe annonçant la saturation d'une campagne de frappes sur le raffinage.
 
-Les huit secteurs modélisés totalisent quarante-huit hexagones de largeur, soit quatre cent
-quatre-vingts kilomètres de front. Un hexagone d'avance sur toute la ligne vaut donc 4 800 km².
+Ce que ce tour devrait montrer : **la ligne de 2014, et rien d'autre.** La Crimée et les deux
+enclaves du Donbass, de l'ordre de quarante-trois mille kilomètres carrés.
+
+### La cause : cinq ancrages sur huit sont posés sur la ligne d'aujourd'hui
+
+`hexmap.js` trace la ligne de contact à partir des ancrages de secteur — `lon + pushLon × hexes` — et
+colore en occupé tout ce qui se trouve à l'est. Au tour 1 le cumul d'hexagones vaut zéro : la carte
+affiche donc exactement les ancrages. Or le commentaire de `FrontSector` les annonce sur « la ligne
+de contact, février 2022 » alors qu'ils sont posés, pour la plupart, sur la ligne actuelle.
+
+| Secteur | Ancrage actuel | Ancrage de février 2022 | Écart |
+|---|---|---|---|
+| `kharkiv` | 36,95 / 50,05 | 36,95 / **50,35** — la frontière d'État | ~33 km |
+| `kupiansk` | 37,75 / 49,55 | **38,20** / 49,55 — la frontière d'État | ~33 km |
+| `lyman` | 38,05 / 49,00 | **38,70** / 49,00 — à l'est de Kreminna | ~47 km |
+| `bakhmut` | 38,15 / 48,60 | **38,45** / 48,55 — Debaltseve | ~22 km |
+| `pokrovsk` | 37,80 / 48,25 | 37,75 / **48,14** — Avdiïvka | ~12 km |
+| `vuhledar` | 37,30 / 47,75 | 37,40 / 47,80 — Marïnka–Chyrokyne | ~9 km |
+| `zaporizhzhia` | 35,90 / 47,45 | **aucun front n'existait** | — |
+| `kherson` | 33,40 / 46,75 | **33,70 / 46,16** — l'isthme de Perekop | ~67 km |
+
+Coordonnées de travail, justes à une dizaine de kilomètres : la ligne de 2014 est connue, son tracé
+exact ne l'est pas au degré près. Deux secteurs — `pokrovsk` et `vuhledar` — sont déjà presque au bon
+endroit, ce qui explique que le Donbass soit à peu près crédible et que le sud ne le soit pas du tout.
+
+### La trajectoire de 2022
+
+| Trimestre | Ce qui se passe | Occupé au-delà de la ligne de 2014 |
+|---|---|---|
+| T1 · automne 2021 | Rien. La ligne de 2014 | position de départ |
+| T2 · hiver 2022 | L'invasion sur quatre axes : Kyiv, Kharkiv, le Donbass, le sud depuis la Crimée | pic à ~120 000 km² à la mi-mars |
+| T3 · printemps 2022 | Retrait du nord — Kyiv, Tchernihiv, Soumy — et chute de Marioupol : le corridor terrestre se referme | ~90 000 km² |
+| T4 · été 2022 | Front figé, HIMARS, les dépôts reculent de quatre-vingts kilomètres | ~90 000 km² |
+| T5 · automne 2022 | Kharkiv repris en une semaine, puis retrait de Kherson rive droite | ~78 000 km² |
+
+### Les rapports de force ne suffiront pas, et l'arithmétique le dit avant toute simulation
+
+Les huit secteurs totalisent quarante-huit hexagones de largeur, soit quatre cent quatre-vingts
+kilomètres de front. Un hexagone d'avance sur toute la ligne vaut donc 4 800 km².
 `FrontPhase.MovementFor` plafonne l'avance à **trois hexagones par trimestre** — trente kilomètres,
 et le commentaire précise que c'est déjà une percée historique. Même en portant le rapport de force
 au-delà de trois pour un sur les huit secteurs à la fois, le maximum atteignable est de
-**14 400 km² par trimestre**. Si la défense rompt, le multiplicateur d'effondrement porte ce plafond
+**14 400 km² par trimestre** ; si la défense rompt, le multiplicateur d'effondrement porte ce plafond
 à 50 400 km².
 
-Or le pic de mars 2022 est de l'ordre de **120 000 km²** au-delà des lignes de 2014. Il faudrait
-vingt-cinq hexagones de profondeur, soit deux cent cinquante kilomètres, sur tout le front et en un
-seul trimestre. Un effondrement ukrainien total, sur les huit secteurs simultanément, en produirait
-quarante-deux pour cent.
+Le pic de mars 2022 demanderait vingt-cinq hexagones de profondeur — deux cent cinquante kilomètres —
+sur tout le front et en un seul trimestre. **Un effondrement ukrainien total, sur les huit secteurs
+simultanément, en produirait quarante-deux pour cent.** Et il ne se produirait pas : le multiplicateur
+de rupture ne s'applique qu'à un défenseur déjà passé sous le seuil pendant plusieurs trimestres, ce
+qui n'est pas le cas au deuxième tour d'une partie.
 
-Trois causes se cumulent, et **aucune ne relève des cartes ni du calendrier** :
+Trois causes se cumulent, et aucune ne relève des cartes ni du calendrier :
 
-1. **La géographie manque.** Les axes de mars 2022 — Kyiv, Tchernihiv, Soumy, Jytomyr — ne sont pas
-   des secteurs du modèle. Les huit secteurs couvrent l'arc Kharkiv-Kherson, c'est-à-dire le théâtre
-   de la guerre d'usure, pas celui de la manœuvre. Une part substantielle du pic est hors domaine.
+1. **La géographie manque.** Les axes de mars 2022 — Kyiv, Tchernihiv, Soumy — ne sont pas des
+   secteurs. Zaporijjia et Kherson, eux, existent comme secteurs alors qu'aucun front n'y passait.
 2. **Le plafond de mouvement est calibré pour l'usure.** Trente kilomètres par trimestre, quand les
    colonnes russes ont couvert cent à deux cents kilomètres en trois semaines vers Kherson et
    Melitopol.
-3. **La table de ratio ne peut pas être franchie assez fort.** Il faut dépasser trois pour un pour
-   toucher le plafond, et la doctrine d'ouverture n'y parvient sur aucun secteur.
+3. **La table de ratio ne peut pas être franchie assez fort** par la doctrine d'ouverture.
 
-### Ce que je recommande : la densité, pas un script
+### Ce qui est faisable sans toucher au modèle, et ce qui ne l'est pas
+
+**Faisable, et cela suffit à faire disparaître le défaut du prologue :** reposer les huit ancrages sur
+la ligne de février 2022. C'est une correction de données de départ, dans `BuildSectors`, sans une
+ligne de physique. Le tour 1 affiche alors la Crimée et les deux enclaves, et rien d'autre.
+
+**Et le modèle produit alors une partie de la ruée tout seul.** Avec les ancrages replacés, il lui
+faut avancer d'environ soixante-cinq kilomètres au sud et de vingt à cinquante dans le Donbass pour
+rejoindre la ligne d'aujourd'hui. À trois hexagones par trimestre, c'est deux à trois trimestres —
+soit exactement 2022. Le rythme réel était de trois semaines suivies d'un reflux ; le modèle le
+racontera en trois trimestres sans reflux au sud. C'est compressé, mais ce n'est plus faux : la carte
+montrera une ruée puis un grignotage, au lieu d'une ligne immobile posée sur le présent.
+
+Vérification incidente : sur quatre ans, le modèle produit déjà 5,9 hexagones d'avance sur Pokrovsk,
+soit cinquante-neuf kilomètres. C'est l'ordre de grandeur juste — le Donbass est donc correctement
+calibré, et seul son état initial était faux.
+
+**Non faisable sans toucher au modèle :** le pic de mars 2022 et le reflux d'automne dans leur
+amplitude réelle. Il y faudrait les axes du nord comme secteurs à durée de vie limitée, et un plafond
+de mouvement qui cesse d'être une constante.
+
+### La réponse retenue : la densité, pas un script
 
 Le mécanisme qui manque n'est pas un multiplicateur, c'est **la densité de défense au kilomètre de
 front**. En février 2022, l'Ukraine tenait environ mille deux cents kilomètres avec deux cent
 cinquante mille hommes et aucune fortification au sud : la percée n'a pas été un exploit tactique,
-elle a eu lieu là où il n'y avait personne. Et le reflux de l'automne s'explique exactement de la
-même façon — la Russie tenait ces cent vingt mille kilomètres carrés avec la même densité dérisoire,
-et Kharkiv est tombé en une semaine parce que la ligne était vide.
+elle a eu lieu là où il n'y avait personne. Et le reflux de l'automne s'explique exactement de la même
+façon — la Russie tenait ces cent vingt mille kilomètres carrés avec la même densité dérisoire, et
+Kharkiv est tombé en une semaine parce que la ligne était vide.
 
 Le moteur a déjà tout ce qu'il faut pour le calculer : `Manpower.InContact`, `sector.Width` et
 `sector.DefenderFortification`. Il lui manque seulement de laisser le plafond de `MovementFor`
@@ -651,22 +709,111 @@ tranchées, cède de cent.
 
 C'est de loin la meilleure réponse, pour une raison qui n'est pas technique : **le modèle démontre
 alors ce qu'il affirme** au lieu de le réciter. La ruée de 2022 et le reflux de l'automne sortent du
-même mécanisme, sans qu'aucune date ne soit écrite à la main, et la leçon — *on perd du terrain
-parce qu'on n'a pas assez d'hommes pour le tenir, pas parce que l'adversaire a été brillant* — est
+même mécanisme, sans qu'aucune date ne soit écrite à la main, et la leçon — *on perd du terrain parce
+qu'on n'a pas assez d'hommes pour le tenir, pas parce que l'adversaire a été brillant* — est
 précisément celle du jeu.
 
-### Si le scriptage est préféré
+### Conception du mécanisme de densité
 
-Il reste acceptable, mais alors la règle est absolue et sans exception : **le passé rejoué et
-l'avenir simulé ne sont pas la même chose, et le site est public.** Tout mouvement scripté doit être
-marqué comme tel dans les données, affiché comme tel à l'écran, et distingué des trimestres que le
-modèle calcule. Un visiteur informé doit pouvoir savoir, en un coup d'œil, quels tours sont une
+Décision arrêtée : **la densité, pas un script.** Ce qui suit est la conception, écrite avant la
+moindre ligne de code, et elle appelle une correction que je n'avais pas vue dans mon analyse
+précédente — le plafond de mouvement ne suffit pas seul.
+
+#### Le mécanisme ne marche qu'avec la doctrine d'ouverture qui va avec
+
+`FrontPhase.SectorManpowerShare` répartit les hommes du tenant selon les poids de doctrine. Avec la
+doctrine ukrainienne actuelle — 1,0 partout, 1,1 sur Bakhmout et Pokrovsk — **aucun secteur n'est
+jamais vide**, et une densité calculée sur cette répartition ne varierait presque pas. Le plafond
+resterait plat et rien ne bougerait.
+
+Or la répartition de février 2022 n'avait rien d'uniforme : l'Ukraine avait concentré ses forces
+terrestres dans le Donbass, où la ligne était fortifiée depuis 2014, et tenait le sud avec presque
+rien — une brigade pour deux cents kilomètres entre la Crimée et Kherson. C'est cette répartition,
+et non un défaut du modèle de combat, qui explique où la percée a eu lieu.
+
+Il faut donc **une doctrine d'ouverture** appliquée aux tours 1 et 2, dans `BuildDoctrineShifts` :
+effort massif sur le Donbass, quasi nul au sud, retour à une répartition uniforme dès que le front
+s'établit. Ordres de grandeur à tester : 1,5 sur `lyman`, `bakhmut`, `pokrovsk` et `vuhledar`, 0,15
+sur `kherson` et `zaporizhzhia`, 0,4 sur `kharkiv` et `kupiansk`.
+
+#### La formule
+
+Trois choses empêchent une percée de se transformer en exploitation, et le moteur les porte déjà
+toutes les trois : des hommes au kilomètre, des tranchées, et des drones.
+
+```
+densité   = InContact(tenant) × part du secteur × 1000 / (Width × 10)      hommes par km
+manque    = clamp(Dref / max(densité, 1), 1, 6)                            Dref = 220 h/km
+profondeur = manque / ((1 + fortification du tenant) × frictionDrone)
+plafond   = clamp(3 × profondeur, 3, 18)                                   hexagones par trimestre
+```
+
+`Dref = 220` est la densité que le modèle produit au départ sur une répartition uniforme —
+110 000 hommes en contact sur les 480 km de front modélisés. C'est, par construction, « une ligne
+tenue ». Le plancher du plafond reste à **3**, ce qui garantit que rien ne change dans la phase
+d'usure : la formule ne peut qu'élever le plafond, jamais l'abaisser.
+
+#### Ce que la formule donne, secteur par secteur
+
+| Situation | Densité | Fortif. | Drones | Plafond |
+|---|---|---|---|---|
+| Kherson, hiver 2022 — une brigade, aucune tranchée, aucun drone | ~38 h/km | 0 | 1,0 | **18 hex** — 180 km |
+| Donbass, hiver 2022 — concentré et fortifié depuis 2014 | ~450 h/km | 0,3 | 1,0 | **3 hex** — inchangé |
+| Pokrovsk, 2025 — ligne tenue, tranchées, drones des deux côtés | ~230 h/km | 0,4 | 1,45 | **3 hex** — inchangé |
+
+Le sud cède, le Donbass tient, et l'usure de 2024-2026 ne bouge pas d'un hexagone. C'est exactement
+ce qu'on cherche, et cela sort d'un seul calcul.
+
+**Le reflux de l'automne 2022 sort du même mécanisme, sans rien écrire.** À Kharkiv, c'est la Russie
+qui tient une ligne étirée sans fortifications : la formule lit sa densité, élève le plafond en
+faveur de l'Ukraine, et la contre-offensive reprend en un trimestre ce qui avait été pris en un.
+Un seul mécanisme explique l'avance et le recul — c'est ce qui le rend vrai.
+
+**Et il dit une chose que le jeu affirme sans jamais l'avoir démontrée** : c'est le drone qui a mis
+fin à la guerre de mouvement. En 2022 la friction vaut 1,0 et le plafond peut s'élever ; à partir de
+2023 elle monte vers 1,45 et le referme définitivement, quels que soient les effectifs. Le modèle
+produirait alors tout seul la bascule de la manœuvre vers l'usure.
+
+#### Deux pièges à éviter
+
+**Ne pas multiplier avec le multiplicateur d'effondrement.** `CollapseMovementMultiplier` vaut déjà
+3,5 quand le tenant a rompu. Combiné à un plafond de 18, il produirait 63 hexagones — six cent trente
+kilomètres en un trimestre, soit la moitié du pays. Les deux expriment la même chose : une défense
+qui n'existe plus. Il faut **retenir le maximum des deux, jamais leur produit**.
+
+**Surveiller l'épilogue.** Après la chute du régime, l'armée russe fond de 55 % par trimestre : sa
+densité s'effondre, et le plafond s'élèverait mécaniquement en faveur de l'Ukraine. C'est
+réaliste — c'est même exactement ce que raconte la phase de dénouement — mais il faut vérifier que
+l'avance reste lisible plutôt que de traverser le pays en un tour.
+
+#### Les points de vérification, à poser avant de coder
+
+1. **Pokrovsk reste à ~5,9 hexagones sur quatre ans.** C'est le témoin que la phase d'usure n'a pas
+   bougé. S'il s'envole, la formule mord là où elle ne devrait pas.
+2. **Le sud produit une quinzaine d'hexagones en 2022, puis se fige.**
+3. **Kharkiv et Kherson reculent à l'automne 2022**, sous la seule contre-offensive ukrainienne.
+4. **Les trois issues seront déplacées** — le front qui bouge change les pertes, donc les effectifs,
+   donc la puissance. C'est attendu, et c'est la passe de calibration qui suivra.
+
+
+### Le scriptage a été écarté, et la règle si l'on devait y revenir
+
+L'option a été examinée puis écartée : un script aurait produit la même carte en racontant le
+contraire — que le terrain se perd parce que l'adversaire a été brillant, quand il se perd parce
+qu'on n'a pas assez d'hommes pour le tenir. Si un mouvement devait malgré tout être scripté un jour,
+la règle serait absolue et sans exception : **le passé rejoué et l'avenir
+simulé ne sont pas la même chose, et le site est public.** Tout mouvement scripté doit être marqué
+comme tel dans les données, affiché comme tel à l'écran, et distingué des trimestres que le modèle
+calcule. Un visiteur informé doit pouvoir savoir, en un coup d'œil, quels tours sont une
 reconstitution et quels tours sont un résultat. Un scénario maquillé en sortie de modèle
 discréditerait tout le reste, y compris ce que le moteur calcule justement.
 
-Cette question ne se règle ni dans `cards.fr.json` ni dans le calendrier : elle appartient à
-`FrontPhase` et à `BuildSectors`. Je la documente ici parce qu'elle conditionne le prologue — un tour
-d'ouverture sans mouvement n'a de sens que si les tours suivants en produisent.
+### Deux défauts d'affichage annexes, visibles sur la même carte
+
+Le bandeau d'arrière russe annonce « SATURATION » sur une campagne de frappes contre le raffinage, et
+l'arrière ukrainien affiche « réseau : 2,7 GW perdus », au tour 1. Aucune frappe n'a eu lieu : ce sont
+les phases de frappe qui tournent pendant le prologue, le même défaut que les vingt-neuf mille pertes
+relevées en §2. Le drapeau `CombatStartsOnTurn` les règle toutes ensemble.
 
 ---
 

@@ -35,9 +35,16 @@ public sealed class ModelRulesTests
 
         // The invader breaks at the rear, not at the front: its power collapses while
         // the defender's holds. Cutting the money is what did it.
-        TurnSnapshot last = game.Turns[^1];
-        Assert.True(last.Invader.CombatPower < game.Turns[4].Invader.CombatPower);
-        Assert.True(last.Defender.ForceGenerationRatio >= 0.9d);
+        //
+        // Read on the turn the regime falls, not on the last turn of the run. What follows
+        // the collapse is the aftermath, where the beaten army dissolves and both sides'
+        // indicators describe a war that has already been decided — a fine thing to model,
+        // and a meaningless place to measure who was holding.
+        TurnSnapshot fall = game.Turns[game.Outcome.Turn - 1];
+        Assert.True(fall.Invader.CombatPower < game.Turns[4].Invader.CombatPower);
+        Assert.True(
+            fall.Defender.ForceGenerationRatio >= 0.9d,
+            $"Régénération ukrainienne à {fall.Defender.ForceGenerationRatio:F2} au tour de la chute russe.");
     }
 
     [Fact]
@@ -59,15 +66,20 @@ public sealed class ModelRulesTests
         PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
 
         Assert.NotNull(game.Outcome);
-        Assert.Equal("military_collapse", game.Outcome!.Code);
-        Assert.Equal(Side.Invader.Code, game.Outcome.WinnerSideCode);
+        Assert.Equal(Side.Invader.Code, game.Outcome!.WinnerSideCode);
+
+        // The run now ends on an armistice, but what has to be checked is what CAUSED it:
+        // the front broke, and it broke because the flow dried up. The first outcome the run
+        // ever recorded is the collapse itself; the armistice is only its epilogue.
+        string firstRecorded = game.Turns.First(turn => turn.Outcome is not null).Outcome!.Code;
+        Assert.Equal("military_collapse", firstRecorded);
 
         // The turn aid stops, nothing happens yet: stocks still cover the need.
-        TurnSnapshot cutTurn = game.Turns[5];
+        TurnSnapshot cutTurn = game.Turns[6];
         Assert.True(cutTurn.Defender.ForceGenerationRatio >= 0.95d);
 
         // Two turns later the flow has dried up and power has collapsed.
-        TurnSnapshot afterTurn = game.Turns[7];
+        TurnSnapshot afterTurn = game.Turns[8];
         Assert.True(afterTurn.Defender.CombatPower < cutTurn.Defender.CombatPower * 0.6d);
     }
 
@@ -180,22 +192,36 @@ public sealed class ModelRulesTests
     [Fact]
     public void TheInversion_TheMenSetTheMaterialRequirement_NeverTheReverse()
     {
+        // Raising the ESTABLISHMENT is the wrong handle, and finding that out is itself a
+        // result: Ukrainian recruitment is bound by what the treasury can pay for, quarter
+        // after quarter, so ordering a bigger army produces no men at all. Testing through it
+        // would compare two identical runs and pass on a tautology.
+        //
+        // The men themselves are the handle. A hundred thousand more men in the theatre from
+        // the first quarter, and the front must demand more shells for them.
         Scenario reference = UkraineScenario.Build(SupportVariant.Holds);
 
         Scenario larger = UkraineScenario.Build(SupportVariant.Holds);
-        larger.Defender.Manpower.TargetForceCeiling += 120d;
+        larger.Defender.Manpower.AtFront += 100d;
 
-        PlayedGame referenceGame = new GameRunner().Run(reference);
-        PlayedGame largerGame = new GameRunner().Run(larger);
-
-        SideSnapshot lean = referenceGame.Turns[^1].Defender;
-        SideSnapshot fat = largerGame.Turns[^1].Defender;
+        SideSnapshot lean = new GameRunner().Run(reference).Turns[0].Defender;
+        SideSnapshot fat = new GameRunner().Run(larger).Turns[0].Defender;
 
         Assert.True(fat.MenInTheatre > lean.MenInTheatre);
         Assert.True(
             fat.Need[ResourceKind.Weapons.Code] > lean.Need[ResourceKind.Weapons.Code],
             $"{fat.MenInTheatre:N0} hommes demandent {fat.Need[ResourceKind.Weapons.Code]:F0} "
                 + $"contre {lean.Need[ResourceKind.Weapons.Code]:F0} pour {lean.MenInTheatre:N0}.");
+
+        // And the other direction, which had never actually been tested: shells do not make
+        // men. Handing an army ten times its depot changes what it can fire and nothing about
+        // how many soldiers it has — men are not the output of a material flow.
+        Scenario stuffed = UkraineScenario.Build(SupportVariant.Holds);
+        stuffed.Defender.Stock.Add(ResourceKind.Weapons, 20_000d);
+
+        SideSnapshot armed = new GameRunner().Run(stuffed).Turns[0].Defender;
+        Assert.Equal(lean.MenInTheatre, armed.MenInTheatre);
+        Assert.Equal(lean.MenInContact, armed.MenInContact);
     }
 
     /// <summary>
@@ -251,9 +277,11 @@ public sealed class ModelRulesTests
     {
         PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
 
-        AssertWithin(523_548d, game.Turns[6].Invader.MenInTheatre, 0.15d, "été 2023");
-        AssertWithin(667_114d, game.Turns[10].Invader.MenInTheatre, 0.15d, "été 2024");
-        AssertWithin(723_477d, game.Turns[14].Invader.MenInTheatre, 0.15d, "été 2025");
+        // Indices, not turn numbers: the autumn 2021 prologue sits at index 0, so summer 2023
+        // is turn 8 and index 7.
+        AssertWithin(523_548d, game.Turns[7].Invader.MenInTheatre, 0.15d, "été 2023");
+        AssertWithin(667_114d, game.Turns[11].Invader.MenInTheatre, 0.15d, "été 2024");
+        AssertWithin(723_477d, game.Turns[15].Invader.MenInTheatre, 0.15d, "été 2025");
     }
 
     /// <summary>
@@ -266,7 +294,8 @@ public sealed class ModelRulesTests
     {
         PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
 
-        SideSnapshot ukraine = game.Turns[12].Defender;
+        // Zelensky spoke on 15 January 2025, so the winter 2025 quarter: turn 14, index 13.
+        SideSnapshot ukraine = game.Turns[13].Defender;
 
         AssertWithin(880_000d, ukraine.MenUnderArms, 0.15d, "sous les drapeaux, janvier 2025");
         Assert.True(
@@ -446,14 +475,29 @@ public sealed class ModelRulesTests
         PlayedGame holds = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
         PlayedGame collapses = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
 
+        // Turn 1 is the autumn 2021 build-up, the invasion is turn 2, and the present —
+        // summer 2026 — is turn 20. Everything after it is the model speaking about a future
+        // nobody has observed, which is exactly what the calendar is for.
+
+        // Spring 2027: the Russian regime falls, three quarters past the present.
         Assert.Equal(Side.Defender.Code, resolve.Outcome!.WinnerSideCode);
-        Assert.Equal(19, resolve.Outcome.Turn);
+        Assert.Equal(23, resolve.Outcome.Turn);
 
+        // Winter 2028: nobody has won, and the calendar is what ends the run.
         Assert.Equal("frozen_front", holds.Outcome!.Code);
-        Assert.Equal(19, holds.Outcome.Turn);
+        Assert.Equal(26, holds.Outcome.Turn);
 
+        // Spring 2024: the Ukrainian front breaks, two quarters after the aid stops.
         Assert.Equal(Side.Invader.Code, collapses.Outcome!.WinnerSideCode);
-        Assert.Equal(10, collapses.Outcome.Turn);
+        Assert.Equal(11, collapses.Outcome.Turn);
+
+        // A collapse is not the end of the story: the beaten army dissolves over the turns
+        // that follow, and the run only stops once the armistice is signed. A run that ended
+        // on the turn of the collapse would cut off the model's closing argument.
+        Assert.True(resolve.Turns.Count > resolve.Outcome.Turn, "Le dénouement russe n'est pas joué.");
+        Assert.True(collapses.Turns.Count > collapses.Outcome.Turn, "Le dénouement ukrainien n'est pas joué.");
+        Assert.Equal("armistice", resolve.Outcome.Code);
+        Assert.Equal("armistice", collapses.Outcome.Code);
     }
 
     private static void AssertWithin(double expected, double actual, double tolerance, string label)
@@ -561,8 +605,52 @@ public sealed class ModelRulesTests
             resolve.Turns[^1].Invader.CombatPower < peak * 0.7d,
             $"Pic {peak:F0}, fin {resolve.Turns[^1].Invader.CombatPower:F0} : l'asphyxie ne se voit pas.");
 
-        // And it is not done by taking ground: the defender never runs a real offensive.
-        Assert.True(resolve.Turns[^1].SquareKilometresGained > 0d);
+        // And it is not done by taking ground — which is NOT the same as saying no ground
+        // changes hands. Ground does come back to the defender in this run, and the thesis is
+        // precisely about the order in which it happens: the invader's power collapses FIRST,
+        // and the line follows. The front is a thermometer, never an engine.
+        //
+        // So what has to be true is the sequence. The quarter the line first moves back is
+        // after the quarter the invader's power peaked: the rear had already broken. A run
+        // where ground came back before the power fell would be a counter-offensive, and would
+        // teach the opposite of everything this model is for.
+        int peakTurn = 0;
+        for (int index = 0; index < resolve.Turns.Count; index++)
+        {
+            if (resolve.Turns[index].Invader.CombatPower >= peak)
+            {
+                peakTurn = index;
+                break;
+            }
+        }
+
+        // The window that carries the whole thesis: from the peak of invader power to the
+        // quarter before its regime falls. Across it, the invader loses most of its strength
+        // and the line does not move. Ground does change hands elsewhere in this run — the
+        // real counter-offensives of autumn 2022 give some back, and the aftermath gives back
+        // a great deal — but between those two, the war is decided with a frozen front.
+        SideSnapshot atPeak = resolve.Turns[peakTurn].Invader;
+        int eve = resolve.Outcome!.Turn - 2;
+        SideSnapshot beforeFall = resolve.Turns[eve].Invader;
+
+        Assert.True(
+            beforeFall.CombatPower < atPeak.CombatPower * 0.5d,
+            $"Puissance russe {atPeak.CombatPower:F0} au pic contre {beforeFall.CombatPower:F0} à la veille "
+                + "de la chute : l'étranglement ne se voit pas.");
+
+        // On the eve of its collapse the invader is still holding ground it took: the defender
+        // has not conquered its way to this victory, it has waited for the rear to give.
+        double kmBeforeFall = resolve.Turns[eve].SquareKilometresGained;
+        Assert.True(
+            kmBeforeFall > 0d,
+            $"{kmBeforeFall:F0} km² à la veille de la chute : le terrain aurait été repris avant.");
+
+        // Everything comes back afterwards, and only afterwards — the beaten army dissolves
+        // and the line follows it. That is the closing argument, and it is worth a decisive
+        // sign: the run ends with the invader well behind where it started.
+        Assert.True(
+            resolve.Turns[^1].SquareKilometresGained < 0d,
+            "Le dénouement n'a rendu aucun terrain : l'armée vaincue ne s'est pas défaite.");
     }
 
     [Fact]
@@ -593,13 +681,16 @@ public sealed class ModelRulesTests
     {
         PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
 
-        // Aid stops at turn 6. The depot still covers the need that turn and the next:
-        // this latency is the demonstration, not an artefact of it.
-        Assert.Equal(1d, game.Turns[5].Defender.Coverage["weapons"], 2);
+        // Aid stops at turn 7 — turn 6 before the autumn 2021 prologue was added. The depot
+        // still covers the need that turn and the next: this latency is the demonstration,
+        // not an artefact of it.
         Assert.Equal(1d, game.Turns[6].Defender.Coverage["weapons"], 2);
+        Assert.Equal(1d, game.Turns[7].Defender.Coverage["weapons"], 2);
 
         // The turn after, the depot is empty and coverage falls off a cliff.
-        Assert.True(game.Turns[7].Defender.Coverage["weapons"] < 0.6d);
+        Assert.True(
+            game.Turns[8].Defender.Coverage["weapons"] < 0.6d,
+            $"Couverture armes à {game.Turns[8].Defender.Coverage["weapons"]:F2} : la falaise n'a pas eu lieu.");
     }
 
     [Fact]
@@ -690,9 +781,9 @@ public sealed class ModelRulesTests
         PlayedGame holds = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
         PlayedGame collapses = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
 
-        Assert.Equal(19, resolve.Outcome!.Turn);
+        Assert.Equal(23, resolve.Outcome!.Turn);
         Assert.Equal("frozen_front", holds.Outcome!.Code);
-        Assert.Equal(10, collapses.Outcome!.Turn);
+        Assert.Equal(11, collapses.Outcome!.Turn);
     }
 
     /// <summary>
