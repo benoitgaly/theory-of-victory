@@ -506,7 +506,15 @@ window.tovHexMap = (function () {
             })));
         });
 
-        callouts(svg, turn, board, geo, p);
+        // Sector counters replace the callouts: they carry the name and the distance moved
+        // themselves, on the resolution glyph. The callouts stay as the fallback for a page
+        // served without counters.js.
+        if (window.tovCounters && typeof window.tovCounters.draw === "function") {
+            window.tovCounters.draw(svg, turn, board, p, { cities: geo.cities });
+        } else {
+            callouts(svg, turn, board, geo, p);
+        }
+
         legend(svg, project.kmPerPixel);
 
         return svg;
