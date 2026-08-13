@@ -1,0 +1,1615 @@
+/* ============================================================
+   Theory of Victory — feuille de style
+   Fond papier, encre chaude, typographie de dossier.
+   Aucune ressource distante : le site doit tourner hors-ligne.
+   ============================================================ */
+
+:root {
+    /* Matière */
+    --paper: #f2efe7;
+    --paper-deep: #e6e0d0;
+    --card: #fbf9f4;
+    --card-2: #f5f1e6;
+    --ink: #1a1815;
+    --ink-2: #4e4a42;
+    --ink-3: #8b8578;
+    --rule: #d9d1be;
+    --rule-2: #eae4d5;
+
+    /* Camps */
+    --ru: #a8322a;
+    --ru-soft: #f3dcd9;
+    --ru-deep: #6f1c16;
+    --ua: #1e5fa8;
+    --ua-soft: #d8e5f4;
+    --ua-deep: #123a63;
+    --ua-gold: #e8b923;
+
+    /* Accents */
+    --gold: #b8860b;
+    --gold-deep: #7a5a08;
+    --gold-soft: #f6ecd2;
+    --ok: #3d7a51;
+    --warn: #c07a1e;
+    --bad: #a8322a;
+
+    /* Typographie */
+    --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
+    --font-ui: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+    /* Relief */
+    --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 1px 2px rgba(26, 24, 21, 0.07);
+    --shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 2px 3px rgba(26, 24, 21, 0.06), 0 10px 24px rgba(26, 24, 21, 0.07);
+    --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.75) inset, 0 3px 6px rgba(26, 24, 21, 0.09), 0 18px 38px rgba(26, 24, 21, 0.11);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--paper);
+}
+
+body {
+    margin: 0;
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Grain de papier — bruit fractal en SVG inline, aucune image distante. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+}
+
+/* Étiquette en petites capitales : la voix des libellés secondaires. */
+.panel-title,
+.link .l-step,
+.barrel-readout .b-bottleneck .bb-label,
+.tick .t-season {
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-weight: 700;
+}
+
+/* ---------- Masthead ---------- */
+
+.masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 28px;
+    padding: 16px 30px;
+    background: linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Sceau de campagne plutôt que logo d'application. */
+.brand-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    font-size: 17px;
+    box-shadow: 0 0 0 1px var(--ink), 0 0 0 4px var(--card), 0 0 0 5px rgba(26, 24, 21, 0.28);
+    flex-shrink: 0;
+}
+
+.masthead h1 {
+    font-size: 25px;
+    letter-spacing: 0.005em;
+    line-height: 1.1;
+}
+
+.subtitle {
+    margin: 2px 0 0;
+    color: var(--ink-3);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* ---------- Sélecteur de déroulé ---------- */
+
+.variant-picker {
+    display: flex;
+    gap: 8px;
+}
+
+.variant {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 9px 14px 9px 30px;
+    cursor: pointer;
+    font: inherit;
+    font-family: var(--font-ui);
+    text-align: left;
+    min-width: 196px;
+    color: var(--ink-2);
+    transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
+}
+
+/* Case à cocher de scénario : on choisit un déroulé, on ne clique pas un onglet. */
+.variant::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    width: 11px;
+    height: 11px;
+    margin-top: -5.5px;
+    border: 1px solid var(--ink-3);
+    border-radius: 50%;
+    background: transparent;
+}
+
+.variant:hover {
+    border-color: var(--ink-3);
+    background: var(--card);
+}
+
+.variant.active {
+    background: var(--card);
+    border-color: var(--ink);
+    box-shadow: 0 0 0 1px var(--ink), var(--shadow-sm);
+    color: var(--ink);
+}
+
+.variant.active::before {
+    border-color: var(--ink);
+    background: radial-gradient(circle at 50% 50%, var(--ink) 0 3.2px, transparent 3.3px);
+}
+
+.variant .v-title {
+    display: block;
+    font-weight: 650;
+    font-size: 13px;
+    letter-spacing: 0.005em;
+}
+
+.variant .v-sub {
+    display: block;
+    font-size: 11.5px;
+    color: var(--ink-3);
+}
+
+/* ---------- Frise des tours ---------- */
+
+.timeline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 30px 13px;
+    background: var(--card-2);
+    border-bottom: 1px solid var(--rule);
+}
+
+.ticks {
+    display: flex;
+    gap: 3px;
+    flex: 1;
+}
+
+/* Ce qui s'est passé et ce que le modèle projette ne se lisent pas de la même façon :
+   au-delà du trimestre en cours, le trait devient discontinu. */
+.tick.projected {
+    border-style: dashed;
+    background: repeating-linear-gradient(
+        135deg,
+        var(--paper),
+        var(--paper) 5px,
+        rgba(0, 0, 0, 0.025) 5px,
+        rgba(0, 0, 0, 0.025) 10px
+    );
+}
+
+.tick {
+    flex: 1;
+    height: 42px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    color: var(--ink-3);
+    font-family: var(--font-ui);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    padding: 0;
+    position: relative;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.tick .t-season {
+    font-size: 8.5px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    opacity: 0.72;
+}
+
+.tick:hover {
+    border-color: var(--ink-3);
+    color: var(--ink-2);
+    background: var(--card);
+}
+
+.tick.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+}
+
+.tick.active .t-season {
+    opacity: 0.68;
+}
+
+.step:disabled {
+    opacity: 0.28;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+.step:disabled:hover {
+    background: var(--paper);
+    border-color: var(--rule);
+    color: var(--ink-2);
+}
+
+/* ---------- La main du trimestre ---------- */
+
+.hand-panel {
+    padding: 16px 18px;
+    margin-bottom: 20px;
+}
+
+.hand-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.hand-head .panel-title {
+    margin-bottom: 0;
+}
+
+.hand-note {
+    font-size: 12.5px;
+    color: var(--ink-3);
+}
+
+.hand-note strong {
+    color: var(--ink);
+}
+
+/* Une main se tient sur une seule ligne, comme un éventail de cartes tenu en main :
+   si elle déborde, elle glisse, elle ne se replie pas sur un second rang.
+   Toutes les cartes ont la même hauteur, comme les cartes d'un vrai jeu : la rangée est
+   régulière et la seule à sortir du rang est celle qui a été jouée. */
+.card-rail.hand {
+    gap: 12px;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow-x: auto;
+    padding: 26px 2px 20px;
+}
+
+.card-rail.hand .mtg {
+    width: 176px;
+    flex-shrink: 0;
+}
+
+/* Sur la carte étroite, le pied ne peut pas porter les deux mentions sans couper la plus
+   longue des familles. La signature d'édition s'efface : entre elle et « Militaire et
+   technologique » écrit en entier, c'est la famille qui informe. */
+.card-rail.hand .mtg-foot {
+    font-size: 7.5px;
+    letter-spacing: 0.04em;
+    padding: 7px 2px 0;
+}
+
+.card-rail.hand .mtg-foot > span + span {
+    display: none;
+}
+
+/* La carte jouée sort du rang : plus grande, redressée, cerclée d'or et coiffée de son
+   bandeau. Les cartes tenues restent lisibles mais en retrait — la décision du trimestre
+   doit se voir du premier coup d'œil, sans que rien ne clignote. */
+.card-rail.hand .mtg.is-played {
+    width: 214px;
+    position: relative;
+    transform: translateY(-14px);
+    background:
+        linear-gradient(160deg, var(--fam-1) 0%, var(--fam-2) 52%, var(--fam-1) 100%);
+    /* Un filet clair sépare l'or de la coque, sinon le cerclage disparaît sur les familles
+       déjà dorées — la carte jouée doit se détacher quelle que soit sa couleur de domaine. */
+    box-shadow:
+        0 0 0 1px rgba(250, 244, 230, 0.5),
+        0 0 0 3px var(--gold),
+        0 0 0 4px rgba(26, 24, 21, 0.6),
+        0 2px 5px rgba(0, 0, 0, 0.26),
+        0 22px 40px rgba(26, 24, 21, 0.3);
+}
+
+.card-rail.hand .mtg.is-played:hover {
+    transform: translateY(-18px) rotate(-0.4deg);
+}
+
+/* Le bandeau tient au-dessus du cadre, comme une étiquette collée sur la carte posée. */
+.mtg-played-tag {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 3px 11px;
+    border-radius: 11px;
+    background: var(--gold);
+    color: #221803;
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    box-shadow:
+        0 0 0 1px rgba(26, 24, 21, 0.5),
+        0 1px 0 rgba(255, 255, 255, 0.45) inset,
+        0 3px 7px rgba(26, 24, 21, 0.28);
+}
+
+/* Le filet d'or se prolonge autour de l'illustration : la carte jouée est cadrée d'un bout
+   à l'autre, alors que la pastille de famille reste, elle, à sa couleur de domaine. */
+.card-rail.hand .mtg.is-played .mtg-art {
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.45),
+        0 0 0 2px var(--gold),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Les cartes gardées en main : entières et lisibles, mais posées en second plan — plus
+   petites, moins colorées, sans relief. Elles reviennent entières au survol. */
+.mtg.back {
+    opacity: 0.68;
+    filter: saturate(0.5) brightness(0.99);
+    transform: scale(0.96);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.4),
+        0 1px 3px rgba(26, 24, 21, 0.16);
+}
+
+.mtg.back:hover {
+    opacity: 1;
+    filter: none;
+    transform: translateY(-4px) rotate(-0.4deg) scale(0.96);
+}
+
+.mtg-held {
+    margin-top: auto;
+    padding: 5px 0 1px;
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: rgba(35, 30, 22, 0.5);
+    border-top: 1px dashed rgba(0, 0, 0, 0.18);
+}
+
+.run-ended {
+    margin: 0 0 16px;
+    padding: 10px 16px;
+    border-left: 3px solid var(--ink-3);
+    background: var(--card);
+    border-radius: 0 6px 6px 0;
+    color: var(--ink-2);
+    font-size: 13px;
+}
+
+.run-ended strong {
+    color: var(--ink);
+}
+
+/* Trimestres que la partie n'a pas atteints : la guerre s'est terminée avant. */
+.tick.unplayed {
+    background: transparent;
+    border-style: dashed;
+    border-color: var(--rule);
+    color: var(--ink-3);
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
+.tick.unplayed:hover {
+    border-color: var(--rule);
+    color: var(--ink-3);
+    background: transparent;
+}
+
+/* Repère du tour courant, comme un pion posé sur la piste. */
+.tick.active::before {
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    margin-left: -5px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--ink);
+}
+
+/* Losange doré : une carte a été jouée ce tour-là. */
+.tick.has-card::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg);
+    background: var(--gold);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.step {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    color: var(--ink-2);
+    width: 34px;
+    height: 42px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.step:hover {
+    border-color: var(--ink-3);
+    background: var(--card);
+}
+
+/* ---------- Sélecteur de phase ---------- */
+
+.phases {
+    display: flex;
+    gap: 10px;
+    padding: 16px 30px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+}
+
+.phase {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font: inherit;
+    font-family: var(--font-ui);
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s;
+}
+
+.phase:hover {
+    border-color: var(--ink-3);
+}
+
+.phase.active {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 1px var(--ink), var(--shadow);
+    transform: translateY(-1px);
+}
+
+.phase .p-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-3);
+    flex-shrink: 0;
+}
+
+.phase.active .p-num {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--card), 0 0 0 4px rgba(26, 24, 21, 0.18);
+}
+
+.phase .p-body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.phase .p-body strong {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.phase .p-body em {
+    font-style: normal;
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 650;
+    margin-top: 2px;
+}
+
+.phase[data-phase="0"].active .p-num { background: var(--ru); border-color: var(--ru); box-shadow: 0 0 0 3px var(--card), 0 0 0 4px rgba(168, 50, 42, 0.28); }
+.phase[data-phase="1"].active .p-num { background: var(--ua); border-color: var(--ua); box-shadow: 0 0 0 3px var(--card), 0 0 0 4px rgba(30, 95, 168, 0.28); }
+.phase[data-phase="0"].active { border-color: var(--ru); box-shadow: 0 0 0 1px var(--ru), var(--shadow); }
+.phase[data-phase="1"].active { border-color: var(--ua); box-shadow: 0 0 0 1px var(--ua), var(--shadow); }
+
+/* ---------- Plateau ---------- */
+
+main {
+    padding: 26px 30px 64px;
+    max-width: 1560px;
+    margin: 0 auto;
+}
+
+.stage-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+    flex-wrap: wrap;
+}
+
+.stage-head h2 {
+    font-size: 30px;
+    letter-spacing: -0.01em;
+}
+
+.stage-head .turn-tag {
+    font-size: 12px;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 650;
+}
+
+.side-flag {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 10px;
+    box-shadow: 0 0 0 1px rgba(26, 24, 21, 0.25);
+}
+
+.panel {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.panel-title {
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-bottom: 12px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--rule-2);
+}
+
+/* ---------- Chaîne de génération de force ---------- */
+
+.chain {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.link {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px 16px 16px;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Maillon suivant : chevron dans l'interstice, la chaîne se lit de gauche à droite. */
+.link::after {
+    content: "";
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-top: 2px solid var(--ink-3);
+    border-right: 2px solid var(--ink-3);
+    transform: rotate(45deg);
+    opacity: 0.65;
+}
+
+.link:last-child::after {
+    display: none;
+}
+
+.link .l-step {
+    display: block;
+    font-size: 9.5px;
+    color: var(--ink-3);
+}
+
+.link .l-step b {
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--card);
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0;
+    vertical-align: -3px;
+}
+
+.link .l-value {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.link .l-unit {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--ink-3);
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-left: 4px;
+}
+
+.link .l-note {
+    font-size: 11.5px;
+    color: var(--ink-2);
+    margin-top: 7px;
+    line-height: 1.45;
+}
+
+.link .l-note b {
+    color: var(--ink);
+    font-weight: 650;
+}
+
+/* Toute déperdition est signalée en rouge : la chaîne fuit, ça doit se voir. */
+.link .l-loss {
+    color: var(--bad);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.stackbar {
+    display: flex;
+    height: 10px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 11px;
+    background: var(--rule-2);
+    box-shadow: 0 0 0 1px rgba(26, 24, 21, 0.07) inset;
+}
+
+.stackbar span {
+    display: block;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 12px;
+    margin-top: 9px;
+    font-size: 11px;
+    color: var(--ink-2);
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chip i {
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    display: block;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(26, 24, 21, 0.15);
+}
+
+/* ---------- Tonneau de Liebig ---------- */
+
+.barrel-row {
+    display: grid;
+    grid-template-columns: minmax(420px, 1.15fr) minmax(340px, 1fr);
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.barrel-panel {
+    padding: 20px 24px 22px;
+}
+
+.barrel-lead {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    margin: 0 0 4px;
+    max-width: 56ch;
+    line-height: 1.55;
+}
+
+.barrel-lead b {
+    color: var(--ink);
+    font-weight: 650;
+}
+
+.barrel-wrap {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 26px;
+    margin-top: 10px;
+}
+
+/* Le tonneau se réduit avant de pousser la lecture hors du panneau. */
+.barrel-wrap svg {
+    flex: 0 1 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+.barrel-readout {
+    flex: 1 1 230px;
+    min-width: 0;
+}
+
+.barrel-readout .b-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-weight: 700;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+}
+
+.barrel-readout .b-power {
+    font-family: var(--font-display);
+    font-size: 68px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
+}
+
+.barrel-readout .b-caption {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 5px;
+}
+
+.barrel-readout .b-gauge {
+    height: 7px;
+    border-radius: 4px;
+    background: var(--rule-2);
+    margin-top: 9px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(26, 24, 21, 0.08) inset;
+}
+
+.barrel-readout .b-gauge span {
+    display: block;
+    height: 100%;
+}
+
+.barrel-readout .b-bottleneck {
+    margin-top: 16px;
+    padding: 11px 14px 12px;
+    border-radius: 6px;
+    background: var(--gold-soft);
+    border: 1px solid #ddc894;
+    box-shadow: var(--shadow-sm);
+}
+
+.barrel-readout .b-bottleneck .bb-label {
+    font-size: 9.5px;
+    color: var(--gold-deep);
+}
+
+.barrel-readout .b-bottleneck .bb-value {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: #5e4708;
+    line-height: 1.15;
+    margin-top: 1px;
+}
+
+.barrel-readout .b-bottleneck .bb-note {
+    font-size: 11.5px;
+    color: #6b5518;
+    line-height: 1.45;
+    margin-top: 5px;
+}
+
+.barrel-readout .b-bottleneck .bb-note b {
+    font-weight: 700;
+}
+
+.barrel-readout .b-ratio {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule-2);
+}
+
+.barrel-readout .b-ratio span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--ink-3);
+}
+
+.barrel-readout .b-ratio b {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Stocks en jetons ---------- */
+
+.stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+    gap: 11px;
+}
+
+.stock {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 11px 13px 12px;
+    background: var(--card-2);
+}
+
+.stock .s-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.stock .s-name {
+    font-size: 11.5px;
+    color: var(--ink-2);
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.stock .s-value {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+/* Les trois lectures de l'effectif. Les barres rétrécissent, et ce rétrécissement est
+   l'information : seule la dernière tient la ligne. */
+.stock.manpower {
+    grid-column: span 2;
+}
+
+.mp-tiers {
+    margin-top: 10px;
+}
+
+.mp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--ink-2);
+}
+
+.mp-row + .mp-track {
+    margin: 3px 0 9px;
+}
+
+.mp-value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.mp-track {
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.mp-track span {
+    display: block;
+    height: 100%;
+    background: rgba(122, 106, 85, 0.45);
+}
+
+.mp-track.is-contact span {
+    background: #7a6a55;
+}
+
+.tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 9px;
+    min-height: 14px;
+}
+
+.token {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: inset 0 -2px 2px rgba(0, 0, 0, 0.22), inset 0 2px 2px rgba(255, 255, 255, 0.3), 0 1px 1px rgba(26, 24, 21, 0.18);
+}
+
+.token.ghost {
+    background: transparent !important;
+    border: 1px dashed var(--ink-3);
+    opacity: 0.45;
+    box-shadow: none;
+}
+
+.covermeter {
+    height: 6px;
+    background: var(--rule-2);
+    border-radius: 3px;
+    margin-top: 9px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(26, 24, 21, 0.07) inset;
+}
+
+.covermeter span {
+    display: block;
+    height: 100%;
+}
+
+/* ---------- Champ de bataille ---------- */
+
+.field {
+    display: grid;
+    grid-template-columns: minmax(560px, 1.55fr) minmax(320px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.map-panel {
+    padding: 16px 18px 12px;
+}
+
+.map-panel svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.map-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule-2);
+    font-size: 11.5px;
+    color: var(--ink-2);
+}
+
+.map-legend .chip i {
+    width: 14px;
+    height: 8px;
+    border-radius: 1px;
+}
+
+/* Résumé du trimestre, avant la liste : le lecteur sait quoi chercher. */
+.sector-summary {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin: -2px 0 12px;
+    line-height: 1.5;
+}
+
+.sector-summary b { color: var(--ink); font-weight: 650; }
+.sector-summary b.ru { color: var(--ru); }
+.sector-summary b.ua { color: var(--ua); }
+
+.sector-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.sector {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3px 10px;
+    border: 1px solid var(--rule);
+    border-left-width: 4px;
+    border-radius: 5px;
+    padding: 10px 13px 11px;
+    background: var(--card);
+}
+
+/* Un secteur qui bouge est l'événement du tour : il se voit de l'autre bout de l'écran. */
+.sector.gain {
+    border-left-color: var(--ru);
+    box-shadow: 0 0 0 1px var(--ru), 0 6px 14px rgba(168, 50, 42, 0.14);
+    border-color: var(--ru);
+}
+
+.sector.loss {
+    border-left-color: var(--ua);
+    box-shadow: 0 0 0 1px var(--ua), 0 6px 14px rgba(30, 95, 168, 0.14);
+    border-color: var(--ua);
+}
+
+.sector .sc-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.sector .sc-move {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    line-height: 1;
+}
+
+.sector.gain .sc-move { color: var(--ru); }
+.sector.loss .sc-move { color: var(--ua); }
+
+.sector .sc-outcome {
+    font-size: 11.5px;
+    color: var(--ink-2);
+}
+
+.sector .sc-ratio {
+    font-size: 11px;
+    color: var(--ink-2);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
+/* Secteurs figés : même information, un tiers du poids visuel. */
+.frozen-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 16px 0 8px;
+    padding-top: 11px;
+    border-top: 1px solid var(--rule-2);
+}
+
+.frozen-head span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--ink-3);
+}
+
+.frozen-head em {
+    font-style: normal;
+    font-size: 11.5px;
+    color: var(--ink-3);
+}
+
+.sector-list.frozen {
+    gap: 3px;
+}
+
+.sector-list.frozen .sector {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 5px 11px 6px;
+    border-left-color: var(--rule);
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    border-left-width: 3px;
+    border-radius: 0 4px 4px 0;
+}
+
+.sector-list.frozen .sector:hover {
+    background: var(--card-2);
+}
+
+.sector-list.frozen .sc-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-2);
+}
+
+.sector-list.frozen .sc-ratio {
+    font-size: 11.5px;
+    color: var(--ink-3);
+    font-weight: 650;
+}
+
+.sector-list.frozen .ratiobar {
+    height: 3px;
+    margin-top: 4px;
+}
+
+.ratiobar {
+    grid-column: 1 / -1;
+    height: 6px;
+    background: var(--rule-2);
+    border-radius: 3px;
+    margin-top: 17px;
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(26, 24, 21, 0.06) inset;
+}
+
+.ratiobar span {
+    display: block;
+    height: 100%;
+    background: var(--ink-3);
+    border-radius: 3px;
+}
+
+/* Seuil de mouvement : au-dessous, rien ne bouge, quoi qu'on dépense. */
+.ratiobar .threshold {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 1.5px;
+    background: var(--ink);
+    opacity: 0.6;
+}
+
+.ratiobar .threshold i {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-style: normal;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+}
+
+/* ---------- Cartes façon Magic ---------- */
+
+.card-rail {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.mtg {
+    --fam: #b8860b;
+    --fam-1: #3a2c10;
+    --fam-2: #17110a;
+    width: 252px;
+    background:
+        linear-gradient(160deg, var(--fam-1) 0%, var(--fam-2) 52%, var(--fam-1) 100%);
+    border-radius: 12px;
+    padding: 9px 9px 12px;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 1px 0 rgba(255, 255, 255, 0.14) inset,
+        0 2px 4px rgba(0, 0, 0, 0.24),
+        0 14px 30px rgba(26, 24, 21, 0.22);
+    font-family: var(--font-ui);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.14s, box-shadow 0.14s;
+}
+
+/* Une carte qu'on regarde se soulève : c'est une main, pas un tableau. */
+.mtg:hover {
+    transform: translateY(-4px) rotate(-0.4deg);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 1px 0 rgba(255, 255, 255, 0.18) inset,
+        0 4px 8px rgba(0, 0, 0, 0.26),
+        0 24px 44px rgba(26, 24, 21, 0.28);
+}
+
+.mtg-inner {
+    background: linear-gradient(175deg, #efe6d2, #ded2b6);
+    border-radius: 5px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.mtg.ru .mtg-inner { background: linear-gradient(175deg, #f0dcd6, #dcb8ae); }
+.mtg.ua .mtg-inner { background: linear-gradient(175deg, #d9e4f2, #b6c8e0); }
+/* Les cartes d'événement n'appartiennent à aucun camp : papier nu, aucune teinte de camp. */
+.mtg.neutral .mtg-inner { background: linear-gradient(175deg, #efe6d2, #ded2b6); }
+
+/* Hauteur fixe : le cartouche réserve ses deux lignes de titre même quand une seule est
+   écrite, sinon l'illustration monte ou descend d'une carte à l'autre. */
+.mtg-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 38px;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(0, 0, 0, 0.24);
+    border-radius: 16px;
+    padding: 3px 5px 3px 10px;
+}
+
+.mtg-name {
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #17140f;
+    line-height: 1.18;
+    /* « Missiles balistiques achetés à l'étranger » ne doit ni sortir du cartouche ni
+       pousser l'illustration vers le bas : le mot casse plutôt que la carte. */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+/* Seuils calés sur la carte la plus étroite, celle de la main : au-delà, le titre passerait
+   à une troisième ligne, agrandirait son cartouche et décalerait l'illustration — la rangée
+   se déformerait carte par carte. Deux lignes au maximum, quel que soit le titre. */
+.mtg-name.is-long {
+    font-size: 11px;
+    line-height: 1.12;
+}
+
+.mtg-name.is-longer {
+    font-size: 9.6px;
+    line-height: 1.1;
+}
+
+.mtg-cost {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.pip {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    color: #2a1f06;
+    box-shadow: inset 0 -2px 2px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.pip.pol { background: radial-gradient(circle at 35% 30%, #f3dc95, #dfb43e); }
+.pip.money { background: radial-gradient(circle at 35% 30%, #cbe0c3, #8fb586); }
+
+/* Filet doré autour de l'illustration : la fenêtre est encadrée, pas collée. */
+.mtg-art {
+    height: 110px;
+    border: 1px solid rgba(0, 0, 0, 0.42);
+    border-radius: 2px;
+    overflow: hidden;
+    background: #c9c2ae;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.4),
+        0 0 0 2px var(--fam),
+        0 2px 5px rgba(0, 0, 0, 0.28);
+    margin: 2px 1px 3px;
+}
+
+.mtg-art svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.mtg-type {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(0, 0, 0, 0.24);
+    border-radius: 16px;
+    padding: 2.5px 10px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #2b2519;
+}
+
+/* Pastille de famille sur la ligne de type, comme un symbole d'extension. */
+.mtg-type::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--fam);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+/* Les cartes sont mises à hauteur égale : sur une carte peu bavarde, l'espace libre se
+   répartit au-dessus et au-dessous du texte, qui reste d'un seul tenant. Le repousser en
+   bas creuserait un trou au milieu de la boîte, et un trou se lit comme un champ manquant. */
+.mtg-text {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    padding: 8px 10px;
+    flex: 1;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mtg-rules {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 10.5px;
+    color: #241f16;
+    line-height: 1.5;
+}
+
+.mtg-rules li {
+    padding-left: 10px;
+    position: relative;
+}
+
+.mtg-rules li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    opacity: 0.55;
+}
+
+/* Une carte sans effet chiffré garde une boîte de règles pleine : elle dit ce qu'elle est,
+   elle ne laisse pas un rectangle blanc. */
+.mtg-norule {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.45;
+    color: rgba(36, 31, 22, 0.7);
+    font-style: italic;
+}
+
+.mtg-flavour {
+    margin: 8px 0 0;
+    padding-top: 7px;
+    border-top: 1px solid rgba(0, 0, 0, 0.16);
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-style: italic;
+    color: #4a4234;
+    line-height: 1.4;
+}
+
+.mtg-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 7px 4px 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* La signature d'édition ne se coupe jamais en deux lignes : elle ferait grandir le pied
+   d'une carte sur deux. C'est la famille qui cède la place, et elle seule. */
+.mtg-foot > span + span {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Bloc et non flex : c'est ce qui permet aux points de suspension de s'afficher quand une
+   famille au nom long dépasse — la pastille est alors posée par-dessus, en retrait. */
+.mtg-foot .fam {
+    color: rgba(255, 255, 255, 0.82);
+    position: relative;
+    display: block;
+    min-width: 0;
+    padding-left: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mtg-foot .fam::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--fam);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Journal & issue ---------- */
+
+.narrative {
+    padding: 16px 18px;
+}
+
+.narrative ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12.5px;
+    color: var(--ink-2);
+}
+
+.narrative li {
+    padding: 5px 0 5px 16px;
+    position: relative;
+    border-bottom: 1px solid var(--rule-2);
+    line-height: 1.45;
+}
+
+.narrative li:last-child {
+    border-bottom: 0;
+}
+
+.narrative li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink-3);
+}
+
+/* Le journal alterne les deux camps : la puce dit lequel parle. */
+.narrative li.ru::before { background: var(--ru); }
+.narrative li.ua::before { background: var(--ua); }
+
+.outcome {
+    margin-top: 18px;
+    border: 1px solid #ddc894;
+    background: var(--gold-soft);
+    border-radius: 8px;
+    padding: 18px 22px;
+    box-shadow: var(--shadow-sm);
+}
+
+.outcome h4 {
+    font-size: 21px;
+    color: #5e4708;
+    margin-bottom: 5px;
+}
+
+.outcome p {
+    margin: 0;
+    color: #5c4a1c;
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.footnote {
+    margin-top: 24px;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    max-width: 100ch;
+    line-height: 1.6;
+}
+
+.footnote b {
+    color: var(--ink-2);
+}
+
+/* La chaîne reste une chaîne : cinq maillons en ligne, en typographie resserrée
+   plutôt qu'en deux rangées qui cassent la lecture de gauche à droite. */
+@media (max-width: 1400px) {
+    .chain { gap: 16px; }
+    .link { padding: 12px 13px 14px; }
+    .link::after { right: -12px; }
+    .link .l-value { font-size: 27px; }
+    .barrel-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 1200px) {
+    .chain { grid-template-columns: repeat(2, 1fr); }
+    .link::after { display: none; }
+    .field { grid-template-columns: 1fr; }
+}
