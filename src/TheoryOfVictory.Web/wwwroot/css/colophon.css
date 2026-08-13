@@ -1,0 +1,65 @@
+/* ============================================================
+   Le colophon — ce que le site montre, et ce qu'il ne montre pas.
+   Feuille distincte : le pied de page est un texte, pas un plateau,
+   et il se relit sans traverser la feuille du jeu.
+   ============================================================ */
+
+.colophon {
+    margin: 36px 0 0;
+    padding: 32px 30px 26px;
+    border-top: 1px solid var(--rule);
+    background: var(--card-2);
+    color: var(--ink-2);
+}
+
+.colophon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px 44px;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+.colophon h2 {
+    margin: 0 0 9px;
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+.colophon p {
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.62;
+}
+
+.colophon strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.colophon a {
+    color: var(--ink);
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+}
+
+.colophon a:hover {
+    text-decoration-color: var(--ink-3);
+}
+
+/* La phrase de fin est une prise de position, elle a le droit d'être en sérif. */
+.colophon-foot {
+    max-width: 1320px;
+    margin: 26px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-3);
+}

@@ -14,7 +14,7 @@
 </header>
 
 <nav class="timeline">
-    <button type="button" class="step" id="firstTurn" title="Revenir à février 2022" aria-label="Premier tour">⏮</button>
+    <button type="button" class="step" id="firstTurn" title="Revenir au premier trimestre" aria-label="Premier tour">⏮</button>
     <button type="button" class="step" id="prevTurn" title="Trimestre précédent" aria-label="Tour précédent">◀</button>
     <div class="ticks" id="turnTicks"></div>
     <button type="button" class="step" id="nextTurn" title="Trimestre suivant" aria-label="Tour suivant">▶</button>
@@ -36,6 +36,58 @@
 </nav>
 
 <main id="stage"></main>
+
+@* La guerre est en cours et le site est public : ce qu'il montre, et ce qu'il ne montre pas,
+   doit être lisible sans avoir à ouvrir le dépôt. *@
+<footer class="colophon">
+    <div class="colophon-grid">
+        <section>
+            <h2>Ce que vous regardez</h2>
+            <p>
+                Une simulation de la guerre en Ukraine traitée comme une <strong>compétition de
+                génération de force</strong> — la capacité de chaque camp à produire, financer et
+                acheminer ce que le front consomme — et non comme une succession de batailles.
+                Le modèle donne corps aux travaux de l'historien <strong>Phillips P. O'Brien</strong>.
+            </p>
+            <p>
+                Chaque trimestre se joue en trois temps : la génération de force russe, la génération
+                de force ukrainienne, puis la résolution sur le terrain. Le même départ est rejoué
+                trois fois ; seules changent les cartes que jouent l'Ukraine et ses soutiens.
+            </p>
+        </section>
+        <section>
+            <h2>Ce qui est observé, ce qui est projeté</h2>
+            <p>
+                Les trimestres jusqu'à l'été 2026 s'appuient sur le déroulé réel de la guerre.
+                <strong>Au-delà, tout est une projection du modèle</strong> — la frise les marque
+                d'un trait discontinu. Une projection est une conséquence des règles du jeu, jamais
+                une prédiction : elle se discute, elle ne s'annonce pas.
+            </p>
+            <p>
+                Les chiffres sont des ordres de grandeur de travail, sauf les effectifs, calés sur
+                sources ouvertes avec leurs fourchettes d'incertitude. Rien ici ne doit être cité
+                comme un fait.
+            </p>
+        </section>
+        <section>
+            <h2>Regarder sous le capot</h2>
+            <p>
+                Le modèle, la calibration des effectifs, l'audit de réalisme et les écarts assumés
+                entre le jeu et le réel sont écrits noir sur blanc, et le code est ouvert.
+            </p>
+            <p>
+                <a href="https://github.com/benoitgaly/theory-of-victory">Le dépôt et sa
+                    conception</a> · <a href="https://github.com/benoitgaly/theory-of-victory/blob/master/docs/design/09-audit-realisme.md">L'audit
+                    de réalisme</a>
+            </p>
+        </section>
+    </div>
+    <p class="colophon-foot">
+        Ce site soutient l'Ukraine. Il est construit sur une conviction que le modèle sert à
+        éprouver : une guerre se gagne en asséchant ce qui permet de tenir le terrain, pas en
+        prenant le terrain.
+    </p>
+</footer>
 
 @section Scripts {
     <script>
