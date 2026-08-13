@@ -16,23 +16,30 @@ public enum SupportVariant
 }
 
 /// <summary>
-/// February 2022, sixteen quarterly turns. Starting from 2022 is the only way to check
-/// the model finds the late-2023 ammunition crisis on its own instead of being told to.
-/// All figures are working orders of magnitude, not sourced facts.
+/// Autumn 2021 to winter 2028, twenty-six quarterly turns. Opening a quarter before the
+/// invasion is what shows a war being generated before it is fought; starting there is also
+/// the only way to check the model finds the late-2023 ammunition crisis on its own instead
+/// of being told to. All figures are working orders of magnitude, not sourced facts.
 /// </summary>
 public static class UkraineScenario
 {
     /// <summary>
-    /// Brent per quarter, 2022 Q1 to 2026 Q3. Working estimates, not a sourced series;
-    /// the 2026 quarters are an assumption, not an observation.
+    /// Brent per quarter, 2021 Q4 to 2028 Q1. Working estimates, not a sourced series;
+    /// everything from 2026 Q4 on is an assumption, not an observation.
+    ///
+    /// The first entry is the prologue quarter — the autumn the forces were massed, when
+    /// the barrel was already paying for what was being prepared.
     /// </summary>
     private static readonly double[] OilCalendar =
     [
+        80d,
         100d, 114d, 100d, 89d,
         82d, 78d, 86d, 84d,
         83d, 85d, 80d, 74d,
         75d, 67d, 68d, 65d,
         66d, 64d, 63d,
+        62d, 61d, 60d, 60d,
+        61d, 62d,
     ];
 
     public static Scenario Build(SupportVariant variant)
@@ -71,9 +78,20 @@ public static class UkraineScenario
                 _ => "Même départ, mêmes cartes, même calendrier pétrolier. Seule différence : au tour 6, le "
                     + "flux gratuit s'arrête. Rien ne bouge pendant deux tours, puis tout cède d'un bloc.",
             },
-            StartYear = 2022,
-            StartSeason = Season.Winter,
-            TurnCount = 19,
+            // The game opens a quarter BEFORE the invasion: autumn 2021 is pure force
+            // generation, without a shot fired, and it is the most demonstrative turn of the
+            // whole run. Starting in autumn keeps every winter on turns 2, 6, 10, 14, 18 and 22,
+            // so the campaigns against the grid still land in the quarter that hurts.
+            StartYear = 2021,
+            StartSeason = Season.Autumn,
+
+            // One prologue, nineteen quarters of war to the present, three more of strangulation
+            // before the regime gives at T23, then three for the aftermath. Twenty-six is bounded
+            // at BOTH ends and there is no room either way: the asphyxiation run reaches its
+            // armistice on T26 — verified by running it at 28, where it still stops on 26 — and
+            // the frozen-front run gives at T27, the defender finally yielding. A longer game
+            // would end the demonstration on the wrong lesson.
+            TurnCount = 26,
             OilPriceCalendar = [.. OilCalendar],
             Invader = BuildRussia(),
             Defender = BuildUkraine(),
@@ -124,13 +142,36 @@ public static class UkraineScenario
         // The war wants more than the ordinary budget funds — that is what makes it a war
         // effort rather than a line item, and it is what puts the sovereign fund on a clock
         // from the first turn. Set it under ordinary funding and the barrel is decorative.
-        russia.Economy.WarBudgetCeilingShare = 0.038d;
+        //
+        // Lowered from 0,038 to 0,028 to carry the strangulation three quarters further. The
+        // ceiling drives two things at once: how fast the reserve is drained, and how hard the
+        // funding gap gnaws at elite cohesion. At 0,038 the army stopped being paid around T19
+        // and the run ended in a MILITARY collapse — the front deciding the war, which is the
+        // one thing this scenario must never say. At 0,028 the regime is the first thing to
+        // give, at T23, and it gives because the quarter it has to fund is the one it can no
+        // longer fund. 0,027 was tried and breaks the frozen-front run: the invader then holds
+        // comfortably enough to win it. The figure also reads better against the sources —
+        // 0,028 × 1 800 Md is about 202 Md a year of ceiling, against the ~190 Md estimated for
+        // 2025, where 0,038 implied 274 Md.
+        russia.Economy.WarBudgetCeilingShare = 0.028d;
         russia.Economy.MilitaryFiscalShare = 0.085d;
         russia.Economy.ReserveDrawRate = 0.12d;
         russia.Economy.CivilianGrowthPerTurn = 0.003d;
         russia.Economy.MilitarySpendingMultiplier = 0.6d;
         russia.Economy.CapitalDecayPerTurn = 0.007d;
         russia.Economy.OilExportCapacityMbd = 5.1d;
+
+        // 18 % of the outstanding damage repaired per quarter, the figure the realism audit
+        // asked for and the sources support: distillation columns are rebuilt with Western
+        // equipment nobody will sell any more, and the IEA expects Russian refining runs to
+        // stay depressed into mid-2026.
+        //
+        // It had been left at the engine default of 40 % because it was the one change that
+        // moved the Russian collapse a quarter earlier with no compensation available. That
+        // constraint is gone: the collapse turn is now set by the calendar — by when the final
+        // cards fall — and the war-budget ceiling above absorbs what the slower repair adds.
+        // The concession documented in 04-calibration-effectifs.md §12 can be retired.
+        russia.Economy.RefiningRepairPerTurn = 0.18d;
 
         // A vast, redundant, over-provisioned grid: near impossible to bring down.
         russia.Grid.NominalCapacityGw = 245d;
@@ -144,6 +185,7 @@ public static class UkraineScenario
         // the 25 M the 2022 mobilisation decree nominally covered. ESTIMATION, no usable source:
         // the war has absorbed ≈ 1,6 M contract signings and mobilised men in four years without
         // visibly emptying the reservoir, so a working ceiling of 4,2 M is deliberately generous.
+        russia.Industry.DepotQuartersHeld = 6d;
         russia.Manpower.MobilisablePool = 4200d;
 
         // The invasion grouping massed on the Ukrainian border in February 2022: Western
@@ -196,9 +238,21 @@ public static class UkraineScenario
         // be BOUGHT abroad, quarter after quarter. Cut the money and the shells stop — which is
         // the mechanism the asphyxiation run demonstrates, now grounded rather than assumed.
         russia.Industry.SetCapacityPerTurn(ResourceKind.Weapons, 560d);
-        russia.Industry.SetCapacityPerTurn(ResourceKind.StrikeDrones, 900d);
+        // 3 000 strike drones a quarter, rising to 10 500 at the 3,5 × expansion ceiling.
+        // Russia launched more than 44 000 Shahed-type drones over 2025 — 170 a day in the
+        // summer peaks — against 2 400 a quarter, i.e. 26 a day, in the engine. KNOWN
+        // OVERSTATEMENT OF 2022: Russia fired a few hundred Shaheds that year, not three
+        // thousand a quarter. The engine has no way to grow a line forty-fold in three years,
+        // so the choice is between a right 2022 and a right 2025, and the saturation the game
+        // is built to demonstrate lives in 2025.
+        russia.Industry.SetCapacityPerTurn(ResourceKind.StrikeDrones, 3000d);
         russia.Industry.SetCapacityPerTurn(ResourceKind.Missiles, 130d);
-        russia.Industry.SetCapacityPerTurn(ResourceKind.CheapInterceptors, 1400d);
+        // Raised with the strike volumes it has to answer. Ukrainian deep-strike drones went
+        // from 700 to 1 800 a quarter in this calibration; leaving Russian counter-drone
+        // capacity where it was would have handed Ukraine an unearned free run at the
+        // refineries. Russia built exactly this in the real war — mobile fire groups, Pantsir
+        // batteries and jamming belts along the strike corridors.
+        russia.Industry.SetCapacityPerTurn(ResourceKind.CheapInterceptors, 1600d);
         russia.Industry.SetCapacityPerTurn(ResourceKind.HeavyInterceptors, 95d);
 
         // Slow to adopt, but when it does, it does so at industrial scale.
@@ -268,9 +322,20 @@ public static class UkraineScenario
         ukraine.Economy.OilImportMbd = 0.24d;
 
         // A far smaller grid with a thin margin: the threshold is within reach of a drone campaign.
-        ukraine.Grid.NominalCapacityGw = 36d;
-        ukraine.Grid.BaseDemandGw = 15.5d;
-        ukraine.Grid.WinterDemandMultiplier = 1.5d;
+        // OPERABLE capacity, not installed. The IEA put Ukraine's available dispatchable
+        // generation at about 38 GW before 2022, then recorded 19 GW lost in the first year of
+        // war to occupation and destruction — Zaporizhzhia alone is 6 GW, seized in March 2022
+        // and never modelled here. What the country could actually dispatch after that first
+        // year is the order of 19 to 22 GW, and 36 GW was the pre-war nameplate figure.
+        //
+        // Winter peak demand is the other half of the threshold: the IEA expects up to 18,5 GW,
+        // which 13 GW of base demand at the ×1,45 winter multiplier reproduces almost exactly.
+        // The margin drops from 55 % to 14 % in a winter quarter, and three gigawatts of damage
+        // finally bite. At 36 GW against 23,3 GW of winter demand it took 12,7 GW of damage
+        // before the first cut — a threshold the engine could reach in theory and never did.
+        ukraine.Grid.NominalCapacityGw = 26d;
+        ukraine.Grid.BaseDemandGw = 13d;
+        ukraine.Grid.WinterDemandMultiplier = 1.45d;
         ukraine.Grid.CivilianShareOfDemand = 0.6d;
 
         // ── Effectifs, en milliers d'hommes ────────────────────────────────────────────────
@@ -321,9 +386,29 @@ public static class UkraineScenario
         ukraine.Manpower.MarginalCostExponent = 1.55d;
 
         ukraine.Industry.SetCapacityPerTurn(ResourceKind.Weapons, 45d);
-        ukraine.Industry.SetCapacityPerTurn(ResourceKind.StrikeDrones, 700d);
+        // An army supplied by grant does not build a war reserve. The donor ships against
+        // what is being burnt, in convoys negotiated quarter by quarter, and Ukraine spent
+        // 2023 and 2024 firing what had arrived that month rather than drawing on a stock it
+        // never had. Two quarters against Russia's six is the asymmetry of «donner contre
+        // vendre» made physical: the buyer plans a reserve, the receiver lives on the flow —
+        // and that is exactly why cutting the flow reaches the Ukrainian front in one quarter
+        // and would take Russia a year.
+        ukraine.Industry.DepotQuartersHeld = 3d;
+
+        // 1 800 a quarter, i.e. 7 200 a year — deliberately conservative against Ukrainian
+        // claims of tens of thousands of long-range drones a year, since those counts mix
+        // classes. What matters here is the ratio: Ukraine strikes deep with drones because it
+        // has no missiles, and the volume has to be able to saturate a defended target.
+        ukraine.Industry.SetCapacityPerTurn(ResourceKind.StrikeDrones, 1800d);
         ukraine.Industry.SetCapacityPerTurn(ResourceKind.Missiles, 25d);
-        ukraine.Industry.SetCapacityPerTurn(ResourceKind.CheapInterceptors, 1100d);
+        // 7 000 a quarter, reaching 24 500 at the expansion ceiling — the Ukrainian security
+        // council reports 100 000 interceptor drones produced in 2025, i.e. 25 000 a quarter,
+        // and deliveries running at 1 000 to 1 500 a day by early 2026. The engine held 1 100
+        // a quarter, twelve a day, against a hundred and seventy incoming: two orders of
+        // magnitude out. The error was invisible while aid piled up a wall of half a million
+        // interceptors outside any ceiling; capping the depots is what exposed it.
+        // Same 2022-against-2025 trade-off as the strike drones, and the same answer.
+        ukraine.Industry.SetCapacityPerTurn(ResourceKind.CheapInterceptors, 7000d);
         ukraine.Industry.SetCapacityPerTurn(ResourceKind.HeavyInterceptors, 12d);
 
         // Fast cycles, small structures: frequent jumps that are hard to scale.
@@ -538,77 +623,200 @@ public static class UkraineScenario
 
     private static void BuildCalendar(Scenario scenario, SupportVariant variant)
     {
+        // Two to four cards per side per quarter. The war is a decision every three months,
+        // on both sides, and the screen has to show it — not one card surrounded by filler.
         List<ScheduledCard> calendar =
         [
-            new ScheduledCard { Turn = 1, CardCode = "sanctions_package_1" },
-            new ScheduledCard { Turn = 2, CardCode = "western_aid_opens" },
-            new ScheduledCard { Turn = 3, CardCode = "himars_deep_strike" },
-            new ScheduledCard { Turn = 4, CardCode = "partial_mobilisation" },
-            new ScheduledCard { Turn = 4, CardCode = "counter_offensive_2022" },
-            new ScheduledCard { Turn = 5, CardCode = "grid_campaign" },
-            new ScheduledCard { Turn = 5, CardCode = "oil_price_cap" },
-            new ScheduledCard { Turn = 6, CardCode = "component_embargo" },
-            new ScheduledCard { Turn = 7, CardCode = "failed_offensive" },
-            new ScheduledCard { Turn = 8, CardCode = "attention_elsewhere" },
-            new ScheduledCard { Turn = 8, CardCode = "foreign_shells" },
-            new ScheduledCard { Turn = 9, CardCode = "grid_campaign" },
-            new ScheduledCard { Turn = 10, CardCode = "refinery_strikes" },
-            new ScheduledCard { Turn = 10, CardCode = "licence_transfer" },
-            new ScheduledCard { Turn = 11, CardCode = "harsh_winter" },
-            new ScheduledCard { Turn = 11, CardCode = "rail_interdiction" },
-            new ScheduledCard { Turn = 12, CardCode = "fibre_optic_drones" },
+            new ScheduledCard { Turn = 1, CardCode = "force_concentration" },
+            new ScheduledCard { Turn = 1, CardCode = "zapad_exercises" },
+            new ScheduledCard { Turn = 1, CardCode = "ultimatum_to_nato" },
+            new ScheduledCard { Turn = 1, CardCode = "intelligence_warning" },
+            new ScheduledCard { Turn = 1, CardCode = "first_defensive_deliveries" },
+            new ScheduledCard { Turn = 1, CardCode = "no_mobilisation_yet" },
+            new ScheduledCard { Turn = 2, CardCode = "sanctions_package_1" },
+            new ScheduledCard { Turn = 2, CardCode = "allied_intelligence" },
+            new ScheduledCard { Turn = 2, CardCode = "nato_training_pipeline" },
+            new ScheduledCard { Turn = 2, CardCode = "state_propaganda_surge" },
+            new ScheduledCard { Turn = 2, CardCode = "domestic_repression" },
+            new ScheduledCard { Turn = 2, CardCode = "rasputitsa" },
+            new ScheduledCard { Turn = 3, CardCode = "western_aid_opens" },
+            new ScheduledCard { Turn = 3, CardCode = "transparency_reform" },
+            new ScheduledCard { Turn = 3, CardCode = "recruitment_reform" },
+            new ScheduledCard { Turn = 3, CardCode = "industrial_requisition" },
+            new ScheduledCard { Turn = 3, CardCode = "war_economy_conversion" },
+            new ScheduledCard { Turn = 4, CardCode = "himars_deep_strike" },
+            new ScheduledCard { Turn = 4, CardCode = "depot_strikes" },
+            new ScheduledCard { Turn = 4, CardCode = "prison_recruitment" },
+            new ScheduledCard { Turn = 4, CardCode = "foreign_drones" },
+            new ScheduledCard { Turn = 4, CardCode = "pipeline_sabotage" },
+            new ScheduledCard { Turn = 5, CardCode = "counter_offensive_2022" },
+            new ScheduledCard { Turn = 5, CardCode = "naval_drones_black_sea" },
+            new ScheduledCard { Turn = 5, CardCode = "partial_mobilisation" },
+            new ScheduledCard { Turn = 5, CardCode = "foreign_ballistic_missiles" },
+            new ScheduledCard { Turn = 5, CardCode = "decoy_saturation" },
+            new ScheduledCard { Turn = 6, CardCode = "oil_price_cap" },
+            new ScheduledCard { Turn = 6, CardCode = "diplomatic_campaign" },
+            new ScheduledCard { Turn = 6, CardCode = "grid_campaign" },
+            new ScheduledCard { Turn = 6, CardCode = "glide_bombs" },
+            new ScheduledCard { Turn = 6, CardCode = "oil_export_rerouting" },
+            new ScheduledCard { Turn = 6, CardCode = "mild_winter" },
+            new ScheduledCard { Turn = 7, CardCode = "component_embargo" },
+            new ScheduledCard { Turn = 7, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 7, CardCode = "component_smuggling" },
+            new ScheduledCard { Turn = 7, CardCode = "electronic_warfare_scaling" },
+            new ScheduledCard { Turn = 7, CardCode = "armed_mutiny" },
+            new ScheduledCard { Turn = 8, CardCode = "failed_offensive" },
+            new ScheduledCard { Turn = 8, CardCode = "depot_strikes" },
+            new ScheduledCard { Turn = 8, CardCode = "domestic_drone_industry" },
+            new ScheduledCard { Turn = 8, CardCode = "shahed_plant" },
+            new ScheduledCard { Turn = 8, CardCode = "grain_port_strikes" },
+            new ScheduledCard { Turn = 8, CardCode = "inflation_surge" },
+            new ScheduledCard { Turn = 9, CardCode = "component_embargo" },
+            new ScheduledCard { Turn = 9, CardCode = "naval_drones_black_sea" },
+            new ScheduledCard { Turn = 9, CardCode = "foreign_shells" },
+            new ScheduledCard { Turn = 9, CardCode = "contract_recruitment_drive" },
+            new ScheduledCard { Turn = 9, CardCode = "shadow_fleet" },
+            new ScheduledCard { Turn = 9, CardCode = "attention_elsewhere" },
+            new ScheduledCard { Turn = 9, CardCode = "rasputitsa" },
+            new ScheduledCard { Turn = 10, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 10, CardCode = "conscription_law" },
+            new ScheduledCard { Turn = 10, CardCode = "domestic_drone_industry" },
+            new ScheduledCard { Turn = 10, CardCode = "grid_campaign" },
+            new ScheduledCard { Turn = 10, CardCode = "decoy_saturation" },
+            new ScheduledCard { Turn = 10, CardCode = "contract_recruitment_drive" },
+            new ScheduledCard { Turn = 11, CardCode = "refinery_strikes" },
+            new ScheduledCard { Turn = 11, CardCode = "drone_coalition" },
+            new ScheduledCard { Turn = 11, CardCode = "electronic_warfare_ukraine" },
+            new ScheduledCard { Turn = 11, CardCode = "licence_transfer" },
+            new ScheduledCard { Turn = 11, CardCode = "glide_bombs" },
+            new ScheduledCard { Turn = 11, CardCode = "meat_assault" },
+            new ScheduledCard { Turn = 11, CardCode = "european_election_swing" },
+            new ScheduledCard { Turn = 12, CardCode = "rail_interdiction" },
+            new ScheduledCard { Turn = 12, CardCode = "himars_deep_strike" },
+            new ScheduledCard { Turn = 12, CardCode = "nato_training_pipeline" },
+            new ScheduledCard { Turn = 12, CardCode = "counter_battery" },
+            new ScheduledCard { Turn = 12, CardCode = "meat_assault" },
+            new ScheduledCard { Turn = 13, CardCode = "frozen_assets_windfall" },
+            new ScheduledCard { Turn = 13, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 13, CardCode = "decentralised_generation" },
+            new ScheduledCard { Turn = 13, CardCode = "fibre_optic_drones" },
+            new ScheduledCard { Turn = 13, CardCode = "electronic_warfare" },
+            new ScheduledCard { Turn = 13, CardCode = "substation_strikes" },
+            new ScheduledCard { Turn = 14, CardCode = "shadow_fleet_sanctions" },
+            new ScheduledCard { Turn = 14, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 14, CardCode = "grid_campaign" },
+            new ScheduledCard { Turn = 14, CardCode = "evasion_network" },
+            new ScheduledCard { Turn = 14, CardCode = "decoy_saturation" },
+            new ScheduledCard { Turn = 14, CardCode = "harsh_winter" },
+            new ScheduledCard { Turn = 15, CardCode = "anticorruption_crisis" },
+            new ScheduledCard { Turn = 15, CardCode = "rail_interdiction" },
+            new ScheduledCard { Turn = 15, CardCode = "nato_training_pipeline" },
+            new ScheduledCard { Turn = 15, CardCode = "rail_repair_brigades" },
+            new ScheduledCard { Turn = 15, CardCode = "diplomatic_complaisance" },
+            new ScheduledCard { Turn = 15, CardCode = "air_defence_gap" },
+            new ScheduledCard { Turn = 16, CardCode = "drone_coalition" },
+            new ScheduledCard { Turn = 16, CardCode = "domestic_drone_industry" },
+            new ScheduledCard { Turn = 16, CardCode = "domestic_repression" },
+            new ScheduledCard { Turn = 16, CardCode = "meat_assault" },
+            new ScheduledCard { Turn = 16, CardCode = "foreign_drones" },
+            new ScheduledCard { Turn = 16, CardCode = "ceasefire_talks" },
+            new ScheduledCard { Turn = 17, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 17, CardCode = "transparency_reform" },
+            new ScheduledCard { Turn = 17, CardCode = "drone_coalition" },
+            new ScheduledCard { Turn = 17, CardCode = "grain_port_strikes" },
+            new ScheduledCard { Turn = 17, CardCode = "decoy_saturation" },
+            new ScheduledCard { Turn = 17, CardCode = "oil_export_rerouting" },
+            new ScheduledCard { Turn = 18, CardCode = "nato_training_pipeline" },
+            new ScheduledCard { Turn = 18, CardCode = "domestic_drone_industry" },
+            new ScheduledCard { Turn = 18, CardCode = "contract_recruitment_drive" },
+            new ScheduledCard { Turn = 18, CardCode = "state_propaganda_surge" },
+            new ScheduledCard { Turn = 18, CardCode = "domestic_repression" },
+            new ScheduledCard { Turn = 19, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 19, CardCode = "drone_coalition" },
+            new ScheduledCard { Turn = 19, CardCode = "domestic_drone_industry" },
+            new ScheduledCard { Turn = 19, CardCode = "glide_bombs" },
+            new ScheduledCard { Turn = 19, CardCode = "foreign_ballistic_missiles" },
+            new ScheduledCard { Turn = 19, CardCode = "state_propaganda_surge" },
 
-            // The Red Queen made visible: the fibre-optic jump is answered the very turn
-            // it lands, and the card that was played produces nothing at all.
-            new ScheduledCard { Turn = 12, CardCode = "electronic_warfare" },
-            new ScheduledCard { Turn = 13, CardCode = "shadow_fleet_sanctions" },
-            new ScheduledCard { Turn = 13, CardCode = "grid_campaign" },
-
-            // Sanctions are upkeep, not an act: the circumvention network answers the
-            // shadow-fleet package the same quarter it is announced.
-            new ScheduledCard { Turn = 13, CardCode = "evasion_network" },
-            new ScheduledCard { Turn = 14, CardCode = "anticorruption_crisis" },
-            new ScheduledCard { Turn = 14, CardCode = "air_defence_gap" },
-            new ScheduledCard { Turn = 15, CardCode = "elite_fracture" },
+            // Beyond the present quarter, the war does not stop: both sides keep spending
+            // what they have left while the strangulation does its work in the background.
+            new ScheduledCard { Turn = 20, CardCode = "depot_strikes" },
+            new ScheduledCard { Turn = 20, CardCode = "elite_fracture" },
+            new ScheduledCard { Turn = 20, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 20, CardCode = "meat_assault" },
+            new ScheduledCard { Turn = 20, CardCode = "decoy_saturation" },
+            new ScheduledCard { Turn = 21, CardCode = "drone_coalition" },
+            new ScheduledCard { Turn = 21, CardCode = "nato_training_pipeline" },
+            new ScheduledCard { Turn = 21, CardCode = "glide_bombs" },
+            new ScheduledCard { Turn = 21, CardCode = "meat_assault" },
+            new ScheduledCard { Turn = 22, CardCode = "domestic_drone_industry" },
+            new ScheduledCard { Turn = 22, CardCode = "cheap_interception" },
+            new ScheduledCard { Turn = 22, CardCode = "harsh_winter" },
+            new ScheduledCard { Turn = 22, CardCode = "decoy_saturation" },
+            new ScheduledCard { Turn = 23, CardCode = "depot_strikes" },
+            new ScheduledCard { Turn = 23, CardCode = "meat_assault" },
         ];
 
         if (variant == SupportVariant.Holds)
         {
             // The 2023-2024 ammunition crisis: suspended, then released. The model must find it alone.
-            calendar.Add(new ScheduledCard { Turn = 9, CardCode = "aid_blocked" });
-            calendar.Add(new ScheduledCard { Turn = 11, CardCode = "aid_unblocked" });
+            calendar.Add(new ScheduledCard { Turn = 10, CardCode = "aid_blocked" });
+            calendar.Add(new ScheduledCard { Turn = 12, CardCode = "aid_unblocked" });
+
+            // Support thins and gets conditioned, it never stops. Nobody breaks.
+            calendar.Add(new ScheduledCard { Turn = 14, CardCode = "budget_fatigue" });
+            calendar.Add(new ScheduledCard { Turn = 18, CardCode = "parliament_veto" });
         }
         else if (variant == SupportVariant.Collapses)
         {
             // What actually cuts a free flow: not a battle, a ballot. The two land together
             // because one causes the other — and because the depot has to be full when they do.
-            calendar.Add(new ScheduledCard { Turn = 6, CardCode = "us_election_swing" });
-            calendar.Add(new ScheduledCard { Turn = 6, CardCode = "aid_collapse" });
+            // Nothing before turn 7: the first six turns must stay strictly identical to Holds.
+            calendar.Add(new ScheduledCard { Turn = 7, CardCode = "us_election_swing" });
+            calendar.Add(new ScheduledCard { Turn = 7, CardCode = "aid_collapse" });
+            calendar.Add(new ScheduledCard { Turn = 9, CardCode = "budget_fatigue" });
         }
         else
         {
             // Same war, same events, same barrel calendar as the other runs. The only
             // difference is what the West decides to play on top — and none of these
             // cards takes a single hex: every one of them cuts a flow at its source.
-            // Asphyxiation is slow on purpose: it takes years, not two good quarters.
-            calendar.Add(new ScheduledCard { Turn = 9, CardCode = "aid_blocked" });
-            calendar.Add(new ScheduledCard { Turn = 10, CardCode = "aid_unblocked" });
+            calendar.Add(new ScheduledCard { Turn = 10, CardCode = "aid_blocked" });
+            calendar.Add(new ScheduledCard { Turn = 11, CardCode = "aid_unblocked" });
 
             calendar.AddRange(
             [
-                new ScheduledCard { Turn = 10, CardCode = "component_embargo_total" },
-                new ScheduledCard { Turn = 11, CardCode = "aid_predictable" },
+                new ScheduledCard { Turn = 11, CardCode = "component_embargo_total" },
+                new ScheduledCard { Turn = 12, CardCode = "aid_predictable" },
+
                 // The refining campaign comes back every third quarter, not every one:
                 // the damage half-heals in between, and that gap is what makes the
                 // strangulation take years. Rushed, the regime falls a year too early.
-                new ScheduledCard { Turn = 12, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 13, CardCode = "frozen_assets_released" },
-                new ScheduledCard { Turn = 15, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 19, CardCode = "supplier_withdraws" },
-                new ScheduledCard { Turn = 19, CardCode = "oil_price_crash" },
-                new ScheduledCard { Turn = 19, CardCode = "sovereign_fund_empty" },
-                new ScheduledCard { Turn = 19, CardCode = "elite_break" },
-                new ScheduledCard { Turn = 19, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 13, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 14, CardCode = "frozen_assets_released" },
+                new ScheduledCard { Turn = 17, CardCode = "aid_predictable" },
+
+                // Autumn 2025: the two majors are designated and the discount doubles.
+                new ScheduledCard { Turn = 17, CardCode = "major_oil_sanctions" },
+
+                // Past the present quarter the tension has to keep climbing, quarter after
+                // quarter, without the blow landing early: a plateau here would say the
+                // strangulation stalled, and an early break would say the front decided.
+                new ScheduledCard { Turn = 20, CardCode = "shadow_fleet_sanctions" },
+                new ScheduledCard { Turn = 21, CardCode = "component_embargo_total" },
+                new ScheduledCard { Turn = 21, CardCode = "oil_price_cap" },
+                new ScheduledCard { Turn = 21, CardCode = "conscription_law" },
+                new ScheduledCard { Turn = 22, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 22, CardCode = "currency_collapse" },
+
+                // Spring 2027. The regime does not fall because a front moved: it falls
+                // because the quarter it has to fund is the one it can no longer fund.
+                new ScheduledCard { Turn = 23, CardCode = "supplier_withdraws" },
+                new ScheduledCard { Turn = 23, CardCode = "oil_price_crash" },
+                new ScheduledCard { Turn = 23, CardCode = "sovereign_fund_empty" },
+                new ScheduledCard { Turn = 23, CardCode = "elite_break" },
+                new ScheduledCard { Turn = 23, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 23, CardCode = "sovereign_fund_draw" },
             ]);
         }
 
@@ -644,39 +852,77 @@ public static class UkraineScenario
         russianGrinding.WeaponsShare = 0.32d;
         russianGrinding.PrimaryStrikeTarget = StrikeTarget.PowerGrid;
 
+        // Autumn 2021. Nobody attacks: one side is massing, the other is not mobilising.
+        // A null offensive posture drops every sector ratio to zero, so no hex moves.
+        Doctrine russianPrologue = RussianDoctrine();
+        russianPrologue.OffensivePosture = 0d;
+
+        Doctrine ukrainianPrologue = UkrainianDoctrine();
+        ukrainianPrologue.OffensivePosture = 0d;
+
         scenario.DoctrineShifts.AddRange(
         [
             new DoctrineShift
             {
-                Turn = 4,
+                Turn = 1,
+                SideCode = Side.Invader.Code,
+                Doctrine = russianPrologue,
+                Reason = "Concentration de forces, aucune offensive",
+            },
+            new DoctrineShift
+            {
+                Turn = 1,
+                SideCode = Side.Defender.Code,
+                Doctrine = ukrainianPrologue,
+                Reason = "Ni mobilisation ni provocation",
+            },
+
+            // The invasion. Both sides return to their standing doctrine.
+            new DoctrineShift
+            {
+                Turn = 2,
+                SideCode = Side.Invader.Code,
+                Doctrine = RussianDoctrine(),
+                Reason = "Invasion",
+            },
+            new DoctrineShift
+            {
+                Turn = 2,
+                SideCode = Side.Defender.Code,
+                Doctrine = UkrainianDoctrine(),
+                Reason = "Défense générale",
+            },
+            new DoctrineShift
+            {
+                Turn = 5,
                 SideCode = Side.Defender.Code,
                 Doctrine = ukrainian2022,
                 Reason = "Contre-offensives de Kharkiv et Kherson",
             },
             new DoctrineShift
             {
-                Turn = 5,
+                Turn = 6,
                 SideCode = Side.Defender.Code,
                 Doctrine = ukrainianDefensive,
                 Reason = "Retour à la défensive et fortification",
             },
             new DoctrineShift
             {
-                Turn = 7,
+                Turn = 8,
                 SideCode = Side.Defender.Code,
                 Doctrine = ukrainianOffensive,
                 Reason = "Contre-offensive d'été",
             },
             new DoctrineShift
             {
-                Turn = 8,
+                Turn = 9,
                 SideCode = Side.Defender.Code,
                 Doctrine = ukrainianDefensive,
                 Reason = "L'offensive s'enlise, retour à la défense",
             },
             new DoctrineShift
             {
-                Turn = 9,
+                Turn = 10,
                 SideCode = Side.Invader.Code,
                 Doctrine = russianGrinding,
                 Reason = "Passage au grignotage soutenu",

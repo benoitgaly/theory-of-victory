@@ -40,6 +40,13 @@ public sealed class Scenario
 
     public required int TurnCount { get; init; }
 
+    /// <summary>
+    /// How the war ends once a side breaks. Owned by the scenario because the calendar is: read
+    /// <see cref="AftermathRules.QuartersToArmistice"/> to know how many quarters to leave after
+    /// the rupture. The default dissolves an army over four quarters.
+    /// </summary>
+    public AftermathRules Aftermath { get; set; } = new();
+
     /// <summary>Brent per turn, written in advance. V1.1 replaces this with a process.</summary>
     public List<double> OilPriceCalendar { get; init; } = [];
 

@@ -263,7 +263,7 @@
       "code": "aid_collapse",
       "title": "Rupture du soutien extérieur",
       "family": "Politique occidentale",
-      "description": "Une élection, une lassitude, et le flux gratuit s'arrête net. C'est le risque que porte tout ce qu'on reçoit sans le payer.",
+      "description": "Le flux gratuit ne se coupe pas au front, il se coupe dans une capitale — et l'on y travaille depuis trois ans. Ce qui se reçoit sans être payé peut s'arrêter sans être remplacé.",
       "type": "Instant",
       "politicalCost": 6,
       "baseProbability": 0.2,
@@ -876,7 +876,7 @@
           "kind": "StockDelta",
           "targetSideCode": "defender",
           "resourceCode": "cheap_interceptors",
-          "value": -500
+          "value": -3200
         }
       ],
       "ownerSideCode": "invader"
@@ -1067,7 +1067,7 @@
           "kind": "StockDelta",
           "targetSideCode": "invader",
           "resourceCode": "strike_drones",
-          "value": 500
+          "value": 1650
         },
         {
           "kind": "SanctionsComponentDelta",
@@ -1309,10 +1309,10 @@
       ]
     },
     {
-      "code": "machine_hall_strikes",
-      "title": "Frappes sur les salles des machines",
+      "code": "substation_strikes",
+      "title": "Les postes de raccordement",
       "family": "Énergie",
-      "description": "On ne vise plus le transformateur qu'on remplace en trois semaines, mais la turbine qu'aucune usine amie ne fabrique. Viser juste inflige une perte définitive.",
+      "description": "On ne frappe pas la centrale nucléaire, on frappe le poste qui la relie au pays. Débranchée, elle ne produit pour personne, et le tabou reste entier.",
       "type": "Instant",
       "ownerSideCode": "invader",
       "politicalCost": 4,
@@ -1321,7 +1321,7 @@
         {
           "kind": "GridPermanentDamage",
           "targetSideCode": "defender",
-          "value": 4.5
+          "value": 3.0
         },
         {
           "kind": "MoraleDelta",
@@ -1360,7 +1360,7 @@
           "kind": "StockDelta",
           "targetSideCode": "invader",
           "resourceCode": "strike_drones",
-          "value": -350
+          "value": -1150
         },
         {
           "kind": "ExternalWillDelta",
@@ -1389,13 +1389,13 @@
           "kind": "StockDelta",
           "targetSideCode": "defender",
           "resourceCode": "cheap_interceptors",
-          "value": -450
+          "value": -2850
         },
         {
           "kind": "StockDelta",
           "targetSideCode": "invader",
           "resourceCode": "strike_drones",
-          "value": -600
+          "value": -2000
         }
       ]
     },
@@ -1652,7 +1652,7 @@
           "kind": "StockDelta",
           "targetSideCode": "defender",
           "resourceCode": "strike_drones",
-          "value": -220
+          "value": -550
         }
       ]
     },
@@ -1736,7 +1736,7 @@
           "kind": "StockDelta",
           "targetSideCode": "defender",
           "resourceCode": "cheap_interceptors",
-          "value": 1400
+          "value": 8900
         }
       ]
     },
@@ -1842,7 +1842,7 @@
       "description": "Mille petites machines à la place de dix grandes : plus rien de décisif à viser. On ne défend pas un réseau, on le rend indigne d'être frappé.",
       "type": "Counter",
       "ownerSideCode": "defender",
-      "countersCardCode": "machine_hall_strikes",
+      "countersCardCode": "substation_strikes",
       "politicalCost": 4,
       "baseProbability": 0.4,
       "effects": [
@@ -1972,7 +1972,7 @@
       "code": "oil_price_spike",
       "title": "Flambée du baril",
       "family": "Économique",
-      "description": "Une seule variable, quatre canaux, tous dans le même sens. Le baril à cent dollars est la pire nouvelle possible pour l'envahi.",
+      "description": "Une seule variable, quatre canaux, tous dans le même sens. Le baril à cent dollars finance la guerre, calme les élites et fatigue les opinions d'en face.",
       "type": "Instant",
       "politicalCost": 4,
       "baseProbability": 0.3,
@@ -2003,7 +2003,7 @@
       "code": "global_recession",
       "title": "Récession mondiale",
       "family": "Économique",
-      "description": "La demande recule partout à la fois. Le baril tombe sans qu'aucune sanction n'ait été votée, et la caisse se vide quand même.",
+      "description": "La demande mondiale recule et le baril suit. Aucun train de sanctions n'aura fait autant, et personne n'aura eu à le voter.",
       "type": "Instant",
       "politicalCost": 3,
       "baseProbability": 0.2,
@@ -2338,7 +2338,7 @@
           "kind": "StockDelta",
           "targetSideCode": "defender",
           "resourceCode": "strike_drones",
-          "value": -250
+          "value": -650
         },
         {
           "kind": "MoraleDelta",
@@ -2403,6 +2403,177 @@
           "kind": "EliteCohesionDelta",
           "targetSideCode": "invader",
           "value": -5
+        }
+      ]
+    },
+    {
+      "code": "force_concentration",
+      "title": "L'amassement",
+      "family": "Politique interne",
+      "description": "Cent mille hommes autour d'un pays qu'on jure ne pas vouloir envahir. Rien n'est caché — les convois se comptent, les hôpitaux de campagne montent vers la frontière : une guerre annoncée reste une guerre que personne n'empêche.",
+      "type": "SlowRitual",
+      "ownerSideCode": "invader",
+      "politicalCost": 5,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "MobilisationWave",
+          "targetSideCode": "invader",
+          "value": 100
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "weapons",
+          "value": 400
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "fuel",
+          "value": 80
+        },
+        {
+          "kind": "PoliticalCapitalDelta",
+          "targetSideCode": "invader",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "code": "zapad_exercises",
+      "title": "Manœuvres d'automne",
+      "family": "Militaire et technologique",
+      "description": "L'exercice est annoncé, observé, parfaitement régulier. Ce qui ne repart pas quand il se termine, personne ne le compte.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 2,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "fuel",
+          "value": 60
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": 0.05
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        }
+      ]
+    },
+    {
+      "code": "ultimatum_to_nato",
+      "title": "L'ultimatum de décembre",
+      "family": "Externe",
+      "description": "On exige par écrit ce qu'on sait ne pas pouvoir obtenir. Le refus n'est pas un échec de la démarche : il en est le produit.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -8
+        },
+        {
+          "kind": "PoliticalCapitalDelta",
+          "targetSideCode": "invader",
+          "value": 6
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "code": "intelligence_warning",
+      "title": "L'avertissement que personne ne croit",
+      "family": "Politique occidentale",
+      "description": "Le renseignement donne la date, les axes et les effectifs. On l'écoute poliment sans rien changer : croire engage, douter ne coûte rien — jusqu'au matin où le doute se paie.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 2,
+      "baseProbability": 0.55,
+      "effects": [
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 1.0
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 5
+        },
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "defender",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "code": "first_defensive_deliveries",
+      "title": "Les premières livraisons défensives",
+      "family": "Politique occidentale",
+      "description": "Des missiles antichars qu'un homme porte sur l'épaule, rien qui frappe au-delà de la colline. On arme assez pour n'être pas complice, pas assez pour dissuader.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 3,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "weapons",
+          "value": 250
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 1.5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "code": "no_mobilisation_yet",
+      "title": "L'ordre qui n'est pas donné",
+      "family": "Politique interne",
+      "description": "Mobiliser, c'est donner raison à celui qui masse ses troupes et vider les usines avant le premier coup de feu. On attend — et l'on attendra jusqu'au dernier matin.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 1,
+      "baseProbability": 0.7,
+      "effects": [
+        {
+          "kind": "RecruitmentCostMultiplier",
+          "targetSideCode": "defender",
+          "value": 0.9
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "defender",
+          "value": -5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 2
         }
       ]
     }

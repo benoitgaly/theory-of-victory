@@ -38,6 +38,14 @@ public sealed class ArmsIndustry
     /// <summary>Fraction of installed capacity paid every turn just to keep it alive.</summary>
     public double UpkeepRateOfCapacity { get; set; } = 0.04d;
 
+    /// <summary>
+    /// Quarters of war stock an army is willing and able to hold before it stops filling the
+    /// depot. Six for an army that buys and makes its own — it can plan a reserve. Far less
+    /// for an army supplied by grant: the donor ships against consumption, not against a
+    /// stockpiling plan, and what cannot be held is not held.
+    /// </summary>
+    public double DepotQuartersHeld { get; set; } = 6d;
+
     /// <summary>Cost of adding one unit per turn of permanent capacity.</summary>
     public double ExpansionCostMultiplier { get; set; } = 6d;
 

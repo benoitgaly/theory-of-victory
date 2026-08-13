@@ -45,7 +45,14 @@ public sealed class ControlPhase : ITurnPhase
         // Men replaced over men lost, floored by how filled the order of battle already is:
         // an army at establishment is regenerating even on a quiet quarter, an army bled down
         // to two thirds of it is not, however few it lost this turn.
-        double menRatio = Math.Max(replacementRatio, belligerent.Manpower.ManningRatio);
+        //
+        // That floor is a courtesy extended to an army that still exists. Once a side has broken,
+        // the courtesy inverts: its quarters are quiet because there is nobody left to fight, not
+        // because nothing is wrong. Taking the maximum there would show a dissolving army
+        // regenerating perfectly, which is the exact opposite of what is happening to it.
+        double menRatio = belligerent.HasCollapsed
+            ? belligerent.Manpower.ManningRatio
+            : Math.Max(replacementRatio, belligerent.Manpower.ManningRatio);
         double materielRatio = consumed <= 0.01d ? 1.5d : delivered / consumed;
 
         // Regeneration obeys the same law as combat power: the scarcest side of it governs.

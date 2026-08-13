@@ -45,23 +45,31 @@ public sealed class RevenuePhase : ITurnPhase
             double grant = belligerent.Foreign.EffectiveGrantBillions;
 
             // Most aid arrives as materiel, not cash: it bypasses the domestic capacity ceiling.
+            // It does NOT bypass the depot ceiling — a receiving army holds what it can hold,
+            // and the rest never reaches it. Aid is not all ammunition either: vehicles,
+            // training and maintenance eat a third of it.
             double inKind = grant * belligerent.Foreign.InKindShare;
+            double refused = 0d;
             if (inKind > 0d)
             {
-                // Aid is not all ammunition — vehicles, training and maintenance eat a third of
-                // it — but the ammunition share has to come close to covering consumption, or
-                // the depot never exists and cutting the flow lands the same quarter it is cut.
-                belligerent.Stock.Add(ResourceKind.Weapons, inKind * 1000d * 0.52d / ResourceKind.Weapons.UnitCostMillions);
-                belligerent.Stock.Add(ResourceKind.CheapInterceptors, inKind * 1000d * 0.12d / ResourceKind.CheapInterceptors.UnitCostMillions);
-                belligerent.Stock.Add(ResourceKind.HeavyInterceptors, inKind * 1000d * 0.18d / ResourceKind.HeavyInterceptors.UnitCostMillions);
+                refused += DeliverInKind(belligerent, ResourceKind.Weapons, inKind * 0.52d);
+                refused += DeliverInKind(belligerent, ResourceKind.CheapInterceptors, inKind * 0.12d);
+                refused += DeliverInKind(belligerent, ResourceKind.HeavyInterceptors, inKind * 0.18d);
             }
+
+            // What the depots could not take does not evaporate: a donor facing a receiver who
+            // cannot absorb more materiel sends money instead, and the Kiel tracker shows that
+            // very shift — the military share of Western support falls as the financial share
+            // rises. So the refused value moves to the cash side of the same grant.
+            belligerent.AidBeyondDepotCapacity = refused;
+            double inKindDelivered = Math.Max(0d, inKind - refused);
 
             // The war chest is not the whole budget: ordinary spending has first claim.
             // Oil and aid are what actually fund the fighting, quarter by quarter.
             double ordinary =
                 (fiscal * economy.MilitaryFiscalShare)
                 + oilRevenue
-                + (grant - inKind)
+                + (grant - inKindDelivered)
                 - oilCost;
 
             // The sovereign fund plugs whatever the quarter's revenue leaves short of the
@@ -77,7 +85,7 @@ public sealed class RevenuePhase : ITurnPhase
             economy.WarFundableBillions = ordinary + draw;
 
             economy.LastTurnOilRevenueBillions = oilRevenue;
-            economy.LastTurnRevenueBillions = fiscal + oilRevenue + (grant - inKind) - oilCost;
+            economy.LastTurnRevenueBillions = fiscal + oilRevenue + (grant - inKindDelivered) - oilCost;
             economy.TreasuryBillions += economy.LastTurnRevenueBillions;
 
             // Reserves absorb the deficit until they no longer can.
@@ -119,5 +127,22 @@ public sealed class RevenuePhase : ITurnPhase
                 granted.Politics.ExternalWill = Math.Max(0d, granted.Politics.ExternalWill - (energyPain * 4d));
             }
         }
+    }
+
+    /// <summary>
+    /// Hands over a slice of aid as materiel and returns, in billions, the part the depot
+    /// could not take. Converting back to money is what keeps the aid's value conserved:
+    /// the units refused here reappear as cash on the same grant.
+    /// </summary>
+    private static double DeliverInKind(Belligerent belligerent, ResourceKind kind, double billions)
+    {
+        if (billions <= 0d)
+        {
+            return 0d;
+        }
+
+        double units = billions * 1000d / kind.UnitCostMillions;
+        double refusedUnits = belligerent.FillDepot(kind, units);
+        return refusedUnits * kind.UnitCostMillions / 1000d;
     }
 }

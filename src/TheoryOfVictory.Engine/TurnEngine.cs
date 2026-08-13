@@ -6,22 +6,12 @@ namespace TheoryOfVictory.Engine;
 /// <summary>Runs the ten phases of a three-month turn and freezes the result.</summary>
 public sealed class TurnEngine
 {
-    /// <summary>The engine's internal unit is the thousand men; the board's unit is the man.</summary>
-    private const double ThousandsToMen = 1000d;
-
     private readonly List<ITurnPhase> _phases;
 
-    /// <summary>
-    /// Turns an internal count of thousands into men, rounded to the nearest thousand.
-    ///
-    /// The rounding is the point, not a detail. Exposing 671 412 men would claim a precision
-    /// nobody has: the underlying estimates carry ± 15 %, so the last three digits would be
-    /// pure invention dressed as a census. The thousand is the finest grain any of the sources
-    /// behind this model actually support.
-    /// </summary>
+    /// <summary>Thousands in, men out. One definition, in <see cref="ManCount"/>.</summary>
     private static double Men(double thousands)
     {
-        return Math.Round(thousands, MidpointRounding.AwayFromZero) * ThousandsToMen;
+        return ManCount.FromThousands(thousands);
     }
 
     public TurnEngine()
@@ -125,6 +115,7 @@ public sealed class TurnEngine
             Headline = Headline(state, alerts),
             Alerts = alerts,
             Sectors = [.. context.SectorResolutions],
+            Orders = [Orders(context, Side.Invader), Orders(context, Side.Defender)],
             CardsPlayed = [.. context.CardsPlayed],
             Narrative = [.. context.Narrative],
             InvaderStrike = context.InvaderStrike,
@@ -132,6 +123,39 @@ public sealed class TurnEngine
             TotalHexesGained = totalHexes,
             SquareKilometresGained = squareKm,
             Outcome = state.Outcome,
+        };
+    }
+
+    /// <summary>
+    /// One side's orders on the front, normalised here rather than on the page: the effort
+    /// weights the doctrine carries are relative, and turning relatives into shares is
+    /// arithmetic on the model, which belongs on this side of the wire.
+    ///
+    /// The default weight of one matches <c>FrontPhase.Weight</c>: a sector the doctrine never
+    /// names is still held, and pretending it carries no effort would misreport the front.
+    /// </summary>
+    private static SectorOrders Orders(TurnContext context, Side side)
+    {
+        Doctrine doctrine = context.DoctrineFor(side);
+
+        double total = 0d;
+        foreach (FrontSector sector in context.State.Sectors)
+        {
+            total += doctrine.SectorEffort.TryGetValue(sector.Code, out double weight) ? weight : 1d;
+        }
+
+        Dictionary<string, double> shares = [];
+        foreach (FrontSector sector in context.State.Sectors)
+        {
+            double weight = doctrine.SectorEffort.TryGetValue(sector.Code, out double value) ? value : 1d;
+            shares[sector.Code] = total <= 0d ? 0d : weight / total;
+        }
+
+        return new SectorOrders
+        {
+            SideCode = side.Code,
+            OffensivePosture = doctrine.OffensivePosture,
+            EffortShare = shares,
         };
     }
 

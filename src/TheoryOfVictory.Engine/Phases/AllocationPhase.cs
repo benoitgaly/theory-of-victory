@@ -10,8 +10,6 @@ public sealed class AllocationPhase : ITurnPhase
 {
     private const int ConsumableLeadTurns = 1;
 
-    /// <summary>Quarters of production an army is willing to hold in depot before it stops ordering.</summary>
-    private const double StockQuartersHeld = 6d;
     private const int ExpansionLeadTurns = 3;
 
     public string Name
@@ -58,6 +56,12 @@ public sealed class AllocationPhase : ITurnPhase
             return;
         }
 
+        // The ledger is emptied HERE, before the first line is written to it — payroll is
+        // booked inside PayTroops just below, and clearing afterwards used to erase it. Two
+        // thirds of the military spend then existed, was debited, and appeared nowhere on
+        // the economic view, which showed a state that had apparently stopped buying.
+        belligerent.AllocationThisTurn.Clear();
+
         // Payroll comes before every choice, like rations. It is most of a war budget,
         // and it is the line through which a collapsing revenue reaches the front: a
         // state that cannot pay its army does not get to keep that army in the line.
@@ -81,7 +85,6 @@ public sealed class AllocationPhase : ITurnPhase
         }
 
         belligerent.AirDefence.RearShare = doctrine.RearDefenceShare;
-        belligerent.AllocationThisTurn.Clear();
 
         double unspent = 0d;
         double militarySpend = payrollPaid;
@@ -288,9 +291,9 @@ public sealed class AllocationPhase : ITurnPhase
             : belligerent.Industry.GetCapacityPerTurn(kind) * ceilingMultiplier;
 
         // Nobody keeps filling depots that are already overflowing: an army orders up to
-        // a few quarters of war stock, then spends the money elsewhere.
-        double stockCeiling = belligerent.Industry.GetCapacityPerTurn(kind) * StockQuartersHeld;
-        double room = Math.Max(0d, stockCeiling - belligerent.Stock.GetActual(kind));
+        // a few quarters of war stock, then spends the money elsewhere. Same ceiling as the
+        // one aid in kind now obeys — there is exactly one definition of a full depot.
+        double room = Math.Max(0d, belligerent.DepotCeiling(kind) - belligerent.Stock.GetActual(kind));
 
         double produced = Math.Min(Math.Min(affordable, capacity), room);
         if (produced <= 0d)

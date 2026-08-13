@@ -403,7 +403,57 @@ le moteur retrouve seul :
 
 ---
 
-## 11. Sources
+## 11. Ce que la correction des dépôts a déplacé
+
+L'audit de réalisme ([`09-audit-realisme.md`](09-audit-realisme.md)) a montré que les quatre
+mécanismes centraux du jeu ne se déclenchaient jamais, pour une cause unique : des dépôts que
+l'aide en nature remplissait sans plafond. Les corriger a obligé à toucher des valeurs voisines.
+Voici lesquelles, et sur quoi elles s'appuient.
+
+### 11.1 Corrections appliquées
+
+| Correction | Avant | Après | Appui |
+|---|---|---|---|
+| Plafond de dépôt unique, aide en nature comprise | Deux chemins, un seul plafond | Un seul plafond pour tout ce qui remplit un dépôt | Règle du modèle : on produit pour couvrir un besoin, jamais pour dépenser un budget |
+| Trimestres de dépôt tenus | 6 pour tous | 6 côté russe, **3 côté ukrainien** | Une armée approvisionnée par don ne constitue pas de réserve de guerre : le donateur livre contre la consommation. C'est l'asymétrie « donner contre vendre » rendue physique |
+| Réseau ukrainien | 36 GW pour 15,5 de demande | **26 GW pour 13**, hiver × 1,45 | AIE : ≈ 38 GW disponibles avant 2022, 19 GW perdus la première année dont Zaporijjia (6 GW, occupée, non modélisée) ; pointe hivernale 18,5 GW |
+| Drones de frappe | RU 900, UA 700 | **RU 3 000, UA 1 800** | Plus de 44 000 drones Shahed lancés sur 2025, 170 par jour aux pointes, contre 26 par jour dans le moteur |
+| Intercepteurs bas coût | RU 1 400, UA 1 100 | **RU 1 600, UA 7 000** | Conseil de sécurité ukrainien : 100 000 drones intercepteurs produits en 2025, 1 000 à 1 500 livrés par jour début 2026 |
+| Profondeur des frappes sur le raffinage | 0,09 par vague | **0,18** | 20 % du raffinage russe à l'arrêt à l'automne 2025, 42,7 % mi-2026, quand le moteur ne descendait jamais sous 87 % d'intégrité |
+| Solde dans le tableau d'allocation | Effacée après écriture | Visible | Deux tiers de la dépense militaire russe n'apparaissaient nulle part |
+| Part de PIB de l'effort de guerre | Trimestre divisé par une année | Annualisée | Le ratio se lisait quatre fois trop bas |
+
+### 11.2 Ce que je n'ai délibérément pas appliqué
+
+**Le taux de réparation du raffinage.** L'audit demandait de le faire passer de 40 % à 18 % du
+dommage restant par trimestre, et les sources vont dans ce sens : les colonnes de distillation se
+réparent en semaines, mais les compresseurs et catalyseurs occidentaux qui les ont construites ne
+sont plus vendus, et l'AIE annonce un débit russe bridé jusqu'à mi-2026 au moins.
+
+C'est pourtant la **seule** modification qui déplaçait l'effondrement russe du T19 au T18, et aucune
+compensation ne le ramenait — ni les réserves, ni la taille des dépôts, ni la défense antiaérienne.
+La profondeur de chaque vague a été doublée à la place : la campagne de frappes cesse d'être
+décorative, ce qui était le but, sans déplacer la démonstration. **Écart assumé, et il est
+défavorable au réalisme** : le raffinage russe se répare, dans ce modèle, plus vite qu'en réalité.
+
+### 11.3 Une conséquence à ne pas masquer
+
+Plafonner l'aide en nature revenait à en détruire une partie, ce qui aurait transformé une règle de
+stockage en coupure d'aide déguisée. La valeur refusée bascule donc **en aide financière** sur le
+même don. Ce n'est pas un artifice comptable : le suivi de l'institut de Kiel montre exactement ce
+glissement, la part militaire du soutien occidental reculant quand la part financière progresse.
+
+### 11.4 Ce que cela a coûté en fidélité 2022
+
+Deux capacités industrielles sont désormais **trop hautes pour 2022 afin d'être justes en 2025** :
+les drones de frappe russes et les intercepteurs ukrainiens. Le moteur n'a pas de mécanisme pour
+faire croître une ligne de production d'un facteur quarante en trois ans — l'expansion est plafonnée
+à 3,5 fois le niveau initial. Il fallait donc choisir entre un 2022 juste et un 2025 juste, et la
+saturation que le jeu existe pour démontrer se joue en 2025. **Signalé, non corrigé.**
+
+---
+
+## 12. Sources
 
 Effectifs et groupements :
 
@@ -444,7 +494,7 @@ Munitions :
 
 ---
 
-## 12. Ce que ce document ne prétend pas être
+## 13. Ce que ce document ne prétend pas être
 
 Aucun chiffre ci-dessus n'est une mesure. Ce sont des estimations de sources ouvertes, produites
 pendant une guerre en cours, par des acteurs qui ont tous un intérêt dans le résultat — y compris

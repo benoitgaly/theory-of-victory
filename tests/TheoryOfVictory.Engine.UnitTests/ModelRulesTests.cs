@@ -676,4 +676,134 @@ public sealed class ModelRulesTests
         Assert.True(massed.MissilesLeaked > small.MissilesLeaked);
         Assert.True(massed.Saturated);
     }
+
+    /// <summary>
+    /// The sector detail the board draws its counters from is published, never recomputed on
+    /// the page — and publishing it changes nothing. The three runs still land on their turns,
+    /// which is the whole guarantee: a figure that moved would mean a quantity was computed a
+    /// second time instead of being exposed once.
+    /// </summary>
+    [Fact]
+    public void PublishingSectorDetail_ChangesNoOutcome()
+    {
+        PlayedGame resolve = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Resolve));
+        PlayedGame holds = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
+        PlayedGame collapses = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
+
+        Assert.Equal(19, resolve.Outcome!.Turn);
+        Assert.Equal("frozen_front", holds.Outcome!.Code);
+        Assert.Equal(10, collapses.Outcome!.Turn);
+    }
+
+    /// <summary>
+    /// What the counters are drawn from holds together: the attacker is named, the ratio is
+    /// the published pair, the establishment stands above the power committed wherever a stave
+    /// falls short, and the factors that explain a stalled sector are all on the wire. Kept
+    /// apart from the outcome guard above so a failure here names the publication and a failure
+    /// there names the calibration.
+    /// </summary>
+    [Fact]
+    public void SectorDetail_IsCoherentWithTheResolution()
+    {
+        PlayedGame resolve = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Resolve));
+        PlayedGame holds = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
+        PlayedGame collapses = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Collapses));
+
+        foreach (PlayedGame game in new[] { resolve, holds, collapses })
+        {
+            foreach (TurnSnapshot turn in game.Turns)
+            {
+                // Both sides carry orders, and relative weights leave the engine as shares.
+                Assert.Equal(2, turn.Orders.Count);
+                foreach (SectorOrders orders in turn.Orders)
+                {
+                    Assert.Equal(1d, orders.EffortShare.Values.Sum(), 6);
+                }
+
+                foreach (SectorResolution sector in turn.Sectors)
+                {
+                    // Who was pushing is stated, not left to the sign of a movement that is
+                    // zero on most sectors of most quarters.
+                    Assert.Contains(sector.AttackerSideCode, new[] { Side.Invader.Code, Side.Defender.Code });
+
+                    // The ratio is the published pair and nothing else: if these ever drift
+                    // apart, the board is drawing one comparison and the engine resolving another.
+                    Assert.Equal(sector.AttackerPush / sector.HolderResistance, sector.Ratio, 6);
+
+                    // Liebig, read on the front rather than on the barrel: where the shortest
+                    // stave falls short, the establishment stands above the power actually
+                    // committed, and the gap is the men who are present and unsupplied. The
+                    // two readings must agree — the counter and the barrel draw the same
+                    // scarcity, and two surfaces that disagree cost more than either is worth.
+                    AssertStavesAgree(turn.Invader.MaterialCoverage, sector.InvaderCommitted, sector.InvaderEstablishment);
+                    AssertStavesAgree(turn.Defender.MaterialCoverage, sector.DefenderCommitted, sector.DefenderEstablishment);
+
+                    // The factors that explain a stalled sector are published, not inferred.
+                    Assert.True(sector.TerrainMultiplier > 0d);
+                    Assert.True(sector.DroneFriction >= 1d);
+                    Assert.True(sector.SeasonModifier > 0d);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// A short stave shows on the counter, a full one leaves it flush. Over-supply is clamped
+    /// in the power formula, so the committed figure may sit slightly above the establishment
+    /// without meaning anything — the drawing treats that as no gap, and so does this.
+    /// </summary>
+    private static void AssertStavesAgree(double coverage, double committed, double establishment)
+    {
+        if (committed <= 0d)
+        {
+            return;
+        }
+
+        // The establishment is a ceiling on the front exactly as it is on the barrel.
+        Assert.True(
+            establishment >= committed,
+            $"Couverture à {coverage:F2} : théorique {establishment:N0} sous l'engagé {committed:N0}.");
+
+        if (coverage >= 0.99d)
+        {
+            return;
+        }
+
+        // Strictly above only once the shortfall outweighs the rounding grain. On a small
+        // sector a five per cent gap is fewer than a thousand men: it is real, it is not
+        // printable, and rounding it into existence would be the invention the grain exists
+        // to prevent.
+        double shortfall = committed * ((1d / coverage) - 1d);
+        if (shortfall < 2000d)
+        {
+            return;
+        }
+
+        Assert.True(
+            establishment > committed,
+            $"Couverture à {coverage:F2} : le théorique {establishment:N0} devrait dépasser l'engagé {committed:N0}.");
+    }
+
+    /// <summary>
+    /// Everything the board reads leaves the engine in men, never in thousands. A sector
+    /// counter printing "48" teaches nothing; "48 000 hommes" is immediately an army.
+    /// </summary>
+    [Fact]
+    public void SectorDetail_IsPublishedInMen_LikeEverythingElseTheBoardReads()
+    {
+        PlayedGame game = new GameRunner().Run(UkraineScenario.Build(SupportVariant.Holds));
+        TurnSnapshot turn = game.Turns[8];
+
+        double committed = turn.Sectors.Sum(sector => sector.InvaderCommitted);
+
+        // Sector commitments are shares of one army: assault and cover together add back up to
+        // the combat power the side snapshot publishes, and both are in men.
+        Assert.True(committed > turn.Invader.CombatPower * 0.5d);
+        Assert.True(committed < turn.Invader.CombatPower * 1.5d);
+
+        // A headcount is rounded to the thousand; the two terms of the ratio are not, and the
+        // asymmetry is deliberate — see ManCount.
+        Assert.True(turn.Sectors.All(sector => sector.InvaderCommitted % 1000d == 0d));
+        Assert.True(turn.Sectors.All(sector => sector.DefenderLosses % 1000d == 0d));
+    }
 }

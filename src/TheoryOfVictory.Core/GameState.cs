@@ -67,6 +67,13 @@ public sealed class TurnSnapshot
 
     public List<SectorResolution> Sectors { get; init; } = [];
 
+    /// <summary>
+    /// What each side ordered on the front this quarter. The four verbs the board names —
+    /// hold, press, dig in, strike deep — are read from here and from the budget, never
+    /// guessed from the result.
+    /// </summary>
+    public List<SectorOrders> Orders { get; init; } = [];
+
     public List<PlayedCard> CardsPlayed { get; init; } = [];
 
     public List<string> Narrative { get; init; } = [];

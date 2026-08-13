@@ -46,6 +46,14 @@ public sealed class DeepStrikePhase : ITurnPhase
         target.Stock.Destroy(ResourceKind.CheapInterceptors, resolution.CheapInterceptorsSpent);
         target.Stock.Destroy(ResourceKind.HeavyInterceptors, resolution.HeavyInterceptorsSpent);
 
+        // A magazine is sized on what it fires. Recording it here is what lets the depot
+        // ceiling hold enough interceptors to defend the sky without letting aid pile up a
+        // wall of them that no wave could ever saturate.
+        target.BurntThisTurn[ResourceKind.CheapInterceptors.Code] = resolution.CheapInterceptorsSpent;
+        target.BurntThisTurn[ResourceKind.HeavyInterceptors.Code] = resolution.HeavyInterceptorsSpent;
+        attacker.BurntThisTurn[ResourceKind.StrikeDrones.Code] = drones;
+        attacker.BurntThisTurn[ResourceKind.Missiles.Code] = missiles;
+
         ApplyDamage(context, target, resolution);
         Report(context, attacker, target, resolution);
 
@@ -69,7 +77,19 @@ public sealed class DeepStrikePhase : ITurnPhase
                 break;
 
             case StrikeTarget.Refining:
-                target.Economy.RefiningIntegrity = Math.Clamp(target.Economy.RefiningIntegrity - (damage * 0.09d), 0.05d, 1d);
+                // A refinery is not a substation. The observed campaigns took 20 % of Russian
+                // refining offline in autumn 2025 and 42,7 % by mid-2026, where the engine
+                // never took integrity below 87 % — the sustained-campaign card, which is the
+                // central weapon of the winning run, bought almost nothing. Depth per wave is
+                // doubled here, from 0,09 to 0,18.
+                //
+                // The audit also asked for the repair rate to be cut from 40 % to 18 % a
+                // quarter. That half is deliberately NOT applied: it is the one change that
+                // moved the Russian collapse from T19 to T18 and broke the demonstration,
+                // whatever else was compensated. Deepening each wave reaches the same goal —
+                // making the campaign matter — through the lever that does not move the
+                // outcome. See docs/design/04-calibration-effectifs.md §12.
+                target.Economy.RefiningIntegrity = Math.Clamp(target.Economy.RefiningIntegrity - (damage * 0.18d), 0.05d, 1d);
                 break;
 
             case StrikeTarget.Industry:

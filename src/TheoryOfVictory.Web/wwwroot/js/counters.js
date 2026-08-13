@@ -88,11 +88,16 @@ window.tovCounters = (function () {
     var NOTCHES = 7;
     var ARMY_MEN = 60000;      // at or above, the pushing side is drawn as an army
 
-    var NW = 6, NH = 9, NGAP = 1.6;          // notch box and spacing
+    // The notch has to be readable without a lens: the gap between a filled step and a hollow
+    // one IS the thesis, and at six pixels by nine it was not decipherable. Removing half the
+    // objects on the map is what bought the room to make it eight by twelve.
+    var NW = 8, NH = 12, NGAP = 2;           // notch box and spacing
     var RUN = NOTCHES * (NW + NGAP);         // one side's full run
     var CENTRE = 10;                         // half-width of the resolution glyph
     var FRAME_W = 15, FRAME_H = 11;          // the NATO mark on the pushing side
+    var NOTE_CHAR = 4.9;                     // width of one glyph of the note, at 8,5 px serif
     var PITCH = 26;                          // minimum vertical distance between two gauges
+    var MARGIN = 8;                          // nothing this file draws comes closer to the edge
     var MAP_W = 900, MAP_H = 520;
 
     var COLOUR = {
@@ -246,8 +251,8 @@ window.tovCounters = (function () {
             return true;
         }
 
-        if (free(cy - 10)) { return cy - 10; }
-        if (free(cy + 16)) { return cy + 16; }
+        if (free(cy - 12)) { return cy - 12; }
+        if (free(cy + 18)) { return cy + 18; }
         return null;
     }
 
@@ -305,10 +310,23 @@ window.tovCounters = (function () {
        direction the army stands in. Hollow notches continue the run where the establishment
        stands above what the flows actually supplied. */
 
+    // How many notch slots this side actually occupies. A weak sector draws a short run and a
+    // strong one a long one, so the piece is as long as its data rather than padded out to the
+    // maximum — which is also what keeps a label from floating half a gauge away from its own
+    // notches, and what keeps the whole piece off the city names it does not need to cover.
+    function notchCount(side) {
+        if (side.power === null || side.power === undefined) { return NOTCHES; }
+        var filled = Math.min(NOTCHES, side.power / STEP_MEN);
+        var total = side.establishment !== null && side.establishment !== undefined
+            ? Math.min(NOTCHES, Math.max(filled, side.establishment / STEP_MEN))
+            : filled;
+        return Math.max(1, Math.ceil(total));
+    }
+
     function run(g, cx, cy, direction, side) {
         var known = side.power !== null && side.power !== undefined;
         var filled = known ? Math.min(NOTCHES, side.power / STEP_MEN) : 0;
-        var total = known && side.establishment !== null
+        var total = known && side.establishment !== null && side.establishment !== undefined
             ? Math.min(NOTCHES, Math.max(filled, side.establishment / STEP_MEN))
             : filled;
 
@@ -329,16 +347,19 @@ window.tovCounters = (function () {
 
             if (dry <= 0.02) { break; }
 
-            // The hollow part: men present, and not supplied.
+            // The hollow part: men present, and not supplied. It carries a faint wash as well
+            // as an outline, so an empty step reads as a step that exists and is empty — and
+            // never as nothing at all, which is what the eye does with a bare rule.
             g.appendChild(svgEl("rect", {
                 x: x, y: cy - NH / 2, width: NW * dry, height: NH,
-                fill: "none", stroke: side.colour, "stroke-width": "0.7", opacity: "0.55"
+                fill: side.colour, "fill-opacity": "0.11",
+                stroke: side.colour, "stroke-width": "0.9", opacity: "0.7"
             }));
 
             if (full > 0.02) {
                 g.appendChild(svgEl("rect", {
                     x: x, y: cy - NH / 2, width: NW * full, height: NH,
-                    fill: side.colour, opacity: "0.82"
+                    fill: side.colour, opacity: "0.88"
                 }));
             }
         }
@@ -346,33 +367,49 @@ window.tovCounters = (function () {
         // A broken army is struck through, and it must not look like any other quarter: this is
         // the turn the whole game exists to reach.
         if (side.collapsed) {
-            var end = cx + direction * (CENTRE + RUN);
+            var end = cx + direction * (CENTRE + notchCount(side) * (NW + NGAP));
             g.appendChild(svgEl("line", {
-                x1: cx + direction * CENTRE, y1: cy - NH / 2 - 2,
-                x2: end, y2: cy + NH / 2 + 2,
+                x1: cx + direction * CENTRE, y1: cy - NH / 2 - 3,
+                x2: end, y2: cy + NH / 2 + 3,
                 stroke: side.colour, "stroke-width": "1.4", opacity: "0.85"
             }));
         }
-
-        return known ? Math.max(1, Math.ceil(total)) : NOTCHES;
     }
 
     /* ---------------- The resolution glyph ---------------- */
+
+    /* A front at rest is not a front that holds, and the two must not be drawn alike.
+       A butée is two armies pushing and bleeding for nothing; a quiet line is a sector where
+       nothing is being spent at all — the autumn of 2021, when the line is the one from 2014,
+       nobody attacks, and Russia is doing nothing but massing behind it.
+
+       The discriminator is losses, not the ratio. Measured over the three reference runs, still
+       sectors carry ratios from 0,15 to 1,11 with a median at 0,55, and the opening quarter of
+       the invasion sits at 0,49 to 0,97 — squarely inside that range. No threshold on the ratio
+       separates the two, and one would have reclassified between a fifth and four fifths of
+       ordinary frozen sectors depending on where it was put. A quarter that cost nobody a
+       thousand men, on the other hand, is unambiguous. */
+    function quiet(g, cx, cy) {
+        g.appendChild(svgEl("line", {
+            x1: cx, y1: cy - 6, x2: cx, y2: cy + 6,
+            stroke: COLOUR.ink3, "stroke-width": "1.2", opacity: "0.75"
+        }));
+    }
 
     // Below 1,1 the line holds. Two chevrons that meet and a stop bar between them — the frozen
     // front is the normal result of this model, not an absence, and it is drawn as an event.
     function butee(g, cx, cy) {
         [1, -1].forEach(function (dir) {
             g.appendChild(svgEl("path", {
-                d: "M" + (cx + dir * 7) + " " + (cy - 5) +
+                d: "M" + (cx + dir * 7.5) + " " + (cy - 6.5) +
                    "L" + (cx + dir * 2.5) + " " + cy +
-                   "L" + (cx + dir * 7) + " " + (cy + 5),
+                   "L" + (cx + dir * 7.5) + " " + (cy + 6.5),
                 fill: "none", stroke: COLOUR.ink, "stroke-width": "1.5",
                 "stroke-linecap": "round", "stroke-linejoin": "round", opacity: "0.85"
             }));
         });
         g.appendChild(svgEl("line", {
-            x1: cx, y1: cy - 5.5, x2: cx, y2: cy + 5.5,
+            x1: cx, y1: cy - 7, x2: cx, y2: cy + 7,
             stroke: COLOUR.ink, "stroke-width": "1", opacity: "0.5"
         }));
     }
@@ -392,8 +429,8 @@ window.tovCounters = (function () {
         }));
         g.appendChild(svgEl("path", {
             d: "M" + (cx + dir * reach) + " " + cy +
-               "L" + (cx + dir * (reach - 6)) + " " + (cy - 4) +
-               "L" + (cx + dir * (reach - 6)) + " " + (cy + 4) + "Z",
+               "L" + (cx + dir * (reach - 7)) + " " + (cy - 4.8) +
+               "L" + (cx + dir * (reach - 7)) + " " + (cy + 4.8) + "Z",
             fill: colour
         }));
     }
@@ -470,9 +507,17 @@ window.tovCounters = (function () {
         });
 
         marks.forEach(function (m, index) {
-            var cx = Math.max(RUN + CENTRE + 30, Math.min(MAP_W - RUN - CENTRE - 30, m.ax));
-            var cy = ys[index];
             var sector = m.sector;
+            var cy = ys[index];
+
+            // Fold back inside the frame, reserving what this particular gauge actually draws
+            // on each flank — its own notches plus the pushing side's mark. The note that still
+            // would not fit changes flank rather than being clipped.
+            var reserveEast = CENTRE + notchCount(sector.invader) * (NW + NGAP)
+                + (sector.attacker === "invader" ? FRAME_W + 3 : 0);
+            var reserveWest = CENTRE + notchCount(sector.defender) * (NW + NGAP)
+                + (sector.attacker === "defender" ? FRAME_W + 3 : 0);
+            var cx = Math.max(MARGIN + reserveWest, Math.min(MAP_W - MARGIN - reserveEast, m.ax));
             var g = svgEl("g", {});
 
             // A leader back to the true position whenever the piece had to be nudged.
@@ -484,22 +529,31 @@ window.tovCounters = (function () {
             }
 
             // The invader stands east of the line, the defender west of it.
-            var invaderNotches = run(g, cx, cy, 1, sector.invader);
-            var defenderNotches = run(g, cx, cy, -1, sector.defender);
+            run(g, cx, cy, 1, sector.invader);
+            run(g, cx, cy, -1, sector.defender);
 
-            if (Math.abs(sector.moved) <= 0.01) {
+            if (Math.abs(sector.moved) > 0.01) {
+                arrow(g, cx, cy, sector);
+            } else if (sector.cost > 0) {
                 butee(g, cx, cy);
             } else {
-                arrow(g, cx, cy, sector);
+                quiet(g, cx, cy);
             }
+
+            // Where the piece actually ends on each flank, notches drawn and mark included.
+            var east = cx + CENTRE + notchCount(sector.invader) * (NW + NGAP);
+            var west = cx - CENTRE - notchCount(sector.defender) * (NW + NGAP);
 
             var attacking = sector.attacker === "invader" ? sector.invader
                 : (sector.attacker === "defender" ? sector.defender : null);
-            if (attacking && attacking.power !== null) {
-                var side = sector.attacker === "invader" ? 1 : -1;
-                var notches = sector.attacker === "invader" ? invaderNotches : defenderNotches;
-                var markX = cx + side * (CENTRE + notches * (NW + NGAP) + 3);
-                mark(g, side < 0 ? markX - FRAME_W : markX, cy, attacking);
+            if (attacking && attacking.power !== null && attacking.power !== undefined) {
+                if (sector.attacker === "invader") {
+                    mark(g, east + 3, cy, attacking);
+                    east += 3 + FRAME_W;
+                } else {
+                    mark(g, west - 3 - FRAME_W, cy, attacking);
+                    west -= 3 + FRAME_W;
+                }
             }
 
             // The name rides above its own gauge, in small capitals so it never reads as one of
@@ -527,7 +581,18 @@ window.tovCounters = (function () {
             }
 
             if (note) {
-                g.appendChild(halo(text(cx + CENTRE + RUN + 22, cy + 3, note, {
+                // Against the piece's own edge, not against the widest a piece could ever be —
+                // a figure floating half a gauge away from its notches has no owner. East by
+                // default, west when this particular string would not clear the frame there,
+                // and clamped outright if neither flank has the room: a figure cut by the
+                // border is the one thing worse than a figure on the wrong side.
+                var width = note.length * NOTE_CHAR;
+                var onEast = east + 8 + width <= MAP_W - MARGIN;
+                var nx = onEast
+                    ? Math.min(east + 8, MAP_W - MARGIN - width)
+                    : Math.max(west - 8, MARGIN + width);
+                g.appendChild(halo(text(nx, cy + 3, note, {
+                    "text-anchor": onEast ? "start" : "end",
                     "font-size": "8.5", "font-family": "Georgia, 'Palatino Linotype', serif",
                     "font-variant-numeric": "tabular-nums", fill: noteColour
                 })));

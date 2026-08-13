@@ -23,10 +23,25 @@ public sealed class Economy
     public double FiscalCaptureRate { get; set; } = 0.09d;
 
     /// <summary>
-    /// Ceiling on what can be poured into the war in one quarter, as a share of GDP.
-    /// Without it, unspent cash compounds and the war effort drifts past the whole economy.
+    /// Ceiling on what can be poured into the war in ONE QUARTER, expressed as a share of
+    /// ANNUAL GDP. The two periods differ on purpose, and reading them as one is the trap:
+    /// 0,038 here is not a war effort of 3,8 % of GDP, it is four quarters of 3,8 %, so
+    /// roughly 15 % of GDP a year. Use <see cref="AnnualWarEffortShareOfGdp"/> whenever the
+    /// figure is meant for a human — never this one.
+    ///
+    /// Without the ceiling, unspent cash compounds and the war effort drifts past the whole
+    /// economy.
     /// </summary>
     public double WarBudgetCeilingShare { get; set; } = 0.03d;
+
+    /// <summary>
+    /// The war effort as a year-on-year share of GDP — the number history books quote, and
+    /// the only one fit to be displayed. Four quarterly ceilings over one annual GDP.
+    /// </summary>
+    public double AnnualWarEffortShareOfGdp
+    {
+        get { return WarBudgetCeilingShare * 4d; }
+    }
 
     /// <summary>
     /// Share of ordinary tax revenue the state can divert to the war. The rest of the
@@ -109,7 +124,12 @@ public sealed class Economy
         }
     }
 
-    /// <summary>Share of GDP going to the war, the number the history books quote.</summary>
+    /// <summary>
+    /// Share of GDP actually going to the war, annualised — the number the history books
+    /// quote. The spend is a quarter's worth and the GDP is a year's worth, so the quarterly
+    /// figure has to be multiplied by four before the two can be divided. Without that, the
+    /// ratio reads four times too low and would put Russia at 2 % of GDP.
+    /// </summary>
     public double WarEffortShare
     {
         get
@@ -119,7 +139,7 @@ public sealed class Economy
                 return 0d;
             }
 
-            return LastTurnMilitarySpendBillions / HeadlineGdpBillions;
+            return LastTurnMilitarySpendBillions * 4d / HeadlineGdpBillions;
         }
     }
 }

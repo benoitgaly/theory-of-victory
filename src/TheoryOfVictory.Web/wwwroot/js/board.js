@@ -967,9 +967,19 @@
     }
 
     /* ---------------- Illustrations de cartes ----------------
-       Six scènes, une grammaire commune : ciel dégradé, une source de lumière,
-       un plan intermédiaire, une silhouette au premier plan. La profondeur fait
-       l'illustration ; le pictogramme fait le panneau de signalisation. */
+       Une scène par sujet, jamais par famille : sur un jeu de cartes, l'illustration
+       est ce qui fait reconnaître une carte avant même d'en lire le titre. Deux cartes
+       qui racontent la même chose sous deux angles peuvent partager un motif ; deux
+       cartes de sens opposé, jamais.
+
+       Grammaire commune à toutes : ciel dégradé accordé à la teinte de la famille,
+       une source de lumière unique, un plan intermédiaire, une silhouette au premier
+       plan, un voile sombre en bas. La profondeur fait l'illustration ; le pictogramme
+       ferait un panneau de signalisation.
+
+       Les scènes se composent à partir des primitives qui suivent : c'est ce qui tient
+       la cohérence du deck sur une centaine de vignettes, et ce qui les garde lisibles
+       à deux cents pixels de large. */
 
     function artDefs(g) {
         var d = svgEl("defs", {});
@@ -1005,6 +1015,205 @@
             x: 0, y: 38, width: 100, height: 22,
             fill: linGrad(defs, [["0%", "#000", 0], ["100%", "#000", 0.42]])
         }));
+    }
+
+    /* --- Matière commune ------------------------------------------------- */
+
+    // Le ciel appartient à la famille, pas à la scène : c'est ce qui fait qu'un deck de
+    // cent cartes se lit comme un deck et non comme une collection d'images.
+    var SKY = {
+        "Économique": [["0%", "#241a17"], ["52%", "#6d4630"], ["100%", "#d59a5c"]],
+        "Politique occidentale": [["0%", "#0c1c33"], ["56%", "#1d3f6b"], ["100%", "#6f93bf"]],
+        "Politique interne": [["0%", "#241b16"], ["54%", "#54382a"], ["100%", "#a9784f"]],
+        "Énergie": [["0%", "#101c28"], ["58%", "#3b3524"], ["100%", "#c4761f"]],
+        "Militaire et technologique": [["0%", "#0d1826"], ["60%", "#274056"], ["100%", "#8ba5b8"]],
+        "Externe": [["0%", "#1b2a26"], ["54%", "#4b5f4c"], ["100%", "#b6bf94"]],
+        "": [["0%", "#1d2129"], ["58%", "#454b52"], ["100%", "#9a9384"]]
+    };
+
+    // Encre chaude : sur du papier, un noir froid sonne écran.
+    var INK = "#12100d";
+    var PAPER = "#efe6d2";
+    var WARM = "#f6d097";
+    var FIRE = "#e8721f";
+    var ALERT = "#e8746a";
+    var SIGNAL = "#8fd0e8";
+
+    function shape(g, path, fill, op) {
+        g.appendChild(svgEl("path", {
+            d: path, fill: fill || INK, opacity: op === undefined ? "1" : String(op)
+        }));
+    }
+
+    function box(g, x, y, w, h, fill, op) {
+        g.appendChild(svgEl("rect", {
+            x: x, y: y, width: w, height: h, fill: fill || INK,
+            opacity: op === undefined ? "1" : String(op)
+        }));
+    }
+
+    function disc(g, x, y, r, fill, op) {
+        g.appendChild(svgEl("circle", {
+            cx: x, cy: y, r: r, fill: fill || INK, opacity: op === undefined ? "1" : String(op)
+        }));
+    }
+
+    function stroke(g, path, colour, w, op) {
+        g.appendChild(svgEl("path", {
+            d: path, fill: "none", stroke: colour, "stroke-width": String(w || 1),
+            "stroke-linecap": "round", "stroke-linejoin": "round",
+            opacity: op === undefined ? "1" : String(op)
+        }));
+    }
+
+    // Source de lumière unique, posée bas : c'est elle qui donne la profondeur.
+    function sun(g, x, y, r, fill, op) {
+        disc(g, x, y, r, fill || WARM, op === undefined ? 0.8 : op);
+    }
+
+    // Le halo déborde de sa source, sinon la lumière reste un disque collé au fond.
+    function glow(g, d, colour, cx, cy, r, op) {
+        box(g, 0, 0, 100, 60, radGrad(d,
+            [["0%", colour, op === undefined ? 0.5 : op], ["100%", colour, 0]], cx, cy, r || "0.55"));
+    }
+
+    // Sol plat : la scène se ferme sur une masse sombre.
+    function ground(g, y, fill) {
+        box(g, 0, y, 100, 60 - y, fill);
+    }
+
+    // Horizon vallonné : le plein air, sans dessiner de paysage.
+    function ridge(g, y, fill) {
+        shape(g, "M0 60 L0 " + y + " Q26 " + (y - 5) + " 50 " + (y - 1) +
+                 " Q76 " + (y + 3) + " 100 " + (y - 4) + " L100 60 Z", fill);
+    }
+
+    // Une silhouette humaine : tête et buste. C'est la seule échelle qui parle.
+    function figure(g, x, y, h, fill) {
+        var w = h * 0.46;
+        disc(g, x, y - h, h * 0.21, fill);
+        shape(g, "M" + (x - w / 2) + " " + y + " Q" + x + " " + (y - h * 0.95) + " " +
+                 (x + w / 2) + " " + y + " Z", fill);
+    }
+
+    // Une foule de dos : des nuques, jamais des visages.
+    function crowd(g, y, from, step, n, r, fill) {
+        for (var i = 0; i < n; i++) {
+            var x = from + i * step;
+            var yy = y + (i % 3) * (r * 0.5);
+            shape(g, "M" + (x - r * 1.8) + " 60 Q" + x + " " + (yy + r * 0.5) + " " +
+                     (x + r * 1.8) + " 60 Z", fill);
+            disc(g, x, yy, r, fill);
+        }
+    }
+
+    // Caisse de matériel : le flux étranger, quantifié en boîtes.
+    function crate(g, x, y, w, h, fill) {
+        box(g, x, y, w, h, fill || "#c8a86a");
+        box(g, x, y, w, h * 0.24, "#fff", 0.18);
+        for (var k = 1; k < 3; k++) {
+            g.appendChild(svgEl("line", {
+                x1: x + k * (w / 3), y1: y + 0.6, x2: x + k * (w / 3), y2: y + h - 0.6,
+                stroke: "#000", opacity: "0.22", "stroke-width": "0.6"
+            }));
+        }
+    }
+
+    // Flamme : une seule, jamais un incendie décoratif.
+    function flame(g, x, y, s, d) {
+        shape(g, "M" + x + " " + y + " Q" + (x - 2.6 * s) + " " + (y - 4 * s) + " " +
+                 (x - 0.3 * s) + " " + (y - 8 * s) + " Q" + (x + 0.7 * s) + " " + (y - 4.6 * s) + " " +
+                 (x + 2.4 * s) + " " + (y - 6 * s) + " Q" + (x + 3 * s) + " " + (y - 1.6 * s) + " " +
+                 x + " " + y + " Z",
+             d ? linGrad(d, [["0%", "#fff0c0"], ["100%", FIRE]]) : FIRE);
+    }
+
+    // Drone : aile delta de trois quarts, l'objet le plus fréquent du deck.
+    function droneShape(g, x, y, s, flip) {
+        var f = flip ? -1 : 1;
+        shape(g, "M" + x + " " + y + " L" + (x + 17 * s * f) + " " + (y + 2 * s) +
+                 " L" + (x + 6 * s * f) + " " + (y + 4 * s) + " L" + (x + 3 * s * f) + " " + (y + 6 * s) +
+                 " L" + (x + 2 * s * f) + " " + (y + 3 * s) + " L" + (x - 3 * s * f) + " " + (y + 2.5 * s) + " Z");
+        shape(g, "M" + (x + 6 * s * f) + " " + (y + 2 * s) + " L" + (x + 10 * s * f) + " " + (y - 4 * s) +
+                 " L" + (x + 11 * s * f) + " " + (y - 3.4 * s) + " L" + (x + 8 * s * f) + " " + (y + 2.6 * s) + " Z");
+        disc(g, x + 15 * s * f, y + 2 * s, 0.7 * s, "#ff6b5e");
+    }
+
+    // Pylône de ligne à haute tension.
+    function pylon(g, x, y, h) {
+        var w = h * 0.34;
+        stroke(g, "M" + (x - w / 2) + " " + y + " L" + x + " " + (y - h) + " L" + (x + w / 2) + " " + y +
+                  " M" + (x - w * 0.34) + " " + (y - h * 0.42) + " L" + (x + w * 0.34) + " " + (y - h * 0.42) +
+                  " M" + (x - w * 0.2) + " " + (y - h * 0.72) + " L" + (x + w * 0.2) + " " + (y - h * 0.72),
+               INK, h * 0.07);
+        stroke(g, "M" + (x - w * 0.62) + " " + (y - h * 0.86) + " L" + (x + w * 0.62) + " " + (y - h * 0.86),
+               INK, h * 0.07);
+    }
+
+    // Feuille de papier : décrets, contrats, registres, plans. Sur un fond sombre,
+    // c'est la forme claire qui porte le sens.
+    function sheet(g, x, y, w, h, tilt, lines) {
+        var t = tilt || 0;
+        var s = svgEl("g", { transform: "rotate(" + t + " " + (x + w / 2) + " " + (y + h / 2) + ")" });
+        g.appendChild(s);
+        box(s, x, y, w, h, PAPER, 0.94);
+        box(s, x, y, w, h * 0.1, "#fff", 0.5);
+        for (var i = 0; i < (lines === undefined ? 4 : lines); i++) {
+            box(s, x + w * 0.14, y + h * (0.26 + i * 0.16), w * (i % 2 ? 0.5 : 0.68), h * 0.06, INK, 0.42);
+        }
+        return s;
+    }
+
+    // Sceau : ce qui rend un document opposable — ou ce qu'on brise.
+    function seal(g, x, y, r, colour) {
+        disc(g, x, y, r, colour || "#a8322a");
+        disc(g, x, y, r * 0.62, "#fff", 0.22);
+    }
+
+    // Courbe : ce que la comptabilité raconte, en une ligne.
+    function curve(g, pts, colour, w) {
+        var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0] + " " + p[1]; }).join(" ");
+        stroke(g, d, colour || ALERT, w || 2.2);
+        pts.forEach(function (p, i) {
+            if (i % 2 === 0) { disc(g, p[0], p[1], 1.7, colour || ALERT, 0.85); }
+        });
+    }
+
+    // Navire vu de flanc : coque basse, superstructure arrière.
+    function ship(g, x, y, s, fill) {
+        shape(g, "M" + (x - 20 * s) + " " + y + " L" + (x + 20 * s) + " " + y +
+                 " L" + (x + 16 * s) + " " + (y + 4 * s) + " L" + (x - 16 * s) + " " + (y + 4 * s) + " Z", fill);
+        box(g, x + 6 * s, y - 5 * s, 8 * s, 5 * s, fill);
+        box(g, x + 9 * s, y - 8 * s, 2 * s, 3 * s, fill);
+    }
+
+    // Voie ferrée en fuite : deux files et leurs traverses.
+    function rails(g, y, cutAt) {
+        stroke(g, "M4 60 L38 " + y + " M40 60 L46 " + y, INK, 1.6);
+        for (var i = 0; i < 6; i++) {
+            var k = i / 6;
+            var y1 = 60 - (60 - y) * k;
+            var x1 = 4 + (38 - 4) * k, x2 = 40 + (46 - 40) * k;
+            stroke(g, "M" + x1 + " " + y1 + " L" + x2 + " " + y1, INK, 1.4 - k * 0.7);
+        }
+        if (cutAt) {
+            shape(g, "M" + (cutAt - 7) + " " + 50 + " L" + (cutAt + 5) + " 46 L" + (cutAt + 9) + " 54 L" +
+                     (cutAt - 3) + " 57 Z", "#2b2118");
+        }
+    }
+
+    // Coupole de protection : le geste « on couvre ce qui est en dessous ».
+    function dome(g, cx, cy, r, colour) {
+        stroke(g, "M" + (cx - r) + " " + cy + " A" + r + " " + r + " 0 0 1 " + (cx + r) + " " + cy,
+               colour || SIGNAL, 1.5, 0.85);
+        stroke(g, "M" + (cx - r * 0.72) + " " + cy + " A" + (r * 0.72) + " " + (r * 0.72) +
+                  " 0 0 1 " + (cx + r * 0.72) + " " + cy, colour || SIGNAL, 1, 0.5);
+    }
+
+    // Faisceau de projecteur : ce que le régime éclaire, et ce qu'il laisse dans l'ombre.
+    function beam(g, x, y, spread, len, colour) {
+        shape(g, "M" + x + " " + y + " L" + (x - spread) + " " + (y + len) + " L" + (x + spread) + " " +
+                 (y + len) + " Z", colour || WARM, 0.2);
     }
 
     var ART = {

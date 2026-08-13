@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using TheoryOfVictory.Core;
 using TheoryOfVictory.Engine;
 using TheoryOfVictory.Web.Services;
 
@@ -34,16 +35,40 @@ public sealed class GameController : Controller
             lat = sector.Latitude,
             pushLon = sector.PushLongitude,
             pushLat = sector.PushLatitude,
+            // Fixed properties of the ground, unchanged for the whole game: the board reads
+            // them once, here, rather than per turn on every resolution.
+            width = sector.Width,
+            terrain = sector.TerrainMultiplier,
+            urbanisation = sector.Urbanisation,
+            strategicValue = sector.StrategicValue,
         });
 
-        // February 2022 is turn 1; the page opens on the quarter we are actually living in.
+        // The page opens on the quarter we are actually living in, and the timeline draws
+        // everything beyond it as a projection. The turn is found by matching the calendar
+        // rather than counted from a hard-coded start: the scenario has already moved its
+        // opening once, from the invasion back to the autumn 2021 build-up.
         DateTime now = DateTime.Now;
-        int quartersSinceStart = ((now.Year - 2022) * 4) + (now.Month - 1) / 3;
+        int currentTurn = 1;
+        foreach (TurnSnapshot snapshot in games[0].Turns)
+        {
+            int firstMonth = snapshot.Season switch
+            {
+                Season.Winter => 1,
+                Season.Spring => 4,
+                Season.Summer => 7,
+                _ => 10,
+            };
+
+            if (new DateTime(snapshot.Year, firstMonth, 1) <= now)
+            {
+                currentTurn = snapshot.Turn;
+            }
+        }
 
         ViewBag.GamesJson = JsonSerializer.Serialize(games, JsonOptions);
         ViewBag.BoardJson = JsonSerializer.Serialize(board, JsonOptions);
         ViewBag.DeckJson = JsonSerializer.Serialize(_library.Deck, JsonOptions);
-        ViewBag.CurrentTurn = Math.Max(1, quartersSinceStart + 1);
+        ViewBag.CurrentTurn = currentTurn;
         return View();
     }
 }

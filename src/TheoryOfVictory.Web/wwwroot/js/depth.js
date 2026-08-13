@@ -57,20 +57,32 @@ window.tovDepth = (function () {
 
     /* ---------------- Display constants ---------------- */
 
-    var CW = 142, CH = 78;          // rear card
-    var SQUARE = 7, SQUARE_GAP = 2.4, MAX_SQUARES = 12;
-    var SQUARE_DAMAGE = 0.05;       // damage points per square — display only
+    var CW = 132, CH = 82;          // rear card
+    var INNER = CW - 20;            // what a line of text may occupy inside it
+
+    // The hollow square against the solid one — repairable damage against a loss measured in
+    // years — is what this card has that nothing else on the board has. At seven pixels the
+    // distinction did not survive; ten is the size at which it reads. The count came down from
+    // twelve to eight to pay for it, which costs nothing: a wave that fills eight squares is
+    // already a catastrophe, and the exact number is in the tooltip.
+    var SQUARE = 10, SQUARE_GAP = 3, MAX_SQUARES = 6;
+    var SQUARE_DAMAGE = 0.075;      // damage points per square — display only
 
     // Fixed screen anchors rather than coordinates. The Ukrainian rear is real ground and sits
     // over the empty paper west of the line, around Zhytomyr; the Russian rear is not on this
     // map at all and stands beyond the border, where the map has nothing to say.
     //
-    // Both are boxed in by pieces that were here first, and the clearances are deliberate: the
-    // legend panel starts at y 214, Kyiv's dot at x 425, the RUSSIE label around x 720 y 80,
-    // and the eastern column of counters comes down from y 100. These two slots are what is
-    // left, and moving either one by twenty pixels lands on something.
+    // Both stand at the western and eastern extremities, as far from the contact line as the
+    // frame allows: the deep rear of Ukraine is its west, and Russia's is off this map
+    // entirely. The first draft put the Ukrainian card in the middle of the country, over the
+    // Kyiv region, which said the opposite of what the piece is for — it made the depth look
+    // like a place on the plateau rather than a place beyond it.
+    //
+    // The clearances are measured, not guessed: the POLOGNE label sits at y 114, Lviv's at
+    // x 163 running to 198, the legend panel starts at y 214, the RUSSIE label is around
+    // x 720 y 80, and the eastern column of gauges comes down from y 137.
     var PLACE = {
-        defender: { x: 250, y: 118, label: "Arrière ukrainien", bow: 40 },
+        defender: { x: 20, y: 122, label: "Arrière ukrainien", bow: 40 },
         invader: { x: 752, y: 16, label: "Arrière russe", bow: 72 }
     };
 
@@ -93,16 +105,6 @@ window.tovDepth = (function () {
         Logistics: "Nœuds logistiques"
     };
 
-    // The scarcest stave, in the colours the barrel already uses on the other screens. It lives
-    // here rather than on the sector gauges because it is a property of an ARMY: the engine
-    // holds one bottleneck per side, and drawing it once per sector printed the same two values
-    // sixteen times.
-    var BOTTLENECK = {
-        weapons: { label: "Armes", colour: "#b8860b" },
-        fuel: { label: "Carburant", colour: "#8a5a2b" },
-        food: { label: "Nourriture", colour: "#3d7a51" }
-    };
-
     /* ---------------- Helpers, same facture as hexmap.js ---------------- */
 
     function svgEl(tag, attrs) {
@@ -120,6 +122,36 @@ window.tovDepth = (function () {
         n.setAttribute("y", y);
         n.textContent = content;
         return n;
+    }
+
+    // Estimated width of a run of text. SVG can measure itself once it is in a document, but
+    // nothing here is in a document yet and the card has to be laid out before it is attached.
+    // The coefficients are deliberately generous: a line that is judged slightly too wide and
+    // set one point smaller costs nothing, a line judged too narrow runs off the card.
+    function widthOf(content, attrs) {
+        var size = parseFloat(attrs["font-size"] || "10");
+        var serif = (attrs["font-family"] || "").indexOf("Georgia") >= 0;
+        var spacing = String(attrs["letter-spacing"] || "0");
+        var extra = spacing.indexOf("em") >= 0 ? size * parseFloat(spacing) : parseFloat(spacing) || 0;
+        return content.length * ((size * (serif ? 0.58 : 0.56)) + extra);
+    }
+
+    // A line that never leaves its card. It shrinks a point at a time down to a floor, then
+    // truncates — because the alternative, which this card shipped with, is a sentence running
+    // off the panel and off the map frame behind it.
+    function fitted(x, y, content, attrs, maxWidth) {
+        var size = parseFloat(attrs["font-size"] || "10");
+        var trimmed = content;
+
+        while (widthOf(trimmed, attrs) > maxWidth && size > 7) {
+            size -= 0.5;
+            attrs["font-size"] = String(size);
+        }
+        while (widthOf(trimmed, attrs) > maxWidth && trimmed.length > 4) {
+            trimmed = trimmed.slice(0, -2) + "…";
+        }
+
+        return text(x, y, trimmed, attrs);
     }
 
     function tip(node, content) {
@@ -157,19 +189,8 @@ window.tovDepth = (function () {
             colour: sideCode === "invader" ? COLOUR.invader : COLOUR.defender,
             place: PLACE[sideCode],
             wave: wave || null,
-            standing: standingFigure(wave, snapshot),
-            bottleneck: bottleneckOf(snapshot)
+            standing: standingFigure(wave, snapshot)
         };
-    }
-
-    // Named only when it bites: pointing at a stave that covers the need would put a warning on
-    // an army that has none.
-    function bottleneckOf(snapshot) {
-        if (!snapshot || !snapshot.bottleneckCode) { return null; }
-        if (snapshot.materialCoverage === undefined || snapshot.materialCoverage >= 0.95) { return null; }
-        var flow = BOTTLENECK[snapshot.bottleneckCode];
-        if (!flow) { return null; }
-        return { label: flow.label, colour: flow.colour, coverage: snapshot.materialCoverage };
     }
 
     // The line that makes a sustained campaign legible: what the rear still carries from every
@@ -212,36 +233,18 @@ window.tovDepth = (function () {
             stroke: rear.colour, "stroke-width": "2.4", opacity: "0.8"
         }));
 
-        g.appendChild(text(10, 13, rear.place.label.toUpperCase(), {
+        g.appendChild(fitted(10, 13, rear.place.label.toUpperCase(), {
             "font-size": "8", "font-weight": "700", "letter-spacing": "0.13em", fill: COLOUR.ink3
-        }));
-
-        // The scarcest stave of this army, once, where the army is named. It has nothing to do
-        // with the strike wave and shows whether or not one was flown.
-        if (rear.bottleneck) {
-            var chip = svgEl("g", {});
-            chip.appendChild(svgEl("circle", {
-                cx: CW - 62, cy: 10, r: 3, fill: rear.bottleneck.colour
-            }));
-            chip.appendChild(text(CW - 56, 13,
-                rear.bottleneck.label + " " + percent(rear.bottleneck.coverage), {
-                    "font-size": "8.5", fill: COLOUR.ink2
-                }));
-            tip(chip, "Douve la plus courte de cette armée : "
-                + rear.bottleneck.label.toLowerCase() + ", couverte à "
-                + percent(rear.bottleneck.coverage) + " du besoin.\n"
-                + "C'est elle qui plafonne la puissance sur tous les secteurs à la fois.");
-            g.appendChild(chip);
-        }
+        }, INNER));
 
         if (!rear.wave) {
-            g.appendChild(text(10, 34, "Aucune frappe ce trimestre", {
+            g.appendChild(fitted(10, 32, "Aucune frappe ce trimestre", {
                 "font-size": "10", "font-style": "italic",
                 "font-family": "Georgia, 'Palatino Linotype', serif", fill: COLOUR.ink3
-            }));
-            g.appendChild(text(10, 50, "Les vecteurs sont restés au dépôt.", {
+            }, INNER));
+            g.appendChild(fitted(10, 48, "Vecteurs restés au dépôt.", {
                 "font-size": "8.5", fill: COLOUR.ink3
-            }));
+            }, INNER));
             svg.appendChild(g);
             return;
         }
@@ -256,14 +259,19 @@ window.tovDepth = (function () {
         var leaked = (w.dronesLeaked || 0) + (w.missilesLeaked || 0);
         var stopped = Math.max(0, sent - leaked);
 
-        g.appendChild(text(10, 27, TARGETS[w.target] || w.target, {
+        g.appendChild(fitted(10, 29, TARGETS[w.target] || w.target, {
             "font-size": "10.5", "font-weight": "600", fill: COLOUR.ink
-        }));
+        }, INNER));
 
         /* The salvo bar. One length, two parts: what the magazines stopped and what went
            through. A rate read as a length rather than a percentage — and on this model, most
-           quarters, it is almost entirely one colour, which is itself the finding. */
-        var barX = 10, barY = 34, barW = CW - 20, barH = 7;
+           quarters, it is almost entirely one colour, which is itself the finding.
+
+           It used to carry a "0 passés sur 7 047" caption, right-aligned on the title's own
+           line, where the two ran into each other and neither could be read. The bar already
+           says it as a length and the tooltip says it in figures: the caption was the third
+           telling and it is gone. */
+        var barX = 10, barY = 36, barW = CW - 20, barH = 7;
         var through = sent <= 0 ? 0 : Math.min(1, leaked / sent);
 
         var bar = svgEl("g", {});
@@ -290,23 +298,19 @@ window.tovDepth = (function () {
             + "ce sont ceux qui manqueront au front.");
         g.appendChild(bar);
 
-        g.appendChild(text(CW - 10, barY - 2, count(leaked) + " passés sur " + count(sent), {
-            "text-anchor": "end", "font-size": "8", fill: COLOUR.ink3
-        }));
-
         /* The impacts. Hollow is repaired in weeks and has to be done again; solid is a turbine
            hall, and the delay is measured in years. This is the whole reason a campaign beats
            a raid, and it is the one distinction the piece exists to carry. */
-        squares(g, 10, 50, w);
+        squares(g, 10, 49, w);
 
         // The trade, in the model's own terms: what a round cost against what it destroyed.
         if (w.exchangeRatio > 0) {
             var ratio = svgEl("g", {});
             ratio.appendChild(svgEl("rect", {
-                x: CW - 54, y: 46, width: 44, height: 14, rx: 2,
+                x: CW - 42, y: 48, width: 32, height: 14, rx: 2,
                 fill: "#f5f1e6", stroke: COLOUR.rule, "stroke-width": "0.6"
             }));
-            ratio.appendChild(text(CW - 32, 56, "1 : " + Math.round(w.exchangeRatio), {
+            ratio.appendChild(text(CW - 26, 58, "1 : " + Math.round(w.exchangeRatio), {
                 "text-anchor": "middle", "font-size": "9",
                 "font-family": "Georgia, 'Palatino Linotype', serif", fill: COLOUR.ink
             }));
@@ -316,9 +320,9 @@ window.tovDepth = (function () {
         }
 
         if (rear.standing) {
-            g.appendChild(text(10, CH - 6, rear.standing, {
+            g.appendChild(fitted(10, CH - 10, rear.standing, {
                 "font-size": "8.5", fill: COLOUR.ink2
-            }));
+            }, INNER));
         }
 
         // Saturation is what opens the door to the missiles, and it is invisible everywhere
@@ -335,10 +339,10 @@ window.tovDepth = (function () {
     function squares(g, x, y, w) {
         var total = Math.min(MAX_SQUARES, Math.ceil((w.damageInflicted || 0) / SQUARE_DAMAGE));
         if (total <= 0) {
-            g.appendChild(text(x, y + 7, "Rien n'a atteint l'arrière.", {
+            g.appendChild(fitted(x, y + SQUARE - 2, "Rien n'a percé.", {
                 "font-size": "8.5", "font-style": "italic",
                 "font-family": "Georgia, 'Palatino Linotype', serif", fill: COLOUR.ink3
-            }));
+            }, INNER - 46));
             return;
         }
 
@@ -349,8 +353,8 @@ window.tovDepth = (function () {
             var solid = i < permanent;
             row.appendChild(svgEl("rect", {
                 x: x + i * (SQUARE + SQUARE_GAP), y: y, width: SQUARE, height: SQUARE,
-                fill: solid ? COLOUR.ink : "none",
-                stroke: COLOUR.ink, "stroke-width": solid ? "0" : "0.9"
+                fill: solid ? COLOUR.ink : COLOUR.paper,
+                stroke: COLOUR.ink, "stroke-width": solid ? "0" : "1.2"
             }));
         }
 

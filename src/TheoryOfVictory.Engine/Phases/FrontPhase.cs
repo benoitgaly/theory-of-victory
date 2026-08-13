@@ -21,16 +21,60 @@ public sealed class FrontPhase : ITurnPhase
         ComputeCombatPower(context, Side.Invader);
         ComputeCombatPower(context, Side.Defender);
 
-        Dictionary<string, double> invaderPush = OffensivePressure(context, Side.Invader);
-        Dictionary<string, double> defenderPush = OffensivePressure(context, Side.Defender);
+        Belligerent invader = context.State.Invader;
+        Belligerent defender = context.State.DefenderSide;
 
-        Dictionary<string, double> invaderHold = DefensiveCover(context, Side.Invader, defenderPush);
-        Dictionary<string, double> defenderHold = DefensiveCover(context, Side.Defender, invaderPush);
+        Dictionary<string, double> invaderPush = OffensivePressure(context, Side.Invader, invader.SustainableCombatPower);
+        Dictionary<string, double> defenderPush = OffensivePressure(context, Side.Defender, defender.SustainableCombatPower);
+
+        Dictionary<string, double> invaderHold = DefensiveCover(context, Side.Invader, invader.SustainableCombatPower, defenderPush);
+        Dictionary<string, double> defenderHold = DefensiveCover(context, Side.Defender, defender.SustainableCombatPower, invaderPush);
+
+        // The same split, applied to the power a full stave would have allowed. It decides
+        // nothing: no phase reads it, and it exists so the board can draw the men who are
+        // present and unsupplied. The enemy pressure passed in is the REAL one on purpose —
+        // it only sets the reserve shares, and scaling both sides would not change them.
+        double invaderFull = EstablishmentPower(invader);
+        double defenderFull = EstablishmentPower(defender);
+
+        Dictionary<string, double> invaderFullPush = OffensivePressure(context, Side.Invader, invaderFull);
+        Dictionary<string, double> defenderFullPush = OffensivePressure(context, Side.Defender, defenderFull);
+        Dictionary<string, double> invaderFullHold = DefensiveCover(context, Side.Invader, invaderFull, defenderPush);
+        Dictionary<string, double> defenderFullHold = DefensiveCover(context, Side.Defender, defenderFull, invaderPush);
 
         foreach (FrontSector sector in context.State.Sectors)
         {
-            ResolveSector(context, sector, invaderPush, defenderPush, invaderHold, defenderHold);
+            SectorCommitment commitment = new()
+            {
+                InvaderCommitted = invaderPush.GetValueOrDefault(sector.Code) + invaderHold.GetValueOrDefault(sector.Code),
+                DefenderCommitted = defenderPush.GetValueOrDefault(sector.Code) + defenderHold.GetValueOrDefault(sector.Code),
+                InvaderEstablishment = invaderFullPush.GetValueOrDefault(sector.Code) + invaderFullHold.GetValueOrDefault(sector.Code),
+                DefenderEstablishment = defenderFullPush.GetValueOrDefault(sector.Code) + defenderFullHold.GetValueOrDefault(sector.Code),
+            };
+
+            ResolveSector(context, sector, invaderPush, defenderPush, invaderHold, defenderHold, commitment);
         }
+    }
+
+    /// <summary>What a side's combat power on the line would be with every stave full.
+    /// Deliberately the expression of <see cref="ComputeCombatPower"/> minus its coverage
+    /// factor — the two must be changed together.</summary>
+    private static double EstablishmentPower(Belligerent belligerent)
+    {
+        Manpower manpower = belligerent.Manpower;
+        return manpower.InContact * manpower.TrainingQuality * manpower.CohesionFactor;
+    }
+
+    /// <summary>Per-side power on one sector, gathered for publication and read by nothing else.</summary>
+    private sealed class SectorCommitment
+    {
+        public double InvaderCommitted { get; init; }
+
+        public double DefenderCommitted { get; init; }
+
+        public double InvaderEstablishment { get; init; }
+
+        public double DefenderEstablishment { get; init; }
     }
 
     /// <summary>
@@ -88,9 +132,8 @@ public sealed class FrontPhase : ITurnPhase
     }
 
     /// <summary>The attacker concentrates: this is where a local ratio comes from.</summary>
-    private static Dictionary<string, double> OffensivePressure(TurnContext context, Side side)
+    private static Dictionary<string, double> OffensivePressure(TurnContext context, Side side, double power)
     {
-        Belligerent belligerent = context.State.Get(side);
         Doctrine doctrine = context.DoctrineFor(side);
 
         double total = 0d;
@@ -103,7 +146,7 @@ public sealed class FrontPhase : ITurnPhase
         foreach (FrontSector sector in context.State.Sectors)
         {
             double share = total <= 0d ? 0d : Weight(doctrine, sector.Code) / total;
-            pressure[sector.Code] = belligerent.SustainableCombatPower * share * doctrine.OffensivePosture;
+            pressure[sector.Code] = power * share * doctrine.OffensivePosture;
         }
 
         return pressure;
@@ -116,12 +159,13 @@ public sealed class FrontPhase : ITurnPhase
     private static Dictionary<string, double> DefensiveCover(
         TurnContext context,
         Side side,
+        double power,
         Dictionary<string, double> enemyPressure)
     {
         Belligerent belligerent = context.State.Get(side);
         Doctrine doctrine = context.DoctrineFor(side);
 
-        double available = belligerent.SustainableCombatPower * (1d - doctrine.OffensivePosture);
+        double available = power * (1d - doctrine.OffensivePosture);
         // Redeployment is always late and partial: this is what leaves room for concentration.
         double reactivity = belligerent.HasCollapsed
             ? 0d
@@ -161,7 +205,8 @@ public sealed class FrontPhase : ITurnPhase
         Dictionary<string, double> invaderPush,
         Dictionary<string, double> defenderPush,
         Dictionary<string, double> invaderHold,
-        Dictionary<string, double> defenderHold)
+        Dictionary<string, double> defenderHold,
+        SectorCommitment commitment)
     {
         Belligerent invader = context.State.Invader;
         Belligerent defender = context.State.DefenderSide;
@@ -194,10 +239,11 @@ public sealed class FrontPhase : ITurnPhase
 
         // Tactical drones make every attack dearer for both sides: this is what freezes the front.
         double droneFriction = 1d + ((attacker.Innovation.TacticalDroneEdge + holder.Innovation.TacticalDroneEdge) * 0.45d);
+        double seasonModifier = context.State.Season.OffensiveModifier();
         double resistance = Math.Max(0.001d, hold)
             * sector.DefensiveMultiplier(holder.Side)
             * droneFriction
-            / context.State.Season.OffensiveModifier();
+            / seasonModifier;
 
         double ratio = push / resistance;
         double hexes = MovementFor(ratio);
@@ -224,18 +270,34 @@ public sealed class FrontPhase : ITurnPhase
                 1d);
         }
 
+        // Everything below is publication: values the phase has just used, converted once into
+        // the unit the board reads. No figure here is computed for the first time, and nothing
+        // in the simulation reads any of it back.
         context.SectorResolutions.Add(new SectorResolution
         {
             SectorCode = sector.Code,
             SectorName = sector.Name,
-            AttackerPower = push,
-            DefenderPower = resistance,
+            AttackerSideCode = attacker.Side.Code,
+            // Not rounded: the board prints these two and their ratio, and a reader who
+            // divides them must land on the ratio he is being shown.
+            AttackerPush = ManCount.ExactFromThousands(push),
+            HolderResistance = ManCount.ExactFromThousands(resistance),
+            InvaderCommitted = ManCount.FromThousands(commitment.InvaderCommitted),
+            DefenderCommitted = ManCount.FromThousands(commitment.DefenderCommitted),
+            InvaderEstablishment = ManCount.FromThousands(commitment.InvaderEstablishment),
+            DefenderEstablishment = ManCount.FromThousands(commitment.DefenderEstablishment),
             Ratio = ratio,
             HexesMoved = hexes * direction,
             HexesCumulative = sector.HexesGained,
             SectorWidth = sector.Width,
-            AttackerLosses = attackerLosses,
-            DefenderLosses = holderLosses,
+            TerrainMultiplier = sector.TerrainMultiplier,
+            Urbanisation = sector.Urbanisation,
+            InvaderFortification = sector.InvaderFortification,
+            DefenderFortification = sector.DefenderFortification,
+            DroneFriction = droneFriction,
+            SeasonModifier = seasonModifier,
+            AttackerLosses = ManCount.FromThousands(attackerLosses),
+            DefenderLosses = ManCount.FromThousands(holderLosses),
             Outcome = DescribeOutcome(ratio, hexes, attacker, holder),
         });
     }

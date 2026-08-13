@@ -152,6 +152,71 @@ foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
     {
         Console.WriteLine($"  {sector.Name,-26} {sector.HexesGained,6:F1} hex   ({sector.KilometresGained,6:F0} km)");
     }
+
+    Mechanisms(game);
+}
+
+// A mechanism that never fires demonstrates nothing. This block answers the only question
+// that matters about the three central rules: did they ever actually happen in this run?
+static void Mechanisms(PlayedGame game)
+{
+    int pinched = 0;
+    int shed = 0;
+    int saturated = 0;
+    double worstInterception = 1d;
+    double worstCoverage = 1d;
+
+    foreach (TurnSnapshot turn in game.Turns)
+    {
+        foreach (SideSnapshot side in new[] { turn.Invader, turn.Defender })
+        {
+            if (side.MaterialCoverage < 0.97d)
+            {
+                pinched++;
+            }
+
+            worstCoverage = Math.Min(worstCoverage, side.MaterialCoverage);
+
+            if (side.GridShortfall > 0d)
+            {
+                shed++;
+            }
+        }
+
+        foreach (StrikeResolution? strike in new[] { turn.InvaderStrike, turn.DefenderStrike })
+        {
+            if (strike is null)
+            {
+                continue;
+            }
+
+            if (strike.Saturated)
+            {
+                saturated++;
+            }
+
+            worstInterception = Math.Min(worstInterception, strike.InterceptionRate);
+        }
+    }
+
+    Console.WriteLine();
+    Console.WriteLine("Mécanismes — un mécanisme qui ne se déclenche jamais ne démontre rien :");
+    Console.WriteLine($"  Règle du minimum   {pinched,3} lectures camp-tour sous 0,97   (plus basse : {worstCoverage:P0})");
+    Console.WriteLine($"  Délestage          {shed,3} lectures camp-tour en coupure");
+    Console.WriteLine($"  Saturation         {saturated,3} vagues saturées                (interception la plus basse : {worstInterception:P0})");
+
+    // The magazines the event cards draw from: a card that always empties one entirely has
+    // stopped being a dose and become a switch.
+    double heavyLow = double.MaxValue;
+    double heavyHigh = 0d;
+    foreach (TurnSnapshot turn in game.Turns)
+    {
+        double held = turn.Defender.Stocks[ResourceKind.HeavyInterceptors.Code];
+        heavyLow = Math.Min(heavyLow, held);
+        heavyHigh = Math.Max(heavyHigh, held);
+    }
+
+    Console.WriteLine($"  Magasin lourd UA   {heavyLow,3:F0} au plus bas, {heavyHigh:F0} au plus haut");
 }
 
 static string Short(string? name)
