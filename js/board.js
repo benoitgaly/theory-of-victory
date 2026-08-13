@@ -34,6 +34,7 @@
     var state = { gameIndex: 0, turnIndex: 0, phase: 0 };
 
     var SEASONS = { Winter: "hiver", Spring: "printemps", Summer: "été", Autumn: "automne" };
+    var QUARTERS = { Winter: 1, Spring: 2, Summer: 3, Autumn: 4 };
 
     // The three flows the front consumes, and only those: a stave is a resource with a need
     // and therefore a coverage. Men have neither — they are the size of the barrel, since it
@@ -167,12 +168,30 @@
     // and that origin would have dated every unplayed quarter one season off.
     function quarterAfter(last, steps) {
         var order = ["Winter", "Spring", "Summer", "Autumn"];
-        var short = ["hiver", "print", "été", "autom"];
         var from = order.indexOf(last.season);
-        if (from < 0) { return { season: "", year: last.year }; }
+        if (from < 0) { return { quarter: 0, year: last.year }; }
 
         var total = from + steps;
-        return { season: short[total % 4], year: last.year + Math.floor(total / 4) };
+        return { quarter: (total % 4) + 1, year: last.year + Math.floor(total / 4) };
+    }
+
+    // La frise se lit au calendrier, pas au compteur de parties : « T1 22 » est le premier
+    // trimestre de 2022, quel que soit le rang de ce trimestre dans le scénario. Le numéro
+    // de tour reste dans l'infobulle, pour qui suit la mécanique.
+    function quarterLabel(q) {
+        return "T" + q.quarter + " " + String(q.year).slice(2);
+    }
+
+    // Le rang du tour n'intéresse personne : ce qui situe un trimestre, c'est sa date. Les
+    // bandeaux de titre portent donc la saison et l'année, jamais le compteur.
+    function dateOf(t) {
+        var season = SEASONS[t.season] || t.season;
+        return season.charAt(0).toUpperCase() + season.slice(1) + " " + t.year;
+    }
+
+    function dateInOf(t) {
+        var articles = { Winter: "à l'hiver ", Spring: "au printemps ", Summer: "à l'été ", Autumn: "à l'automne " };
+        return (articles[t.season] || "en ") + t.year;
     }
 
     function renderTimeline() {
@@ -191,7 +210,7 @@
         next.disabled = atEnd;
         next.title = atEnd
             ? (g.endedEarly
-                ? "La guerre s'est terminée au tour " + g.turns.length + " : il n'y a pas de trimestre suivant."
+                ? "La guerre s'est terminée ici : il n'y a pas de trimestre suivant."
                 : "Dernier trimestre de la partie.")
             : "Trimestre suivant";
 
@@ -206,7 +225,7 @@
             // reached have to be deduced from their position.
             var number = played ? t.turn : last.turn + (i - lastIndex);
             var q = played
-                ? { season: (SEASONS[t.season] || "").slice(0, 5), year: t.year }
+                ? { quarter: QUARTERS[t.season] || 0, year: t.year }
                 : quarterAfter(last, i - lastIndex);
 
             var hasCard = played && t.cardsPlayed && t.cardsPlayed.length > 0;
@@ -223,16 +242,21 @@
             var b = el("button", cls);
             b.type = "button";
             b.disabled = !played;
-            b.appendChild(el("span", null, "T" + number));
-            b.appendChild(el("span", "t-season", q.season + " " + String(q.year).slice(2)));
+            // Trimestre au-dessus, millésime au-dessous : « T4 21 » d'un seul tenant se lit
+            // « 14 21 » dans une graisse de titre. Deux lignes, et chacune respire.
+            var label = el("span", "t-quarter");
+            label.appendChild(el("b", null, "T" + q.quarter));
+            label.appendChild(el("i", null, String(q.year)));
+            b.appendChild(label);
 
             if (played) {
-                b.title = "Tour " + number + " · " + (SEASONS[t.season] || t.season) + " " + t.year;
+                var season = SEASONS[t.season] || t.season;
+                b.title = season.charAt(0).toUpperCase() + season.slice(1) + " " + t.year;
                 (function (index) {
                     b.addEventListener("click", function () { state.turnIndex = index; render(); });
                 })(i);
             } else {
-                b.title = "La guerre s'est terminée au tour " + g.turns.length + " : ce trimestre n'a pas été joué.";
+                b.title = "La guerre s'est terminée avant ce trimestre : il n'a pas été joué.";
             }
 
             host.appendChild(b);
@@ -681,7 +705,7 @@
         h.appendChild(document.createTextNode("Génération de force — " + side.name));
         head.appendChild(h);
         head.appendChild(el("div", "turn-tag",
-            "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year + " · Brent " + fmt(t.oilPrice) + " $"));
+            dateOf(t) + " · Brent " + fmt(t.oilPrice) + " $"));
         stage.appendChild(head);
 
         stage.appendChild(renderHand(t, side.sideCode));
@@ -2735,8 +2759,7 @@
         // invited the reader to compare it with the seventy thousand square kilometres of
         // the real war, which is not what this number measures.
         head.appendChild(el("div", "turn-tag",
-            "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year +
-            " · " + fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés"));
+            dateOf(t) + " · " + fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés"));
         stage.appendChild(head);
 
         // On the last turn of a run that stopped early, say so: the timeline stops here
@@ -2744,11 +2767,20 @@
         var g = game();
         if (g.endedEarly && state.turnIndex === g.turns.length - 1) {
             var stop = el("div", "run-ended");
-            stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine au tour " +
-                g.turns.length + ", " + (SEASONS[t.season] || t.season) + " " + t.year +
-                " — les " + (g.plannedTurns - g.turns.length) +
+            stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine " +
+                dateInOf(t) + " — les " + (g.plannedTurns - g.turns.length) +
                 " trimestres suivants du calendrier n'ont pas été joués.";
             stage.appendChild(stop);
+        }
+
+        // Le capital de guerre passe AVANT la carte, et le ciseau juste après lui. La carte
+        // montre le thermomètre, le bandeau montre le moteur, et les deux se lisent d'un seul
+        // regard. Les deux pièces vivent dans leur propre fichier : ce qu'elles dessinent est
+        // un modèle à part entière, pas une décoration de la résolution.
+        var capital = window.tovCapital;
+        if (capital) {
+            stage.appendChild(capital.band(g, state.turnIndex));
+            stage.appendChild(capital.divergence(g, state.turnIndex));
         }
 
         // No cards here at all: they are played on each side's own screen, where the
@@ -2764,44 +2796,9 @@
             : renderMap(t);
         mapPanel.appendChild(mapSvg);
 
-        // La carte hexagonale porte sa propre légende : n'en afficher une seconde
-        // que pour le tracé de repli, sinon les deux se contredisent.
-        if (!hexMap) {
-            var legend = el("div", "map-legend");
-            [
-                { label: "Territoire occupé", colour: "rgba(168,50,42,0.25)" },
-                { label: "Ligne de contact", colour: "#a8322a" },
-                { label: "Ligne de février 2022", colour: "#6b7280" }
-            ].forEach(function (l) {
-                var c = el("div", "chip");
-                var i = el("i");
-                i.style.background = l.colour;
-                c.appendChild(i);
-                c.appendChild(el("span", null, l.label));
-                legend.appendChild(c);
-            });
-            mapPanel.appendChild(legend);
-        }
         var leftCol = el("div");
         leftCol.appendChild(mapPanel);
         field.appendChild(leftCol);
-
-        // Le journal appartient à la colonne de la carte : les deux racontent le même trimestre.
-        if (t.narrative && t.narrative.length) {
-            var narr = el("section", "panel narrative");
-            narr.style.marginTop = "16px";
-            narr.appendChild(el("div", "panel-title", "Journal du trimestre"));
-            var ul = el("ul");
-            t.narrative.forEach(function (n) {
-                var li = el("li", null, n);
-                // Chaque ligne s'ouvre sur un camp : on le rend repérable au liseré.
-                if (/^Russie\b/.test(n)) { li.className = "ru"; }
-                else if (/^Ukraine\b/.test(n)) { li.className = "ua"; }
-                ul.appendChild(li);
-            });
-            narr.appendChild(ul);
-            leftCol.appendChild(narr);
-        }
 
         var right = el("div");
         var sectorPanel = el("section", "panel");
@@ -2907,6 +2904,11 @@
         var stage = document.getElementById("stage");
         stage.innerHTML = "";
 
+        // Les deux écrans de génération portent la même chaîne : sans teinte de camp, on ne
+        // sait plus lequel on lit. La couleur du camp habille l'écran entier, pas seulement
+        // le fanion du titre.
+        stage.className = state.phase === 0 ? "side-ru" : (state.phase === 1 ? "side-ua" : "");
+
         var t = turn();
         if (state.phase === 0) {
             renderGeneration(t.invader, true);
@@ -2949,6 +2951,11 @@
     // vérifier qu'aucune ne sort vide, tronquée ou débordante. La partie n'en joue qu'une
     // poignée — le reste ne se contrôle qu'ici.
     window.tovCards = { render: renderCard, hand: handFor, size: HAND_SIZE };
+
+    // Une seule formulation des dates pour tout le plateau. Le bandeau de capital vit dans son
+    // propre fichier et doit dater ses trimestres exactement comme les écrans de génération —
+    // recopier la table des saisons ailleurs, c'est se garantir deux libellés qui divergent.
+    window.tovDates = { of: dateOf, in: dateInOf };
 
     bindPhases();
     state.turnIndex = openingTurnIndex(game());
