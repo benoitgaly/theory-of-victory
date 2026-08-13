@@ -42,6 +42,7 @@ public enum EffectKind
     InnovationCounterJump,
     ProductionCapacityMultiplier,
     GridPermanentDamage,
+    CivilianIndustryDamage,
     RefiningIntegrityDelta,
     LogisticsIntegrityDelta,
     TreasuryDelta,

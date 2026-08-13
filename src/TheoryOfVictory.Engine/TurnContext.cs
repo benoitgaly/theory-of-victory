@@ -38,6 +38,20 @@ public sealed class TurnContext
     /// <summary>Generation ratio carried in from last turn, per side. Same reason.</summary>
     public Dictionary<string, double> OpeningGenerationRatio { get; } = [];
 
+    /// <summary>
+    /// The capital posts as they stood before the turn ran, per side. Read with the very same
+    /// ruler as the closing position, so the band never subtracts one turn from another: a
+    /// variant switched mid-replay would otherwise invent a variation nobody played.
+    /// </summary>
+    public Dictionary<string, Dictionary<string, double>> OpeningCapital { get; } = [];
+
+    /// <summary>
+    /// The cards this turn actually played, with their typed effects. The printed card carries
+    /// its rules text and not its effect kinds, and attributing a destruction to a card demands
+    /// the kinds — naming the wrong card would be worse than naming none.
+    /// </summary>
+    public List<EventCard> EventCardsPlayed { get; } = [];
+
     /// <summary>Forward-looking readings, filled once the ten phases have run.</summary>
     public List<PressureReading> Readings { get; } = [];
 

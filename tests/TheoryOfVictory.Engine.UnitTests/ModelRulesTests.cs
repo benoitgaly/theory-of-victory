@@ -375,11 +375,12 @@ public sealed class ModelRulesTests
 
         PlayedGame game = new GameRunner().Run(scenario);
 
-        // The autumn 2022 mobilisation lands at turn 4, and the bill falls the same quarter.
-        // Measured on the turn itself: discontent decays every quarter, so comparing the two
-        // ends of a nineteen-turn run would hide the very jump this ceiling is made of.
-        SideSnapshot before = game.Turns[2].Invader;
-        SideSnapshot after = game.Turns[3].Invader;
+        // The autumn 2022 mobilisation is the invader's decision of turn 5, and the bill falls
+        // the same quarter. Measured on the turn itself: discontent decays every quarter, so
+        // comparing the two ends of a twenty-six-turn run would hide the very jump this ceiling
+        // is made of.
+        SideSnapshot before = game.Turns[3].Invader;
+        SideSnapshot after = game.Turns[4].Invader;
 
         Assert.True(
             after.PopularDiscontent > before.PopularDiscontent,

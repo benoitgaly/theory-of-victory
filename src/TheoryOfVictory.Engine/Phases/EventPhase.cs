@@ -81,6 +81,11 @@ public sealed class EventPhase : ITurnPhase
                 continue;
             }
 
+            // Only cards that actually resolved may be named as the cause of a destruction on
+            // the capital band. A countered card produced nothing, and blaming a fall on it
+            // would be an attribution that reads well and is false.
+            context.EventCardsPlayed.Add(card);
+
             foreach (CardEffect effect in card.Effects)
             {
                 if (effect.DelayTurns > 0)

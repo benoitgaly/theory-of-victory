@@ -65,7 +65,18 @@ public static class DeckDuel
         // the deck changes is the deck's doing.
         Scenario scenario = UkraineScenario.Build(SupportVariant.Holds);
 
-        scenario.Calendar.AddRange(Deck(archetype));
+        // A deck does not ADD to the defender's calendar, it TAKES its quarters: a side plays
+        // one card per quarter, in the laboratory as on the board. Stacked on top, the frontal
+        // attrition deck used to win the duel for the trivial reason that it was seven extra
+        // cards rather than seven different ones — which measures a budget, not a theory.
+        List<ScheduledCard> deck = Deck(archetype);
+        foreach (ScheduledCard scheduled in deck)
+        {
+            scenario.Calendar.RemoveAll(existing =>
+                existing.Turn == scheduled.Turn && IsDefenderCard(scenario, existing.CardCode));
+        }
+
+        scenario.Calendar.AddRange(deck);
         Steer(scenario, archetype);
         return scenario;
     }
@@ -112,6 +123,19 @@ public static class DeckDuel
         }
 
         return results;
+    }
+
+    private static bool IsDefenderCard(Scenario scenario, string code)
+    {
+        foreach (EventCard card in scenario.Deck)
+        {
+            if (string.Equals(card.Code, code, StringComparison.OrdinalIgnoreCase))
+            {
+                return card.OwnerSideCode == Side.Defender.Code;
+            }
+        }
+
+        return false;
     }
 
     public static string Name(DeckArchetype archetype)

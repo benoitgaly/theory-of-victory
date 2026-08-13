@@ -18,6 +18,9 @@ public sealed class Belligerent
 
     public ArmsIndustry Industry { get; init; } = new();
 
+    /// <summary>What the civilians live on. Never reaches the front, and holds up consent.</summary>
+    public CivilianIndustry Civilian { get; init; } = new();
+
     public Innovation Innovation { get; init; } = new();
 
     public AirDefenceSystem AirDefence { get; init; } = new();
@@ -44,6 +47,14 @@ public sealed class Belligerent
 
     /// <summary>Budget put on each spending line this turn, for the economic view.</summary>
     public Dictionary<string, double> AllocationThisTurn { get; } = [];
+
+    /// <summary>
+    /// Each capital post as it stood on the first quarter of this side's own war. Every index
+    /// on the band is read against it, and never against the other camp: Russia holds 310 Md
+    /// of reserves against 29 for Ukraine, and putting those two masses on one scale would
+    /// only say, falsely, that the game was over before it began.
+    /// </summary>
+    public Dictionary<string, double> CapitalBaseline { get; } = [];
 
     /// <summary>Units that left the factories this turn, before transmission losses.</summary>
     public Dictionary<string, double> ProducedThisTurn { get; } = [];

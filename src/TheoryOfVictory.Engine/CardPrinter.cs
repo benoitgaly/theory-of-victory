@@ -97,6 +97,7 @@ public static class CardPrinter
             EffectKind.InnovationCounterJump => $"{who} : avance contre-drone {Signed(effect.Value, string.Empty)}",
             EffectKind.ProductionCapacityMultiplier => $"{who} : capacité industrielle ×{effect.Value:0.##}",
             EffectKind.GridPermanentDamage => $"{who} : {effect.Value:0.#} GW détruits définitivement",
+            EffectKind.CivilianIndustryDamage => $"{who} : {effect.Value:0.#} Md d'appareil civil détruits",
             EffectKind.RefiningIntegrityDelta => $"{who} : raffinage {Signed(effect.Value * 100d, "%")}",
             EffectKind.LogisticsIntegrityDelta => $"{who} : logistique {Signed(effect.Value * 100d, "%")}",
             EffectKind.TreasuryDelta => $"{who} : trésorerie {Signed(effect.Value, "Md")}",

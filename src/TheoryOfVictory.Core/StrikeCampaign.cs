@@ -14,6 +14,14 @@ public enum StrikeTarget
 
     /// <summary>Rail nodes, bridges, depots — degrades transmission to the front.</summary>
     Logistics = 3,
+
+    /// <summary>
+    /// Warehouses, logistics platforms, consumer assembly lines. Sends nothing to the front
+    /// and takes nothing from it: it takes the standard of living, and the standard of living
+    /// is what buys consent. The slowest of the five, and the only one aimed at the rear of
+    /// the rear.
+    /// </summary>
+    CivilianIndustry = 4,
 }
 
 /// <summary>Outcome of one quarterly strike wave, kept for display and for the lesson.</summary>

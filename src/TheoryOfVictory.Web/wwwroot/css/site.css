@@ -241,7 +241,7 @@ h1, h2, h3, h4 {
 
 .tick {
     flex: 1;
-    height: 42px;
+    height: 50px;
     background: var(--paper);
     border: 1px solid var(--rule);
     border-radius: 3px;
@@ -260,22 +260,29 @@ h1, h2, h3, h4 {
     transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
 
+/* Deux lignes : le trimestre, puis son millésime. Sur une seule, « T4 21 » se lit « 14 21 »
+   dans une graisse de titre, et la frise ne se déchiffre plus d'un coup d'œil. */
 .tick .t-quarter {
-    font-size: 11.5px;
-    letter-spacing: 0.04em;
-    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    line-height: 1.05;
     white-space: nowrap;
 }
 
 .tick .t-quarter b {
+    font-size: 13px;
     font-weight: 700;
+    letter-spacing: 0.03em;
 }
 
 .tick .t-quarter i {
     font-style: normal;
+    font-size: 9.5px;
     font-weight: 600;
-    opacity: 0.6;
-    margin-left: 3px;
+    letter-spacing: 0.04em;
+    opacity: 0.62;
 }
 
 .tick:hover {
@@ -508,7 +515,7 @@ h1, h2, h3, h4 {
     border: 1px solid var(--rule);
     color: var(--ink-2);
     width: 34px;
-    height: 42px;
+    height: 50px;
     border-radius: 3px;
     cursor: pointer;
     font-size: 11px;

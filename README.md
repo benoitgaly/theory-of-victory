@@ -64,6 +64,12 @@ politique, illustration propre à chaque carte, ligne de type, boîte de règles
 Celles qu'il a jouées portent leur bandeau ; les autres attendent, parce que la V2 les mettra en
 main des joueurs.
 
+**Un camp joue une carte par trimestre, jamais deux.** Le trimestre est l'unité de décision : une
+mobilisation, un paquet d'aide, un tour de vis sur les composants. Ce qui se joue occupe donc la
+place de tout ce qui ne se joue pas — et c'est pour cela que l'Occident, dans le déroulé de la
+victoire, paie son étranglement de dix trimestres d'intercepteurs qu'il ne livre pas. Le détail des
+arbitrages est dans le [calendrier](docs/design/06-calendrier-propose.md).
+
 La conception détaillée est répartie en neuf documents, du [modèle de jeu](docs/design/01-modele-de-jeu.md)
 à la [fin de guerre](docs/design/10-fin-de-guerre.md), en passant par la
 [calibration des effectifs](docs/design/04-calibration-effectifs.md) et l'

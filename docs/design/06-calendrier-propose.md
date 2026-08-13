@@ -1,18 +1,20 @@
-# Calendrier — vingt-six trimestres, deux à quatre cartes par camp
+# Calendrier — vingt-six trimestres, une carte par camp et par trimestre
 
-> Le calendrier de `UkraineScenario.BuildCalendar`. Le deck étant passé de 41 à 101 cartes, le
-> déroulé montre ce que chaque camp décide **chaque** trimestre, au lieu d'une carte isolée entourée
-> de remplissage. La partie ouvre à l'automne 2021, un trimestre avant l'invasion, et se poursuit
-> au-delà de la décision jusqu'à l'armistice.
+> Le calendrier de `UkraineScenario.BuildCalendar`. **Un camp joue une carte par trimestre, jamais
+> deux.** Le déroulé en programmait cent cinquante-deux sur vingt-six trimestres, soit près de six
+> par tour : la main affichée à l'écran mentait sur la mécanique, et le joueur ne voyait pas une
+> décision, il voyait un déluge. Il en programme désormais **quarante-six** — vingt-trois trimestres,
+> deux camps, une carte chacun — et chacune est celle qui décide du trimestre.
 >
-> **Statut : intégré et vérifié.** Le calendrier est dans le scénario et les trois issues tombent où
-> elles doivent tomber — le régime russe cède au **T23**, printemps 2027 ; le front reste figé jusqu'au
-> **T26** ; l'Ukraine s'effondre au **T11**, printemps 2024. Détail et mesures en §11.
+> **Statut : intégré et vérifié.** Les trois issues n'ont pas bougé d'un trimestre : le régime russe
+> cède au **T23**, printemps 2027, et l'armistice tombe à l'**automne 2027** ; le front reste figé
+> jusqu'au **T26** ; l'Ukraine s'effondre au **T11**, printemps 2024. Toute la suite de tests passe, dont
+> quatre nouveaux qui verrouillent la règle elle-même.
 >
-> Ce sont les cartes qui fixent ces dates, pas les constantes : un balayage systématique du moteur
-> n'avait jamais réussi à déplacer la chute russe hors de la fourchette T17-T19. Le régime tombe
-> quand tombe l'amas de fin — fonds vidé, fracture des élites, baril effondré, fournisseur retiré.
-
+> Les cartes sorties du calendrier **ne sont pas sorties du deck** : les cent une y sont toujours.
+> Elles sont la main dans laquelle la V2 fera piocher, et c'est précisément pour cela qu'on les
+> garde. Quarante-sept codes distincts sont joués sur les trois déroulés réunis ; cinquante-quatre
+> cartes ne le sont jamais et attendent leur joueur.
 ---
 
 ## 1. Personne ne subit : tout le monde joue
@@ -43,6 +45,9 @@ chaque côté, et non supprimées.
 Chacune a reçu un coût en capital politique proportionné à la manœuvre qu'elle représente. Une seule
 exception, documentée en §12 : `elite_fracture` reste à zéro.
 
+Cette attribution est ce qui rend la règle d'une carte par camp et par trimestre **comptable** : sans
+propriétaire, on ne saurait pas de qui est le trimestre. Les deux chantiers se tiennent.
+
 ---
 
 ## 2. Le prologue : la guerre se prépare avant de se jouer
@@ -51,25 +56,25 @@ La partie ouvre à l'**automne 2021**, un trimestre avant l'invasion. C'est le s
 aucun coup de feu n'est tiré, et c'est le plus démonstratif de tous : le joueur y voit une guerre se
 gagner ou se perdre dans les dépôts, avant que la carte ne bouge d'un hexagone.
 
-Six cartes s'y jouent, trois par camp, et leur asymétrie **est** le message.
+Deux cartes s'y jouent, une par camp, et leur asymétrie **est** le message.
 
-La Russie masse cent mille hommes, remplit les dépôts avancés en obus et en carburant, couvre le tout
-d'un exercice annoncé et régulier, puis adresse à l'OTAN un ultimatum dont elle sait qu'il sera
-refusé — le refus n'est pas l'échec de la démarche, il en est le produit. `force_concentration` est
-un rituel lent : les hommes arrivent au front **au tour suivant**, c'est-à-dire le jour de
-l'invasion. La force est constituée un trimestre avant d'être employée, et cela se lit à l'écran.
+La Russie joue **L'amassement**. Cent mille hommes, les dépôts avancés remplis en obus et en
+carburant : c'est un rituel lent, les hommes n'arrivent au front qu'**au tour suivant**,
+c'est-à-dire le jour de l'invasion. La force est constituée un trimestre avant d'être employée, et
+cela se lit à l'écran. Les manœuvres d'automne et l'ultimatum de décembre restent dans le deck : ce
+sont la couverture et le prétexte de la manœuvre, pas la manœuvre.
 
-En face, le renseignement allié donne la date, les axes et les effectifs, et il ne se passe rien :
-`intelligence_warning` produit une promesse d'aide d'un milliard et cinq points de volonté, pas une
-armée. Les premières livraisons sont des missiles antichars portables — de quoi n'être pas complice,
-pas de quoi dissuader. Et l'Ukraine ne mobilise pas : `no_mobilisation_yet` préserve son économie et
-son consentement, et n'ajoute **pas un homme** au front.
+En face, l'Occident joue **Les premières livraisons défensives** : des missiles antichars portables,
+de quoi n'être pas complice, pas de quoi dissuader. L'avertissement du renseignement allié et l'ordre
+de mobilisation que l'Ukraine ne donne pas restent eux aussi dans le deck — le premier parce qu'un
+renseignement que personne ne croit ne décide de rien, le second parce qu'une décision de ne pas
+agir n'occupe pas le trimestre de celui qui la prend.
 
-> Le prologue oppose donc un camp qui convertit son économie en force et un camp qui préserve son
-> économie. Au tour deux, l'un a cent mille hommes de plus sur la ligne et l'autre a un PIB intact.
-> C'est toute la thèse du jeu en un seul écran, sans un coup de feu.
+> Le prologue oppose donc un camp qui convertit son économie en force et un camp qui livre de quoi
+> ne pas mourir tout de suite. Au tour deux, l'un a cent mille hommes de plus sur la ligne et l'autre
+> a un PIB intact. C'est toute la thèse du jeu en deux cartes, sans un coup de feu.
 
-Les six textes portent une même leçon, et elle n'est pas datée : **tout était visible.** Les convois
+Les deux textes portent une même leçon, et elle n'est pas datée : **tout était visible.** Les convois
 se comptaient, les hôpitaux de campagne montaient vers la frontière, le renseignement donnait la date
 et les axes. Ce qui a manqué n'est pas l'information, c'est la décision — croire engage, douter ne
 coûte rien, jusqu'au matin où le doute se paie.
@@ -131,268 +136,153 @@ d'étranglement et d'après-guerre.
 
 ---
 
-## 4. Lecture chronologique du socle
+## 4. La règle : une carte par camp et par trimestre
 
-| Tour | Ce que joue l'Ukraine et ses soutiens | Ce que joue la Russie |
-|---|---|---|
-| **T1** | **L'avertissement que personne ne croit, les premières livraisons défensives, l'ordre de mobilisation qui n'est pas donné** | **L'amassement, les manœuvres d'automne, l'ultimatum de décembre** |
-| T2 | Premier train de sanctions, renseignement allié, filières de formation, la boue de mars | Verrouillage intérieur, saturation de l'espace médiatique |
-| T3 | L'aide s'industrialise, la conditionnalité s'installe, le recrutement se réforme | Réquisition des chaînes, bascule vers l'économie de guerre |
-| T4 | HIMARS, les dépôts reculent de quatre-vingts kilomètres, un gazoduc saute | Prisons ouvertes, premiers drones achetés à l'étranger |
-| T5 | Kharkiv et Kherson, les drones navals entrent en mer Noire | Mobilisation partielle, missiles achetés, premières vagues de leurres |
-| T6 | Plafonnement du baril, campagne diplomatique, un hiver clément qui annule la campagne d'en face | Frappes sur le réseau, bombes planantes, barils réorientés vers l'Asie |
-| T7 | Embargo sur les machines-outils, interception à bas coût, mutinerie armée à Rostov | L'embargo est contourné le trimestre même, le brouillage passe à l'échelle |
-| T8 | L'offensive d'été s'enlise, la production nationale de drones démarre | La chaîne de montage domestique, les ports céréaliers, l'inflation chez les donateurs |
-| T9 | Le train de sanctions est reconduit — une sanction est un entretien —, la raspoutitsa | Obus étrangers, primes d'engagement, flotte fantôme, une autre guerre capte l'attention |
-| T10 | Loi de mobilisation, interception à bas coût, ateliers de drones | Réseau, leurres, primes |
-| T11 | Raffineries, coalition drones, brouillage des kits de guidage | Licence transférée, bombes planantes, assauts à découvert, bascule électorale européenne |
-| T12 | Rail coupé, nouvelle frappe profonde | La contre-batterie annule la frappe : la carte est jouée pour rien |
-| T13 | Prêt gagé sur les avoirs gelés, réseaux îlotés | Fibre optique, brouillage, postes de raccordement — les deux sont contrées |
-| T14 | Sanctions sur la flotte fantôme | Le réseau de contournement répond le trimestre même, l'hiver est rigoureux |
-| T15 | Crise anticorruption, rail coupé de nouveau | Bataillons ferroviaires, complaisance diplomatique achetée, trou dans la couverture antiaérienne |
-| T16 | Coalition drones, ateliers, fracture au sommet à Moscou | Tour de vis, assauts, drones étrangers, pourparlers sans lendemain |
-| T17 | Interception, transparence, coalition | Ports céréaliers, leurres, réorientation des flux |
-| T18 | Formation, ateliers | Primes, propagande, répression |
-| T19 | Interception, coalition, ateliers | Bombes planantes, missiles achetés, propagande |
-| T20 | *(variantes — la décision)* | |
-| T21 à T24 | *(l'après-chute — voir §15)* | |
+Un camp joue **une** carte par trimestre. Pas deux, pas cinq. C'est une règle de jeu, pas une
+préférence d'affichage : une main de six cartes au-dessus d'un trimestre qui en joue six ne présente
+aucun choix, et le tonneau de Liebig n'a plus rien à arbitrer si tout arrive en même temps. Le
+trimestre est l'unité de décision du jeu ; il ne peut porter qu'une décision.
+
+### Comment la règle est tenue
+
+Le calendrier n'est plus une liste, c'est **une table de créneaux par camp** : le trimestre est la
+clé, et écrire une deuxième carte dessus **remplace** la première au lieu de s'y ajouter. La règle
+n'est donc pas une discipline à respecter, c'est la forme de la donnée. Une variante ne s'ajoute pas
+au calendrier : elle **réécrit** les créneaux où l'Occident a décidé autrement, ce qui rend les trois
+déroulés comparables carte à carte.
+
+Quatre tests la verrouillent malgré tout (`CalendarRuleTests`), parce qu'une forme de donnée reste
+une convention et qu'une convention est à un remaniement près d'être perdue : aucun trimestre ne
+porte deux cartes du même camp, aucune carte jouée n'est sans propriétaire, aucun code programmé
+n'est absent du deck — une faute de frappe programmerait un trimestre vide sans que rien ne le
+signale — et le deck reste au moins deux fois plus large que ce qui est joué.
+
+### Ce qui compte comme une décision
+
+Le critère d'arbitrage, appliqué trimestre par trimestre : **la carte est-elle ce qui a changé la
+génération de force ce trimestre-là ?** Une mobilisation, un paquet d'aide, un tour de vis sur les
+composants, une conversion industrielle, un fournisseur étranger qui s'ouvre — oui. Le reste, non.
+
+| Écarté du calendrier | Pourquoi |
+|---|---|
+| La météo et la saison — `harsh_winter`, `mild_winter`, `rasputitsa` | Une saison n'est pas une décision. Elle ne peut pas consommer le trimestre de celui qui la subit. |
+| Les conséquences — `failed_offensive`, `armed_mutiny` | Une offensive qui s'enlise est le résultat d'une posture, et la posture est déjà dans le décalage de doctrine du T8. Une mutinerie dans le camp d'en face n'est pas une carte qu'on joue. |
+| La couverture et le prétexte — `zapad_exercises`, `ultimatum_to_nato`, `intelligence_warning` | Ils habillent la manœuvre, ils ne la sont pas. |
+| Le saupoudrage répété — `decoy_saturation` (six fois), `state_propaganda_surge` (quatre), `domestic_repression` (trois) | Six vagues de leurres en six trimestres, c'est la routine de la guerre, pas six décisions. |
+| Les frottements diplomatiques — `diplomatic_complaisance`, `attention_elsewhere`, `european_election_swing`, `inflation_surge` | Ils pèsent sur la volonté des soutiens, mais aucun ne décide d'un trimestre à lui seul. |
 
 ---
 
-## 5. Socle commun — à coller tel quel
+## 5. Le socle commun — les deux tables de créneaux
 
-```csharp
-// T1 · automne 2021 — le prologue : de la génération de force, et rien d'autre
-new ScheduledCard { Turn = 1, CardCode = "force_concentration" },
-new ScheduledCard { Turn = 1, CardCode = "zapad_exercises" },
-new ScheduledCard { Turn = 1, CardCode = "ultimatum_to_nato" },
-new ScheduledCard { Turn = 1, CardCode = "intelligence_warning" },
-new ScheduledCard { Turn = 1, CardCode = "first_defensive_deliveries" },
-new ScheduledCard { Turn = 1, CardCode = "no_mobilisation_yet" },
+Vingt-trois trimestres jouent ; les trois derniers sont l'épilogue et ne jouent rien.
 
-// T2 · hiver 2022 — l'invasion
-new ScheduledCard { Turn = 2, CardCode = "sanctions_package_1" },
-new ScheduledCard { Turn = 2, CardCode = "allied_intelligence" },
-new ScheduledCard { Turn = 2, CardCode = "nato_training_pipeline" },
-new ScheduledCard { Turn = 2, CardCode = "state_propaganda_surge" },
-new ScheduledCard { Turn = 2, CardCode = "domestic_repression" },
-new ScheduledCard { Turn = 2, CardCode = "rasputitsa" },
+| Tour | Trimestre | Ce que joue l'Ukraine et ses soutiens | Ce que joue la Russie |
+|---|---|---|---|
+| **T1** | automne 2021 | Les premières livraisons défensives | L'amassement |
+| T2 | hiver 2022 | Premier train de sanctions | Tour de vis intérieur |
+| T3 | printemps 2022 | L'aide occidentale s'organise | Conversion en économie de guerre |
+| T4 | été 2022 | Frappe de précision longue portée | Drones achetés à l'étranger |
+| T5 | automne 2022 | Contre-offensives d'automne | Mobilisation partielle |
+| T6 | hiver 2023 | Plafonnement du prix du baril | Campagne contre le réseau électrique |
+| T7 | printemps 2023 | Embargo sur les machines-outils | Les composants passent par ailleurs |
+| T8 | été 2023 | Drones navals en mer Noire | La chaîne de montage domestique |
+| T9 | automne 2023 | Embargo sur les machines-outils *(reconduit)* | Fournisseur étranger de munitions |
+| T10 | hiver 2024 | Production nationale de drones | Blocage budgétaire du principal soutien |
+| T11 | printemps 2024 | Drones sur les raffineries | Bombes planantes |
+| T12 | été 2024 | Coalition drones | Transfert de licence |
+| T13 | automne 2024 | Prêt gagé sur les avoirs gelés | Drones à fibre optique |
+| T14 | hiver 2025 | Frappes sur les dépôts | Campagne contre le réseau électrique |
+| T15 | printemps 2025 | Abaissement de l'âge de mobilisation | Montée en gamme du brouillage |
+| T16 | été 2025 | Drones sur les raffineries | Prime d'engagement |
+| T17 | automne 2025 | Interception à bas coût | Flotte fantôme |
+| T18 | hiver 2026 | Production nationale de drones | Pourparlers sans lendemain |
+| T19 | printemps 2026 | Interdiction du rail | Assauts d'infanterie à découvert |
+| T20 | été 2026 | Interception à bas coût | Assauts d'infanterie à découvert |
+| T21 | automne 2026 | Frappes sur les dépôts | Ponction sur le fonds souverain |
+| T22 | hiver 2027 | Interception à bas coût | Impôt de guerre |
+| T23 | printemps 2027 | Drones sur les raffineries | Assauts d'infanterie à découvert |
 
-// T3 · printemps 2022 — le repli du nord, l'aide s'organise
-new ScheduledCard { Turn = 3, CardCode = "western_aid_opens" },
-new ScheduledCard { Turn = 3, CardCode = "transparency_reform" },
-new ScheduledCard { Turn = 3, CardCode = "recruitment_reform" },
-new ScheduledCard { Turn = 3, CardCode = "industrial_requisition" },
-new ScheduledCard { Turn = 3, CardCode = "war_economy_conversion" },
+### Trois trimestres qui portent une leçon à eux seuls
 
-// T4 · été 2022 — HIMARS
-new ScheduledCard { Turn = 4, CardCode = "himars_deep_strike" },
-new ScheduledCard { Turn = 4, CardCode = "depot_strikes" },
-new ScheduledCard { Turn = 4, CardCode = "prison_recruitment" },
-new ScheduledCard { Turn = 4, CardCode = "foreign_drones" },
-new ScheduledCard { Turn = 4, CardCode = "pipeline_sabotage" },
+**T7 et T9 : le duel de l'embargo.** L'Ukraine pose l'embargo sur les machines-outils au T7 ; la
+Russie répond le trimestre même par « Les composants passent par ailleurs », une contre-carte, et
+l'embargo ne produit rien — il est joué, il est vu, il ne sert à rien. L'Ukraine le reconduit au T9,
+la Russie a dépensé son trimestre ailleurs, et cette fois il aboutit. **Une sanction qu'on
+n'entretient pas se contourne** : la règle est désormais visible à l'écran plutôt qu'écrite dans un
+document. C'est la seule contre-carte du socle, et elle suffit à rendre le mécanisme atteignable.
 
-// T5 · automne 2022 — Kharkiv, Kherson, mobilisation
-new ScheduledCard { Turn = 5, CardCode = "counter_offensive_2022" },
-new ScheduledCard { Turn = 5, CardCode = "naval_drones_black_sea" },
-new ScheduledCard { Turn = 5, CardCode = "partial_mobilisation" },
-new ScheduledCard { Turn = 5, CardCode = "foreign_ballistic_missiles" },
-new ScheduledCard { Turn = 5, CardCode = "decoy_saturation" },
+**T5 : la mobilisation partielle.** Le seul trimestre où la Russie ajoute trois cent mille hommes
+d'un coup. Rien d'autre ne se joue de son côté ce trimestre-là, et c'est juste : mobiliser est une
+décision qui mange son trimestre.
 
-// T6 · hiver 2023 — la campagne contre le réseau, et l'hiver qui la dément
-new ScheduledCard { Turn = 6, CardCode = "oil_price_cap" },
-new ScheduledCard { Turn = 6, CardCode = "diplomatic_campaign" },
-new ScheduledCard { Turn = 6, CardCode = "grid_campaign" },
-new ScheduledCard { Turn = 6, CardCode = "glide_bombs" },
-new ScheduledCard { Turn = 6, CardCode = "oil_export_rerouting" },
-new ScheduledCard { Turn = 6, CardCode = "mild_winter" },
-
-// T7 · printemps 2023 — l'embargo posé, l'embargo contourné
-new ScheduledCard { Turn = 7, CardCode = "component_embargo" },
-new ScheduledCard { Turn = 7, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 7, CardCode = "component_smuggling" },
-new ScheduledCard { Turn = 7, CardCode = "electronic_warfare_scaling" },
-new ScheduledCard { Turn = 7, CardCode = "armed_mutiny" },
-
-// T8 · été 2023 — l'offensive s'enlise, le blé devient une cible
-new ScheduledCard { Turn = 8, CardCode = "failed_offensive" },
-new ScheduledCard { Turn = 8, CardCode = "depot_strikes" },
-new ScheduledCard { Turn = 8, CardCode = "domestic_drone_industry" },
-new ScheduledCard { Turn = 8, CardCode = "shahed_plant" },
-new ScheduledCard { Turn = 8, CardCode = "grain_port_strikes" },
-new ScheduledCard { Turn = 8, CardCode = "inflation_surge" },
-
-// T9 · automne 2023 — le train reconduit, les obus étrangers arrivent
-new ScheduledCard { Turn = 9, CardCode = "component_embargo" },
-new ScheduledCard { Turn = 9, CardCode = "naval_drones_black_sea" },
-new ScheduledCard { Turn = 9, CardCode = "foreign_shells" },
-new ScheduledCard { Turn = 9, CardCode = "contract_recruitment_drive" },
-new ScheduledCard { Turn = 9, CardCode = "shadow_fleet" },
-new ScheduledCard { Turn = 9, CardCode = "attention_elsewhere" },
-new ScheduledCard { Turn = 9, CardCode = "rasputitsa" },
-
-// T10 · hiver 2024 — la disette d'obus, la loi de mobilisation
-new ScheduledCard { Turn = 10, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 10, CardCode = "conscription_law" },
-new ScheduledCard { Turn = 10, CardCode = "domestic_drone_industry" },
-new ScheduledCard { Turn = 10, CardCode = "grid_campaign" },
-new ScheduledCard { Turn = 10, CardCode = "decoy_saturation" },
-new ScheduledCard { Turn = 10, CardCode = "contract_recruitment_drive" },
-
-// T11 · printemps 2024 — les raffineries, les bombes planantes et leur brouillage
-new ScheduledCard { Turn = 11, CardCode = "refinery_strikes" },
-new ScheduledCard { Turn = 11, CardCode = "drone_coalition" },
-new ScheduledCard { Turn = 11, CardCode = "electronic_warfare_ukraine" },
-new ScheduledCard { Turn = 11, CardCode = "licence_transfer" },
-new ScheduledCard { Turn = 11, CardCode = "glide_bombs" },
-new ScheduledCard { Turn = 11, CardCode = "meat_assault" },
-new ScheduledCard { Turn = 11, CardCode = "european_election_swing" },
-
-// T12 · été 2024 — la frappe profonde est annulée par la contre-batterie
-new ScheduledCard { Turn = 12, CardCode = "rail_interdiction" },
-new ScheduledCard { Turn = 12, CardCode = "himars_deep_strike" },
-new ScheduledCard { Turn = 12, CardCode = "nato_training_pipeline" },
-new ScheduledCard { Turn = 12, CardCode = "counter_battery" },
-new ScheduledCard { Turn = 12, CardCode = "meat_assault" },
-
-// T13 · automne 2024 — deux contres le même trimestre
-new ScheduledCard { Turn = 13, CardCode = "frozen_assets_windfall" },
-new ScheduledCard { Turn = 13, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 13, CardCode = "decentralised_generation" },
-new ScheduledCard { Turn = 13, CardCode = "fibre_optic_drones" },
-new ScheduledCard { Turn = 13, CardCode = "electronic_warfare" },
-new ScheduledCard { Turn = 13, CardCode = "substation_strikes" },
-
-// T14 · hiver 2025 — la flotte fantôme sanctionnée, puis contournée
-new ScheduledCard { Turn = 14, CardCode = "shadow_fleet_sanctions" },
-new ScheduledCard { Turn = 14, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 14, CardCode = "grid_campaign" },
-new ScheduledCard { Turn = 14, CardCode = "evasion_network" },
-new ScheduledCard { Turn = 14, CardCode = "decoy_saturation" },
-new ScheduledCard { Turn = 14, CardCode = "harsh_winter" },
-
-// T15 · printemps 2025 — le rail coupé, le rail réparé
-new ScheduledCard { Turn = 15, CardCode = "anticorruption_crisis" },
-new ScheduledCard { Turn = 15, CardCode = "rail_interdiction" },
-new ScheduledCard { Turn = 15, CardCode = "nato_training_pipeline" },
-new ScheduledCard { Turn = 15, CardCode = "rail_repair_brigades" },
-new ScheduledCard { Turn = 15, CardCode = "diplomatic_complaisance" },
-new ScheduledCard { Turn = 15, CardCode = "air_defence_gap" },
-
-// T16 · été 2025 — la fracture au sommet, les pourparlers
-new ScheduledCard { Turn = 16, CardCode = "drone_coalition" },
-new ScheduledCard { Turn = 16, CardCode = "domestic_drone_industry" },
-new ScheduledCard { Turn = 16, CardCode = "domestic_repression" },
-new ScheduledCard { Turn = 16, CardCode = "meat_assault" },
-new ScheduledCard { Turn = 16, CardCode = "foreign_drones" },
-new ScheduledCard { Turn = 16, CardCode = "ceasefire_talks" },
-
-// T17 · automne 2025
-new ScheduledCard { Turn = 17, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 17, CardCode = "transparency_reform" },
-new ScheduledCard { Turn = 17, CardCode = "drone_coalition" },
-new ScheduledCard { Turn = 17, CardCode = "grain_port_strikes" },
-new ScheduledCard { Turn = 17, CardCode = "decoy_saturation" },
-new ScheduledCard { Turn = 17, CardCode = "oil_export_rerouting" },
-
-// T18 · hiver 2026
-new ScheduledCard { Turn = 18, CardCode = "nato_training_pipeline" },
-new ScheduledCard { Turn = 18, CardCode = "domestic_drone_industry" },
-new ScheduledCard { Turn = 18, CardCode = "contract_recruitment_drive" },
-new ScheduledCard { Turn = 18, CardCode = "state_propaganda_surge" },
-new ScheduledCard { Turn = 18, CardCode = "domestic_repression" },
-
-// T19 · printemps 2026
-new ScheduledCard { Turn = 19, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 19, CardCode = "drone_coalition" },
-new ScheduledCard { Turn = 19, CardCode = "domestic_drone_industry" },
-new ScheduledCard { Turn = 19, CardCode = "glide_bombs" },
-new ScheduledCard { Turn = 19, CardCode = "foreign_ballistic_missiles" },
-new ScheduledCard { Turn = 19, CardCode = "state_propaganda_surge" },
-
-// T20 · été 2026 — le présent
-new ScheduledCard { Turn = 20, CardCode = "depot_strikes" },
-new ScheduledCard { Turn = 20, CardCode = "elite_fracture" },
-new ScheduledCard { Turn = 20, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 20, CardCode = "meat_assault" },
-new ScheduledCard { Turn = 20, CardCode = "decoy_saturation" },
-
-// T21 · automne 2026
-new ScheduledCard { Turn = 21, CardCode = "drone_coalition" },
-new ScheduledCard { Turn = 21, CardCode = "nato_training_pipeline" },
-new ScheduledCard { Turn = 21, CardCode = "glide_bombs" },
-new ScheduledCard { Turn = 21, CardCode = "meat_assault" },
-
-// T22 · hiver 2027
-new ScheduledCard { Turn = 22, CardCode = "domestic_drone_industry" },
-new ScheduledCard { Turn = 22, CardCode = "cheap_interception" },
-new ScheduledCard { Turn = 22, CardCode = "harsh_winter" },
-new ScheduledCard { Turn = 22, CardCode = "decoy_saturation" },
-
-// T23 · printemps 2027 — la décision
-new ScheduledCard { Turn = 23, CardCode = "depot_strikes" },
-new ScheduledCard { Turn = 23, CardCode = "meat_assault" },
-```
+**T16 : la prime d'engagement.** L'armée de contrat se rachète tous les trimestres, et chaque hausse
+de la prime retire un homme au budget des obus. C'est la carte qui, à elle seule, empêche l'armée
+russe de gonfler jusqu'à un format que sa caisse ne peut plus alimenter — voir §11.
 
 ---
 
 ## 6. Variante `Holds` — le soutien tient, sans plus
 
 ```csharp
-new ScheduledCard { Turn = 10, CardCode = "aid_blocked" },
-new ScheduledCard { Turn = 12, CardCode = "aid_unblocked" },
-new ScheduledCard { Turn = 14, CardCode = "budget_fatigue" },
-new ScheduledCard { Turn = 18, CardCode = "parliament_veto" },
+defender[12] = "aid_unblocked";
+invader[15] = "budget_fatigue";
+invader[18] = "parliament_veto";
 ```
 
-La crise des munitions de 2023-2024 est conservée telle quelle : la Russie coupe le robinet à T9,
-l'Ukraine le rouvre à T11. S'y ajoutent deux frottements russes qui ne rompent rien — le soutien
-s'amaigrit et se conditionne, il ne s'arrête jamais.
+Trois créneaux réécrits sur quarante-six. La crise des munitions de 2023-2024 est conservée telle
+quelle : la Russie coupe le robinet au T10 — c'est sa carte du trimestre —, l'Ukraine le rouvre au
+T12. S'y ajoutent deux frottements russes qui ne rompent rien : le soutien s'amaigrit et se
+conditionne, il ne s'arrête jamais.
 
 ## 7. Variante `Collapses` — le soutien s'arrête
 
 ```csharp
-new ScheduledCard { Turn = 7, CardCode = "us_election_swing" },
-new ScheduledCard { Turn = 7, CardCode = "aid_collapse" },
-new ScheduledCard { Turn = 9, CardCode = "budget_fatigue" },
+invader[7] = "aid_collapse";
+invader[10] = "meat_assault";
 ```
 
-Rien avant T6 : les cinq premiers tours doivent rester **strictement identiques** à ceux de `Holds`,
-c'est la démonstration elle-même. La fatigue budgétaire arrive à T8 et non à T5 pour cette raison.
-Les trois cartes appartiennent à la Russie : couper un flux gratuit n'est pas un accident du calendrier
-électoral, c'est le rendement d'un effort d'influence de trois ans.
+Rien avant le T7 : les six premiers trimestres restent **strictement identiques** à ceux de `Holds`,
+c'est la démonstration elle-même. La coupure prend le créneau russe du T7, et la bascule électorale
+américaine qui l'accompagnait retourne au deck — `aid_collapse` porte déjà les trente-cinq points de
+volonté perdus, et deux cartes pour dire la même chose n'en font pas une décision de plus.
+
+Au T10, il n'y a plus d'aide à bloquer : la Russie dépense ce trimestre-là sur le front. C'est la
+seule divergence de calendrier hors coupure, et elle est une conséquence de la coupure.
 
 ## 8. Variante `Resolve` — l'Occident joue ses cartes
 
 ```csharp
-new ScheduledCard { Turn = 10, CardCode = "aid_blocked" },
-new ScheduledCard { Turn = 11, CardCode = "aid_unblocked" },
-new ScheduledCard { Turn = 11, CardCode = "component_embargo_total" },
-new ScheduledCard { Turn = 12, CardCode = "aid_predictable" },
-new ScheduledCard { Turn = 13, CardCode = "refinery_campaign_sustained" },
-new ScheduledCard { Turn = 14, CardCode = "frozen_assets_released" },
-new ScheduledCard { Turn = 17, CardCode = "aid_predictable" },
-new ScheduledCard { Turn = 17, CardCode = "major_oil_sanctions" },
-new ScheduledCard { Turn = 20, CardCode = "shadow_fleet_sanctions" },
-new ScheduledCard { Turn = 21, CardCode = "component_embargo_total" },
-new ScheduledCard { Turn = 21, CardCode = "oil_price_cap" },
-new ScheduledCard { Turn = 21, CardCode = "conscription_law" },
-new ScheduledCard { Turn = 22, CardCode = "refinery_campaign_sustained" },
-new ScheduledCard { Turn = 22, CardCode = "currency_collapse" },
-new ScheduledCard { Turn = 23, CardCode = "supplier_withdraws" },
-new ScheduledCard { Turn = 23, CardCode = "oil_price_crash" },
-new ScheduledCard { Turn = 23, CardCode = "sovereign_fund_empty" },
-new ScheduledCard { Turn = 23, CardCode = "elite_break" },
-new ScheduledCard { Turn = 23, CardCode = "refinery_campaign_sustained" },
-new ScheduledCard { Turn = 23, CardCode = "sovereign_fund_draw" },
+defender[11] = "aid_unblocked";
+defender[12] = "component_embargo_total";
+defender[13] = "refinery_campaign_sustained";
+defender[14] = "frozen_assets_released";
+defender[16] = "refinery_campaign_sustained";
+defender[17] = "major_oil_sanctions";
+defender[19] = "refinery_campaign_sustained";
+defender[21] = "sovereign_fund_empty";
+defender[22] = "oil_price_crash";
+defender[23] = "elite_break";
 ```
 
-La campagne sur le raffinage revient tous les trois trimestres, jamais tous les trimestres : le dégât
-cicatrise entre deux passages, et c'est cet intervalle qui fait durer l'étranglement des années. Le
-paquet de T19 n'est pas une victoire militaire, c'est une caisse qui se ferme — et depuis que rien
-n'est plus « subi », ces cinq cartes sont dans la main ukrainienne. Le trimestre final est la seule
-main de six cartes du déroulé, ce qui est exactement le propos : c'est le moment où le camp qui a
-patiemment coupé les flux abat tout ce qu'il a construit.
+**Dix trimestres sur vingt-trois.** C'est le prix d'une théorie de la victoire quand un trimestre ne
+porte qu'une décision — et c'est la meilleure chose que la règle ait apportée au jeu. Ce que
+l'Occident ne joue pas se lit aussi bien que ce qu'il joue : ces dix trimestres sont dix trimestres
+d'intercepteurs, d'ateliers de drones et de frappes sur les dépôts que l'Ukraine n'a pas, et elle
+tient la ligne sur les huit qui lui restent. **L'arbitrage est le jeu.** Dans l'ancien calendrier,
+l'Occident jouait l'étranglement *en plus* du reste : cela ne coûtait rien, donc cela ne décidait de
+rien.
+
+La campagne sur le raffinage revient **tous les trois trimestres** — T13, T16, T19 — et jamais tous
+les trimestres : le dégât cicatrise entre deux passages, et c'est cet intervalle qui fait durer
+l'étranglement des années. Les trois derniers trimestres sont l'endgame, et il est financier : le
+fonds qui comblait le trou (T21), puis le baril (T22), puis l'appareil (T23). Aucune de ces cartes ne
+prend un hexagone.
+
+Deux cartes de l'ancien amas final sont retournées au deck, `supplier_withdraws` et
+`currency_collapse` : le trimestre de la décision était une main de six cartes, il en porte une, et
+c'est `elite_break` — la seule qui dise ce qui se passe réellement, à savoir que l'appareil se
+fracture parce qu'il n'est plus payé.
 
 ### Le durcissement de 2025, et pourquoi +0,5
 
@@ -414,117 +304,135 @@ exactement onze dollars au baril, soit le milieu de la fourchette observée. La 
 consenti : les raffineurs indiens et chinois ont réduit leurs enlèvements, et cela se lit en volume,
 pas en prix.
 
-Placement au **T16**, soit le quatrième trimestre 2025 : le trimestre exact de la désignation. C'est
-aussi, à la mesure, le seul placement qui fasse tomber le régime russe par sa caisse plutôt que son
-armée par le front — reculée à T17 ou T18, la carte laisse l'issue basculer en `military_collapse`,
-ce qui raconte l'inverse de la thèse du jeu.
-
-Elle est réservée à la variante `Resolve`. Un durcissement de cette ampleur n'a aucun sens dans un
-monde où le soutien « tient sans plus », et la partie est déjà finie au T10 dans la variante où il
-s'arrête.
+Placement au **T17**, soit le quatrième trimestre 2025 : le trimestre exact de la désignation. Elle
+est réservée à la variante `Resolve` — un durcissement de cette ampleur n'a aucun sens dans un monde
+où le soutien « tient sans plus », et la partie est déjà finie au T11 dans celui où il s'arrête.
 
 ---
 
-## 9. Ce que le calendrier corrige au passage
+## 9. Cartes volontairement laissées hors calendrier
 
-**`harsh_winter` déplacée de T11 à T13.** T11 est un tour d'été. Un hiver rigoureux en juillet
-contredit la règle saisonnière que le modèle met en scène ; T13 est le premier hiver disponible.
+**Cinquante-quatre cartes sur cent une ne sont jouées à aucun tour d'aucun déroulé.** Ce n'est pas un
+oubli, c'est le but : le deck de la V2 doit être beaucoup plus large que la chronique de la V1, sinon
+il n'y a rien à piocher et rien à choisir. Le rapport est aujourd'hui d'une carte jouée pour deux
+cartes en main.
 
-**`conscription_law` placée à T9 et non au premier tour.** Le décret de mobilisation générale de
-février 2022 est déjà supposé par l'état de départ ; ce que la carte représente — l'abaissement de
-l'âge et l'élargissement de l'assiette — date d'avril 2024, soit T9. La placer à T1 vidait par
-ailleurs le dépôt ukrainien un trimestre trop tôt et faisait disparaître la latence de deux tours qui
-fait toute la démonstration de la variante `Collapses`.
+Elles se répartissent en cinq familles, et les trois premières viennent du passage à une carte par
+trimestre.
 
-**Deux cartes reconduites plutôt que jouées une fois.** `component_embargo` est joué à T6 puis à T8 :
-le premier est contré le trimestre même par `component_smuggling`, le second aboutit. Une sanction
-qu'on n'entretient pas se contourne — la règle est désormais visible à l'écran plutôt qu'écrite dans
-un document.
+| Famille | Exemples | Raison |
+|---|---|---|
+| Le décor du trimestre | `harsh_winter`, `mild_winter`, `rasputitsa`, `zapad_exercises`, `ultimatum_to_nato`, `intelligence_warning`, `no_mobilisation_yet` | Elles habillent le trimestre sans le décider — voir le critère en §4 |
+| Les doublons d'intensité | `industrial_requisition`, `prison_recruitment`, `foreign_ballistic_missiles`, `decoy_saturation`, `state_propaganda_surge`, `allied_intelligence`, `nato_training_pipeline`, `transparency_reform`, `recruitment_reform`, `diplomatic_campaign` | Une carte du même créneau dit déjà la même chose, en plus lourd. Leur poids a été reversé dans celle qui reste — voir §11 |
+| Les conséquences | `failed_offensive`, `armed_mutiny`, `anticorruption_crisis`, `european_election_swing`, `inflation_surge`, `attention_elsewhere`, `diplomatic_complaisance`, `us_election_swing` | Elles constatent, elles ne décident pas |
+| Les contre-cartes sans cible | `refinery_air_defence`, `counter_intelligence`, `air_defence_surge`, `electronic_warfare`, `electronic_warfare_ukraine`, `counter_battery`, `evasion_network`, `rail_repair_brigades`, `decentralised_generation` | Leur cible n'est plus jouée le même trimestre. Elles existent pour le bluff de la V2, où c'est le joueur qui choisira de dépenser son trimestre à répondre |
+| Le réservoir de la V1.1 et de la V2 | `oil_price_spike`, `global_recession`, `dam_breach`, `demographic_wall`, `mobilisation_wave_two`, `air_base_strikes`, `security_guarantees`, `decapitation_strike`, `drone_swarm_scaling`, `chinese_pressure` | Déjà hors calendrier avant ce chantier ; `oil_price_spike` et `global_recession` décalent définitivement tout le calendrier pétrolier et feraient doublon avec lui |
 
----
-
-## 10. Cartes volontairement laissées hors calendrier
-
-Quatorze cartes ne sont jouées à aucun tour. Ce n'est pas un oubli : le deck de la V2 doit être plus
-large que la chronique de la V1.
-
-| Carte | Raison |
-|---|---|
-| `war_tax_rise`, `mobilisation_wave_two` | Leur bénéfice repose sur `TreasuryDelta` ou sur une ressource que le vocabulaire d'effets ne sait pas encore atteindre ; jouées dans le socle, elles seraient un coût net pour la Russie. Voir §11. |
-| `oil_price_spike`, `global_recession` | `OilPriceDelta` décale **définitivement** tout le calendrier pétrolier. Dans un déroulé où `OilPriceCalendar` encode déjà la trajectoire réelle du baril, elles font doublon. Excellentes cartes de deck, mauvaises cartes de chronique. |
-| `dam_breach`, `demographic_wall` | Réservoir de tension pour la V1.1 et la V2. |
-| `refinery_air_defence`, `counter_intelligence`, `air_defence_surge` | Contre-cartes dont la cible n'est pas jouée dans le socle ; elles existent pour le bluff de la V2. |
-| `air_base_strikes`, `security_guarantees` | Cartes ukrainiennes ajoutées pour équilibrer les deux decks à quarante-sept ; les insérer déplacerait les issues déjà calées. |
-| `decapitation_strike`, `drone_swarm_scaling`, `chinese_pressure` | Déjà hors calendrier avant cette proposition ; les deux premières servent au duel de decks. |
+Une seule contre-carte survit dans le socle, `component_smuggling`, et c'est assez : le mécanisme
+reste atteignable, le test qui le verrouille passe, et le duel du T7 le montre à l'écran.
 
 ---
 
-## 11. Résultats observés
+## 10. Le duel de decks obéit désormais à la même règle
 
-Mesuré sur le scénario intégré.
+`DeckDuel` compare trois théories de la victoire à budget politique égal sur le déroulé du front
+figé. Il **ajoutait** son deck au calendrier du défenseur ; il en **prend** désormais les créneaux,
+comme n'importe quel joueur.
 
-| Variante | Issue | Tour de décision | Lecture |
+Le changement n'est pas cosmétique, il répare une mesure fausse. Empilé par-dessus, le deck
+d'attrition frontale gagnait le duel pour la raison la plus triviale qui soit : il était sept cartes
+**de plus**, pas sept cartes **autres**. On mesurait un budget, pas une théorie. Une fois qu'il doit
+payer ses sept trimestres, il perd — et la frappe profonde gagne, ce que le document de conception
+pose comme critère d'équilibre.
+
+---
+
+## 11. Résultats observés et réétalonnage
+
+Mesuré sur le scénario intégré, suite de tests au vert.
+
+| Variante | Issue | Tour de décision | Armistice |
 |---|---|---|---|
-| `Resolve` | chute du régime, puis **armistice**, victoire ukrainienne | **T23** | Cohésion des élites à zéro, puissance russe à 13 % de son pic, écart de financement 0,50, réserves 310 → 44 Md |
-| `Holds` | `frozen_front` | **T26** | Personne ne rompt, la partie va au bout des vingt-six trimestres |
-| `Collapses` | effondrement ukrainien, puis armistice, victoire russe | **T11** | Le flux gratuit coupé au T7, deux trimestres de latence, puis tout cède |
+| `Resolve` | chute du régime, puis armistice, victoire ukrainienne | **T23** — printemps 2027 | **T25** — automne 2027 |
+| `Holds` | `frozen_front` | **T26** — personne ne rompt | — |
+| `Collapses` | effondrement militaire ukrainien, puis armistice | **T11** — printemps 2024 | **T13** |
 
-**La tension monte sans plateau sur les trois derniers trimestres**, ce qui était la condition
-posée. L'écart de financement russe passe de 0,19 au T18 à 0,21, 0,30, 0,33, 0,39 puis 0,45 ; les
-réserves de 91 à 48 Md ; la puissance de combat de 301 000 à 37 000 hommes ; et la cohésion des
-élites de 76 à zéro. Rien ne s'affaisse et rien ne saute : le régime cède le trimestre où ce qu'il
-doit financer est devenu ce qu'il ne peut plus financer.
+Les trois issues sont **exactement celles d'avant**, au trimestre près. C'est le résultat qui
+comptait : la règle n'a pas coûté la démonstration.
 
-**L'épilogue ne joue aucune carte.** Aux tours 24 à 26, les deux mains sont vides et la ligne bouge
-quand même : l'armée qui n'est plus payée fond, et l'Ukraine reprend du terrain sans monter un seul
-assaut. C'est la meilleure démonstration que le jeu puisse offrir de sa propre thèse, et elle ne
-coûte pas une carte.
+### Ce que le réétalonnage a coûté
 
-### Deux constantes ont dû bouger avec le calendrier
+Passer de cent cinquante-deux cartes à quarante-six retire de l'effet cumulé des deux côtés, et
+jamais dans les mêmes proportions. Cinq valeurs de cartes et une constante de scénario ont bougé.
+Aucune carte n'a été ajoutée au calendrier pour compenser : **une décision par trimestre qui pèse
+lourd est plus juste qu'un saupoudrage**, et c'est la règle qui a guidé chaque ajustement.
 
-Le calendrier fixe **quand** le coup porte ; les constantes décident **s'il** porte. Deux ont été
-ajustées, toutes deux dans le sens du réalisme.
+| Ce qui a changé | Avant | Après | Pourquoi |
+|---|---|---|---|
+| `contract_recruitment_drive` — multiplicateur de coût de recrutement | 1,5 | **2,4** | La carte était jouée trois fois (1,5³ ≈ 3,4), elle l'est une. Sans cela l'armée de contrat russe ne coûte plus assez cher, la Russie tient sept cent mille hommes que sa caisse ne peut plus munitionner, et le front figé se met à bouger. **C'est l'ajustement le plus structurant de tous.** |
+| `meat_assault` — obus russes détruits | 320 | **480** | Sept passages dans l'ancien calendrier, trois désormais. Un trimestre d'assauts à découvert consomme un trimestre d'obus, pas un dixième |
+| `western_aid_opens` — aide promise | 11 Md | **16 Md** | L'aide occidentale de 2022 arrivait en six cartes étalées sur quatre trimestres ; elle arrive en une |
+| `refinery_campaign_sustained` — intégrité du raffinage | −0,34 | **−0,40** | Quatre passages dans l'ancien calendrier, trois désormais, et l'étranglement doit rester assez profond pour que la puissance russe tombe sous la moitié de son pic avant la chute |
+| `oil_price_crash` — cohésion des élites | −9 | **−5** | La carte doit couper la caisse, pas fracturer l'appareil : c'est le travail d'`elite_break` au trimestre suivant. À −9 le régime tombait au T22, un trimestre trop tôt |
+| `ukraine.Industry.DepotQuartersHeld` | 3 | **3,2** | Les deux trimestres de latence que promet la variante `Collapses` viennent de ce dépôt. Une fois le remplissage retiré, il manquait le second **de quatre obus** — le trimestre à couvrir est celui de l'offensive d'été 2023, dont la posture augmente la consommation d'un quart |
 
-`WarBudgetCeilingShare` passe de 0,038 à **0,028**. À 0,038 l'armée russe cessait d'être payée vers
-le T19 et le déroulé s'achevait en effondrement **militaire** — le front décidant de la guerre, ce
-que ce scénario ne doit jamais dire. À 0,028, c'est le régime qui cède le premier. La valeur colle
-aussi mieux aux sources : elle implique environ 202 Md par an de plafond de guerre, contre les
-~190 Md estimés pour 2025, là où 0,038 impliquait 274 Md. La borne basse est connue — à 0,027 la
-variante du front figé casse, l'envahisseur tenant alors assez confortablement pour l'emporter.
+`major_oil_sanctions` **n'a pas bougé** et reste à +0,5, la valeur calée sur sources en §8 : onze
+dollars de décote supplémentaire, le milieu de la fourchette observée après la désignation de
+Rosneft et de Lukoil. Il aurait été commode de la pousser à +0,7 pour gagner de la marge sur
+l'étranglement ; c'eût été sortir de ce que les sources soutiennent pour un confort de calibration.
+La profondeur manquante a été prise sur la campagne de raffinage, dont la valeur est de travail.
 
-`RefiningRepairPerTurn` revient de 0,4 à **0,18**, la valeur que l'audit demandait et que les sources
-soutiennent. Elle avait été écartée parce qu'elle avançait l'effondrement russe d'un trimestre sans
-compensation disponible ; cette contrainte a disparu, puisque la date de la chute est désormais tenue
-par le calendrier. La concession documentée dans `04-calibration-effectifs.md` §12 peut être retirée.
+### Ce qui a bougé malgré nous
 
-Une campagne sur le raffinage a été retirée du T19 en contrepartie : avec une réparation deux fois
-plus lente, chaque passage pèse plus lourd et il en faut moins pour le même étranglement.
+**La puissance de combat russe forme un plateau au lieu d'une pente**, du T16 au T20, à trois cent
+trente-trois mille hommes. L'armée est à son plafond d'effectif et sa couverture matérielle est
+encore pleine : rien ne la fait descendre tant que le dépôt tient. Elle chute ensuite d'un bloc —
+333 000 au T19, 291 000 au T20, 189 000 au T21, 163 000 au T22, 52 000 au T23. L'ancien calendrier produisait une décrue plus
+régulière, parce que sept passages d'assauts à découvert et trois de frappes sur les dépôts la
+grignotaient trimestre après trimestre. La nouvelle courbe est plus brutale et, à la réflexion, plus
+fidèle au modèle : **l'effondrement est un seuil, pas une pente**, et c'est le dépôt qui décide du
+moment où il se franchit.
+
+**La ruée de 2022 va mille kilomètres carrés plus loin** — 2 365 km² au T8 contre 1 285 dans
+l'ancien calendrier : l'Ukraine ne joue plus, en 2022, les trois ou quatre cartes de soutien qui l'aidaient à
+tenir le sud. L'écart est dans le bruit d'un modèle qui reconnaît lui-même ne pas couvrir les axes de
+Kyiv, Tchernihiv et Soumy — mais il est réel et il est signalé.
+
+**Le déroulé « Épuisement politique » du duel de decks ne gagne plus.** Avec des créneaux à payer, la
+décapitation et la fracture au sommet ne suffisent plus à faire tomber le régime dans le temps
+imparti. Aucun test ne l'exigeait ; c'est néanmoins un déplacement d'équilibre à connaître, et il
+mérite d'être rejugé quand la V2 rendra les decks jouables.
 
 ---
 
 ## 12. Points de vigilance
 
-**Le capital politique ne suit pas.** Densifier multiplie par cinq le nombre de cartes payées, et la
-suppression des cartes sans propriétaire ajoute vingt-six cartes désormais facturées à un camp. Avec
-une génération de deux à trois points par tour et un plafond de trente, les deux camps terminent en
-découvert profond — de l'ordre de cent trente points côté russe, deux cent soixante-dix côté
-ukrainien. La V1.0 joue son calendrier quoi qu'il arrive et n'enregistre que le découvert, donc rien
-ne casse ; mais l'économie de mana telle qu'elle est calibrée ne supporterait pas la V2 avec cette
-densité. Deux leviers, à trancher avant la V2 : relever la génération par tour, ou multiplier les
-cartes qui en rendent — `state_propaganda_surge` et `diplomatic_campaign` le font déjà, chacune de
-son côté du plateau, et c'est exactement l'asymétrie décrite dans le modèle.
+**Le capital politique redevient soutenable, et c'est la bonne surprise.** L'ancienne densité laissait
+les deux camps en découvert profond — de l'ordre de cent trente points côté russe et trois cents côté
+ukrainien —, ce qui condamnait l'économie de mana à être refondue avant la V2. Avec une carte par
+trimestre, le découvert tombe à **trente-sept points côté russe et soixante-cinq côté ukrainien** sur
+le déroulé de l'asphyxie. Ce n'est pas encore payable, mais l'écart n'est plus d'un ordre de grandeur :
+relever la génération de deux à quatre points par tour suffirait à rendre le calendrier jouable tel
+quel. La règle a fait, au passage, la moitié du travail que la V2 devait faire.
 
 **`elite_fracture` reste au coût zéro** alors que toutes les autres cartes réattribuées ont reçu un
-prix. Ce n'est pas un choix de conception : le deck « Épuisement politique » de `DeckDuel` est
-calibré à exactement quarante-quatre points de capital, et cette carte y compte pour rien. Lui donner
-un coût casse le test `NoDeckIsDominant_TheyAreComparedAtEqualPoliticalCost` tant que `DeckDuel.cs`
-n'est pas rééquilibré en regard.
+prix. Ce n'est pas un choix de conception : le deck « Épuisement politique » de `DeckDuel` est calibré
+à exactement quarante-quatre points de capital, et cette carte y compte pour rien. Lui donner un coût
+casse le test `NoDeckIsDominant_TheyAreComparedAtEqualPoliticalCost` tant que `DeckDuel.cs` n'est pas
+rééquilibré en regard.
 
 **Le vocabulaire d'effets manque de trois entrées** pour que les cartes budgétaires russes
 fonctionnent : `ReservesDelta` (le fonds souverain n'est pas atteignable), `FiscalCaptureDelta` (un
 impôt de guerre ne peut pas augmenter ce que le trimestre finance), et un moyen de brûler des hommes.
-`TreasuryDelta` est par ailleurs quasi inerte côté russe : le budget de guerre est plafonné par le
-PIB et par les recettes du trimestre, et la trésorerie est réinitialisée à chaque tour.
+`TreasuryDelta` est par ailleurs quasi inerte côté russe : le budget de guerre est plafonné par le PIB
+et par les recettes du trimestre, et la trésorerie est réinitialisée à chaque tour. `war_tax_rise`,
+jouée au T22, ne rapporte donc presque rien — elle est au calendrier pour ce qu'elle coûte en
+consentement, ce qui est un demi-usage et se voit.
+
+**La marge de l'asphyxie est mince.** La puissance russe à la veille de la chute vaut quarante-neuf
+pour cent de son pic, contre les cinquante que le test exige au maximum. Un point. Toute modification
+du moteur qui touche à la production, au budget de guerre ou au dépôt doit être suivie d'une
+relecture de ce chiffre, et non du seul « les tests passent ».
 
 ---
 
@@ -587,11 +495,15 @@ pour un gain de justesse négligeable.
 
 **Le réseau ukrainien est enfin franchissable.** Avec 26 GW opérables contre 18,85 GW de demande
 hivernale, la marge est de 7,15 GW : un seul passage de `grid_campaign` ne coupe rien, deux
-franchissent le seuil. Le calendrier en programme trois, aux tours 5, 9 et 13 — tous des hivers —
-donc les coupures nationales apparaissent au deuxième, ce qui est le rythme que le modèle décrit et
-qu'aucune partie ne produisait. Le plafond de perte permanente autorise 14,3 GW, que les trois
-passages atteignent presque exactement : la marge de manœuvre pour ajouter d'autres cartes de réseau
-est désormais nulle, et `dam_breach` comme `substation_strikes` doivent rester des jeux uniques.
+franchissent le seuil. Le calendrier en programme exactement **deux**, aux tours 6 et 14 — deux
+hivers —, donc les coupures nationales apparaissent au second, ce qui est le rythme que le modèle
+décrit et qu'aucune partie ne produisait. Les deux passages retirent 9 GW sur les 14,3 que le
+plafond autorise ; la marge restante est de cinq gigawatts, c'est-à-dire d'un seul jeu de
+`substation_strikes`, et il n'y a pas de place pour un troisième passage de campagne.
+
+C'est le seul endroit où la règle d'une carte par trimestre a rendu une lecture *moins* dure qu'avant
+— trois campagnes contre deux — et la coupure hivernale continue pourtant de se produire. Le seuil
+est franchi, ce qui est ce que le modèle avait à démontrer ; il l'est avec moins de marge.
 
 **Une bonne nouvelle, enfin.** Les cartes de mobilisation — `partial_mobilisation`,
 `mobilisation_wave_two`, `prison_recruitment`, `conscription_law` — ne coûtaient jusqu'ici que du
@@ -717,12 +629,13 @@ l'invasion, où elle tombe à 0,15.
 | T2 | hiver 2022 | **+4 183** | La ruée : Zaporijjia 3,5 hexagones, Kherson 2,9 — le sud, jamais le Donbass |
 | T3–T4 | 2022 | 4 183 | La ligne s'est formée, les réserves sont arrivées, plus rien ne bouge |
 | T5 | automne 2022 | **+570** | Le reflux : Kharkiv repris sur 3 hexagones, Kherson ramené de 2,9 à 1,0 |
-| T8–T22 | 2023-2026 | 1 285 → 1 435 | **Quinze trimestres, cent cinquante kilomètres carrés.** Le front est redevenu un thermomètre |
-| T23 | printemps 2027 | −1 598 | Le régime tombe, et le terrain revient d'un coup |
+| T8–T22 | 2023-2026 | 2 365 → 2 463 | **Quinze trimestres, cent kilomètres carrés.** Le front est redevenu un thermomètre |
+| T23 | printemps 2027 | 513 | Le régime tombe, et le terrain commence à revenir |
+| T25 | automne 2027 | −3 796 | L'armistice : l'armée qui n'est plus payée a rendu tout ce qu'elle tenait |
 
-**La séquence est le résultat qui compte.** Entre le pic de puissance russe au T16 et la chute au
-T23, l'envahisseur passe de 294 000 à 100 000 hommes de puissance de combat **et la ligne ne bouge
-pas d'un kilomètre**. Le terrain ne revient qu'après. Le front n'est pas devenu le moteur de
+**La séquence est le résultat qui compte.** Entre le pic de puissance russe au T16 et la veille de
+la chute au T22, l'envahisseur passe de 333 000 à 163 000 hommes de puissance de combat **et la ligne
+ne bouge pas d'un kilomètre** — 2 463 km² au T20 comme au T22. Le terrain ne revient qu'après. Le front n'est pas devenu le moteur de
 l'histoire : il bouge pendant la manœuvre de 2022, se fige pendant toute la guerre d'usure, et ne
 rebouge qu'à l'effondrement de l'arrière.
 
@@ -730,8 +643,9 @@ Témoin de non-régression, celui qui vérifie qu'on n'a pas cassé ce qui march
 à 2,3 hexagones**, exactement sa valeur d'avant le changement.
 
 Les trois issues sont intactes — `Resolve` T23, `Holds` front figé au T26, `Collapses` T11 — et les
-soixante tests passent, dont cinq nouveaux qui verrouillent la ruée, le reflux, le prologue muet,
-l'usure figée et l'ordre puissance-puis-terrain.
+tous les tests passent, dont cinq qui verrouillent la ruée, le reflux, le prologue muet,
+l'usure figée et l'ordre puissance-puis-terrain, et quatre qui verrouillent la règle d'une carte par
+camp et par trimestre.
 
 #### Ce que cela ne fait toujours pas, et qu'il faut assumer
 

@@ -5,7 +5,30 @@
 > [`02-direction-artistique.md`](02-direction-artistique.md) et les conventions de dessin par
 > [`05-composantes-armee.md`](05-composantes-armee.md) §9, qu'on ne rouvre pas ici.
 
-État : conception arrêtée, calibration à faire. Aucun code écrit.
+État : **implémenté**, étapes 1 à 5 du §8. Quatre écarts assumés par rapport au texte ci-dessous,
+et chacun est documenté à l'endroit du code qui le porte :
+
+1. **Le niveau de vie n'a que deux facteurs**, l'intégrité de l'appareil civil et l'électricité
+   civile disponible. Le troisième terme du §4.2, l'érosion de la capacité productive, a été
+   retiré : `AttritionPhase` le lit déjà sur la cohésion des élites, et le compter deux fois
+   aurait inventé un coût politique que le modèle n'a jamais payé. C'est aussi ce qui rend la
+   publication du poste strictement neutre — les trois déroulés ne bougent pas d'un bit.
+2. **La ligne de mécontentement reste dans `EnergyPhase`**, exprimée à travers le niveau de vie
+   plutôt que déplacée dans `AttritionPhase`. La déplacer aurait changé son rang par rapport à
+   la répression et au décrément du trimestre, donc les issues — pour un gain nul.
+3. **Le ruban parle en pourcentages**, pas en points d'indice : un poste dont le trimestre de
+   base était petit imprimait « −400 pts » à côté d'un « −7 pts », et un ruban se lit d'un trait.
+4. **La carte « Frappe sur les entrepôts » n'existe pas encore.** Le mécanisme est complet —
+   `StrikeTarget.CivilianIndustry`, `EffectKind.CivilianIndustryDamage`, la chaîne jusqu'au
+   capital politique — mais rien dans `cards.fr.json` ni dans les doctrines ne le vise, ce qui
+   est exactement la raison pour laquelle rien ne bouge dans les trois déroulés. Le poste des
+   usines civiles est donc plat tant que cette carte n'est pas écrite.
+
+Calibration posée : capacité civile = 24 % de la capacité productive soutenable (≈ 413 Md côté
+russe, 45 côté ukrainien), et un point de dégât emporte 16 % de cette base — de sorte qu'une
+campagne soutenue de deux à trois trimestres coûte huit à douze points de mécontentement, ce
+que le §9.2 demandait. Le seuil d'affichage « poste détruit » à 25 % est franchi dix-huit fois
+sur les trois déroulés : le dessin le plus fort du bandeau sert, il n'est pas décoratif (§9.4).
 
 ---
 
@@ -42,6 +65,20 @@ nourrissent. Le bandeau doit systématiquement montrer les deux termes de ces co
 seul qui rassure. C'est le même geste, répété sept fois.
 
 ---
+
+> **Décision revue à l'implémentation : le bandeau porte les huit postes, pas sept.** La fusion
+> argumentée ci-dessous a été refusée par l'utilisateur, et sa raison tient : le soutien étranger
+> est ce qu'on **reçoit** — armes, argent, munitions — tandis que le soutien international est la
+> **position diplomatique**, qui vote quoi, qui sanctionne, qui achète encore le pétrole. Ce sont
+> deux leviers qu'on actionne séparément, donc deux cartouches.
+>
+> Le huitième poste lit le régime de sanctions, seul objet du moteur qui décrive cette position,
+> les composants comptant double comme partout ailleurs — c'est le canal lent, et c'est le seul
+> qui décide. Une seule quantité, la latitude commerciale laissée à l'envahisseur, lue des deux
+> côtés de la table : elle est son capital, et elle est exactement ce que ses adversaires lui ont
+> pris. Le même nombre porte donc deux masses qui tirent en sens contraire, et le delta change de
+> signe d'un camp à l'autre — la corde que le §7.3 dessine partout ailleurs, ici prise au pied de
+> la lettre.
 
 ## 2. Sept postes pour huit demandés
 

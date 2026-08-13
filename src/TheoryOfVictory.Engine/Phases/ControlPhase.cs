@@ -12,7 +12,11 @@ public sealed class ControlPhase : ITurnPhase
 
     public const int TurnsBeforeCollapse = 3;
 
-    private const double RegimeCollapseStress = 58d;
+    /// <summary>
+    /// Where the apparatus fractures. Public because the capital band draws the margin left
+    /// before it: a threshold nobody can see is a threshold nobody plays against.
+    /// </summary>
+    public const double RegimeCollapseStress = 58d;
 
     public string Name
     {

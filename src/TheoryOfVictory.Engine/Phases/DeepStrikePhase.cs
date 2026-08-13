@@ -8,6 +8,9 @@ namespace TheoryOfVictory.Engine.Phases;
 /// </summary>
 public sealed class DeepStrikePhase : ITurnPhase
 {
+    /// <summary>Share of the civilian base one damage point takes off. Calibration, see §9.2.</summary>
+    private const double CivilianLossPerDamagePoint = 0.16d;
+
     public string Name
     {
         get { return "Frappes en profondeur"; }
@@ -108,6 +111,18 @@ public sealed class DeepStrikePhase : ITurnPhase
 
                 break;
 
+            case StrikeTarget.CivilianIndustry:
+                // Same two levels as the grid, and the same lesson: what the wave puts through
+                // a warehouse roof comes back in a quarter, what it puts through an assembly
+                // line does not. One damage point takes 16 % of the civilian base, so a
+                // campaign has to be sustained over two or three quarters before the regime
+                // feels anything — which is exactly the point being taught.
+                double civilianLoss = damage * CivilianLossPerDamagePoint * target.Civilian.CapacityBillions;
+                double civilianPermanent = civilianLoss * resolution.PermanentDamageShare;
+                target.Civilian.PermanentDamage += civilianPermanent;
+                target.Civilian.ReversibleDamage += civilianLoss - civilianPermanent;
+                break;
+
             case StrikeTarget.Logistics:
                 target.Politics.LogisticsIntegrity = Math.Clamp(
                     target.Politics.LogisticsIntegrity - (damage * 0.05d),
@@ -133,6 +148,7 @@ public sealed class DeepStrikePhase : ITurnPhase
             StrikeTarget.Refining => $"le raffinage et les terminaux {Adjective(target)}s",
             StrikeTarget.Industry => $"les usines d'armement {Adjective(target)}s",
             StrikeTarget.Logistics => $"les nœuds logistiques {Adjective(target)}s",
+            StrikeTarget.CivilianIndustry => $"les entrepôts et les usines civiles {Adjective(target)}s",
             _ => "l'arrière adverse",
         };
 

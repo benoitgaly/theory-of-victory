@@ -259,4 +259,22 @@ public sealed class SideSnapshot
 
     /// <summary>Everything forward-looking: countdowns, depot horizons, threat index, alerts.</summary>
     public PressureReading? Pressure { get; init; }
+
+    /// <summary>
+    /// The seven posts of war capital, in the band's own order. What this side still holds
+    /// to make war with, against what the front is showing.
+    /// </summary>
+    public List<CapitalPost> Capital { get; init; } = [];
+
+    /// <summary>
+    /// The seven posts in one figure, base 100 at the first quarter, as a geometric mean
+    /// floored at 15 points a post. Not a minimum — a treasury at zero is survived for a few
+    /// quarters and a dead grid is worked around for a while — and not a sum either, which
+    /// would let 310 Md of reserves hide a grid in ruins. It exists for one purpose: to be
+    /// drawn against combat power, and to show the front living off the capital.
+    /// </summary>
+    public double CapitalIndex { get; init; } = 100d;
+
+    /// <summary>The quarter's sharpest destruction, followed downstream. Null on a quiet quarter.</summary>
+    public CapitalChain? Chain { get; init; }
 }

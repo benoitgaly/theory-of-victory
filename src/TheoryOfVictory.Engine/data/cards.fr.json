@@ -40,7 +40,7 @@
         {
           "kind": "AidPledgeDelta",
           "targetSideCode": "defender",
-          "value": 11.0
+          "value": 16.0
         },
         {
           "kind": "MoraleDelta",
@@ -549,7 +549,7 @@
         {
           "kind": "RefiningIntegrityDelta",
           "targetSideCode": "invader",
-          "value": -0.34
+          "value": -0.4
         },
         {
           "kind": "InnovationStrikeJump",
@@ -579,7 +579,7 @@
         {
           "kind": "EliteCohesionDelta",
           "targetSideCode": "invader",
-          "value": -9
+          "value": -5
         },
         {
           "kind": "ExternalWillDelta",
@@ -989,7 +989,7 @@
         {
           "kind": "RecruitmentCostMultiplier",
           "targetSideCode": "invader",
-          "value": 1.5
+          "value": 2.4
         },
         {
           "kind": "PopularDiscontentDelta",
@@ -1608,7 +1608,7 @@
           "kind": "StockDelta",
           "targetSideCode": "invader",
           "resourceCode": "weapons",
-          "value": -320
+          "value": -480
         },
         {
           "kind": "PopularDiscontentDelta",

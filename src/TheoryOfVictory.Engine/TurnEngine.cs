@@ -74,6 +74,7 @@ public sealed class TurnEngine
 
             context.OpeningStocks[side.Code] = stocks;
             context.OpeningGenerationRatio[side.Code] = belligerent.ForceGenerationRatio;
+            context.OpeningCapital[side.Code] = CapitalReader.Measure(belligerent, context.State);
         }
     }
 
@@ -110,8 +111,10 @@ public sealed class TurnEngine
             Year = state.Year,
             Season = state.Season,
             OilPrice = state.OilPrice,
-            Invader = Capture(state.Invader, invaderPressure),
-            Defender = Capture(state.DefenderSide, defenderPressure),
+            // A side's capital is read against the wave that came AT it, which is the one its
+            // opponent launched: the invader's grid is what the defender's drones flew towards.
+            Invader = Capture(state.Invader, invaderPressure, context, context.DefenderStrike),
+            Defender = Capture(state.DefenderSide, defenderPressure, context, context.InvaderStrike),
             Headline = Headline(state, alerts),
             Alerts = alerts,
             Sectors = [.. context.SectorResolutions],
@@ -193,8 +196,45 @@ public sealed class TurnEngine
         return sharpest.Title;
     }
 
-    private static SideSnapshot Capture(Belligerent belligerent, PressureReading? pressure)
+    /// <summary>
+    /// The seven posts of war capital, indexed against this side's own first quarter. The
+    /// baseline is written once, on the turn it is first read, and never again: an index whose
+    /// base moved would draw a capital holding steady while it emptied.
+    /// </summary>
+    private static List<CapitalPost> ReadCapital(
+        Belligerent belligerent,
+        TurnContext context,
+        StrikeResolution? incoming)
     {
+        Dictionary<string, double> opening = context.OpeningCapital.TryGetValue(belligerent.Side.Code, out Dictionary<string, double>? measured)
+            ? measured
+            : CapitalReader.Measure(belligerent, context.State);
+
+        if (belligerent.CapitalBaseline.Count == 0)
+        {
+            foreach (KeyValuePair<string, double> entry in CapitalReader.Measure(belligerent, context.State))
+            {
+                belligerent.CapitalBaseline[entry.Key] = entry.Value;
+            }
+        }
+
+        return CapitalReader.Read(
+            belligerent,
+            context.State,
+            opening,
+            belligerent.CapitalBaseline,
+            context.EventCardsPlayed,
+            incoming);
+    }
+
+    private static SideSnapshot Capture(
+        Belligerent belligerent,
+        PressureReading? pressure,
+        TurnContext context,
+        StrikeResolution? incoming)
+    {
+        List<CapitalPost> capital = ReadCapital(belligerent, context, incoming);
+
         Dictionary<string, double> stocks = [];
         foreach (ResourceKind kind in ResourceKind.All)
         {
@@ -290,6 +330,9 @@ public sealed class TurnEngine
             WarBudgetCeiling = belligerent.Economy.HeadlineGdpBillions * belligerent.Economy.WarBudgetCeilingShare,
             FundingGap = belligerent.Economy.FundingGap,
             Pressure = pressure,
+            Capital = capital,
+            CapitalIndex = CapitalReader.Index(capital),
+            Chain = CapitalReader.Chain(capital),
         };
     }
 }

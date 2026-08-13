@@ -182,6 +182,18 @@
         return "T" + q.quarter + " " + String(q.year).slice(2);
     }
 
+    // Le rang du tour n'intéresse personne : ce qui situe un trimestre, c'est sa date. Les
+    // bandeaux de titre portent donc la saison et l'année, jamais le compteur.
+    function dateOf(t) {
+        var season = SEASONS[t.season] || t.season;
+        return season.charAt(0).toUpperCase() + season.slice(1) + " " + t.year;
+    }
+
+    function dateInOf(t) {
+        var articles = { Winter: "à l'hiver ", Spring: "au printemps ", Summer: "à l'été ", Autumn: "à l'automne " };
+        return (articles[t.season] || "en ") + t.year;
+    }
+
     function renderTimeline() {
         var host = document.getElementById("turnTicks");
         host.innerHTML = "";
@@ -198,7 +210,7 @@
         next.disabled = atEnd;
         next.title = atEnd
             ? (g.endedEarly
-                ? "La guerre s'est terminée au tour " + g.turns.length + " : il n'y a pas de trimestre suivant."
+                ? "La guerre s'est terminée ici : il n'y a pas de trimestre suivant."
                 : "Dernier trimestre de la partie.")
             : "Trimestre suivant";
 
@@ -230,20 +242,21 @@
             var b = el("button", cls);
             b.type = "button";
             b.disabled = !played;
-            // Le millésime s'écrit en retrait : « T4 21 » d'un seul tenant se lit « 14 21 »
-            // dans une graisse de titre, et la frise devient illisible d'un coup d'œil.
+            // Trimestre au-dessus, millésime au-dessous : « T4 21 » d'un seul tenant se lit
+            // « 14 21 » dans une graisse de titre. Deux lignes, et chacune respire.
             var label = el("span", "t-quarter");
             label.appendChild(el("b", null, "T" + q.quarter));
-            label.appendChild(el("i", null, String(q.year).slice(2)));
+            label.appendChild(el("i", null, String(q.year)));
             b.appendChild(label);
 
             if (played) {
-                b.title = "Tour " + number + " · " + (SEASONS[t.season] || t.season) + " " + t.year;
+                var season = SEASONS[t.season] || t.season;
+                b.title = season.charAt(0).toUpperCase() + season.slice(1) + " " + t.year;
                 (function (index) {
                     b.addEventListener("click", function () { state.turnIndex = index; render(); });
                 })(i);
             } else {
-                b.title = "La guerre s'est terminée au tour " + g.turns.length + " : ce trimestre n'a pas été joué.";
+                b.title = "La guerre s'est terminée avant ce trimestre : il n'a pas été joué.";
             }
 
             host.appendChild(b);
@@ -692,7 +705,7 @@
         h.appendChild(document.createTextNode("Génération de force — " + side.name));
         head.appendChild(h);
         head.appendChild(el("div", "turn-tag",
-            "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year + " · Brent " + fmt(t.oilPrice) + " $"));
+            dateOf(t) + " · Brent " + fmt(t.oilPrice) + " $"));
         stage.appendChild(head);
 
         stage.appendChild(renderHand(t, side.sideCode));
@@ -2746,8 +2759,7 @@
         // invited the reader to compare it with the seventy thousand square kilometres of
         // the real war, which is not what this number measures.
         head.appendChild(el("div", "turn-tag",
-            "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year +
-            " · " + fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés"));
+            dateOf(t) + " · " + fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés"));
         stage.appendChild(head);
 
         // On the last turn of a run that stopped early, say so: the timeline stops here
@@ -2755,11 +2767,20 @@
         var g = game();
         if (g.endedEarly && state.turnIndex === g.turns.length - 1) {
             var stop = el("div", "run-ended");
-            stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine au tour " +
-                g.turns.length + ", " + (SEASONS[t.season] || t.season) + " " + t.year +
-                " — les " + (g.plannedTurns - g.turns.length) +
+            stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine " +
+                dateInOf(t) + " — les " + (g.plannedTurns - g.turns.length) +
                 " trimestres suivants du calendrier n'ont pas été joués.";
             stage.appendChild(stop);
+        }
+
+        // Le capital de guerre passe AVANT la carte, et le ciseau juste après lui. La carte
+        // montre le thermomètre, le bandeau montre le moteur, et les deux se lisent d'un seul
+        // regard. Les deux pièces vivent dans leur propre fichier : ce qu'elles dessinent est
+        // un modèle à part entière, pas une décoration de la résolution.
+        var capital = window.tovCapital;
+        if (capital) {
+            stage.appendChild(capital.band(g, state.turnIndex));
+            stage.appendChild(capital.divergence(g, state.turnIndex));
         }
 
         // No cards here at all: they are played on each side's own screen, where the
@@ -2930,6 +2951,11 @@
     // vérifier qu'aucune ne sort vide, tronquée ou débordante. La partie n'en joue qu'une
     // poignée — le reste ne se contrôle qu'ici.
     window.tovCards = { render: renderCard, hand: handFor, size: HAND_SIZE };
+
+    // Une seule formulation des dates pour tout le plateau. Le bandeau de capital vit dans son
+    // propre fichier et doit dater ses trimestres exactement comme les écrans de génération —
+    // recopier la table des saisons ailleurs, c'est se garantir deux libellés qui divergent.
+    window.tovDates = { of: dateOf, in: dateInOf };
 
     bindPhases();
     state.turnIndex = openingTurnIndex(game());

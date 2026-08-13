@@ -123,6 +123,13 @@ public static class CardEffectApplier
                 belligerent.Grid.PermanentDamageGw += Math.Max(0d, value);
                 break;
 
+            // Warehouses burn back, assembly lines do not. A card that names the civilian base
+            // states how much of what it destroyed is gone for the war, exactly as a wave does.
+            case EffectKind.CivilianIndustryDamage:
+                belligerent.Civilian.PermanentDamage += Math.Max(0d, value) * 0.35d;
+                belligerent.Civilian.ReversibleDamage += Math.Max(0d, value) * 0.65d;
+                break;
+
             case EffectKind.RefiningIntegrityDelta:
                 belligerent.Economy.RefiningIntegrity = Math.Clamp(belligerent.Economy.RefiningIntegrity + value, 0.05d, 1d);
                 break;
