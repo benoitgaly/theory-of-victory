@@ -96,15 +96,16 @@
 
     var HAND_SIZE = 7;
 
+    // Every card is played by someone — nothing falls from the sky. While the deck still
+    // holds a few unattributed cards, they join the hand of each side they land on rather
+    // than sit in a "nobody chose this" limbo.
     function cardsOf(t, sideCode) {
-        return (t.cardsPlayed || []).filter(function (c) { return c.ownerSideCode === sideCode; });
-    }
-
-    // Cards nobody chose, landing on this side: what it is dealt, not what it decides.
-    function sufferedBy(t, sideCode) {
         return (t.cardsPlayed || []).filter(function (c) {
-            return !c.ownerSideCode &&
-                (c.affectedSideCodes || []).indexOf(sideCode) !== -1;
+            if (c.ownerSideCode) {
+                return c.ownerSideCode === sideCode;
+            }
+
+            return (c.affectedSideCodes || []).indexOf(sideCode) !== -1;
         });
     }
 
@@ -606,23 +607,6 @@
             rail.appendChild(renderCardBack(h.card, isInvader));
         });
         panel.appendChild(rail);
-
-        // What this side is dealt rather than chooses, on the same screen: it lands here.
-        var suffered = sufferedBy(t, sideCode);
-        if (suffered.length) {
-            var sufferedHead = el("div", "suffered-head");
-            sufferedHead.innerHTML = "<strong>Subi ce trimestre</strong> — personne ne l'a choisi.";
-            panel.appendChild(sufferedHead);
-
-            var sufferedRail = el("div", "card-rail hand suffered");
-            suffered.forEach(function (c) {
-                var node = renderCard(c);
-                node.classList.add("is-suffered");
-                sufferedRail.appendChild(node);
-            });
-            panel.appendChild(sufferedRail);
-        }
-
         return panel;
     }
 
