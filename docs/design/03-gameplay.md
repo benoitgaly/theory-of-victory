@@ -86,6 +86,16 @@ son argent ailleurs. Plafond posé à **six trimestres de production**.
 C'est le même enseignement que celui déjà noté pour le recrutement : *on produit pour couvrir un
 besoin, jamais pour dépenser un budget*. Trois fois le même piège, à trois endroits différents.
 
+**Correction de fond : l'effectif n'est pas une ressource à couvrir.** Celle-ci n'est pas une boucle
+mal bornée mais une erreur de catégorie. Le modèle traitait les soldats comme un flux de plus, avec
+un besoin et un taux de couverture ; or il n'existe aucun besoin exogène en hommes auquel comparer
+un effectif — c'est l'effectif qui dimensionne le front et fabrique donc le besoin en obus, en
+carburant et en vivres. Les hommes tenus en ligne sont désormais la **taille du tonneau**, les trois
+flux consommés en sont les douves, et un déficit d'effectif se paie deux fois : le tonneau rétrécit
+et il fuit, par perte de cohésion. La règle du minimum ne bouge pas — elle reste entière sur les
+matériels, et c'est toujours le cœur pédagogique du jeu. Calibration, trajectoires et sources dans
+[`04-calibration-effectifs.md`](04-calibration-effectifs.md).
+
 ---
 
 ## Ce qui reste à faire
@@ -96,6 +106,17 @@ Le tour où l'aide s'arrête ne produit encore rien de visible — c'est juste, 
 **sentir** la catastrophe arriver. Les alertes existent dans le moteur ; leur mise en scène à
 l'écran (compte à rebours qui s'affole, dépôts qui se vident visuellement) reste à faire côté
 interface.
+
+### Le tonneau dessine encore une douve « Soldats »
+
+Le moteur a été corrigé, le dessin non : `FLOWS`, dans `board.js`, compte toujours quatre douves
+dont une pour les soldats, et le tonneau est construit en les parcourant. Tant qu'elle est là, la
+page affirme exactement le contraire du modèle — que l'effectif est une ressource dont on couvre un
+besoin. L'effectif doit devenir la **taille** du tonneau, et non l'une de ses douves.
+
+À traiter dans la même passe : l'unité d'affichage. Le moteur compte en milliers, la page doit
+montrer l'homme réel — « 560 000 hommes », jamais « 560 ». La conversion se fait côté C#, pour que
+l'affichage n'ait aucun calcul à faire.
 
 ### Le coût de l'inaction
 

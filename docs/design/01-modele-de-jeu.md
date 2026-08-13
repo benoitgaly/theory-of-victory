@@ -6,6 +6,12 @@
 
 État : conception arrêtée, hors calibration chiffrée. Document de référence du projet.
 
+Deux documents le complètent et sont postérieurs à sa rédaction :
+[`04-calibration-effectifs.md`](04-calibration-effectifs.md) fixe l'unité, la trajectoire et les
+besoins engendrés par les effectifs humains, et fait autorité sur ce point ;
+[`05-composantes-armee.md`](05-composantes-armee.md) spécifie les cinq composantes d'armée — terre,
+air, mer, drones, missiles — et le théâtre naval.
+
 ---
 
 ## 1. La thèse à mettre en scène
@@ -70,8 +76,15 @@ exportés, milliards perçus, tonnes acheminées, térawattheures produits.
 > **Le front consomme des flux.** Un stock énorme mal alimenté ne tient pas ; un stock faible bien
 > alimenté tient indéfiniment.
 
-Les quatre flux du plateau : **Soldats · Armes · Pétrole · Nourriture**, plus **l'argent** qui les
-achète et le **PIB** qui produit l'argent.
+Les trois flux consommés au front : **Armes · Carburant · Nourriture**, plus **l'argent** qui les
+achète, le **pétrole** qui fait l'argent et le **PIB** qui le produit.
+
+**Les hommes ne sont pas un flux de plus.** Un flux consommé a un besoin, donc un taux de
+couverture ; l'effectif n'en a pas, parce qu'il n'existe aucun besoin exogène auquel le comparer —
+c'est lui qui dimensionne le front, et donc lui qui **fabrique** le besoin en obus, en carburant et
+en vivres. Les recrues formées restent un flux, celui qui répare les pertes ; les hommes tenus en
+ligne sont autre chose, et le §4 dit quoi. Le moteur les compte en milliers, l'affichage montre
+toujours l'homme réel : « 560 000 hommes », jamais « 560 ».
 
 Élégance à exploiter : **le pétrole est à la fois monnaie et consommable.** La Russie le vend pour
 financer sa guerre, les deux camps le brûlent pour bouger. Le même cube change de nature selon qui
@@ -85,9 +98,18 @@ Règle de combat unique, tenable à la main sur un plateau :
 
 > **Ta puissance sur un secteur est celle de ta ressource la plus rare.**
 
-Chaque intrant est exprimé en taux de couverture du besoin. Trois millions d'obus ne compensent pas
-un manque de fantassins ; cinq cent mille hommes sans obus ne percent rien. Minimum strict en V1 —
-c'est plus démonstratif et directement jouable au plateau.
+Chaque flux consommé est exprimé en taux de couverture du besoin, et le minimum porte sur ces
+trois-là. Trois millions d'obus ne compensent pas un dépôt de carburant vide ; cinq cent mille
+hommes sans obus ne percent rien. Minimum strict en V1 — c'est plus démonstratif et directement
+jouable au plateau.
+
+**Le tonneau, énoncé proprement.** Les hommes tenus en ligne sont la **taille** du tonneau : la
+puissance leur est proportionnelle, linéairement, et ils ne sont jamais une douve. Les douves sont
+les trois flux que le front consomme, et la plus courte fixe le niveau quelle que soit la taille.
+Un déficit d'effectif est puni deux fois plutôt qu'une, sans être déguisé en couverture manquante :
+**le tonneau rétrécit**, et **il fuit** — une unité qui tient le même terrain sous son effectif
+théorique le tient avec des lignes plus minces, sans relève ni réserve, et se bat donc moins bien
+que son seul effectif ne le dirait.
 
 En V2, le minimum strict pourra être adouci par une agrégation à substituabilité faible et réglable :
 mettre le curseur au maximum montre en direct pourquoi « avoir beaucoup de tout » ne remplace pas
@@ -154,6 +176,12 @@ Deux compteurs distincts, et c'est volontaire :
 Le camp qui optimise le premier se ruine à trois ans. C'est le piège central du scénario.
 
 ### 6.2 Mobilisation
+
+**Les hommes ont trois plafonds, jamais un taux de couverture** — démographique (le réservoir
+mobilisable), politique (ce qu'un régime ose exiger) et économique (chaque mobilisé quitte
+l'économie productive). Celui de la Russie n'est pas démographique : il est **politique et fiscal**.
+C'est pourquoi elle a acheté ses soldats par primes au lieu de les réquisitionner, et pourquoi son
+recrutement retombe dès qu'elle réduit la prime.
 
 **Le coût en PIB est marginalement croissant.** Les premiers mobilisés ne coûtent presque rien —
 régions périphériques, faible productivité, chômage. Les suivants coûtent de plus en plus cher,
