@@ -219,14 +219,15 @@ h1, h2, h3, h4 {
     border-bottom: 1px solid var(--rule);
 }
 
-/* Vingt-six saisons écrites en toutes lettres ne tiennent pas sur une ligne : « Printemps »
-   y touchait ses deux bords. La piste se plie donc en deux rangées de treize — une piste de
-   jeu se lit aussi bien en deux lignes, et chaque case respire enfin. */
+/* Une rangée, vingt-six cases de largeur strictement égale : c'est une piste de jeu, et sur
+   une piste toutes les cases se valent. C'est donc le texte qui s'adapte à la case et non
+   l'inverse — le corps suit la largeur de la fenêtre, calé pour que « Printemps », le plus
+   long des quatre, entre sans jamais toucher son filet. */
 .ticks {
-    display: grid;
-    grid-template-columns: repeat(13, minmax(0, 1fr));
-    gap: 10px 3px;
+    display: flex;
+    gap: 2px;
     flex: 1;
+    min-width: 0;
 }
 
 /* Ce qui s'est passé et ce que le modèle projette ne se lisent pas de la même façon :
@@ -243,7 +244,9 @@ h1, h2, h3, h4 {
 }
 
 .tick {
-    height: 44px;
+    flex: 1 1 0;
+    min-width: 0;
+    height: 50px;
     background: var(--paper);
     border: 1px solid var(--rule);
     border-radius: 3px;
@@ -258,7 +261,7 @@ h1, h2, h3, h4 {
     justify-content: center;
     gap: 1px;
     /* « Printemps » ne doit jamais toucher le filet de sa case. */
-    padding: 0 3px;
+    padding: 0 2px;
     position: relative;
     transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
@@ -279,14 +282,14 @@ h1, h2, h3, h4 {
    « Printemps » et il fallait le rétrécir jusqu'à l'illisible pour le faire tenir. En bas
    de casse, le plus long des quatre entre dans sa case à sa taille normale. */
 .tick .t-quarter b {
-    font-size: 11.5px;
+    font-size: clamp(8.5px, 0.58vw, 13px);
     font-weight: 650;
     letter-spacing: 0;
 }
 
 .tick .t-quarter i {
     font-style: normal;
-    font-size: 9.5px;
+    font-size: clamp(8px, 0.5vw, 10.5px);
     font-weight: 600;
     letter-spacing: 0.05em;
     opacity: 0.55;
@@ -492,8 +495,17 @@ h1, h2, h3, h4 {
     background: transparent;
 }
 
-/* Le pion de la piste était une pointe sous la case ; sur deux rangées, elle tombe dans la
-   rangée du dessous et se perd. La case noire pleine suffit à dire où l'on est. */
+/* Repère du tour courant, comme un pion posé sur la piste. */
+.tick.active::before {
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    margin-left: -5px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--ink);
+}
 
 /* Losange doré : une carte a été jouée ce tour-là. */
 .tick.has-card::after {
@@ -513,7 +525,7 @@ h1, h2, h3, h4 {
     border: 1px solid var(--rule);
     color: var(--ink-2);
     width: 34px;
-    height: 98px;
+    height: 50px;
     border-radius: 3px;
     cursor: pointer;
     font-size: 11px;
