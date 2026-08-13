@@ -17,7 +17,18 @@ public sealed class PlayedGame
 
     public required List<FrontSector> FinalSectors { get; init; }
 
+    /// <summary>
+    /// Turns the scenario had on the calendar. A run that ends early stopped because the
+    /// war ended, not because the timeline ran out — the display has to say which.
+    /// </summary>
+    public required int PlannedTurns { get; init; }
+
     public GameOutcome? Outcome { get; init; }
+
+    public bool EndedEarly
+    {
+        get { return Turns.Count < PlannedTurns; }
+    }
 
     public double TotalHexesGained
     {
@@ -88,6 +99,7 @@ public sealed class GameRunner
             Description = scenario.Description,
             Turns = turns,
             FinalSectors = scenario.Sectors,
+            PlannedTurns = scenario.TurnCount,
             Outcome = state.Outcome,
         };
     }

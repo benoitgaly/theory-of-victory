@@ -36,8 +36,13 @@ public sealed class GameController : Controller
             pushLat = sector.PushLatitude,
         });
 
+        // February 2022 is turn 1; the page opens on the quarter we are actually living in.
+        DateTime now = DateTime.Now;
+        int quartersSinceStart = ((now.Year - 2022) * 4) + (now.Month - 1) / 3;
+
         ViewBag.GamesJson = JsonSerializer.Serialize(games, JsonOptions);
         ViewBag.BoardJson = JsonSerializer.Serialize(board, JsonOptions);
+        ViewBag.CurrentTurn = Math.Max(1, quartersSinceStart + 1);
         return View();
     }
 }

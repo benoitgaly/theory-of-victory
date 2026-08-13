@@ -270,6 +270,36 @@ h1, h2, h3, h4 {
     opacity: 0.68;
 }
 
+.run-ended {
+    margin: 0 0 16px;
+    padding: 10px 16px;
+    border-left: 3px solid var(--ink-3);
+    background: var(--card);
+    border-radius: 0 6px 6px 0;
+    color: var(--ink-2);
+    font-size: 13px;
+}
+
+.run-ended strong {
+    color: var(--ink);
+}
+
+/* Trimestres que la partie n'a pas atteints : la guerre s'est terminée avant. */
+.tick.unplayed {
+    background: transparent;
+    border-style: dashed;
+    border-color: var(--rule);
+    color: var(--ink-3);
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
+.tick.unplayed:hover {
+    border-color: var(--rule);
+    color: var(--ink-3);
+    background: transparent;
+}
+
 /* Repère du tour courant, comme un pion posé sur la piste. */
 .tick.active::before {
     content: "";

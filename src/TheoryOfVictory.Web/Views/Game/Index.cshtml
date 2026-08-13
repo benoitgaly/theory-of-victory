@@ -40,6 +40,7 @@
     <script>
         window.tovGames = @Html.Raw(ViewBag.GamesJson);
         window.tovBoard = @Html.Raw(ViewBag.BoardJson);
+        window.tovCurrentTurn = @ViewBag.CurrentTurn;
     </script>
     <script src="~/js/geography.js" asp-append-version="true"></script>
     <script src="~/js/hexmap.js" asp-append-version="true"></script>

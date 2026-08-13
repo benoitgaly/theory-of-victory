@@ -8,6 +8,13 @@
         return;
     }
 
+    // The page opens on the quarter we are living in, not on February 2022 — and on the
+    // last played turn when the war ended before it.
+    function openingTurnIndex(g) {
+        var wanted = (window.tovCurrentTurn || 1) - 1;
+        return Math.max(0, Math.min(wanted, g.turns.length - 1));
+    }
+
     var state = { gameIndex: 0, turnIndex: 0, phase: 0 };
 
     var SEASONS = { Winter: "hiver", Spring: "printemps", Summer: "été", Autumn: "automne" };
@@ -78,6 +85,8 @@
             b.appendChild(el("span", "v-sub", g.subtitle));
             b.addEventListener("click", function () {
                 state.gameIndex = i;
+                // Switching runs keeps the quarter when it exists, and lands on the end
+                // of the war when that run stopped earlier.
                 state.turnIndex = Math.min(state.turnIndex, g.turns.length - 1);
                 render();
             });
@@ -85,18 +94,55 @@
         });
     }
 
+    // February 2022 is turn 1, so turn N is a known quarter of a known year.
+    function quarterOf(turn) {
+        var index = turn - 1;
+        var seasons = ["hiver", "print", "été", "autom"];
+        return {
+            season: seasons[index % 4],
+            year: 2022 + Math.floor(index / 4)
+        };
+    }
+
     function renderTimeline() {
         var host = document.getElementById("turnTicks");
         host.innerHTML = "";
-        game().turns.forEach(function (t, i) {
-            var hasCard = t.cardsPlayed && t.cardsPlayed.length > 0;
-            var b = el("button", "tick" + (i === state.turnIndex ? " active" : "") + (hasCard ? " has-card" : ""));
+
+        var g = game();
+        var planned = g.plannedTurns || g.turns.length;
+
+        for (var i = 0; i < planned; i++) {
+            var played = i < g.turns.length;
+            var t = played ? g.turns[i] : null;
+            var q = played
+                ? { season: (SEASONS[t.season] || "").slice(0, 5), year: t.year }
+                : quarterOf(i + 1);
+
+            var hasCard = played && t.cardsPlayed && t.cardsPlayed.length > 0;
+            var cls = "tick";
+            if (played && i === state.turnIndex) { cls += " active"; }
+            if (hasCard) { cls += " has-card"; }
+            // Beyond the last played turn the war is over: the quarter still shows, greyed,
+            // so the timeline never looks like a broken button.
+            if (!played) { cls += " unplayed"; }
+
+            var b = el("button", cls);
             b.type = "button";
-            b.appendChild(el("span", null, "T" + t.turn));
-            b.appendChild(el("span", "t-season", (SEASONS[t.season] || "").slice(0, 4) + " " + String(t.year).slice(2)));
-            b.addEventListener("click", function () { state.turnIndex = i; render(); });
+            b.disabled = !played;
+            b.appendChild(el("span", null, "T" + (i + 1)));
+            b.appendChild(el("span", "t-season", q.season + " " + String(q.year).slice(2)));
+
+            if (played) {
+                b.title = "Tour " + (i + 1);
+                (function (index) {
+                    b.addEventListener("click", function () { state.turnIndex = index; render(); });
+                })(i);
+            } else {
+                b.title = "La guerre s'est terminée au tour " + g.turns.length + " : ce trimestre n'a pas été joué.";
+            }
+
             host.appendChild(b);
-        });
+        }
     }
 
     function bindPhases() {
@@ -1065,6 +1111,18 @@
             " · " + fmt(t.squareKilometresGained) + " km² pris depuis février 2022"));
         stage.appendChild(head);
 
+        // On the last turn of a run that stopped early, say so: the timeline stops here
+        // because the war did, not because the button failed.
+        var g = game();
+        if (g.endedEarly && state.turnIndex === g.turns.length - 1) {
+            var stop = el("div", "run-ended");
+            stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine au tour " +
+                g.turns.length + ", " + (SEASONS[t.season] || t.season) + " " + t.year +
+                " — les " + (g.plannedTurns - g.turns.length) +
+                " trimestres suivants du calendrier n'ont pas été joués.";
+            stage.appendChild(stop);
+        }
+
         if (t.cardsPlayed && t.cardsPlayed.length) {
             var rail = el("div", "card-rail");
             t.cardsPlayed.forEach(function (c) { rail.appendChild(renderCard(c)); });
@@ -1258,5 +1316,6 @@
     });
 
     bindPhases();
+    state.turnIndex = openingTurnIndex(game());
     render();
 })();
