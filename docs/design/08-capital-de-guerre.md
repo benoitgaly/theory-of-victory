@@ -638,7 +638,7 @@ n'existent.
   courbe contre celle du front. Affiché seul, il redevient exactement le chiffre agrégé et rassurant
   que ce jeu passe son temps à dénoncer. Le bilan en dollars (§11.3) ne rouvre pas cette porte :
   il publie **deux** totaux par camp — le patrimoine et le flux annuel — et **jamais leur somme**,
-  parce qu'additionner un fonds souverain et une année de recette pétrolière est exactement
+  parce qu'additionner ce qu'un camp détient et ce qu'on lui verse chaque année est exactement
   l'arithmétique des communiqués de guerre.
 - **Une jauge de PIB apparent dans le bandeau.** Le PIB apparent monte quand tout va mal : c'est le
   piège keynésien, il a sa place dans la chaîne économique de chaque camp, pas dans un bandeau qui
@@ -741,8 +741,8 @@ sont pas sourcés un par un et ne doivent pas être cités comme des faits.
   moteur tient dans une unité qui n'est pas de l'argent. Le coefficient est **le même pour les
   deux camps** : il déplace le poids du poste dans le patrimoine, jamais le rapport entre Moscou
   et Kyiv.
-- **3,5 % et 2,0 % de la capacité soutenable** — le chiffre le plus fragile des deux, et il est
-  assumé comme tel. Il vise l'addition sécurité intérieure + clientèle + subventions à la paix
+- **3,5 % et 2,0 % de la capacité soutenable** — le plus fragile des trois, et il est assumé
+  comme tel. Il vise l'addition sécurité intérieure + clientèle + subventions à la paix
   sociale ; à un facteur deux près, le poste garderait la même forme, puisque c'est la marge qui
   le fait bouger et non la facture.
 - Le **× 4** n'est pas un coefficient : c'est un changement de période. Le moteur pense au
@@ -750,8 +750,9 @@ sont pas sourcés un par un et ne doivent pas être cités comme des faits.
 
 ### 11.3 Deux natures, deux totaux, jamais leur somme
 
-Un fonds souverain et une année de recette pétrolière ne s'additionnent pas. Chaque poste porte
-donc sa nature, et le bandeau publie **deux totaux par camp** :
+Un patrimoine et une aide annuelle ne s'additionnent pas : l'un est une chose qu'on détient,
+l'autre une somme qu'on reçoit tant qu'on veut bien vous la donner. Chaque poste porte donc sa
+nature, et le bandeau publie **deux totaux par camp** :
 
 La ligne de partage est celle du §11.1 : **est un patrimoine ce qui se capitalise**, est un flux
 ce qu'on ne peut pas capitaliser parce qu'on n'y a pas de titre.
