@@ -6,7 +6,23 @@ namespace TheoryOfVictory.Engine;
 /// <summary>Runs the ten phases of a three-month turn and freezes the result.</summary>
 public sealed class TurnEngine
 {
+    /// <summary>The engine's internal unit is the thousand men; the board's unit is the man.</summary>
+    private const double ThousandsToMen = 1000d;
+
     private readonly List<ITurnPhase> _phases;
+
+    /// <summary>
+    /// Turns an internal count of thousands into men, rounded to the nearest thousand.
+    ///
+    /// The rounding is the point, not a detail. Exposing 671 412 men would claim a precision
+    /// nobody has: the underlying estimates carry ± 15 %, so the last three digits would be
+    /// pure invention dressed as a census. The thousand is the finest grain any of the sources
+    /// behind this model actually support.
+    /// </summary>
+    private static double Men(double thousands)
+    {
+        return Math.Round(thousands, MidpointRounding.AwayFromZero) * ThousandsToMen;
+    }
 
     public TurnEngine()
     {
@@ -173,13 +189,11 @@ public sealed class TurnEngine
             capacity[kind.Code] = belligerent.Industry.GetCapacityPerTurn(kind);
         }
 
-        string? bottleneckName = belligerent.BottleneckCode switch
-        {
-            null => null,
-            "infantry" => "Soldats",
-            "payroll" => "Solde",
-            _ => ResourceKind.FromCode(belligerent.BottleneckCode).DisplayName,
-        };
+        // Only a consumed flow can be a bottleneck: the men are the size of the barrel,
+        // never one of its staves.
+        string? bottleneckName = belligerent.BottleneckCode is null
+            ? null
+            : ResourceKind.FromCode(belligerent.BottleneckCode).DisplayName;
 
         return new SideSnapshot
         {
@@ -194,11 +208,20 @@ public sealed class TurnEngine
             ForeignSupport = belligerent.Foreign.Mode == SupportMode.Granted
                 ? belligerent.Foreign.EffectiveGrantBillions
                 : belligerent.Foreign.Dependency * 100d,
-            SoldiersAtFront = belligerent.Manpower.AtFront,
-            SoldiersInTraining = belligerent.Manpower.InTraining,
-            MobilisablePool = belligerent.Manpower.MobilisablePool,
-            CumulativeLosses = belligerent.Manpower.CumulativeLosses,
-            CombatPower = belligerent.SustainableCombatPower,
+            // The engine counts in thousands; nothing leaves it in thousands. A board that
+            // prints "560" teaches nothing — "560 000 hommes" is immediately a war.
+            MenUnderArms = Men(belligerent.Manpower.TotalUnderArms),
+            MenInTheatre = Men(belligerent.Manpower.AtFront),
+            MenInContact = Men(belligerent.Manpower.InContact),
+            MenInTraining = Men(belligerent.Manpower.InTraining),
+            MenMobilisable = Men(belligerent.Manpower.MobilisablePool),
+            MenLost = Men(belligerent.Manpower.CumulativeLosses),
+            MenEstablishment = Men(belligerent.Manpower.TargetForceSize),
+            ManningRatio = belligerent.Manpower.ManningRatio,
+            CohesionFactor = belligerent.Manpower.CohesionFactor,
+            MaterialCoverage = belligerent.MaterialCoverage,
+            PayRatio = belligerent.Manpower.PayRatio,
+            CombatPower = Men(belligerent.SustainableCombatPower),
             ForceGenerationRatio = belligerent.ForceGenerationRatio,
             BottleneckCode = belligerent.BottleneckCode,
             BottleneckName = bottleneckName,
@@ -213,7 +236,6 @@ public sealed class TurnEngine
             InKindAid = belligerent.Foreign.Mode == SupportMode.Granted
                 ? belligerent.Foreign.EffectiveGrantBillions * belligerent.Foreign.InKindShare
                 : 0d,
-            TargetForceSize = belligerent.Manpower.TargetForceSize,
             GridAvailableGw = belligerent.Grid.AvailableCapacityGw,
             GridDemandGw = belligerent.Grid.BaseDemandGw,
             GridShortfall = belligerent.Grid.ShortfallRatio(Season.Winter),

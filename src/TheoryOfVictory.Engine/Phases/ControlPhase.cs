@@ -41,7 +41,11 @@ public sealed class ControlPhase : ITurnPhase
         // A full army recruits nobody, which does not mean it stopped regenerating:
         // an inactive constraint must never bind.
         double replacementRatio = losses <= 0.01d ? 1.5d : replacements / losses;
-        double menRatio = Math.Max(replacementRatio, belligerent.Manpower.InfantryCoverage);
+
+        // Men replaced over men lost, floored by how filled the order of battle already is:
+        // an army at establishment is regenerating even on a quiet quarter, an army bled down
+        // to two thirds of it is not, however few it lost this turn.
+        double menRatio = Math.Max(replacementRatio, belligerent.Manpower.ManningRatio);
         double materielRatio = consumed <= 0.01d ? 1.5d : delivered / consumed;
 
         // Regeneration obeys the same law as combat power: the scarcest side of it governs.
@@ -67,8 +71,9 @@ public sealed class ControlPhase : ITurnPhase
             floor = Math.Min(floor, belligerent.GetCoverage(kind.Code) + 0.25d);
         }
 
-        // An army whose salaries are unfunded does not regenerate either.
-        return Math.Min(floor, belligerent.GetCoverage("payroll") + 0.25d);
+        // An army whose salaries are unfunded does not regenerate either. Unpaid men are not
+        // a missing coverage, they are men the state can no longer hold in the line.
+        return Math.Min(floor, belligerent.Manpower.PayRatio + 0.25d);
     }
 
     private void CheckMilitaryCollapse(TurnContext context)

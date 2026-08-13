@@ -193,6 +193,6 @@ public static class CardEffectApplier
         // Rushing the cycle degrades quality, which raises losses, which forces the next wave.
         manpower.TrainingQuality = Math.Max(0.55d, manpower.TrainingQuality - 0.08d);
 
-        narrative.Add($"{belligerent.Name} : {taken:F0} k hommes mobilisés, {gdpHit:F1} Md de capacité productive perdus.");
+        narrative.Add($"{belligerent.Name} : {taken * 1000d:N0} hommes mobilisés, {gdpHit:F1} Md de capacité productive perdus.");
     }
 }

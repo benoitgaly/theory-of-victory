@@ -125,6 +125,28 @@ foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
     }
 
     Console.WriteLine();
+    Console.WriteLine("Effectifs, en hommes — trois grandeurs qu'on confond en permanence :");
+    Console.WriteLine("  sous les drapeaux (ce que les dirigeants annoncent) · au théâtre (ce qui consomme) "
+        + "· en contact (ce qui tient le terrain)");
+    Console.WriteLine("Tour |    RU drapeaux   théâtre   contact  pertes cum. "
+        + "|    UA drapeaux   théâtre   contact  pertes cum.");
+    foreach (TurnSnapshot turn in game.Turns)
+    {
+        Console.WriteLine(string.Format(
+            CultureInfo.CurrentCulture,
+            "T{0,-3} | {1,12:N0} {2,9:N0} {3,9:N0} {4,12:N0} | {5,12:N0} {6,9:N0} {7,9:N0} {8,12:N0}",
+            turn.Turn,
+            turn.Invader.MenUnderArms,
+            turn.Invader.MenInTheatre,
+            turn.Invader.MenInContact,
+            turn.Invader.MenLost,
+            turn.Defender.MenUnderArms,
+            turn.Defender.MenInTheatre,
+            turn.Defender.MenInContact,
+            turn.Defender.MenLost));
+    }
+
+    Console.WriteLine();
     Console.WriteLine("Front final :");
     foreach (FrontSector sector in game.FinalSectors)
     {

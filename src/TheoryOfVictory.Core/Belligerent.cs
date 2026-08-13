@@ -48,10 +48,16 @@ public sealed class Belligerent
     /// </summary>
     public double SustainmentShortfall { get; set; }
 
-    /// <summary>Sustainable combat power: the scarcest resource, never the sum.</summary>
+    /// <summary>Sustainable combat power: men in the line times the scarcest flow, never a sum.</summary>
     public double SustainableCombatPower { get; set; }
 
-    /// <summary>Which flow is currently the binding constraint. The single most useful readout.</summary>
+    /// <summary>
+    /// Level of the shortest stave: the smallest coverage among the three consumed flows.
+    /// It is what caps the whole force, whatever its size.
+    /// </summary>
+    public double MaterialCoverage { get; set; } = 1d;
+
+    /// <summary>Which consumed flow is currently the binding constraint. The single most useful readout.</summary>
     public string? BottleneckCode { get; set; }
 
     /// <summary>Force regenerated over force consumed. Below one for too long means collapse.</summary>

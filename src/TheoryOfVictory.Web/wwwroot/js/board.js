@@ -19,8 +19,10 @@
 
     var SEASONS = { Winter: "hiver", Spring: "printemps", Summer: "été", Autumn: "automne" };
 
+    // The three flows the front consumes, and only those: a stave is a resource with a need
+    // and therefore a coverage. Men have neither — they are the size of the barrel, since it
+    // is the force held in line that dimensions the front and so manufactures the need.
     var FLOWS = [
-        { key: "infantry", label: "Soldats", colour: "#7a6a55", scale: 40 },
         { key: "weapons", label: "Armes", colour: "#b8860b", scale: 120 },
         { key: "fuel", label: "Carburant", colour: "#8a5a2b", scale: 60 },
         { key: "food", label: "Nourriture", colour: "#3d7a51", scale: 60 }
@@ -48,7 +50,11 @@
 
     function fmt(v, d) {
         if (v === null || v === undefined || isNaN(v)) { return "—"; }
-        return v.toLocaleString("fr-FR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+        // French grouping uses a narrow no-break space, which several faces render with no
+        // advance at all in tabular figures — « 1141000 ». A plain no-break space always
+        // shows, and a figure of a million men has to be readable at a glance.
+        return v.toLocaleString("fr-FR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 })
+            .replace(/ /g, " ");
     }
 
     function el(tag, cls, text) {
@@ -350,8 +356,8 @@
 
         var staveW = 62, gapW = 2;
         var baseY = 238, maxH = 180;
-        var startX = 80;
         var innerW = FLOWS.length * (staveW + gapW) - gapW;
+        var startX = Math.round((W - innerW) / 2);
         var rightX = startX + innerW;
 
         var scarcest = 2;
@@ -672,10 +678,11 @@
         var readout = el("div", "barrel-readout");
         readout.appendChild(el("div", "b-eyebrow", "Puissance soutenable ce trimestre"));
         readout.appendChild(el("div", "b-power", fmt(side.combatPower)));
-        readout.appendChild(el("div", "b-caption", "sur une cible de " + fmt(side.targetForceSize) + " k hommes"));
+        readout.appendChild(el("div", "b-caption",
+            "sur un effectif théorique de " + fmt(side.menEstablishment) + " hommes"));
 
         // Jauge atteint / cible : l'écart se voit avant de se lire.
-        var reach = side.targetForceSize > 0 ? Math.min(1, side.combatPower / side.targetForceSize) : 0;
+        var reach = side.menEstablishment > 0 ? Math.min(1, side.combatPower / side.menEstablishment) : 0;
         var gauge = el("div", "b-gauge");
         var gfill = el("span");
         gfill.style.width = (reach * 100).toFixed(1) + "%";
@@ -714,12 +721,8 @@
         stockPanel.style.padding = "20px 22px";
         stockPanel.appendChild(el("div", "panel-title", "Ce qui atteint le front ce trimestre"));
         var grid = el("div", "stock-grid");
+        grid.appendChild(manpowerCard(side));
         FLOWS.forEach(function (f) {
-            if (f.key === "infantry") {
-                grid.appendChild(stockCard("Soldats au front", side.soldiersAtFront, side.targetForceSize,
-                    f.colour, 40, side.coverage.infantry));
-                return;
-            }
             grid.appendChild(stockCard(f.label, side.delivered[f.key] || 0, side.need[f.key] || 0,
                 f.colour, f.scale, side.coverage[f.key]));
         });
@@ -761,6 +764,46 @@
             ? "La Russie <b>achète</b> son soutien étranger : le flux coûte cher et ne s'arrête jamais tant qu'elle peut payer. Dépendance actuelle : " + fmt(side.dependency * 100) + " %."
             : "L'Ukraine <b>reçoit</b> son soutien : le flux est gratuit et peut s'arrêter du jour au lendemain. Volonté des soutiens : " + fmt(side.externalWill) + "/100.";
         stage.appendChild(foot);
+    }
+
+    // Men have no coverage — they are the size of the barrel, not a stave. What they have
+    // is three readings that narrow, and the narrowing is the whole point: an army of a
+    // million men can lack infantry, because only the last tier holds the line.
+    function manpowerCard(side) {
+        var card = el("div", "stock manpower");
+        var head = el("div", "s-head");
+        head.appendChild(el("span", "s-name", "Hommes en ligne de contact"));
+        head.appendChild(el("span", "s-value", fmt(side.menInContact)));
+        card.appendChild(head);
+
+        var tiers = [
+            { label: "Sous les drapeaux", value: side.menUnderArms },
+            { label: "Au théâtre", value: side.menInTheatre },
+            { label: "En ligne de contact", value: side.menInContact }
+        ];
+        var widest = tiers[0].value > 0 ? tiers[0].value : 1;
+
+        var wrap = el("div", "mp-tiers");
+        tiers.forEach(function (tier, i) {
+            var row = el("div", "mp-row");
+            row.appendChild(el("span", "mp-label", tier.label));
+            row.appendChild(el("span", "mp-value", fmt(tier.value)));
+            wrap.appendChild(row);
+
+            var track = el("div", "mp-track" + (i === tiers.length - 1 ? " is-contact" : ""));
+            var fill = el("span");
+            fill.style.width = Math.max(2, Math.min(100, (tier.value / widest) * 100)).toFixed(1) + "%";
+            track.appendChild(fill);
+            wrap.appendChild(track);
+        });
+        card.appendChild(wrap);
+
+        var note = el("div", "sc-outcome");
+        note.style.marginTop = "8px";
+        note.textContent = "L'effectif dimensionne le front — c'est lui qui fabrique le besoin en obus.";
+        card.appendChild(note);
+
+        return card;
     }
 
     function stockCard(name, value, reference, colour, scale, coverage) {

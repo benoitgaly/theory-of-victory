@@ -33,6 +33,10 @@ public sealed class AllocationPhase : ITurnPhase
     {
         Economy economy = belligerent.Economy;
 
+        // Both armies grew their establishment quarter after quarter rather than settling on a
+        // size: the war builds its own recruitment machine. Capped at the observed maximum.
+        belligerent.Manpower.GrowEstablishment();
+
         // Troops are fed and fuelled before anything is chosen: this is a charge, not a decision.
         BuySustainment(context, belligerent);
 
@@ -213,11 +217,12 @@ public sealed class AllocationPhase : ITurnPhase
             return budget - payroll;
         }
 
+        // Thousands of men the remaining budget can still pay for.
         double payable = budget / manpower.UpkeepCostPerThousand;
         manpower.PayableForceSize = payable;
 
-        context.Say($"{belligerent.Name} : la solde n'est plus couverte — {payable:F0} k hommes finançables "
-            + $"sur {manpower.AtFront:F0} k au front.");
+        context.Say($"{belligerent.Name} : la solde n'est plus couverte — {payable * 1000d:N0} hommes finançables "
+            + $"sur {manpower.AtFront * 1000d:N0} au front.");
 
         return 0d;
     }
@@ -312,8 +317,8 @@ public sealed class AllocationPhase : ITurnPhase
             return budgetBillions;
         }
 
-        // An army recruits to fill its target, not to spend its budget. Without this cap
-        // it grows past what it can ever arm, and starves itself of shells.
+        // An army recruits to fill its establishment, not to spend its budget. Without this cap
+        // it grows past what it can ever arm, and starves itself of shells. All in thousands of men.
         double deficit = Math.Max(0d, manpower.TargetForceSize - manpower.AtFront - manpower.InTraining);
 
         double affordable = budgetBillions / manpower.ContractCostPerThousand;
@@ -337,7 +342,7 @@ public sealed class AllocationPhase : ITurnPhase
 
         if (gdpHit > 1d)
         {
-            context.Say($"{belligerent.Name} : {recruited:F0} k recrues, {gdpHit:F1} Md de capacité productive en moins.");
+            context.Say($"{belligerent.Name} : {recruited * 1000d:N0} recrues, {gdpHit:F1} Md de capacité productive en moins.");
         }
 
         return Math.Max(0d, budgetBillions - (recruited * manpower.ContractCostPerThousand));

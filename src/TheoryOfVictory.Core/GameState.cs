@@ -114,14 +114,50 @@ public sealed class SideSnapshot
 
     public double ForeignSupport { get; init; }
 
-    public double SoldiersAtFront { get; init; }
+    // Every count below is in MEN, not in thousands: the engine works in thousands, the board
+    // reads people. 560 000 means 560 000 soldiers, and nothing on the page has to convert.
 
-    public double SoldiersInTraining { get; init; }
+    /// <summary>Men in uniform, everything included. The figure leaders quote, and the vaguest.</summary>
+    public double MenUnderArms { get; init; }
 
-    public double MobilisablePool { get; init; }
+    /// <summary>Men in the grouping committed to the theatre. This is what consumes.</summary>
+    public double MenInTheatre { get; init; }
 
-    public double CumulativeLosses { get; init; }
+    /// <summary>
+    /// Men in the combat units on the line of contact. This is what fights, what holds ground,
+    /// and what both armies ran out of. Never equal to the theatre grouping.
+    /// </summary>
+    public double MenInContact { get; init; }
 
+    /// <summary>Men in training, one quarter from the line.</summary>
+    public double MenInTraining { get; init; }
+
+    /// <summary>Men the state could still put under arms — the demographic ceiling, in men.</summary>
+    public double MenMobilisable { get; init; }
+
+    /// <summary>Men lost since the first turn, killed and permanently out of the line alike.</summary>
+    public double MenLost { get; init; }
+
+    /// <summary>Men the command intends to hold in the theatre: the establishment, in men.</summary>
+    public double MenEstablishment { get; init; }
+
+    /// <summary>Men present over establishment. A structural reading, never a coverage.</summary>
+    public double ManningRatio { get; init; }
+
+    /// <summary>What fighting below establishment costs, on top of the missing men themselves.</summary>
+    public double CohesionFactor { get; init; }
+
+    /// <summary>Level of the shortest stave: the smallest coverage among the three consumed flows.</summary>
+    public double MaterialCoverage { get; init; }
+
+    /// <summary>Share of the men present the treasury can still pay for. Below one, the line empties.</summary>
+    public double PayRatio { get; init; }
+
+    /// <summary>
+    /// Combat power, in MEN of fully supplied infantry equivalent — the same unit as the counts
+    /// above, so it can be read against them. It is the men in contact, cut down by the
+    /// scarcest flow, by training quality and by cohesion.
+    /// </summary>
     public double CombatPower { get; init; }
 
     public double ForceGenerationRatio { get; init; }
@@ -149,8 +185,6 @@ public sealed class SideSnapshot
     public double FiscalRevenue { get; init; }
 
     public double InKindAid { get; init; }
-
-    public double TargetForceSize { get; init; }
 
     public double GridAvailableGw { get; init; }
 

@@ -1,18 +1,27 @@
 # Calibration des effectifs
 
-> Document de calibration des effectifs humains du scénario Ukraine, de février 2022 à l'été 2026.
-> Il fixe l'unité, la trajectoire de chaque camp trimestre par trimestre, les rythmes de recrutement,
-> les pertes, et les besoins matériels que ces effectifs engendrent.
+> Combien d'hommes, où, et depuis quelle source. Document de calibration du scénario Ukraine,
+> de février 2022 à l'été 2026.
 
-État : calé sur sources ouvertes, avec fourchettes d'incertitude assumées. Complète
-`01-modele-de-jeu.md`, qui reste le document de référence du modèle.
+Trois niveaux de fiabilité sont marqués partout dans ce document, et tenus dans le code :
+
+| Marque | Sens |
+|---|---|
+| **SOURCÉ** | Un chiffre publié, avec sa source nommée et sa fourchette |
+| **EXTRAPOLATION** | Une déduction de ma part à partir de chiffres sourcés — jamais présentée autrement |
+| **VALEUR DE JEU** | Un paramètre fixé par la démonstration à produire, qu'aucune source ne détermine |
+
+Rien dans ce fichier n'est inventé puis présenté comme mesuré. Quand les sources se contredisent,
+la fourchette est donnée, puis le chiffre retenu, puis la raison du choix.
+
+Complète `01-modele-de-jeu.md`, qui reste le document de référence du modèle.
 
 ---
 
 ## 1. L'effectif est la variable structurante, pas une ressource à couvrir
 
-C'est la correction de fond que ce document accompagne, et elle prime sur tous les chiffres qui
-suivent.
+C'est la correction de fond que cette calibration accompagne, et elle prime sur tous les chiffres
+qui suivent.
 
 Les obus, le carburant et la nourriture sont des **flux consommés** : ils se brûlent chaque
 trimestre, ils ont un besoin, et ce besoin peut être couvert ou non. Les hommes, non. Un effectif
@@ -25,305 +34,425 @@ Dans le tonneau de Liebig que dessine le plateau :
 
 | Élément | Rôle |
 |---|---|
-| Hommes tenus en ligne | La **taille** du tonneau. La puissance y est proportionnelle, linéairement |
+| Infanterie en ligne de contact | La **taille** du tonneau. La puissance y est proportionnelle |
 | Obus, carburant, nourriture | Les **douelles**. La plus courte fixe le niveau, quelle que soit la taille |
 
-La règle du minimum reste donc entière — et elle reste le cœur pédagogique du jeu : un front
+La règle du minimum reste donc entière, et elle reste le cœur pédagogique du jeu : un front
 largement pourvu en hommes mais sans obus ne perce rien. Ce qui disparaît, c'est uniquement le
 *taux de couverture des hommes*, qui était une erreur de catégorie.
 
-Un déficit d'effectif reste puni, deux fois plutôt qu'une, sans qu'on ait à le déguiser en couverture
-manquante :
+Un déficit d'effectif reste puni deux fois, sans qu'on ait à le déguiser en couverture manquante :
+**le tonneau rétrécit** avec chaque homme manquant, et **il fuit** — une unité sous son effectif
+théorique tient le même terrain avec des lignes plus minces, sans relève et sans réserve.
 
-1. **Le tonneau rétrécit** — chaque homme manquant retire de la puissance, proportionnellement.
-2. **Il fuit** — une unité qui tient le même terrain sous son effectif théorique le tient avec des
-   lignes plus minces, sans relève et sans réserve : elle se bat moins bien que son seul effectif ne
-   le dirait. C'est le facteur de cohésion.
+Les hommes n'ont pas de plafond de couverture. Ils ont **trois plafonds réels** :
 
-Les hommes n'ont pas de plafond de couverture. Ils ont **trois plafonds réels**, et c'est ce que le
-modèle doit reproduire :
-
-| Plafond | Nature | Ce qui le fait mordre |
+| Plafond | Nature | Où il mord |
 |---|---|---|
-| **Démographique** | Le réservoir mobilisable | Ukraine : petit, et il se vide. Russie : large, il ne mord jamais vraiment |
-| **Politique** | Ce qu'un régime ose mobiliser | Russie : refus obstiné d'une seconde mobilisation générale après septembre 2022 |
+| **Démographique** | Le réservoir mobilisable | Ukraine : il mord. Russie : jamais vraiment |
+| **Politique** | Ce qu'un régime ose exiger | Russie : refus obstiné d'une seconde mobilisation générale après 2022 |
 | **Économique** | Chaque mobilisé quitte l'économie productive | Coût marginal croissant : la première vague est presque gratuite, la troisième est ruineuse |
 
-Le plafond russe n'est pas démographique — il est politique et fiscal. C'est pour cela que la Russie
-a acheté ses soldats par primes plutôt que de les réquisitionner, et c'est ce que le modèle doit
-faire découvrir au joueur : les primes assèchent la trésorerie qui aurait acheté les munitions.
+Ce qui limite la Russie n'est pas le nombre d'hommes disponibles : c'est ce que le régime ose
+exiger et ce que la trésorerie peut payer. Elle a acheté ses soldats par primes plutôt que de les
+réquisitionner — et le joueur découvre que ces primes assèchent la trésorerie qui aurait acheté les
+munitions.
 
 ---
 
-## 2. Unité de compte
+## 2. Trois grandeurs, qu'on confond en permanence
 
-**Le moteur compte en milliers d'hommes.** `AtFront = 560` signifie 560 000 soldats déployés dans le
-théâtre d'opérations, ligne de contact et arrières immédiats compris.
+L'écart entre elles est énorme, et le débat public les mélange constamment — y compris dans les
+communiqués officiels, qui comparent volontiers un effectif total à un effectif de théâtre pour
+faire parler les chiffres.
 
-**L'affichage, lui, se fait toujours en hommes réels.** « 560 » à l'écran ne veut rien dire pour un
-lecteur ; « 560 000 hommes » se lit immédiatement. Toute valeur exposée à la vue doit donc être
-multipliée par mille côté C#, pour que la page n'ait aucune conversion à faire.
-
-Trois niveaux d'effectif, à ne jamais confondre :
-
-| Niveau | Définition | Ordre de grandeur, début 2025 |
+| Grandeur | Définition | Ce qu'elle fait dans le modèle |
 |---|---|---|
-| **Sous les drapeaux** | Tout ce qui porte l'uniforme : théâtre, arrières, formation, défense du territoire, marine, aviation | Ukraine ≈ 880 000 |
-| **Au théâtre** | Le groupement de forces engagé contre l'adversaire | Russie ≈ 600 000, Ukraine ≈ 500 000 |
-| **En ligne de contact** | Les unités de combat du groupement — l'infanterie qui tient réellement la ligne | Ukraine ≈ 300 000, dont l'infanterie de contact n'est qu'une fraction |
+| **Sous les drapeaux** | Tout ce qui porte l'uniforme : théâtre, arrières, formation, défense du territoire, marine, aviation | Rien. C'est le chiffre que les dirigeants annoncent, et le plus vague |
+| **Au théâtre** | Le groupement de forces engagé sur le territoire ukrainien | **Consomme.** C'est le dénominateur de tous les besoins matériels |
+| **En ligne de contact** | Les unités de combat qui tiennent la ligne | **Combat.** C'est la taille du tonneau, et c'est ce qui manque aux deux armées |
 
-L'écart entre les deux derniers est le point le plus mal documenté de cette guerre, et c'est aussi
-celui qui explique le mieux la crise d'infanterie ukrainienne : une armée de 880 000 hommes peut
-manquer de fantassins. Le rapport retenu est une **estimation** (voir § 6), pas une donnée.
+Conséquence tenue par un test : **grossir la queue ne sert à rien.** Plus d'hommes au théâtre à
+infanterie de contact constante augmente les obus, le carburant et les vivres exigés sans ajouter
+un gramme de puissance. C'est la crise ukrainienne de 2024-2026 énoncée en un rapport.
+
+Le point d'ancrage de toute la distinction, et il est **SOURCÉ** : l'OSW estime que **pas plus de
+300 000** des plus d'un million d'Ukrainiens sous les drapeaux sont déployés sur la ligne, et la
+presse ukrainienne documente des brigades tombées à **30 % de leur effectif théorique**, avec un
+besoin déclaré de **300 000 hommes** pour les recompléter. Une armée d'un million d'hommes peut
+manquer d'infanterie : c'est cela qu'il fallait rendre modélisable.
 
 ---
 
-## 3. Trajectoire des effectifs au théâtre, trimestre par trimestre
+## 3. Unité de compte
+
+**Le moteur compte en milliers d'hommes** — `AtFront = 560` vaut 560 000 soldats. **Rien ne sort du
+moteur en milliers** : le snapshot expose `MenUnderArms`, `MenInTheatre`, `MenInContact`,
+`MenInTraining`, `MenMobilisable`, `MenLost`, `MenEstablishment` et `CombatPower` **en hommes**, de
+sorte que la page n'ait aucune conversion à faire. Un tableau de bord qui affiche « 560 » n'apprend
+rien ; « 560 000 hommes » est immédiatement une guerre.
+
+**Tout effectif exposé est arrondi au millier**, et l'arrondi fait partie de l'honnêteté du chiffre :
+afficher « 671 412 hommes » revendiquerait un recensement là où les sources donnent une estimation à
+± 15 %. Les trois derniers chiffres seraient de l'invention déguisée en précision. Le millier est le
+grain le plus fin que les sources de ce document soutiennent, et un test le vérifie sur chaque
+effectif de chaque tour.
+
+---
+
+## 4. Trajectoire trimestre par trimestre
 
 Le scénario compte 19 tours de trois mois : T1 = hiver 2022 (l'invasion), T19 = été 2026.
 
-| Tour | Période | Russie au théâtre | Ukraine sous les drapeaux | Repère historique |
+### 4.1 Groupement russe au théâtre
+
+La série de référence est celle de **Janis Kluge**, reconstituée à partir des données budgétaires
+russes de compléments de solde. C'est la seule qui ne provienne d'aucun des deux belligérants, et
+c'est pour cela qu'elle sert d'étalon.
+
+| Repère | Effectif | Statut | Source |
+|---|---|---|---|
+| Février 2022 | ≈ 190 000 | **SOURCÉ**, fourchette 150 000 – 190 000 | Estimations occidentales de la force massée aux frontières |
+| Sept.-oct. 2022 | +300 000 mobilisés | **SOURCÉ** | Mobilisation partielle, clôture annoncée le 28 octobre 2022 |
+| Mi-2023 | 523 548 | **SOURCÉ** | Kluge, données budgétaires |
+| Mi-2024 | 667 114 | **SOURCÉ** | Kluge, données budgétaires |
+| Mi-2025 | 723 477 | **SOURCÉ** | Kluge, données budgétaires |
+| Septembre 2025 | « plus de 700 000 » | **SOURCÉ**, déclaratif | Poutine, 18 septembre 2025 |
+| Juin 2026 | 721 300 | **SOURCÉ**, déclaratif | Syrskyi |
+
+Les deux déclarations de belligérants encadrent la série budgétaire au lieu de la contredire, ce
+qui est la seule raison sérieuse de leur accorder du crédit. **Chiffre retenu : la série Kluge**,
+parce qu'elle est dérivée de dépenses engagées et non d'une annonce.
+
+**Ce que le modèle produit** (variante « le soutien tient ») :
+
+| Tour | Période | Modèle | Repère | Écart |
 |---|---|---|---|---|
-| T1 | 2022 Q1 | ~190 000 | ~261 000 | Force d'invasion massée aux frontières ; effectif ukrainien d'avant-guerre |
-| T2-T3 | 2022 Q2-Q3 | 150 000 – 200 000 | ~700 000 | Échec de la poussée initiale ; mobilisation générale ukrainienne, garde nationale et gardes-frontières inclus |
-| T4 | 2022 Q4 | ~300 000 | ~700 000 | Mobilisation partielle russe : 300 000 réservistes, annoncée le 21 septembre, déclarée remplie le 28 octobre |
-| T5-T8 | 2023 | 350 000 – 450 000 | 750 000 – 800 000 | Montée en charge du recrutement sous contrat russe ; contre-offensive d'été ukrainienne |
-| T9-T12 | 2024 | 470 000 – 575 000 | ~800 000 | Objectif russe de 690 000 pour fin 2024, non atteint ; abaissement de l'âge de mobilisation ukrainien à 25 ans |
-| T13 | 2025 Q1 | ~600 000 | ~880 000 | Chiffres donnés par Zelensky le 15 janvier 2025 |
-| T15 | 2025 Q3 | > 700 000 | ~880 000 | Poutine, 18 septembre 2025 : « plus de 700 000 sur la ligne de front » |
-| T17-T19 | 2026 | 700 000 – 720 000 | 800 000 – 880 000 | Syrskyi évoque plus de 721 000 hommes russes concentrés en Ukraine ; le recrutement russe recule de 20 % au premier trimestre 2026 |
+| T1 | 2022 Q1 | 208 700 | ≈ 190 000 | +10 % |
+| T7 | été 2023 | 556 500 | 523 548 | +6,3 % |
+| T11 | été 2024 | 635 500 | 667 114 | −4,7 % |
+| T15 | été 2025 | 672 100 | 723 477 | −7,1 % |
+| T19 | été 2026 | 668 700 | 721 300 | −7,3 % |
 
-**Incertitude.** Les effectifs de théâtre sont des estimations de renseignement, pas des états
-nominatifs. Les chiffres russes viennent soit du Kremlin, qui a intérêt à les gonfler pour afficher
-sa puissance, soit du renseignement ukrainien, qui a intérêt à les gonfler pour justifier ses
-demandes d'aide. Les deux sources convergent ici autour de 600 000 – 720 000 pour 2025-2026, ce qui
-est le seul motif sérieux de leur faire confiance. Fourchette honnête : **± 15 %**.
+Un test verrouille ces trois derniers points à ± 15 %, qui est la tolérance honnête pour des
+estimations de renseignement comparées à un tour large d'un trimestre.
 
-Le chiffre ukrainien de 880 000 est un total sous les drapeaux, revendiqué par le pouvoir politique :
-il n'est comparable au 600 000 russe qu'à condition de se souvenir que le second est un effectif de
-théâtre et le premier non. Les comparer directement, comme le font régulièrement les communiqués des
-deux camps, n'a aucun sens.
+### 4.2 Ukraine
+
+| Repère | Effectif | Statut | Source |
+|---|---|---|---|
+| Février 2022 | 196 600 d'active | **SOURCÉ** | IISS Military Balance 2022 |
+| Février 2022, tout compris | ≈ 261 000 | **SOURCÉ**, déclaratif | Umerov, comparant au total ultérieur |
+| Mi-2022 | ≈ 700 000 sous les drapeaux | **SOURCÉ**, déclaratif | Mobilisation générale, garde nationale et gardes-frontières inclus |
+| Janvier 2025 | 880 000 sous les drapeaux | **SOURCÉ**, déclaratif | Zelensky, 15 janvier 2025 |
+| 2025 | « plus d'un million » sous les drapeaux, **≤ 300 000 sur la ligne** | **SOURCÉ** | OSW |
+| 2025-2026 | Brigades à 30 % de l'effectif théorique, besoin de 300 000 hommes | **SOURCÉ** | Presse ukrainienne, DeepState sur Pokrovsk |
+
+**Contradiction à trancher** : l'IISS donne 575 000 aux forces terrestres en 2025, Zelensky annonce
+800 000 à 980 000 selon les déclarations, l'OSW dit « plus d'un million ». Les trois mesurent des
+choses différentes — forces terrestres, forces armées, tout ce qui porte l'uniforme y compris la
+défense territoriale. **Chiffre retenu : ≈ 860 000 sous les drapeaux en 2025-2026**, au milieu de
+l'écart et cohérent avec l'annonce la plus précise (880 000, janvier 2025).
+
+**Ce que le modèle produit** :
+
+| Tour | Période | Sous les drapeaux | En contact | Repère |
+|---|---|---|---|---|
+| T13 | 2025 Q1 | 831 200 | 272 100 | 880 000 annoncés, ≤ 300 000 sur la ligne |
+| T15 | été 2025 | 867 300 | 283 900 | idem |
+| T19 | été 2026 | 857 500 | 280 700 | idem |
+
+Deux tests verrouillent ces deux ancrages : le total sous les drapeaux à ± 15 % des 880 000, et
+l'infanterie de contact sous le plafond de 300 000 de l'OSW.
+
+### 4.3 Écarts connus, assumés
+
+Trois divergences que je préfère écrire plutôt que masquer.
+
+1. **T5 (hiver 2023) surestime le groupement russe** — 559 500 modélisés contre 400 000 à 500 000
+   selon les estimations contemporaines. Cause : les 300 000 mobilisés de septembre 2022 arrivent
+   en un seul trimestre, là où la réalité les a étalés sur deux et en a versé une large part au
+   remplacement des pertes plutôt qu'à la croissance. Le tour suivant retombe exactement sur la
+   série Kluge, et corriger ce pic supposait de retarder toute la file de formation, au risque de
+   déplacer les trois issues. **Non corrigé, documenté.**
+2. **Le total ukrainien sous les drapeaux de 2022 est trop haut** — 440 000 modélisés au premier
+   trimestre contre ≈ 261 000 réels. Le modèle porte un rapport arrière/théâtre constant, alors que
+   la queue logistique et territoriale s'est construite pendant la guerre. Les chiffres se rejoignent
+   à partir de 2024, période où les sources sont de loin les plus fermes. **Non corrigé, documenté.**
+3. **Le rapport d'échange des pertes favorise trop l'Ukraine** — 3,3 contre 1 en cumulé dans le
+   modèle, quand le CSIS donne ≈ 1,4 contre 1 sur l'ensemble du conflit (et jusqu'à 8 contre 1 sur
+   le seul premier semestre 2026). Cause : le modèle applique fidèlement sa règle « attaquer coûte
+   trois à cinq fois tenir », et la Russie attaque presque tous les trimestres ; la réalité inclut
+   des offensives ukrainiennes coûteuses en 2022 et 2023 et des pertes défensives sous l'artillerie
+   et les bombes planantes. Corriger supposerait de contredire une règle posée par le document de
+   modèle. **Non corrigé : c'est un choix de modèle, pas une erreur de calibration.**
 
 ---
 
-## 4. Flux de recrutement
+## 5. Flux de recrutement
 
-C'est le flux, pas le stock, qui décide — et le recrutement est le seul robinet par lequel un camp
-répare ses pertes.
+C'est le flux, pas le stock, qui décide.
 
 ### Russie
 
-| Période | Rythme | Source du chiffre |
+| Période | Rythme | Statut |
 |---|---|---|
-| Sept.-oct. 2022 | 300 000 en six semaines | Mobilisation partielle, chiffre officiel de clôture |
-| 2023 | ~400 000 sur l'année | Revendication du ministère de la Défense, invérifiable |
-| 2024 | 407 000 – 450 000 sur l'année, soit ~1 700/jour fin 2024 | Estimation indépendante à partir des données budgétaires régionales, recoupée par les annonces officielles |
-| 2025 | 280 000 (renseignement ukrainien, octobre) à 417 000 (Medvedev, décembre) | Écart de 1 à 1,5 entre les deux sources : à retenir tel quel |
-| 2026 Q1 | En baisse de ~20 % | Recul concomitant de la réduction des primes régionales |
+| Sept.-oct. 2022 | 300 000 en six semaines | **SOURCÉ** |
+| 2024 | 407 000 – 450 000 sur l'année, ≈ 1 700/jour en fin d'année | **SOURCÉ** — reconstitution budgétaire (Kluge), recoupée par les annonces officielles |
+| 2025 | 280 000 (renseignement militaire ukrainien) à 417 000 (Medvedev) | **SOURCÉ**, sources contradictoires |
+| 2026 Q1 | En baisse d'environ 20 % | **SOURCÉ** |
 
-Le point structurant : **la Russie a acheté ses soldats plutôt que de les réquisitionner.** La prime
-d'engagement fédérale passe de 195 000 à 400 000 roubles en août 2024, et Moscou y ajoute 1,9 million
-de roubles — c'est cette surenchère qui produit le flux, et c'est elle qui le fait retomber dès
-qu'on la réduit. Le recrutement russe est un prix, pas une conscription : il est donc sensible à la
-trésorerie, exactement comme le modèle le suppose.
+**Contradiction 2025 à trancher** : l'écart de 1 à 1,5 entre les deux chiffres oppose un
+belligérant à l'autre. **Retenu : ≈ 35 000 par mois**, soit le milieu, parce qu'il est cohérent
+avec la reconstitution budgétaire de 2024 et avec le repli constaté début 2026.
+
+Le point structurant : **la Russie achète ses soldats.** La prime fédérale passe de 195 000 à
+400 000 roubles en août 2024, Moscou y ajoute 1,9 million — et le flux retombe dès qu'on réduit la
+prime. Le recrutement russe est un prix, donc sensible à la trésorerie, exactement comme le modèle
+le suppose.
 
 ### Ukraine
 
-| Période | Rythme | Repère |
+| Période | Rythme | Statut |
 |---|---|---|
-| 2022 | Mobilisation générale décrétée dès le 24 février | L'effectif triple en quelques mois |
-| Avril 2024 | ~30 000/mois | Loi signée le 2 avril 2024 abaissant l'âge de mobilisation de 27 à 25 ans |
-| Automne 2024 | ~20 000/mois | Le gain de l'abaissement d'âge ne tient pas |
-| 2025 | 25 000 – 27 000/mois | Chiffre avancé par Zelensky, en regard de 40 000 – 45 000 côté russe |
+| Avril 2024 | ≈ 30 000/mois après l'abaissement de l'âge de 27 à 25 ans (loi du 2 avril 2024) | **SOURCÉ** |
+| Automne 2024 | ≈ 20 000/mois | **SOURCÉ** — état-major |
+| 2025 | 25 000 – 27 000/mois | **SOURCÉ**, déclaratif (Zelensky) |
+| 2025-2026 | 17 000 – 24 000/mois, avec plus de 80 000 désertions cumulées | **SOURCÉ** |
 
-L'asymétrie est le sujet : à population et à économie beaucoup plus petites, l'Ukraine mobilise
-environ deux fois moins vite que la Russie ne recrute, et chaque mobilisé lui coûte
-proportionnellement trois à quatre fois plus cher en capacité productive perdue.
+L'asymétrie est le sujet : l'Ukraine mobilise environ deux fois moins vite que la Russie ne recrute,
+et chaque mobilisé lui coûte proportionnellement trois à quatre fois plus cher en capacité
+productive perdue.
 
 ---
 
-## 5. Pertes : les chiffres publics des deux camps sont de la propagande
+## 6. Pertes : les chiffres publics des deux camps sont de la propagande
 
-Il faut l'écrire sans détour. Les bilans que publient Kyiv sur les pertes russes et Moscou sur les
-pertes ukrainiennes sont des instruments de guerre, pas des mesures ; ils sont invariablement gonflés
-d'un facteur deux à trois. Les bilans que chaque camp publie sur **ses propres** pertes sont
-minorés pour la même raison. Aucun des quatre ne sert à calibrer quoi que ce soit.
+Il faut l'écrire sans détour. Les bilans que publie Kyiv sur les pertes russes et Moscou sur les
+pertes ukrainiennes sont des instruments de guerre : ils sont gonflés d'un facteur deux à trois. Les
+bilans que chaque camp publie sur **ses propres** pertes sont minorés pour la même raison. Aucun des
+quatre ne sert à calibrer quoi que ce soit.
 
-Le modèle retient donc des **estimations occidentales et indépendantes**, en l'assumant, avec leurs
-fourchettes.
+Le modèle retient des **estimations occidentales et indépendantes**, en l'assumant.
 
 ### Morts russes
 
 | Source | Estimation | Méthode | Période |
 |---|---|---|---|
-| Mediazona / Meduza / BBC Russie | ~352 000 morts | Registre successoral russe croisé avec une liste nominative vérifiée (217 808 noms confirmés en mai 2026) | Fév. 2022 – fin 2025 |
-| CSIS | 400 000 – 450 000 morts, ~1,4 million de pertes totales | Agrégation de sources de renseignement | Fév. 2022 – juin 2026 |
+| Mediazona / Meduza / BBC Russie | ≈ 352 000 morts | Registre successoral croisé avec une liste nominative vérifiée (217 808 noms confirmés en mai 2026) | Fév. 2022 – fin 2025 |
+| CSIS | 400 000 – 450 000 morts, ≈ 1,4 M de pertes totales | Agrégation de sources de renseignement | Fév. 2022 – juin 2026 |
 
-L'estimation Mediazona se décompose en ~261 000 décès « ordinaires » et ~90 000 décès « tardifs »
-(déclarés par jugement ou enregistrés avec plus de 180 jours de retard) ; la seconde moitié est la
-plus fragile, et les auteurs le disent eux-mêmes.
+L'estimation Mediazona se décompose en ≈ 261 000 décès ordinaires et ≈ 90 000 décès « tardifs »
+(déclarés par jugement ou enregistrés avec plus de 180 jours de retard) ; les auteurs signalent
+eux-mêmes que la seconde moitié est la plus fragile.
 
 ### Morts ukrainiennes
 
-| Source | Estimation | Période |
+| Source | Estimation | Statut |
 |---|---|---|
-| Zelensky | 46 000 morts (février 2025), 55 000 morts (février 2026) | Déclaration officielle, plancher |
-| CSIS | 125 000 – 150 000 morts, 525 000 – 625 000 pertes totales | Fév. 2022 – juin 2026 |
+| Zelensky | 46 000 (février 2025), 55 000 (février 2026) | Déclaratif, plancher |
+| UALosses | Plus de 92 000 noms confirmés début 2026 | Comptage nominatif, plancher explicite |
+| CSIS | 125 000 – 150 000 morts, 525 000 – 625 000 pertes totales | Estimation, fév. 2022 – juin 2026 |
 
-L'écart entre le chiffre officiel ukrainien et l'estimation occidentale est d'un facteur deux à
-trois. Retenir le premier reviendrait à croire un belligérant sur ses propres pertes ; retenir le
-second sans le dire reviendrait à le présenter comme un fait. Le modèle retient la fourchette
-occidentale **en la signalant comme fourchette**.
+**Fourchette retenue et raison du choix** : entre le chiffre officiel et l'estimation occidentale,
+l'écart va de un à trois. Le comptage nominatif d'UALosses, qui ne recense que ce qui est
+publiquement documenté et se déclare incomplet, dépasse déjà de 70 % le chiffre officiel — ce qui
+tranche en faveur des estimations hautes. **Retenu : la fourchette CSIS, signalée comme fourchette.**
 
 ### Ce que le modèle en fait
 
-Le rapport d'échange n'est pas une constante : il dépend du sens de l'attaque, ce qui est précisément
-la règle que le jeu enseigne — **attaquer coûte trois à cinq fois ce que coûte tenir**. Sur les
-pertes totales cumulées, les estimations CSIS donnent un rapport russe/ukrainien d'environ 1,4 sur
-l'ensemble du conflit et jusqu'à 8 pour 1 sur le premier semestre 2026, quand la Russie assaille en
-permanence. Le moteur reproduit cet écart par le multiplicateur de coût d'attaque, jamais par un
-coefficient national : aucun camp n'a de « meilleurs soldats » dans ce modèle.
+Les pertes ne sont pas un paramètre national : elles sortent du multiplicateur de coût d'attaque.
+Aucun camp n'a de « meilleurs soldats » dans ce modèle. Voir l'écart n° 3 du § 4.3 sur la limite de
+cette approche.
 
-**Signal de fin de partie, à retenir pour 2026** : le CSIS estime les pertes russes à
-30 000 – 34 000 par mois en 2026 pour un recrutement d'environ 27 000. Le flux de régénération passe
-sous le flux de consommation — l'armée russe rétrécit alors même qu'elle avance. C'est très
-exactement la situation que le ratio de génération de force est censé rendre visible, et le scénario
-`Resolve` doit la retrouver seul.
+**Signal de fin de partie** : le CSIS estime les pertes russes de 2026 à 30 000 – 34 000 par mois
+pour un recrutement d'environ 27 000. Le flux de régénération passe sous le flux de consommation —
+l'armée russe rétrécit alors qu'elle avance encore. C'est ce que le ratio de génération de force
+doit rendre visible, et c'est ce que la variante « l'Occident joue ses cartes » retrouve seule.
 
 ---
 
-## 6. Ce que les effectifs consomment
+## 7. Ce que les effectifs consomment
 
-Puisque l'effectif dimensionne le besoin, chaque taux ci-dessous est un **besoin par homme et par
-trimestre**, et le total en découle mécaniquement.
+L'unité `Armes` du moteur vaut **mille coups d'artillerie de tube**. Le point important est que la
+consommation **et** la production sont ancrées sur cette même nature de munition — les mélanger est
+l'erreur la plus facile à commettre ici, puisque les sources publient tantôt les obus d'artillerie
+seuls, tantôt toutes natures confondues.
 
-### Obus
+### Consommation
 
-L'artillerie russe tire environ 10 000 coups par jour en 2024-2025, pour un groupement d'environ
-650 000 hommes : soit **≈ 1,4 coup par homme et par trimestre**. L'Ukraine, rationnée, tire entre
-2 000 et 6 000 coups par jour à effectif comparable, soit 0,3 à 0,9. Les premiers mois de 2022 sont
-une aberration à part, avec des pointes annoncées jusqu'à 60 000 coups russes par jour.
+L'artillerie russe tire de l'ordre de **10 000 coups par jour** en 2024-2025 pour ≈ 650 000 hommes
+au théâtre, soit 10 000 × 91 ÷ 650 ≈ **1,40 coup par homme et par trimestre**, à la posture
+offensive que la Russie a tenue tout du long. La constante du moteur se lit **avant** le
+multiplicateur d'intensité, qui vaut 1,12 à cette posture : l'ancrage donne donc 1,40 ÷ 1,12 ≈
+**1,25**, valeur retenue. L'Ukraine, rationnée, tire 2 000 à 6 000 coups par jour à groupement
+comparable, soit 0,3 à 0,9 — que le modèle reproduit par sa posture défensive et par sa couverture,
+et non par une seconde constante. **Estimation, ± 40 %.**
 
-La valeur retenue par le moteur se situe sur le régime de grignotage 2024-2025, qui est celui que
-dix-neuf des vingt trimestres simulés connaissent réellement. **Estimation, ± 40 %.**
+Les premiers mois de 2022, avec des pointes annoncées jusqu'à 60 000 coups russes par jour, sont
+délibérément non calés : le régime de grignotage est celui que dix-neuf des vingt trimestres
+simulés ont réellement vécu.
 
-Vérification de cohérence, dans l'autre sens : 700 000 hommes russes au taux retenu, en posture
-offensive, consomment de l'ordre de 4 millions de coups par an, pour une production russe estimée
-entre 3 et 4 millions par an, approvisionnement nord-coréen compris. Le déficit qui en résulte est
-fidèle — il est comblé par les stocks soviétiques, et c'est bien ce qui les vide. Le modèle est donc
-physiquement tenable à effectif réaliste ; il ne l'était pas à 420 000 hommes, où la consommation
-tombait sous la production et où le stock ne servait plus à rien.
+### Production, et le trou que la Corée du Nord comble
+
+| Chiffre | Statut |
+|---|---|
+| Production russe domestique ≤ 2,3 M d'obus en 2024 | **SOURCÉ** — responsables ukrainiens et occidentaux |
+| ≈ 7 M de coups toutes natures produits en 2025 (dont 3,4 M d'obusier) | **SOURCÉ** — renseignement estonien |
+| 4 à 6 M d'obus livrés par la Corée du Nord depuis septembre 2023, ≈ la moitié des munitions d'artillerie tirées par la Russie | **SOURCÉ** — Reuters, RUSI |
+
+C'est le rapprochement décisif de toute cette calibration : **700 000 hommes russes consomment de
+l'ordre de 4 millions de coups par an, pour une production nationale plafonnée à 2,3 millions.** Le
+modèle porte donc une capacité russe de 560 000 coups par trimestre, et l'écart doit être **acheté
+à l'étranger, trimestre après trimestre**. Coupez l'argent, les obus s'arrêtent — l'asphyxie de la
+variante de victoire ukrainienne n'est plus un réglage, c'est le mécanisme réel.
+
+Le modèle en portait 700 000 par trimestre, soit 2,8 M par an de production nationale : au-dessus
+de tout ce que les sources soutiennent, et cela rendait la Russie autosuffisante, donc insensible à
+la coupure financière. **Corrigé.**
 
 ### Carburant et nourriture
 
-Environ 6 kg de carburant et 4,6 kg de vivres et d'eau par homme et par jour, ordres de grandeur
-d'une force mécanisée sur lignes de ravitaillement courtes. **Estimation non sourcée**, assumée comme
-telle : ces deux flux servent moins à la précision qu'à rappeler que le ravitaillement est une
-charge et non une décision. Contrairement aux obus, la nourriture ne dépend pas de l'intensité des
-combats — un homme mange autant un trimestre calme.
-
-### Part en ligne de contact
-
-Le rapport entre le groupement de théâtre et les unités de combat qui tiennent la ligne est le
-paramètre le plus faible de ce document. Les seuls repères publics : sur 880 000 Ukrainiens sous les
-drapeaux, de l'ordre de 300 000 servent dans les unités de combat, et l'état-major a dû transférer
-des milliers d'aviateurs vers l'infanterie pour combler les brigades. Aucun des deux camps ne publie
-de ventilation. **Estimation, ± 30 %**, à traiter comme un ordre de grandeur pédagogique et non
-comme une donnée.
+Environ 6 kg de carburant et 4,6 kg de vivres et d'eau par homme et par jour. **EXTRAPOLATION**,
+ordres de grandeur d'une force mécanisée sur lignes courtes, sans source utilisable. Contrairement
+aux obus, la nourriture ne dépend pas de l'intensité des combats.
 
 ---
 
-## 7. Paramètres retenus dans le scénario
+## 8. Paramètres retenus dans le scénario
 
-Toutes les valeurs sont en milliers d'hommes. Elles décrivent l'**effectif visé par le commandement**
-au théâtre, jamais le total sous les drapeaux : l'effectif réellement présent le suit avec retard,
-puisqu'il faut recruter, former, et remplacer les pertes.
+En milliers d'hommes. Ils décrivent l'effectif **visé par le commandement** au théâtre ; l'effectif
+présent le suit avec retard, puisqu'il faut recruter, former et remplacer les pertes.
 
-| Paramètre | Russie | Ukraine | Justification |
+| Paramètre | Russie | Ukraine | Statut |
 |---|---|---|---|
-| Effectif de départ au théâtre | 190 | 200 | Force d'invasion de février 2022 contre la part de l'armée ukrainienne engagée |
-| Cible initiale | 190 | 250 | Ce que chaque commandement voulait tenir au premier trimestre |
-| Croissance de la cible par trimestre | 28 | 25 | La guerre institutionnalise son propre recrutement plutôt que de sauter une fois |
-| Plafond de la cible | 720 | 620 | Maximum observé : 700 000 – 721 000 côté russe, groupement de théâtre ukrainien sous un total de 880 000 |
-| Capacité de formation par trimestre | 105 | 78 | ~35 000/mois contre ~26 000/mois |
-| Réservoir mobilisable | 4 200 | 3 700 | Voir la réserve ci-dessous |
+| Effectif de départ au théâtre | 190 | 200 | **SOURCÉ** / **EXTRAPOLATION** côté ukrainien |
+| Cible initiale | 190 | 250 | **EXTRAPOLATION** |
+| Croissance de la cible par trimestre | 28 | 22 | **EXTRAPOLATION**, calée sur les séries du § 4 |
+| Plafond de la cible | 720 | 560 | **SOURCÉ** côté russe (maximum observé) |
+| Capacité de formation par trimestre | 105 | 78 | **SOURCÉ** (≈ 35 000 et ≈ 26 000 par mois) |
+| Réservoir mobilisable | 4 200 | 3 700 | **EXTRAPOLATION** — voir ci-dessous |
+| Rapport arrière / théâtre | 0,70 | 0,68 | **EXTRAPOLATION** depuis les totaux publiés |
+| Part en ligne de contact | 0,55 | 0,55 | **EXTRAPOLATION** — voir ci-dessous |
+| Coût d'entretien et de solde | 0,050 | 0,020 | **VALEUR DE JEU** |
 
-**Trajectoire produite, et son biais connu.** La cible russe passe ainsi par ~300 fin 2022,
-~410 fin 2023, ~525 fin 2024, ~610 mi-2025 et atteint son plafond de 720 en fin de partie. Comparée
-aux repères du § 3, elle est juste sur 2022 et 2023, et **en retard d'un à deux trimestres sur
-2024-2025** (525 modélisés contre ~575 observés fin 2024). Ce retard est assumé : la croissance
-linéaire est la forme la plus honnête qu'on puisse donner à une trajectoire dont les points
-intermédiaires sont eux-mêmes des estimations à ± 15 %, et l'écart reste dans cette fourchette.
+**Part en ligne de contact.** Seul le côté ukrainien est ancré : ≈ 300 000 sur la ligne pour un
+groupement de théâtre de l'ordre de 550 000. La Russie ne publie **aucune** ventilation
+combattants/soutien, donc sa valeur est celle de l'Ukraine, reportée. Les deux camps portent
+délibérément le même chiffre : inventer une asymétrie ici reviendrait à offrir un avantage
+qu'aucune source ne soutient. Fourchette 0,45 – 0,65.
 
-**Réserve sur le réservoir mobilisable.** Les deux valeurs sont larges, et c'est volontaire : elles
-ne représentent pas la démographie brute mais le vivier réellement atteignable. Côté russe, le
-réservoir ne mord jamais dans la partie, et c'est fidèle — ce qui limite la Russie n'est pas le
-nombre d'hommes disponibles mais ce que le régime ose exiger et ce que la trésorerie peut payer.
-Côté ukrainien, la contrainte est inverse et le réservoir doit finir par se faire sentir. Un
-réservoir russe calibré comme une contrainte active serait une erreur de modèle.
+**Réservoir mobilisable.** Les deux valeurs sont larges et c'est volontaire : elles ne représentent
+pas la démographie brute mais le vivier réellement atteignable. Côté russe le réservoir ne mord
+jamais dans la partie, et c'est fidèle. Côté ukrainien, 3,7 millions d'hommes de 25 à 60 ans étaient
+évalués mobilisables en mars 2024 — c'est un instantané de 2024 utilisé ici comme réservoir de 2022,
+ce qui flatte légèrement l'Ukraine : **signalé, non corrigé.**
 
----
-
-## 8. Ce que la calibration doit reproduire sans y être forcée
-
-Critère de validation, dans l'esprit du § 18 du modèle de jeu : **un modèle qui ne retrouve pas le
-passé n'a rien à dire sur l'avenir.** La calibration des effectifs est bonne si le moteur retrouve
-seul :
-
-1. **L'échec de la poussée initiale** — 190 000 hommes ne suffisent pas à tenir un front de cette
-   longueur, quelle que soit la couverture matérielle. Le tonneau est trop petit.
-2. **La crise d'infanterie ukrainienne de 2024** — l'effectif total monte pendant que la ligne
-   s'amincit : c'est l'écart entre « sous les drapeaux » et « en ligne de contact » qui le produit,
-   pas une pénurie d'hommes au sens brut.
-3. **Le piège de la mobilisation** — mobiliser quand le goulot est l'obus n'apporte rien au front,
-   ampute la capacité productive, donc les recettes, donc la production d'obus. Le joueur doit
-   pouvoir y tomber et voir le front céder six tours plus tard avec plus d'hommes que jamais.
-4. **Le retournement de 2026** — pertes supérieures au recrutement côté russe, donc ratio de
-   génération de force sous 1 alors même que le front avance encore.
+**Dépôt initial ukrainien : 400 000 coups, VALEUR DE JEU** — et la seule de la chaîne des munitions
+qui le soit. Personne n'a publié ce que l'Ukraine détenait en février 2022. Il est fixé par la
+démonstration qu'il doit porter : le dépôt achète exactement les deux trimestres de calme que le
+modèle promet après une coupure de flux, et cette latence est toute la leçon.
 
 ---
 
-## 9. Sources
+## 9. Où le moteur s'écarte du réel pour préserver la démonstration
 
-Effectifs et groupements de forces :
+Il faut le dire plutôt que de laisser croire que le jeu est calé au plus près du réel. Le scénario
+doit produire trois issues précises — victoire ukrainienne au T19, front figé au T19, effondrement
+ukrainien au T10 — et **quand la fidélité historique et la démonstration entrent en conflit, c'est
+la démonstration qui gagne.** Voici où, exactement.
 
-- [Poutine : « plus de 700 000 soldats russes sur la ligne de front », 18 septembre 2025 — Al Arabiya English](https://english.alarabiya.net/News/world/2025/09/18/putin-says-more-than-700000-russian-soldiers-fighting-at-front-in-ukraine)
-- [Zelensky : 880 000 soldats ukrainiens face à 600 000 Russes, 15 janvier 2025 — The Kyiv Independent](https://kyivindependent.com/ukraines-military-now-totals-880-000-soldiers-facing-600-000-russian-troops-zelensky-says/)
+| Ce qui s'écarte | Ce que dit le réel | Ce que fait le moteur, et pourquoi |
+|---|---|---|
+| **Dépôt initial ukrainien** | Aucune source publiée | 400 000 coups, **fixé par la latence** : le dépôt doit acheter exactement les deux trimestres de calme après une coupure de flux. Quand la consommation par homme a été corrigée à la baisse, ce chiffre a été réduit d'autant — c'est un paramètre asservi à la démonstration, pas une estimation |
+| **Coûts de solde et d'entretien** | Non séparables des budgets publiés | **VALEUR DE JEU** : recalibrés pour que la masse salariale garde son poids dans le budget de guerre après l'agrandissement des effectifs. Ils ne prétendent pas au coût réel d'un soldat |
+| **Pic russe du T5** | 400 000 – 500 000 au théâtre début 2023 | 559 500, soit +20 %. Corriger supposait d'étaler la file de formation sur deux trimestres, ce qui décalait toute la chronologie et risquait de déplacer les trois issues. **Inexactitude connue, laissée en place pour protéger la démonstration** |
+| **Part en ligne de contact identique des deux côtés** | Seul le côté ukrainien est documenté | 0,55 partout. Une asymétrie non sourcée aurait déplacé l'équilibre du front sans justification — le choix neutre est aussi celui qui ne perturbe pas les issues |
+| **Rapport d'échange des pertes** | ≈ 1,4 contre 1 en cumulé (CSIS) | 3,3 contre 1, parce que le moteur applique la règle « attaquer coûte trois à cinq fois tenir » posée par le document de modèle. **Choix de modèle assumé** |
+
+Deux corrections, à l'inverse, sont allées dans le sens du réel **contre** le confort du réglage, et
+méritent d'être notées puisqu'elles ont cassé des tests avant de les réparer :
+
+- la consommation d'obus par homme, ramenée à la valeur dérivée de l'artillerie russe observée
+  plutôt qu'à une valeur d'ajustement ;
+- la production d'obus russe, ramenée de 2,8 à 2,24 millions par an, ce que les sources plafonnent.
+  Le moteur rendait la Russie autosuffisante en munitions, donc insensible à une coupure
+  financière : l'asphyxie ne pouvait pas fonctionner. Elle fonctionne maintenant **parce que** le
+  chiffre est juste, et non malgré lui.
+
+C'est la règle que ce document se donne : une valeur fixée par la démonstration est marquée
+**VALEUR DE JEU** et ne se déguise jamais en chiffre sourcé.
+
+---
+
+## 10. Ce que la calibration doit reproduire sans y être forcée
+
+**Un modèle qui ne retrouve pas le passé n'a rien à dire sur l'avenir.** La calibration est bonne si
+le moteur retrouve seul :
+
+1. **L'échec de la poussée initiale** — 190 000 hommes ne tiennent pas un front de cette longueur,
+   quelle que soit la couverture matérielle. Le tonneau est trop petit.
+2. **La crise d'infanterie ukrainienne** — l'effectif total monte pendant que la ligne s'amincit.
+   C'est l'écart entre « sous les drapeaux » et « en contact » qui le produit.
+3. **La dépendance russe aux munitions achetées** — la production nationale ne couvre pas ce que le
+   groupement consomme, et l'écart se paie en devises.
+4. **Le piège de la mobilisation** — mobiliser quand le goulot est l'obus n'apporte rien au front et
+   ampute la capacité productive, donc les recettes, donc la production d'obus.
+5. **Le retournement de 2026** — pertes supérieures au recrutement côté russe, donc ratio de
+   génération sous 1 alors que le front avance encore.
+
+---
+
+## 11. Sources
+
+Effectifs et groupements :
+
+- [Janis Kluge, composition des forces russes en Ukraine — Russianomics](https://janiskluge.substack.com/p/the-composition-of-russian-forces)
+- [Poutine : « plus de 700 000 soldats sur la ligne de front », 18 septembre 2025 — Al Arabiya English](https://english.alarabiya.net/News/world/2025/09/18/putin-says-more-than-700000-russian-soldiers-fighting-at-front-in-ukraine)
 - [Syrskyi : plus de 721 000 soldats russes concentrés en Ukraine — Militarnyi](https://militarnyi.com/en/news/russia-concentrate-721000-troops-in-ukraine/)
-- [Comparaison des forces russes et ukrainiennes avant l'invasion — Council on Foreign Relations](https://www.cfr.org/in-brief/comparing-size-and-capabilities-russian-and-ukrainian-militaries)
-- [Combien de soldats la Russie a-t-elle en Ukraine ? — The National Interest](https://nationalinterest.org/blog/buzz/how-many-troops-does-russia-have-ukraine-sa-092225)
+- [Zelensky : 880 000 soldats ukrainiens face à 600 000 Russes, 15 janvier 2025 — The Kyiv Independent](https://kyivindependent.com/ukraines-military-now-totals-880-000-soldiers-facing-600-000-russian-troops-zelensky-says/)
+- [Comparaison des forces avant l'invasion — Council on Foreign Relations](https://www.cfr.org/in-brief/comparing-size-and-capabilities-russian-and-ukrainian-militaries)
+- [Crise de l'infanterie ukrainienne : brigades à 30 %, ≤ 300 000 sur la ligne selon l'OSW — RFE/RL](https://www.rferl.org/a/ukraine-infantry-crisis-military-army-war/33497989.html)
+- [Instabilité du front et manque d'effectifs — Re: Russia](https://re-russia.net/en/analytics/0240/)
 
 Mobilisation et recrutement :
 
-- [Mobilisation partielle russe de septembre 2022, 300 000 réservistes — EUAA, Russian Federation Country Focus](https://www.euaa.europa.eu/russian-federation-country-focus/413-mobilisation)
-- [Conséquences économiques et sociales de la mobilisation russe — OSW Centre for Eastern Studies](https://www.osw.waw.pl/en/publikacje/osw-commentary/2023-01-20/mobilisation-russia-societys-reactions-and-economic)
-- [Données budgétaires : ~1 700 recrues par jour fin 2024 — Janis Kluge](https://janiskluge.substack.com/p/new-budget-data-russia-recruited)
+- [Mobilisation partielle russe de septembre 2022 — EUAA, Russian Federation Country Focus](https://www.euaa.europa.eu/russian-federation-country-focus/413-mobilisation)
+- [Conséquences économiques de la mobilisation russe — OSW](https://www.osw.waw.pl/en/publikacje/osw-commentary/2023-01-20/mobilisation-russia-societys-reactions-and-economic)
+- [≈ 1 700 recrues par jour fin 2024, données budgétaires — Janis Kluge](https://janiskluge.substack.com/p/new-budget-data-russia-recruited)
 - [Recrutement russe au premier semestre 2025 — Janis Kluge](https://janiskluge.substack.com/p/russian-recruitment-the-first-half)
-- [417 000 engagés sous contrat en 2025 selon Medvedev — The Moscow Times](https://www.themoscowtimes.com/2025/12/24/russian-army-recruited-417k-contract-soldiers-in-2025-medvedev-claims-a91536)
+- [417 000 engagés en 2025 selon Medvedev — The Moscow Times](https://www.themoscowtimes.com/2025/12/24/russian-army-recruited-417k-contract-soldiers-in-2025-medvedev-claims-a91536)
 - [280 000 engagés en 2025 selon le renseignement militaire ukrainien — The Kyiv Independent](https://kyivindependent.com/russia-has-recruited-280-000-contract-soldiers-in-2025-military-intelligence-says/)
-- [Recul du recrutement russe de 20 % au premier trimestre 2026 — Militarnyi](https://militarnyi.com/en/news/recruitment-rates-for-russia-fell-by-2026/)
-- [Ajustement de la politique de mobilisation ukrainienne, avril 2024 — OSW Centre for Eastern Studies](https://www.osw.waw.pl/en/publikacje/analyses/2024-04-17/ukraine-adjusts-its-mobilisation-policy)
+- [Recul du recrutement russe de 20 % début 2026 — Militarnyi](https://militarnyi.com/en/news/recruitment-rates-for-russia-fell-by-2026/)
+- [Ajustement de la mobilisation ukrainienne, avril 2024 — OSW](https://www.osw.waw.pl/en/publikacje/analyses/2024-04-17/ukraine-adjusts-its-mobilisation-policy)
 - [Mobilisation, paix et dissuasion en Ukraine — International Crisis Group](https://www.crisisgroup.org/qna/europe-central-asia/eastern-europe/ukraine/mobilisation-peacemaking-and-deterrence-ukraine)
 
 Pertes :
 
-- [352 000 morts russes en quatre ans, méthode du registre successoral — Mediazona](https://en.zona.media/article/2026/05/09/losses)
-- [Trois ans de morts : estimation Meduza / Mediazona — Meduza](https://meduza.io/en/feature/2025/02/24/three-years-of-death)
-- [Le sang et le trésor russes : le coût croissant de la guerre de Poutine — CSIS](https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war)
+- [352 000 morts russes, méthode du registre successoral — Mediazona](https://en.zona.media/article/2026/05/09/losses)
+- [Décompte Mediazona, mise à jour continue](https://en.zona.media/article/2026/07/03/casualties_eng-trl)
+- [Le coût croissant de la guerre de Poutine — CSIS](https://www.csis.org/analysis/russian-blood-and-treasure-ballooning-costs-putins-war)
+- [UALosses, comptage nominatif des morts ukrainiens](https://ualosses.org/en/about/)
 - [Zelensky annonce 55 000 morts ukrainiens, février 2026 — Meduza](https://meduza.io/en/news/2026/02/05/zelensky-says-55-000-ukrainian-soldiers-have-died-in-the-full-scale-war-with-russia-open-source-data-suggests-a-higher-toll)
-- [Estimations de pertes militaires des deux camps — Britannica](https://www.britannica.com/question/What-are-the-military-casualty-estimates-for-the-Russia-Ukraine-War)
+
+Munitions :
+
+- [Production russe record en 2025 : 7 M de coups toutes natures — Defense Express, renseignement estonien](https://en.defence-ua.com/news/in_2025_russia_broke_its_ammunition_output_record_producing_7m_shells_worth_106b-17489.html)
+- [La Corée du Nord fournit jusqu'à la moitié des obus russes — The Moscow Times, d'après Reuters](https://www.themoscowtimes.com/2025/04/15/north-korea-supplying-up-to-100-of-russian-artillery-shells-used-in-ukraine-a88745)
+- [Évaluation de la contribution nord-coréenne — RUSI](https://www.rusi.org/explore-our-research/publications/commentary/brothers-arms-assessing-north-koreas-contribution-russias-war-ukraine)
+- [Mesurer le débit de munitions russe — Modern War Institute](https://mwi.westpoint.edu/the-industrial-window-of-war-how-to-measure-russias-munitions-throughput-and-how-to-disrupt-it/)
 
 ---
 
-## 10. Ce que ce document ne prétend pas être
+## 12. Ce que ce document ne prétend pas être
 
-Aucun des chiffres ci-dessus n'est une mesure. Ce sont des estimations issues de sources ouvertes,
-produites pendant une guerre en cours, par des acteurs qui ont tous un intérêt dans le résultat —
-y compris les meilleurs d'entre eux. Les fourchettes annoncées sont des fourchettes réelles, pas
-des précautions de style : un effectif de théâtre à ± 15 % et des pertes à ± 40 % restent des ordres
-de grandeur.
+Aucun chiffre ci-dessus n'est une mesure. Ce sont des estimations de sources ouvertes, produites
+pendant une guerre en cours, par des acteurs qui ont tous un intérêt dans le résultat — y compris
+les meilleurs. Les fourchettes annoncées sont réelles et non des précautions de style : un effectif
+de théâtre à ± 15 %, des pertes et une consommation d'obus à ± 40 %, une part en ligne de contact à
+± 30 % restent des ordres de grandeur.
 
 Ce qu'ils suffisent à faire, et c'est tout ce qu'on leur demande : produire des trajectoires dont la
 **forme** est juste. Le jeu ne prétend pas dire combien d'hommes sont morts. Il prétend montrer
-pourquoi une armée qui recrute moins vite qu'elle ne perd finit par céder d'un seul coup, plusieurs
+pourquoi une armée qui recrute moins vite qu'elle ne perd finit par céder d'un coup, plusieurs
 trimestres après que le chiffre l'avait annoncé.

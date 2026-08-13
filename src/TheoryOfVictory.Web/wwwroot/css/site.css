@@ -893,6 +893,52 @@ main {
     line-height: 1;
 }
 
+/* Les trois lectures de l'effectif. Les barres rétrécissent, et ce rétrécissement est
+   l'information : seule la dernière tient la ligne. */
+.stock.manpower {
+    grid-column: span 2;
+}
+
+.mp-tiers {
+    margin-top: 10px;
+}
+
+.mp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--ink-2);
+}
+
+.mp-row + .mp-track {
+    margin: 3px 0 9px;
+}
+
+.mp-value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.mp-track {
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.mp-track span {
+    display: block;
+    height: 100%;
+    background: rgba(122, 106, 85, 0.45);
+}
+
+.mp-track.is-contact span {
+    background: #7a6a55;
+}
+
 .tokens {
     display: flex;
     flex-wrap: wrap;

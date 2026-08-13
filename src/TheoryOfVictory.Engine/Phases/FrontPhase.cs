@@ -33,38 +33,55 @@ public sealed class FrontPhase : ITurnPhase
         }
     }
 
-    /// <summary>Power is the binding constraint: a minimum, and we remember which one binds.</summary>
+    /// <summary>
+    /// Liebig, stated properly. The infantry on the line is the SIZE of the barrel — it scales
+    /// the whole thing, linearly, and it is never a stave. The staves are the three flows the
+    /// front actually consumes: shells, fuel, rations. Only a consumed flow can have a "need"
+    /// and therefore a coverage, and the shortest of them sets the level for all the others.
+    ///
+    /// Power rides on the men in contact, not on the theatre grouping: an army can double its
+    /// tail, double what it eats, and hold exactly the same ground. That is why the requirement
+    /// is computed on the theatre force and the power on the contact force — the two ends of
+    /// the same men, and the gap between them is where both armies actually lost.
+    ///
+    /// A manpower deficit is still punished, twice over and without pretending men are a flow:
+    /// the barrel shrinks with every man missing, and fighting below establishment costs
+    /// cohesion on top of it.
+    /// </summary>
     private void ComputeCombatPower(TurnContext context, Side side)
     {
         Belligerent belligerent = context.State.Get(side);
         Manpower manpower = belligerent.Manpower;
 
-        double infantry = Math.Clamp(manpower.InfantryCoverage, 0d, 1.6d);
-        belligerent.CoverageThisTurn["infantry"] = infantry;
+        // The staves. The minimum rule is strict and applies to these three, and only these.
+        string bottleneck = ResourceKind.Weapons.Code;
+        double scarcest = double.MaxValue;
 
-        // Money for salaries is a front flow like any other: it is scarce, it is consumed
-        // every quarter, and running out of it empties the line as surely as running out
-        // of shells. Treating it as a fourth stave keeps one single rule for everything.
-        belligerent.CoverageThisTurn["payroll"] = manpower.TargetForceSize <= 0d
-            ? 1.5d
-            : Math.Clamp(manpower.PayableForceSize / manpower.TargetForceSize, 0d, 1.5d);
-
-        string bottleneck = "infantry";
-        double scarcest = infantry;
-
-        foreach (string code in belligerent.CoverageThisTurn.Keys)
+        foreach (ResourceKind kind in ResourceKind.FrontFlows)
         {
-            double coverage = belligerent.CoverageThisTurn[code];
+            double coverage = belligerent.GetCoverage(kind.Code);
             if (coverage < scarcest)
             {
                 scarcest = coverage;
-                bottleneck = code;
+                bottleneck = kind.Code;
             }
         }
 
+        if (scarcest == double.MaxValue)
+        {
+            scarcest = 1d;
+        }
+
         belligerent.BottleneckCode = bottleneck;
+        belligerent.MaterialCoverage = scarcest;
+
+        // The barrel. Infantry on the line, capped by the men the treasury can still pay:
+        // an army that cannot be paid shrinks without anyone assaulting it.
         belligerent.SustainableCombatPower =
-            manpower.TargetForceSize * Math.Clamp(scarcest, 0d, 1.2d) * manpower.TrainingQuality;
+            manpower.InContact
+            * Math.Clamp(scarcest, 0d, 1.2d)
+            * manpower.TrainingQuality
+            * manpower.CohesionFactor;
 
         TurnContext.Accumulate(context.WeaponsDelivered, side, belligerent.GetDelivered(ResourceKind.Weapons));
         TurnContext.Accumulate(context.WeaponsConsumed, side, belligerent.GetDelivered(ResourceKind.Weapons));

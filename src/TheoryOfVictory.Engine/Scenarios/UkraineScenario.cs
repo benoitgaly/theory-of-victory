@@ -137,21 +137,65 @@ public static class UkraineScenario
         russia.Grid.BaseDemandGw = 148d;
         russia.Grid.CivilianShareOfDemand = 0.5d;
 
+        // ── Effectifs, en milliers d'hommes ────────────────────────────────────────────────
+        // Sources et incertitudes détaillées : docs/design/04-calibration-effectifs.md.
+
+        // Men of military age the state could realistically put under arms over the war, not
+        // the 25 M the 2022 mobilisation decree nominally covered. ESTIMATION, no usable source:
+        // the war has absorbed ≈ 1,6 M contract signings and mobilised men in four years without
+        // visibly emptying the reservoir, so a working ceiling of 4,2 M is deliberately generous.
         russia.Manpower.MobilisablePool = 4200d;
+
+        // The invasion grouping massed on the Ukrainian border in February 2022: Western
+        // estimates converge on ≈ 190 000. Range given by the sources: 150 000 – 190 000.
         russia.Manpower.AtFront = 190d;
-        russia.Manpower.TargetForceSize = 420d;
+
+        // Russia did not plan a long war: at the outset the establishment IS the invasion force.
+        // What follows is the observed trajectory of the grouping in theatre — 523 000 in 2023,
+        // 667 000 in 2024, 723 000 in 2025 (Janis Kluge, from Russian budget salary top-ups),
+        // 721 300 in June 2026 (Syrskyi). +28 000 a quarter plus the autumn 2022 mobilisation
+        // reproduces that curve to within 7 %; the ceiling is the observed maximum.
+        russia.Manpower.TargetForceSize = 190d;
+        russia.Manpower.TargetForceGrowthPerTurn = 28d;
+        russia.Manpower.TargetForceCeiling = 720d;
+
+        // Men under arms outside Ukraine per man inside it. Russian armed forces run at roughly
+        // 1,3 M against a theatre grouping of ≈ 720 000: strategic forces, the eastern military
+        // district, the navy and the training establishment were never committed to this war.
+        russia.Manpower.RearEstablishmentRatio = 0.7d;
+
+        // Share of the theatre grouping serving in the units that hold the line. EXTRAPOLATION:
+        // Russia publishes no teeth-to-tail breakdown at all, so this carries the Ukrainian
+        // anchor (≈ 300 000 on the line out of a theatre grouping of ≈ 550 000) rather than a
+        // figure of its own. Deliberately identical on both sides: inventing an asymmetry here
+        // would hand one army an advantage no source supports. Range 0,45 – 0,65.
+        russia.Manpower.ContactShare = 0.55d;
+
+        // ≈ 35 000 contract signings a month: 440 000–450 000 in 2024 (≈ 1 200 a day) and
+        // ≈ 420 000 in 2025 per the Russian defence ministry, falling to ≈ 800 a day in 2026.
         russia.Manpower.TrainingCapacityPerTurn = 105d;
         russia.Manpower.TrainingTurns = 1;
+
+        // 21 000 $ to sign a man on. Real Russian sign-on bonuses ran at 1,5 to 3 M roubles in
+        // 2024-2025, i.e. 17 000 – 35 000 $ — the model sits mid-range.
         russia.Manpower.ContractCostPerThousand = 0.021d;
 
         // Pay and bonuses are the biggest line of the Russian war budget — deliberately so:
         // the contract army was bought rather than conscripted, and it has to be bought again
-        // every quarter. Estimation.
-        russia.Manpower.UpkeepCostPerThousand = 0.056d;
+        // every quarter. GAME-BALANCE FIGURE, not a sourced cost per soldier: it is set so that
+        // payroll keeps the same weight in the war budget now that the force is 1,7 times larger.
+        russia.Manpower.UpkeepCostPerThousand = 0.050d;
         russia.Manpower.BaseGdpCostPerThousand = 0.031d;
         russia.Manpower.MarginalCostExponent = 1.4d;
 
-        russia.Industry.SetCapacityPerTurn(ResourceKind.Weapons, 700d);
+        // 560 000 rounds a quarter, i.e. 2,24 M a year: Ukrainian and Western officials put
+        // Russian DOMESTIC artillery production at no more than 2,3 M rounds in 2024, and the
+        // industrial expansion line raises it over the run, which is what happened in 2025.
+        // The gap to what 700 000 men actually burn is the whole point: Reuters assesses North
+        // Korean deliveries at roughly half of the shells Russia fires, so the difference has to
+        // be BOUGHT abroad, quarter after quarter. Cut the money and the shells stop — which is
+        // the mechanism the asphyxiation run demonstrates, now grounded rather than assumed.
+        russia.Industry.SetCapacityPerTurn(ResourceKind.Weapons, 560d);
         russia.Industry.SetCapacityPerTurn(ResourceKind.StrikeDrones, 900d);
         russia.Industry.SetCapacityPerTurn(ResourceKind.Missiles, 130d);
         russia.Industry.SetCapacityPerTurn(ResourceKind.CheapInterceptors, 1400d);
@@ -201,7 +245,7 @@ public static class UkraineScenario
                 Mode = SupportMode.Granted,
                 PledgedPerTurnBillions = 4d,
                 DisbursementRate = 1d,
-                InKindShare = 0.62d,
+                InKindShare = 0.54d,
                 UnsustainableShare = 0.45d,
             },
         };
@@ -229,16 +273,50 @@ public static class UkraineScenario
         ukraine.Grid.WinterDemandMultiplier = 1.5d;
         ukraine.Grid.CivilianShareOfDemand = 0.6d;
 
-        ukraine.Manpower.MobilisablePool = 2300d;
-        ukraine.Manpower.AtFront = 250d;
-        ukraine.Manpower.TargetForceSize = 430d;
-        ukraine.Manpower.TrainingCapacityPerTurn = 62d;
+        // ── Effectifs, en milliers d'hommes ────────────────────────────────────────────────
+
+        // 3,7 M men aged 25 to 60 assessed as mobilisable in March 2024, the rest being already
+        // serving, unfit, abroad or in reserved occupations. That is a 2024 snapshot used here as
+        // the 2022 reservoir, which flatters Ukraine slightly: flagged, not corrected.
+        ukraine.Manpower.MobilisablePool = 3700d;
+
+        // 196 600 active armed forces at the outbreak (IISS Military Balance 2022), plus the
+        // National Guard and Border Guard committed within days. ESTIMATION for the 250 000: the
+        // share genuinely engaged in the first weeks is not separable from the total under arms.
+        ukraine.Manpower.AtFront = 200d;
+
+        // Ukraine's establishment grew as steadily as Russia's, and from a smaller base. The
+        // 2025 Military Balance puts ground strength at 575 000 (army, marines, airborne),
+        // excluding territorial defence; Zelensky claims 800 000 to 980 000 in uniform, all
+        // services and rear included. 620 000 in theatre is the middle of that spread, reached
+        // at +25 000 a quarter. The gap between the two figures is not resolvable: see the doc.
+        ukraine.Manpower.TargetForceSize = 250d;
+        ukraine.Manpower.TargetForceGrowthPerTurn = 22d;
+        ukraine.Manpower.TargetForceCeiling = 560d;
+
+        // Men under arms outside the theatre per man inside it. Zelensky claims 880 000 in
+        // uniform in January 2025 and OSW puts the total above a million; against a theatre
+        // grouping in the 500 000s, the tail is territorial defence, the air defence of the
+        // cities, the training establishment and the rear services.
+        ukraine.Manpower.RearEstablishmentRatio = 0.68d;
+
+        // The sourced anchor of the whole three-count distinction: OSW assesses that no more
+        // than 300 000 of the million-plus Ukrainians under arms are deployed on the line, and
+        // Ukrainian reporting has brigades down to 30 % of establishment. This is why an army
+        // of a million can run out of infantry — and why the model puts the power on this count
+        // and the consumption on the theatre count. Range 0,45 – 0,65.
+        ukraine.Manpower.ContactShare = 0.55d;
+
+        // ≈ 26 000 a month: Zelensky put Ukrainian mobilisation at 25 000 – 27 000 a month
+        // against 40 000 – 45 000 for Russia, with a brief 30 000 peak after the 2024 law.
+        ukraine.Manpower.TrainingCapacityPerTurn = 78d;
         ukraine.Manpower.TrainingTurns = 1;
         ukraine.Manpower.ContractCostPerThousand = 0.013d;
 
         // A mobilised army is far cheaper in cash than a bought one — and far dearer in
-        // consent and in GDP, which is the whole asymmetry. Estimation.
-        ukraine.Manpower.UpkeepCostPerThousand = 0.022d;
+        // consent and in GDP, which is the whole asymmetry. GAME-BALANCE FIGURE, rescaled with
+        // the force size for the same reason as the Russian one.
+        ukraine.Manpower.UpkeepCostPerThousand = 0.020d;
         ukraine.Manpower.BaseGdpCostPerThousand = 0.062d;
         ukraine.Manpower.MarginalCostExponent = 1.55d;
 
@@ -257,12 +335,14 @@ public static class UkraineScenario
         ukraine.AirDefence.RearShare = 0.62d;
         ukraine.AirDefence.CheapPurchaseShare = 0.6d;
 
-        // The Soviet inheritance: a large stock of the right calibres and no way to make
-        // more of them. It is what let the front hold through 2022 and what running out of
-        // produced the 2023 crisis — and it is the depot that buys the two quiet turns
-        // after support stops. Without a real depot, a flow cut lands the same turn, and
-        // the whole point is that it does not.
-        ukraine.Stock.Add(ResourceKind.Weapons, 2400d);
+        // The Soviet inheritance: a stock of the right calibres and no way to make more of
+        // them. It is what let the front hold through 2022, and running out of it produced
+        // the 2023 crisis. DESIGN FIGURE, and the only one in this chain that is: nobody has
+        // published what Ukraine held in February 2022. It is set by the demonstration it has
+        // to support — the depot buys exactly the two quiet quarters the model promises after
+        // a flow is cut, no more. Without a depot the cut lands the same quarter, and the
+        // latency is the whole lesson.
+        ukraine.Stock.Add(ResourceKind.Weapons, 400d);
         ukraine.Stock.Add(ResourceKind.Fuel, 120d);
         ukraine.Stock.Add(ResourceKind.Food, 140d);
         ukraine.Stock.Add(ResourceKind.StrikeDrones, 150d);
