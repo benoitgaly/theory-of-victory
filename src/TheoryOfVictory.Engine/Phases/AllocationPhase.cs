@@ -9,6 +9,9 @@ namespace TheoryOfVictory.Engine.Phases;
 public sealed class AllocationPhase : ITurnPhase
 {
     private const int ConsumableLeadTurns = 1;
+
+    /// <summary>Quarters of production an army is willing to hold in depot before it stops ordering.</summary>
+    private const double StockQuartersHeld = 6d;
     private const int ExpansionLeadTurns = 3;
 
     public string Name
@@ -279,7 +282,12 @@ public sealed class AllocationPhase : ITurnPhase
             ? double.MaxValue
             : belligerent.Industry.GetCapacityPerTurn(kind) * ceilingMultiplier;
 
-        double produced = Math.Min(affordable, capacity);
+        // Nobody keeps filling depots that are already overflowing: an army orders up to
+        // a few quarters of war stock, then spends the money elsewhere.
+        double stockCeiling = belligerent.Industry.GetCapacityPerTurn(kind) * StockQuartersHeld;
+        double room = Math.Max(0d, stockCeiling - belligerent.Stock.GetActual(kind));
+
+        double produced = Math.Min(Math.Min(affordable, capacity), room);
         if (produced <= 0d)
         {
             return budgetBillions;

@@ -10,19 +10,20 @@ succession de batailles. Outil pédagogique inspiré des travaux de **Phillips P
 
 ## Ce que la V1 démontre
 
-Le même départ — février 2022, seize tours de trois mois, mêmes forces, même carte — est rejoué
-**trois fois**. Ce qui change, ce sont les cartes que l'Occident décide de jouer.
+Le même départ — février 2022, dix-neuf tours de trois mois jusqu'à l'été 2026, mêmes forces,
+même carte — est rejoué **trois fois**. Ce qui change, ce sont les cartes que l'Occident joue.
 
 | Déroulé | Ce que l'Occident fait | Issue |
 |---|---|---|
-| **L'Occident joue ses cartes** | Embargo sur les composants, campagne trimestrielle sur le raffinage, baril effondré, aide rendue prévisible | **L'Ukraine l'emporte** — chute du régime russe au tour 12 |
-| **Le soutien tient, sans plus** | Le flux ne rompt jamais, sans jamais s'intensifier | **Front figé** — 2 300 km² en quatre ans, personne ne gagne |
-| **Le soutien s'arrête** | Le flux gratuit cesse au tour 6 | **L'Ukraine cède** — effondrement au tour 9, 30 000 km² |
+| **L'Occident joue ses cartes** | Embargo sur les composants, campagne sur le raffinage entretenue, avoirs gelés transférés, baril effondré | **L'Ukraine l'emporte** — chute du régime russe à l'été 2026 |
+| **Le soutien tient, sans plus** | Le flux ne rompt jamais, sans jamais s'intensifier | **Front figé** — personne ne gagne, quatre ans plus tard |
+| **Le soutien s'arrête** | Le flux gratuit cesse au tour 6 | **L'Ukraine cède** — effondrement au printemps 2024 |
 
 Le déroulé de victoire ne prend pas un hexagone de plus que les autres : il **coupe la caisse**.
-Le baril tombe à 48 $, les recettes ne financent plus l'effort de guerre, la puissance russe passe
-de 450 à 283, et l'appareil lâche. C'est la théorie de la victoire que désigne O'Brien — on ne gagne
-pas en prenant du terrain, on gagne en asséchant ce qui permet d'en tenir.
+Le raffinage est frappé tous les trois trimestres sans relâche, le baril s'effondre, le fonds
+souverain se vide pour combler ce que les recettes ne financent plus — et le jour où il ne comble
+plus rien, l'appareil lâche. C'est la théorie de la victoire que désigne O'Brien : on ne gagne pas
+en prenant du terrain, on gagne en asséchant ce qui permet d'en tenir.
 
 Dans le déroulé d'abandon, le tour de la coupure ne produit *rien* : les dépôts couvrent encore le
 besoin. C'est deux tours plus tard que tout cède. **L'effondrement est un seuil, pas une pente.**
@@ -40,9 +41,14 @@ Trois écrans par tour, comme les trois temps d'un tour de jeu de plateau :
 3. **Résolution — champ de bataille** — la carte, les rapports de force, les cartes du tour
 
 Le **tonneau de Liebig** porte la règle centrale : chaque douve est une ressource, sa hauteur est
-son taux de couverture, et l'eau ne monte jamais au-dessus de la plus courte. Les cartes événement
-sont imprimées au format Magic — cadre, coût en capital politique, illustration, ligne de type,
-boîte de règles et texte d'ambiance — parce que la V2 les mettra en main des joueurs.
+son taux de couverture, et l'eau ne monte jamais au-dessus de la plus courte. La **carte** est une
+vraie carte d'Ukraine pavée d'hexagones, où l'on distingue le territoire occupé avant février 2022
+de celui pris depuis. Les cartes événement sont imprimées au format Magic — cadre, coût en capital
+politique, illustration, ligne de type, boîte de règles et texte d'ambiance — parce que la V2 les
+mettra en main des joueurs.
+
+La conception détaillée est répartie en trois documents : le [modèle de jeu](docs/design/01-modele-de-jeu.md),
+la [direction artistique](docs/design/02-direction-artistique.md) et le [gameplay](docs/design/03-gameplay.md).
 
 ## Lancer
 

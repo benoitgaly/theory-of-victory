@@ -41,14 +41,38 @@ public sealed class ArmsIndustry
     /// <summary>Cost of adding one unit per turn of permanent capacity.</summary>
     public double ExpansionCostMultiplier { get; set; } = 6d;
 
+    /// <summary>
+    /// How far a line can be pushed above its pre-war level. Machine tools, skilled hands
+    /// and floor space all run out: Russia roughly tripled its shell output, it did not
+    /// multiply it fiftyfold. Without this the capacity compounds to absurdity.
+    /// </summary>
+    public double ExpansionCeilingMultiple { get; set; } = 3.5d;
+
+    private readonly Dictionary<string, double> _initialCapacity = [];
+
     public double GetCapacityPerTurn(ResourceKind kind)
     {
         return _capacityPerTurn.TryGetValue(kind.Code, out double value) ? value : 0d;
     }
 
+    public double GetCapacityCeiling(ResourceKind kind)
+    {
+        double initial = _initialCapacity.TryGetValue(kind.Code, out double value) ? value : 0d;
+        return initial * ExpansionCeilingMultiple;
+    }
+
     public void SetCapacityPerTurn(ResourceKind kind, double unitsPerTurn)
     {
-        _capacityPerTurn[kind.Code] = Math.Max(0d, unitsPerTurn);
+        double capacity = Math.Max(0d, unitsPerTurn);
+
+        // The first value set is the pre-war line, and it is what the ceiling scales from.
+        if (!_initialCapacity.ContainsKey(kind.Code))
+        {
+            _initialCapacity[kind.Code] = capacity;
+        }
+
+        double ceiling = GetCapacityCeiling(kind);
+        _capacityPerTurn[kind.Code] = ceiling > 0d ? Math.Min(capacity, ceiling) : capacity;
     }
 
     public void AddCapacityPerTurn(ResourceKind kind, double unitsPerTurn)

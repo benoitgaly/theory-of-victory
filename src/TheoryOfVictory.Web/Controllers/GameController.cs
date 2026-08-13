@@ -11,7 +11,7 @@ public sealed class GameController : Controller
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter() },
+        Converters = { new JsonStringEnumConverter(), new FiniteDoubleConverter() },
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 

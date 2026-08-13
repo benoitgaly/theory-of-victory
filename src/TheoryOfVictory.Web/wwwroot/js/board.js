@@ -1140,6 +1140,12 @@
               (netKm >= 0 ? "+" : "−") + fmt(Math.abs(netKm), 1) + " km</b>.";
         sectorPanel.appendChild(summary);
 
+        // Face à une défense effondrée le rapport tend vers l'infini : le chiffre exact
+        // n'apprend plus rien, seul compte le fait que plus rien ne tient en face.
+        function ratioLabel(ratio) {
+            return ratio > 12 ? "défense rompue" : "rapport " + fmt(ratio, 2);
+        }
+
         // Un secteur ne bouge qu'au-delà d'un rapport de 1,1 : l'échelle s'arrête à 3.
         function ratioGauge(s, withScale) {
             var bar = el("div", "ratiobar");
@@ -1162,7 +1168,7 @@
             row.appendChild(el("div", "sc-move",
                 (s.hexesMoved > 0 ? "+" : "−") + fmt(Math.abs(s.hexesMoved * 10), 1) + " km"));
             row.appendChild(el("div", "sc-outcome", s.outcome));
-            row.appendChild(el("div", "sc-ratio", "rapport " + fmt(s.ratio, 2)));
+            row.appendChild(el("div", "sc-ratio", ratioLabel(s.ratio)));
             row.appendChild(ratioGauge(s, true));
             list.appendChild(row);
         });

@@ -518,13 +518,13 @@ public static class UkraineScenario
             [
                 new ScheduledCard { Turn = 10, CardCode = "component_embargo_total" },
                 new ScheduledCard { Turn = 11, CardCode = "aid_predictable" },
+                // The refining campaign comes back every third quarter, not every one:
+                // the damage half-heals in between, and that gap is what makes the
+                // strangulation take years. Rushed, the regime falls a year too early.
                 new ScheduledCard { Turn = 12, CardCode = "refinery_campaign_sustained" },
                 new ScheduledCard { Turn = 13, CardCode = "frozen_assets_released" },
-                new ScheduledCard { Turn = 14, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 15, CardCode = "supplier_withdraws" },
-                new ScheduledCard { Turn = 16, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 17, CardCode = "refinery_campaign_sustained" },
-                new ScheduledCard { Turn = 18, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 15, CardCode = "refinery_campaign_sustained" },
+                new ScheduledCard { Turn = 19, CardCode = "supplier_withdraws" },
                 new ScheduledCard { Turn = 19, CardCode = "oil_price_crash" },
                 new ScheduledCard { Turn = 19, CardCode = "sovereign_fund_empty" },
                 new ScheduledCard { Turn = 19, CardCode = "elite_break" },
