@@ -325,12 +325,14 @@ h1, h2, h3, h4 {
 }
 
 /* Une main se tient sur une seule ligne, comme un éventail de cartes tenu en main :
-   si elle déborde, elle glisse, elle ne se replie pas sur un second rang. */
+   si elle déborde, elle glisse, elle ne se replie pas sur un second rang.
+   L'alignement se fait par le bas : les cartes jouées dépassent vers le haut. */
 .card-rail.hand {
-    gap: 10px;
+    gap: 12px;
     flex-wrap: nowrap;
+    align-items: flex-end;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding: 26px 2px 6px;
 }
 
 .card-rail.hand .mtg {
@@ -338,37 +340,94 @@ h1, h2, h3, h4 {
     flex-shrink: 0;
 }
 
-/* La carte jouée sort du rang. */
-.card-rail.hand .mtg.is-played {
-    width: 208px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 14px 30px rgba(23,25,30,0.24);
-    transform: translateY(-4px);
+/* Sur la carte étroite, le pied ne peut pas porter les deux mentions sans couper la plus
+   longue des familles. La signature d'édition s'efface : entre elle et « Militaire et
+   technologique » écrit en entier, c'est la famille qui informe. */
+.card-rail.hand .mtg-foot {
+    font-size: 7.5px;
+    letter-spacing: 0.04em;
+    padding: 7px 2px 0;
 }
 
-/* Les cartes gardées en main : lisibles, mais visiblement en retrait. */
+.card-rail.hand .mtg-foot > span + span {
+    display: none;
+}
+
+/* La carte jouée sort du rang : plus grande, redressée, cerclée d'or et coiffée de son
+   bandeau. Les cartes tenues restent lisibles mais en retrait — la décision du trimestre
+   doit se voir du premier coup d'œil, sans que rien ne clignote. */
+.card-rail.hand .mtg.is-played {
+    width: 214px;
+    position: relative;
+    transform: translateY(-14px);
+    background:
+        linear-gradient(160deg, var(--fam-1) 0%, var(--fam-2) 52%, var(--fam-1) 100%);
+    /* Un filet clair sépare l'or de la coque, sinon le cerclage disparaît sur les familles
+       déjà dorées — la carte jouée doit se détacher quelle que soit sa couleur de domaine. */
+    box-shadow:
+        0 0 0 1px rgba(250, 244, 230, 0.5),
+        0 0 0 3px var(--gold),
+        0 0 0 4px rgba(26, 24, 21, 0.6),
+        0 2px 5px rgba(0, 0, 0, 0.26),
+        0 22px 40px rgba(26, 24, 21, 0.3);
+}
+
+.card-rail.hand .mtg.is-played:hover {
+    transform: translateY(-18px) rotate(-0.4deg);
+}
+
+/* Le bandeau tient au-dessus du cadre, comme une étiquette collée sur la carte posée. */
+.mtg-played-tag {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 3px 11px;
+    border-radius: 11px;
+    background: var(--gold);
+    color: #221803;
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    box-shadow:
+        0 0 0 1px rgba(26, 24, 21, 0.5),
+        0 1px 0 rgba(255, 255, 255, 0.45) inset,
+        0 3px 7px rgba(26, 24, 21, 0.28);
+}
+
+/* Le filet d'or se prolonge autour de l'illustration : la carte jouée est cadrée d'un bout
+   à l'autre, alors que la pastille de famille reste, elle, à sa couleur de domaine. */
+.card-rail.hand .mtg.is-played .mtg-art {
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.45),
+        0 0 0 2px var(--gold),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Les cartes gardées en main : entières et lisibles, mais posées en second plan — plus
+   petites, moins colorées, sans relief. Elles reviennent entières au survol. */
 .mtg.back {
-    opacity: 0.62;
-    filter: saturate(0.55);
+    opacity: 0.68;
+    filter: saturate(0.5) brightness(0.99);
+    transform: scale(0.96);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.4),
+        0 1px 3px rgba(26, 24, 21, 0.16);
 }
 
 .mtg.back:hover {
-    opacity: 0.9;
-    filter: saturate(0.8);
-}
-
-.mtg.back .mtg-art {
-    height: 62px;
-}
-
-.mtg.back .mtg-art.muted {
-    filter: grayscale(0.5) brightness(0.92);
+    opacity: 1;
+    filter: none;
+    transform: translateY(-4px) rotate(-0.4deg) scale(0.96);
 }
 
 .mtg-held {
-    margin-top: 6px;
-    padding: 5px 0;
+    margin-top: auto;
+    padding: 5px 0 1px;
     text-align: center;
-    font-size: 9.5px;
+    font-size: 9px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 700;
@@ -1251,13 +1310,16 @@ main {
 
 .mtg.ru .mtg-inner { background: linear-gradient(175deg, #f0dcd6, #dcb8ae); }
 .mtg.ua .mtg-inner { background: linear-gradient(175deg, #d9e4f2, #b6c8e0); }
+/* Les cartes d'événement n'appartiennent à aucun camp : papier nu, aucune teinte de camp. */
+.mtg.neutral .mtg-inner { background: linear-gradient(175deg, #efe6d2, #ded2b6); }
 
-/* Hauteur fixe : titres sur une ou deux lignes, les illustrations restent alignées. */
+/* Hauteur fixe : le cartouche réserve ses deux lignes de titre même quand une seule est
+   écrite, sinon l'illustration monte ou descend d'une carte à l'autre. */
 .mtg-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 32px;
+    min-height: 38px;
     gap: 6px;
     background: rgba(255, 255, 255, 0.58);
     border: 1px solid rgba(0, 0, 0, 0.24);
@@ -1271,6 +1333,18 @@ main {
     font-weight: 600;
     color: #17140f;
     line-height: 1.18;
+    /* « Missiles balistiques achetés à l'étranger » ne doit ni sortir du cartouche ni
+       pousser l'illustration vers le bas : le mot casse plutôt que la carte. */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+/* Seuil calé sur la carte la plus étroite, celle de la main : au-delà, le titre passerait
+   à une troisième ligne et pousserait l'illustration hors de son alignement. */
+.mtg-name.is-long {
+    font-size: 11px;
+    line-height: 1.12;
 }
 
 .mtg-cost {
@@ -1293,6 +1367,14 @@ main {
 
 .pip.pol { background: radial-gradient(circle at 35% 30%, #f3dc95, #dfb43e); }
 .pip.money { background: radial-gradient(circle at 35% 30%, #cbe0c3, #8fb586); }
+
+/* Une carte d'événement ne se paie pas : le médaillon reste, vidé de son chiffre, pour
+   que le cartouche du titre garde son équilibre au lieu de s'ouvrir sur du vide. */
+.pip.free {
+    background: radial-gradient(circle at 35% 30%, #e6e0d0, #b9b1a0);
+    color: rgba(42, 31, 6, 0.62);
+    font-weight: 700;
+}
 
 /* Filet doré autour de l'illustration : la fenêtre est encadrée, pas collée. */
 .mtg-art {
@@ -1369,6 +1451,16 @@ main {
     opacity: 0.55;
 }
 
+/* Une carte sans effet chiffré garde une boîte de règles pleine : elle dit ce qu'elle est,
+   elle ne laisse pas un rectangle blanc. */
+.mtg-norule {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.45;
+    color: rgba(36, 31, 22, 0.7);
+    font-style: italic;
+}
+
 .mtg-flavour {
     margin: 8px 0 0;
     padding-top: 7px;
@@ -1394,12 +1486,21 @@ main {
     flex-shrink: 0;
 }
 
+/* La signature d'édition ne se coupe jamais en deux lignes : elle ferait grandir le pied
+   d'une carte sur deux. C'est la famille qui cède la place, et elle seule. */
+.mtg-foot > span + span {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Bloc et non flex : c'est ce qui permet aux points de suspension de s'afficher quand une
+   famille au nom long dépasse — la pastille est alors posée par-dessus, en retrait. */
 .mtg-foot .fam {
     color: rgba(255, 255, 255, 0.82);
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    position: relative;
+    display: block;
     min-width: 0;
+    padding-left: 11px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1407,12 +1508,15 @@ main {
 
 .mtg-foot .fam::before {
     content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -3px;
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--fam);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
-    flex-shrink: 0;
 }
 
 /* ---------- Journal & issue ---------- */

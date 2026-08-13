@@ -105,7 +105,7 @@
         });
     }
 
-    var HAND_SIZE = 7;
+    var HAND_SIZE = 6;
 
     // Every card is played by someone — nothing falls from the sky. While the deck still
     // holds a few unattributed cards, they join the hand of each side they land on rather
@@ -122,21 +122,29 @@
 
     // The hand a side would have been choosing from: what it played this quarter, filled
     // up from its own deck. Deterministic — the run must stay reproducible — and rotated
-    // by turn so the hand is not the same seven cards every time.
+    // by turn so the hand is not the same six cards every time.
+    //
+    // A played card is a decision the run actually took: it is never dropped to respect the
+    // hand size. When a quarter plays more cards than the hand holds, the played cards take
+    // the whole hand and no held card is drawn — the calendar is moving towards two or three
+    // cards a quarter, and the rail must keep showing every one of them.
     function handFor(t, sideCode) {
-        var played = cardsOf(t, sideCode);
+        var played = cardsOf(t, sideCode).filter(function (c) { return c; });
         var playedCodes = played.map(function (c) { return c.code; });
 
         var pool = (window.tovDeck || []).filter(function (c) {
-            return c.ownerSideCode === sideCode && playedCodes.indexOf(c.code) === -1;
+            return c && c.ownerSideCode === sideCode && playedCodes.indexOf(c.code) === -1;
         });
 
         var hand = played.map(function (c) {
             return { card: c, played: true };
         });
 
+        // Modulo on the pool length would draw the same card twice on a short pool; walking
+        // a rotated offset forward keeps the six held cards distinct whatever its size.
+        var offset = pool.length ? (t.turn * 3) % pool.length : 0;
         for (var i = 0; hand.length < HAND_SIZE && i < pool.length; i++) {
-            hand.push({ card: pool[(t.turn * 3 + i) % pool.length], played: false });
+            hand.push({ card: pool[(offset + i) % pool.length], played: false });
         }
 
         return hand;
@@ -591,11 +599,12 @@
     }
 
     // The hand of the quarter: what this side played, and what it was holding instead.
-    // V1.0 follows a calendar, so the unplayed cards are shown face down — in V2 this is
-    // the row the player picks from.
-    function renderHand(t, sideCode, isInvader) {
+    // V1.0 follows a calendar, so the held cards are shown for what they are — a choice
+    // that was available and not taken. In V2 this is the row the player picks from.
+    function renderHand(t, sideCode) {
         var hand = handFor(t, sideCode);
         var played = hand.filter(function (h) { return h.played; });
+        var held = hand.length - played.length;
 
         var panel = el("section", "panel hand-panel");
         var head = el("div", "hand-head");
@@ -604,53 +613,40 @@
         var note = el("div", "hand-note");
         note.innerHTML = played.length
             ? "<strong>" + played.length + "</strong> carte" + (played.length > 1 ? "s jouées" : " jouée") +
-              " sur " + hand.length + " en main."
-            : "Aucune carte jouée ce trimestre — " + hand.length + " en main.";
+              (held > 0
+                  ? ", " + held + " gardée" + (held > 1 ? "s" : "") + " en main."
+                  : " — la main entière est partie ce trimestre.")
+            : "Aucune carte jouée ce trimestre — <strong>" + held + "</strong> gardée" +
+              (held > 1 ? "s" : "") + " en main.";
         head.appendChild(note);
         panel.appendChild(head);
 
         var rail = el("div", "card-rail hand");
         hand.forEach(function (h) {
-            if (h.played) {
-                var node = renderCard(h.card);
-                node.classList.add("is-played");
-                rail.appendChild(node);
-                return;
-            }
-
-            rail.appendChild(renderCardBack(h.card, isInvader));
+            rail.appendChild(h.played ? renderPlayedCard(h.card) : renderHeldCard(h.card));
         });
         panel.appendChild(rail);
         return panel;
     }
 
-    // Face-down card: the title and cost are legible, the effects are not. Enough to
-    // show there was a choice, without pretending V1 made one.
-    function renderCardBack(card, isInvader) {
-        var wrap = el("div", "mtg back " + (isInvader ? "ru" : "ua"));
-        var inner = el("div", "mtg-inner");
+    // The card the quarter actually played: same anatomy as any other, plus the banner that
+    // says so. The distinction is carried by the treatment, never by an amputated card.
+    function renderPlayedCard(card) {
+        var node = renderCard(card);
+        node.classList.add("is-played");
+        node.insertBefore(el("div", "mtg-played-tag", "Jouée ce trimestre"), node.firstChild);
+        node.title = safeText(card && card.title, "Carte sans titre") + " — jouée ce trimestre";
+        return node;
+    }
 
-        var title = el("div", "mtg-title");
-        title.appendChild(el("div", "mtg-name", card.title));
-        var cost = el("div", "mtg-cost");
-        if (card.politicalCost > 0) {
-            cost.appendChild(el("span", "pip pol", String(Math.round(card.politicalCost))));
-        }
-        title.appendChild(cost);
-        inner.appendChild(title);
-
-        var art = el("div", "mtg-art muted");
-        var svg = svgEl("svg", { viewBox: "0 0 100 60", preserveAspectRatio: "xMidYMid slice" });
-        (ART[card.family] || ART["Économique"])(svg);
-        art.appendChild(svg);
-        inner.appendChild(art);
-
-        inner.appendChild(el("div", "mtg-type", card.typeLine));
-        inner.appendChild(el("div", "mtg-held", "En main"));
-
-        wrap.appendChild(inner);
-        wrap.title = card.title + " — non jouée ce trimestre";
-        return wrap;
+    // A held card is a whole card: it was readable in the hand, so it is readable here.
+    // Only the treatment sets it back — nothing is hidden, nothing is left blank.
+    function renderHeldCard(card) {
+        var node = renderCard(card);
+        node.classList.add("back");
+        node.querySelector(".mtg-inner").appendChild(el("div", "mtg-held", "Gardée en main"));
+        node.title = safeText(card && card.title, "Carte sans titre") + " — non jouée ce trimestre";
+        return node;
     }
 
     function renderGeneration(side, isInvader) {
@@ -668,7 +664,7 @@
             "Tour " + t.turn + " · " + (SEASONS[t.season] || t.season) + " " + t.year + " · Brent " + fmt(t.oilPrice) + " $"));
         stage.appendChild(head);
 
-        stage.appendChild(renderHand(t, side.sideCode, isInvader));
+        stage.appendChild(renderHand(t, side.sideCode));
         stage.appendChild(renderChain(side, isInvader));
 
         // The barrel
@@ -1207,6 +1203,22 @@
                 g.appendChild(svgEl("rect", { x: p[0] - 1.5, y: p[1] - 4.2, width: 3, height: 4.2, rx: 1, fill: "#0d1310" }));
             });
             vignette(g, d);
+        },
+
+        // Filet de sécurité : une famille que le deck introduirait sans scène dédiée. Elle
+        // reçoit un paysage neutre de la même grammaire plutôt que la scène d'une autre
+        // famille, qui mentirait sur le domaine de la carte.
+        "": function (g) {
+            var d = artDefs(g);
+            sky(g, d, [["0%", "#1d2129"], ["60%", "#454b52"], ["100%", "#9a9384"]]);
+            g.appendChild(svgEl("circle", { cx: 50, cy: 30, r: 9, fill: "#e8e0cc", opacity: "0.35" }));
+            g.appendChild(svgEl("path", {
+                d: "M0 60 L0 48 Q26 43 50 47 Q76 51 100 45 L100 60 Z", fill: "#15181d"
+            }));
+            [24, 50, 76].forEach(function (x, i) {
+                g.appendChild(svgEl("rect", { x: x, y: 30 + i % 2 * 4, width: 1.6, height: 18, fill: "#15181d" }));
+            });
+            vignette(g, d);
         }
     };
 
@@ -1217,50 +1229,95 @@
         "Politique interne": "#8a4b2a",
         "Énergie": "#c2621a",
         "Militaire et technologique": "#4a6070",
-        "Externe": "#4a6d3a"
+        "Externe": "#4a6d3a",
+        "": "#6b7280"
     };
 
+    // Un champ vide ne doit jamais produire une zone vide : il produit une mention.
+    function safeText(value, fallback) {
+        var s = value === null || value === undefined ? "" : String(value).trim();
+        return s.length ? s : fallback;
+    }
+
+    // La ligne de type est recomposée quand le moteur ne la fournit pas, pour que le
+    // bandeau garde sa hauteur et son sens plutôt que de tomber sur une bande vide.
+    function typeLineOf(card) {
+        var family = safeText(card.family, "Famille inconnue");
+        return safeText(card.typeLine, family);
+    }
+
+    // Les cartes d'événement n'ont ni coût politique ni coût monétaire : le médaillon dit
+    // « rien à payer » au lieu de laisser un trou dans le cartouche du titre.
+    function costPips(card) {
+        var cost = el("div", "mtg-cost");
+        var pol = Number(card.politicalCost) || 0;
+        var money = Number(card.moneyCost) || 0;
+
+        if (pol > 0) {
+            var polPip = el("span", "pip pol", String(Math.round(pol)));
+            polPip.title = "Coût politique : " + Math.round(pol);
+            cost.appendChild(polPip);
+        }
+        if (money > 0) {
+            var moneyPip = el("span", "pip money", String(Math.round(money)));
+            moneyPip.title = "Coût financier : " + Math.round(money) + " Md";
+            cost.appendChild(moneyPip);
+        }
+        if (!cost.childNodes.length) {
+            var free = el("span", "pip free", "—");
+            free.title = "Sans coût : la carte s'impose, elle ne s'achète pas.";
+            cost.appendChild(free);
+        }
+
+        return cost;
+    }
+
     function renderCard(card) {
-        var wrap = el("div", "mtg " + (card.ownerSideCode === "invader" ? "ru" : (card.ownerSideCode === "defender" ? "ua" : "")));
-        var accent = FAMILY_ACCENT[card.family] || FAMILY_ACCENT["Économique"];
+        card = card || {};
+        var wrap = el("div", "mtg " + (card.ownerSideCode === "invader"
+            ? "ru"
+            : (card.ownerSideCode === "defender" ? "ua" : "neutral")));
+
+        var family = safeText(card.family, "");
+        var accent = FAMILY_ACCENT[family] || FAMILY_ACCENT[""];
         wrap.style.setProperty("--fam", accent);
         wrap.style.setProperty("--fam-1", tint(accent, -0.62));
         wrap.style.setProperty("--fam-2", tint(accent, -0.86));
         var inner = el("div", "mtg-inner");
 
         var title = el("div", "mtg-title");
-        title.appendChild(el("div", "mtg-name", card.title));
-        var cost = el("div", "mtg-cost");
-        if (card.politicalCost > 0) {
-            cost.appendChild(el("span", "pip pol", String(Math.round(card.politicalCost))));
-        }
-        if (card.moneyCost > 0) {
-            cost.appendChild(el("span", "pip money", String(Math.round(card.moneyCost))));
-        }
-        title.appendChild(cost);
+        var name = el("div", "mtg-name", safeText(card.title, "Carte sans titre"));
+        // Un titre long se compose plus petit plutôt que de pousser l'illustration vers
+        // le bas : toutes les cartes de la main gardent le même gabarit.
+        if (name.textContent.length > 24) { name.classList.add("is-long"); }
+        title.appendChild(name);
+        title.appendChild(costPips(card));
         inner.appendChild(title);
 
         var art = el("div", "mtg-art");
         var svg = svgEl("svg", { viewBox: "0 0 100 60", preserveAspectRatio: "xMidYMid slice" });
-        (ART[card.family] || ART["Économique"])(svg);
+        (ART[family] || ART[""])(svg);
         art.appendChild(svg);
         inner.appendChild(art);
 
-        inner.appendChild(el("div", "mtg-type", card.typeLine));
+        inner.appendChild(el("div", "mtg-type", typeLineOf(card)));
 
         var text = el("div", "mtg-text");
-        var rules = el("ul", "mtg-rules");
-        (card.rulesText || []).forEach(function (r) { rules.appendChild(el("li", null, r)); });
-        text.appendChild(rules);
-        if (card.description) {
-            text.appendChild(el("p", "mtg-flavour", card.description));
+        var rulesText = (card.rulesText || []).filter(function (r) { return safeText(r, ""); });
+        if (rulesText.length) {
+            var rules = el("ul", "mtg-rules");
+            rulesText.forEach(function (r) { rules.appendChild(el("li", null, r)); });
+            text.appendChild(rules);
+        } else {
+            text.appendChild(el("p", "mtg-norule", "Aucun effet chiffré : la carte agit par la situation qu'elle installe."));
         }
+        text.appendChild(el("p", "mtg-flavour", safeText(card.description, "Pas de texte d'ambiance pour cette carte.")));
         inner.appendChild(text);
 
         wrap.appendChild(inner);
 
         var foot = el("div", "mtg-foot");
-        foot.appendChild(el("span", "fam", card.family));
+        foot.appendChild(el("span", "fam", safeText(card.family, "Famille inconnue")));
         foot.appendChild(el("span", null, "TOV · V1"));
         wrap.appendChild(foot);
 
@@ -1487,6 +1544,11 @@
             render();
         }
     });
+
+    // Surface d'inspection : le deck complet se dessine hors partie, carte par carte, pour
+    // vérifier qu'aucune ne sort vide, tronquée ou débordante. La partie n'en joue qu'une
+    // poignée — le reste ne se contrôle qu'ici.
+    window.tovCards = { render: renderCard, hand: handFor, size: HAND_SIZE };
 
     bindPhases();
     state.turnIndex = openingTurnIndex(game());
