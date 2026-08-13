@@ -360,14 +360,26 @@ h1, h2, h3, h4 {
     border-top: 1px dashed rgba(0, 0, 0, 0.18);
 }
 
-.world-head {
-    margin: 0 0 12px;
-    font-size: 13px;
+.suffered-head {
+    margin: 18px 0 10px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-size: 12.5px;
+    color: var(--ink-3);
+}
+
+.suffered-head strong {
     color: var(--ink-2);
 }
 
-.world-head strong {
-    color: var(--ink);
+/* Une carte subie n'a pas été choisie : bord neutre, jamais aux couleurs d'un camp. */
+.card-rail.hand.suffered .mtg.is-suffered {
+    width: 208px;
+    background: #2a2725;
+}
+
+.card-rail.hand.suffered .mtg.is-suffered .mtg-inner {
+    background: linear-gradient(175deg, #ece7db, #d6cfbe);
 }
 
 .run-ended {

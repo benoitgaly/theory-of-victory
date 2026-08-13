@@ -8,9 +8,21 @@ public static class CardPrinter
     public static PlayedCard Print(EventCard card)
     {
         List<string> rules = [];
+        List<string> affected = [];
         foreach (CardEffect effect in card.Effects)
         {
             rules.Add(Describe(effect));
+
+            // A null target means the whole world — the oil price, and both sides with it.
+            foreach (string side in effect.TargetSideCode is null
+                         ? new[] { Core.Side.Invader.Code, Core.Side.Defender.Code }
+                         : [effect.TargetSideCode])
+            {
+                if (!affected.Contains(side))
+                {
+                    affected.Add(side);
+                }
+            }
         }
 
         return new PlayedCard
@@ -24,6 +36,7 @@ public static class CardPrinter
             PoliticalCost = card.PoliticalCost,
             MoneyCost = card.MoneyCost,
             RulesText = rules,
+            AffectedSideCodes = affected,
             CountersCardCode = card.CountersCardCode,
             Art = card.Family,
         };

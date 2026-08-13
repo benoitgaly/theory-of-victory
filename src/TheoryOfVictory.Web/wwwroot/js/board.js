@@ -100,9 +100,12 @@
         return (t.cardsPlayed || []).filter(function (c) { return c.ownerSideCode === sideCode; });
     }
 
-    // Cards nobody chose: what the side is dealt, not what it decides.
-    function worldCards(t) {
-        return (t.cardsPlayed || []).filter(function (c) { return !c.ownerSideCode; });
+    // Cards nobody chose, landing on this side: what it is dealt, not what it decides.
+    function sufferedBy(t, sideCode) {
+        return (t.cardsPlayed || []).filter(function (c) {
+            return !c.ownerSideCode &&
+                (c.affectedSideCodes || []).indexOf(sideCode) !== -1;
+        });
     }
 
     // The hand a side would have been choosing from: what it played this quarter, filled
@@ -603,6 +606,22 @@
             rail.appendChild(renderCardBack(h.card, isInvader));
         });
         panel.appendChild(rail);
+
+        // What this side is dealt rather than chooses, on the same screen: it lands here.
+        var suffered = sufferedBy(t, sideCode);
+        if (suffered.length) {
+            var sufferedHead = el("div", "suffered-head");
+            sufferedHead.innerHTML = "<strong>Subi ce trimestre</strong> — personne ne l'a choisi.";
+            panel.appendChild(sufferedHead);
+
+            var sufferedRail = el("div", "card-rail hand suffered");
+            suffered.forEach(function (c) {
+                var node = renderCard(c);
+                node.classList.add("is-suffered");
+                sufferedRail.appendChild(node);
+            });
+            panel.appendChild(sufferedRail);
+        }
 
         return panel;
     }
@@ -1236,19 +1255,8 @@
             stage.appendChild(stop);
         }
 
-        // Only what neither side chose: the cards each camp played are shown on its own
-        // screen, where the decision belongs. What is left here is what the world imposed.
-        var world = worldCards(t);
-        if (world.length) {
-            var worldHead = el("div", "world-head");
-            worldHead.innerHTML = "<strong>Ce que personne n'a choisi</strong> — " + world.length +
-                " carte" + (world.length > 1 ? "s subies" : " subie") + " ce trimestre.";
-            stage.appendChild(worldHead);
-
-            var rail = el("div", "card-rail");
-            world.forEach(function (c) { rail.appendChild(renderCard(c)); });
-            stage.appendChild(rail);
-        }
+        // No cards here at all: they are played on each side's own screen, where the
+        // decision is taken. The resolution shows only what the front made of it.
 
         var field = el("div", "field");
 

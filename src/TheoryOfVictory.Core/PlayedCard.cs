@@ -19,6 +19,12 @@ public sealed class PlayedCard
     /// <summary>invader, defender, or null for a world card both sides suffer.</summary>
     public string? OwnerSideCode { get; init; }
 
+    /// <summary>
+    /// Sides this card actually lands on, read from its effects. An unowned card still
+    /// hits someone, and it belongs on that side's screen rather than in the resolution.
+    /// </summary>
+    public List<string> AffectedSideCodes { get; init; } = [];
+
     public double PoliticalCost { get; init; }
 
     public double MoneyCost { get; init; }
