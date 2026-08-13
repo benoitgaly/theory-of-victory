@@ -2,6 +2,8 @@
 
 ### You have the cards in hand
 
+**→ [Jouer la simulation](https://benoitgaly.github.io/theory-of-victory/)**
+
 Simulation de la guerre en Ukraine comme **compétition de génération de force**, et non comme
 succession de batailles. Outil pédagogique inspiré des travaux de **Phillips P. O'Brien**.
 
@@ -40,21 +42,26 @@ Trois écrans par tour, comme les trois temps d'un tour de jeu de plateau :
 2. **Génération de force — Ukraine** — la même chaîne, avec une économie de flux opposée
 3. **Résolution — champ de bataille** — la carte, les rapports de force, les cartes du tour
 
-Le **tonneau de Liebig** porte la règle centrale : chaque douve est une ressource, sa hauteur est
-son taux de couverture, et l'eau ne monte jamais au-dessus de la plus courte. La **carte** est une
+Le **tonneau de Liebig** porte la règle centrale : chaque douve est un flux consommé — obus,
+carburant, nourriture — sa hauteur est son taux de couverture, et l'eau ne monte jamais au-dessus
+de la plus courte. Les hommes, eux, ne sont pas une douve : ils sont la **taille du tonneau**,
+puisque c'est l'effectif tenu en ligne qui dimensionne le front et fabrique donc le besoin
+matériel. La **carte** est une
 vraie carte d'Ukraine pavée d'hexagones, où l'on distingue le territoire occupé avant février 2022
 de celui pris depuis. Les cartes événement sont imprimées au format Magic — cadre, coût en capital
 politique, illustration, ligne de type, boîte de règles et texte d'ambiance — parce que la V2 les
 mettra en main des joueurs.
 
-La conception détaillée est répartie en trois documents : le [modèle de jeu](docs/design/01-modele-de-jeu.md),
-la [direction artistique](docs/design/02-direction-artistique.md) et le [gameplay](docs/design/03-gameplay.md).
+La conception détaillée est répartie en cinq documents : le [modèle de jeu](docs/design/01-modele-de-jeu.md),
+la [direction artistique](docs/design/02-direction-artistique.md), le [gameplay](docs/design/03-gameplay.md),
+la [calibration des effectifs](docs/design/04-calibration-effectifs.md) et les
+[cinq composantes d'armée](docs/design/05-composantes-armee.md).
 
 ## Lancer
 
 ```bash
-# Le site : rejoue les deux parties tour par tour
-dotnet run --project src/TheoryOfVictory.Web        # http://localhost:5241
+# Le site : rejoue les trois déroulés tour par tour
+dotnet run --project src/TheoryOfVictory.Web        # http://localhost:5106
 
 # La trace console, utile pour calibrer
 dotnet run --project src/TheoryOfVictory.Simulator
@@ -73,8 +80,17 @@ dotnet test tests/TheoryOfVictory.Engine.UnitTests
 | `TheoryOfVictory.Web` | ASP.NET Core MVC — navigation tour par tour, carte hexagonale, cubes |
 
 Même pile que Green Acres (.NET 10, ASP.NET Core MVC, mêmes conventions C#), sans back-office ni
-base de données : la V1.0 est déterministe, les deux parties sont jouées au démarrage et servies
+base de données : la V1.0 est déterministe, les trois déroulés sont joués au démarrage et servis
 depuis la mémoire.
+
+## Publier
+
+Rien n'étant calculé à la demande, une capture de la page rendue **est** le jeu complet. Le site
+publié est donc un instantané statique, servi par GitHub Pages depuis la branche `gh-pages` :
+
+```powershell
+scripts\Publish-StaticSite.ps1     # écrit .artifacts\site
+```
 
 ## Les règles qui portent le modèle
 
@@ -107,6 +123,12 @@ depuis la mémoire.
 
 ## Statut des chiffres
 
-Les valeurs sont des **ordres de grandeur de travail**, posées pour que le moteur produise des
-courbes discutables. Elles ne sont pas sourcées une par une et ne doivent pas être citées comme
-des faits. La conception complète est dans [`docs/design/01-modele-de-jeu.md`](docs/design/01-modele-de-jeu.md).
+Les valeurs sont, sauf mention contraire, des **ordres de grandeur de travail**, posées pour que le
+moteur produise des courbes discutables. Elles ne sont pas sourcées une par une et ne doivent pas
+être citées comme des faits. Font exception les **effectifs**, calés sur sources ouvertes avec
+fourchettes d'incertitude assumées dans [`04-calibration-effectifs.md`](docs/design/04-calibration-effectifs.md).
+La conception complète est dans [`docs/design/01-modele-de-jeu.md`](docs/design/01-modele-de-jeu.md).
+
+## Licence
+
+MIT — voir [`LICENSE`](LICENSE).
