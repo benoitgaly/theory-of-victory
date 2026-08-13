@@ -1246,13 +1246,15 @@
         return safeText(card.typeLine, family);
     }
 
-    // Les cartes d'événement n'ont ni coût politique ni coût monétaire : le médaillon dit
-    // « rien à payer » au lieu de laisser un trou dans le cartouche du titre.
+    // Une carte d'événement ne se paie pas : elle n'a pas de médaillon du tout. Un médaillon
+    // sans chiffre se lit comme un défaut d'affichage, pas comme une gratuité — le titre
+    // occupe alors tout le cartouche, ce qui est la bonne façon de dire « rien à payer ».
     function costPips(card) {
-        var cost = el("div", "mtg-cost");
         var pol = Number(card.politicalCost) || 0;
         var money = Number(card.moneyCost) || 0;
+        if (pol <= 0 && money <= 0) { return null; }
 
+        var cost = el("div", "mtg-cost");
         if (pol > 0) {
             var polPip = el("span", "pip pol", String(Math.round(pol)));
             polPip.title = "Coût politique : " + Math.round(pol);
@@ -1262,11 +1264,6 @@
             var moneyPip = el("span", "pip money", String(Math.round(money)));
             moneyPip.title = "Coût financier : " + Math.round(money) + " Md";
             cost.appendChild(moneyPip);
-        }
-        if (!cost.childNodes.length) {
-            var free = el("span", "pip free", "—");
-            free.title = "Sans coût : la carte s'impose, elle ne s'achète pas.";
-            cost.appendChild(free);
         }
 
         return cost;
@@ -1289,9 +1286,11 @@
         var name = el("div", "mtg-name", safeText(card.title, "Carte sans titre"));
         // Un titre long se compose plus petit plutôt que de pousser l'illustration vers
         // le bas : toutes les cartes de la main gardent le même gabarit.
-        if (name.textContent.length > 24) { name.classList.add("is-long"); }
+        if (name.textContent.length > 32) { name.classList.add("is-longer"); }
+        else if (name.textContent.length > 24) { name.classList.add("is-long"); }
         title.appendChild(name);
-        title.appendChild(costPips(card));
+        var cost = costPips(card);
+        if (cost) { title.appendChild(cost); }
         inner.appendChild(title);
 
         var art = el("div", "mtg-art");

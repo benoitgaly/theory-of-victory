@@ -326,13 +326,14 @@ h1, h2, h3, h4 {
 
 /* Une main se tient sur une seule ligne, comme un éventail de cartes tenu en main :
    si elle déborde, elle glisse, elle ne se replie pas sur un second rang.
-   L'alignement se fait par le bas : les cartes jouées dépassent vers le haut. */
+   Toutes les cartes ont la même hauteur, comme les cartes d'un vrai jeu : la rangée est
+   régulière et la seule à sortir du rang est celle qui a été jouée. */
 .card-rail.hand {
     gap: 12px;
     flex-wrap: nowrap;
-    align-items: flex-end;
+    align-items: stretch;
     overflow-x: auto;
-    padding: 26px 2px 6px;
+    padding: 26px 2px 20px;
 }
 
 .card-rail.hand .mtg {
@@ -1340,11 +1341,17 @@ main {
     hyphens: auto;
 }
 
-/* Seuil calé sur la carte la plus étroite, celle de la main : au-delà, le titre passerait
-   à une troisième ligne et pousserait l'illustration hors de son alignement. */
+/* Seuils calés sur la carte la plus étroite, celle de la main : au-delà, le titre passerait
+   à une troisième ligne, agrandirait son cartouche et décalerait l'illustration — la rangée
+   se déformerait carte par carte. Deux lignes au maximum, quel que soit le titre. */
 .mtg-name.is-long {
     font-size: 11px;
     line-height: 1.12;
+}
+
+.mtg-name.is-longer {
+    font-size: 9.6px;
+    line-height: 1.1;
 }
 
 .mtg-cost {
@@ -1367,14 +1374,6 @@ main {
 
 .pip.pol { background: radial-gradient(circle at 35% 30%, #f3dc95, #dfb43e); }
 .pip.money { background: radial-gradient(circle at 35% 30%, #cbe0c3, #8fb586); }
-
-/* Une carte d'événement ne se paie pas : le médaillon reste, vidé de son chiffre, pour
-   que le cartouche du titre garde son équilibre au lieu de s'ouvrir sur du vide. */
-.pip.free {
-    background: radial-gradient(circle at 35% 30%, #e6e0d0, #b9b1a0);
-    color: rgba(42, 31, 6, 0.62);
-    font-weight: 700;
-}
 
 /* Filet doré autour de l'illustration : la fenêtre est encadrée, pas collée. */
 .mtg-art {
@@ -1421,6 +1420,9 @@ main {
     flex-shrink: 0;
 }
 
+/* Les cartes sont mises à hauteur égale : sur une carte peu bavarde, l'espace libre se
+   répartit au-dessus et au-dessous du texte, qui reste d'un seul tenant. Le repousser en
+   bas creuserait un trou au milieu de la boîte, et un trou se lit comme un champ manquant. */
 .mtg-text {
     background: rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -1428,6 +1430,9 @@ main {
     padding: 8px 10px;
     flex: 1;
     min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .mtg-rules {
