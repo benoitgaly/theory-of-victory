@@ -113,12 +113,26 @@ depuis la mémoire.
 
 ## Publier
 
-Rien n'étant calculé à la demande, une capture de la page rendue **est** le jeu complet. Le site
-publié est donc un instantané statique, servi par GitHub Pages depuis la branche `gh-pages` :
+**Le C# ne tourne pas en ligne.** Il joue les trois déroulés au démarrage et imprime le résultat
+dans la page ; rien n'est calculé à la demande, aucun appel n'est fait au serveur après le
+chargement. Une capture de la page rendue **est** donc le jeu complet, et l'hébergement statique
+suffit. Le moteur est la presse, pas le kiosque.
+
+Ce qui part en ligne : `index.html` avec les trois parties déjà jouées à l'intérieur, plus les
+feuilles de style et les scripts qui les mettent en scène — navigation, carte hexagonale, cartes,
+bandeau du capital. Tout le reste du dépôt reste au dépôt.
 
 ```powershell
-scripts\Publish-StaticSite.ps1     # écrit .artifacts\site
+# Produire le site dans .artifacts\site, sans rien publier
+scripts\Publish-StaticSite.ps1
+
+# Le produire ET le pousser sur gh-pages, d'où GitHub Pages le sert
+scripts\Publish-StaticSite.ps1 -Deploy -Message "Publication — ce qui change"
 ```
+
+La publication passe par une copie de travail jetable : la copie principale n'est jamais touchée,
+et un travail en cours ne peut pas partir en ligne par accident. Le site est à jour une à deux
+minutes plus tard sur [benoitgaly.github.io/theory-of-victory](https://benoitgaly.github.io/theory-of-victory/).
 
 ## Les règles qui portent le modèle
 

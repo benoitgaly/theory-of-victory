@@ -17,11 +17,22 @@
 
 .PARAMETER Port
     Port du serveur temporaire.
+
+.PARAMETER Deploy
+    Pousse le site produit sur la branche `gh-pages`, d'où GitHub Pages le sert.
+
+.PARAMETER Message
+    Message du commit de publication. « Publication » par défaut.
+
+.EXAMPLE
+    scripts\Publish-StaticSite.ps1 -Deploy -Message "Publication — le capital en dollars"
 #>
 [CmdletBinding()]
 param(
     [string] $OutputPath,
-    [int] $Port = 5399
+    [int] $Port = 5399,
+    [switch] $Deploy,
+    [string] $Message
 )
 
 $ErrorActionPreference = "Stop"
@@ -91,5 +102,51 @@ finally {
         Select-Object -First 1 -ExpandProperty OwningProcess
     if ($listener) {
         Stop-Process -Id $listener -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# Le site en ligne est le contenu de la branche `gh-pages`, servie telle quelle par GitHub
+# Pages. On y publie depuis une copie de travail jetable plutôt qu'en changeant de branche :
+# la copie principale n'est jamais touchée, et un travail en cours ne peut pas partir en
+# ligne par accident.
+if ($Deploy) {
+    if (-not $Message) {
+        $Message = "Publication"
+    }
+
+    $pages = Join-Path $repoRoot ".artifacts\pages"
+
+    if (Test-Path $pages) {
+        git -C $repoRoot worktree remove $pages --force 2>&1 | Out-Null
+    }
+
+    git -C $repoRoot fetch origin gh-pages
+    git -C $repoRoot worktree add $pages gh-pages
+    if ($LASTEXITCODE -ne 0) {
+        throw "Impossible de préparer la copie de publication."
+    }
+
+    try {
+        # La branche ne contient que le site : ce qui a disparu de la sortie doit disparaître
+        # en ligne, donc on remplace au lieu de superposer. Tout sauf `.git`, évidemment.
+        Get-ChildItem -Path $pages -Force |
+            Where-Object { $_.Name -ne ".git" } |
+            Remove-Item -Recurse -Force
+
+        Copy-Item -Path (Join-Path $OutputPath "*") -Destination $pages -Recurse -Force
+        Copy-Item -Path (Join-Path $OutputPath ".nojekyll") -Destination $pages -Force
+
+        git -C $pages add -A
+        git -C $pages commit -m $Message
+        git -C $pages push origin gh-pages
+        if ($LASTEXITCODE -ne 0) {
+            throw "La publication n'est pas partie."
+        }
+
+        Write-Host "Publié. Le site est en ligne d'ici une à deux minutes :"
+        Write-Host "  https://benoitgaly.github.io/theory-of-victory/"
+    }
+    finally {
+        git -C $repoRoot worktree remove $pages --force 2>&1 | Out-Null
     }
 }
