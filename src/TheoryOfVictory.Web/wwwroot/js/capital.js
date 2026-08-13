@@ -362,9 +362,9 @@
         var g = svg("g", { class: "cap-post" + (alerted ? " alerted" : "") });
 
         var tip = svg("title", {});
-        tip.textContent = nameOf(post) + " — " + money(post.value) + " Md$" +
+        tip.textContent = nameOf(post) + " — " + (charge ? "−" : "") + money(post.value) + " Md$" +
             (post.nature === "AnnualFlow" ? " par an" : "") +
-            (charge ? " de facture" : "") + "\n" + yieldOf(post.code) +
+            (charge ? " : une facture, retranchée du bilan" : "") + "\n" + yieldOf(post.code) +
             "\nVariation du trimestre : " + pct(post.percentDelta) +
             (post.destructionCause ? "\nDétruit par : " + post.destructionCause : "") +
             (post.secondaryLabel
@@ -506,7 +506,10 @@
         var out = invader ? NUM_OUT : W - NUM_OUT;
         var inner = invader ? NUM_IN : W - NUM_IN;
 
-        text(g, out, yc + 6, money(post.value), {
+        // Une charge s'imprime en négatif, comme dans n'importe quel bilan : c'est de l'argent
+        // qui sort, et le total du camp la retranche. La masse, elle, dessine son ampleur —
+        // une facture qui double est un trait deux fois plus long, et rayé.
+        text(g, out, yc + 6, (charge ? "−" : "") + money(post.value), {
             "text-anchor": invader ? "start" : "end", class: "cap-value"
         });
 
