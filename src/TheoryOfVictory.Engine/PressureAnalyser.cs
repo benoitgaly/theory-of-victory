@@ -119,7 +119,7 @@ public static class PressureAnalyser
                 SideCode = belligerent.Side.Code,
                 Level = level,
                 Title = $"{kind.DisplayName} : {quarters:F1} trimestre(s) de couverture, et ça descend",
-                Detail = $"Les dépôts de {belligerent.Name} couvrent encore {quarters:F1} trimestre(s) de "
+                Detail = $"Les dépôts de {belligerent.NameInProse} couvrent encore {quarters:F1} trimestre(s) de "
                     + "consommation, mais ils ne se remplissent plus. Le front ne verra rien passer "
                     + "jusqu'au trimestre où il ne verra plus rien du tout.",
                 TurnsAhead = quarters,
@@ -136,7 +136,7 @@ public static class PressureAnalyser
                 SideCode = belligerent.Side.Code,
                 Level = AlertLevel.Critical,
                 Title = $"Ravitaillement impayé à {belligerent.SustainmentShortfall * 100d:F0} %",
-                Detail = $"{belligerent.Name} n'a plus de quoi acheter les rations et le carburant de ses "
+                Detail = $"{belligerent.NameOpeningSentence} n'a plus de quoi acheter les rations et le carburant de ses "
                     + "propres troupes. On nourrit avant de choisir : quand cette ligne-là casse, "
                     + "aucune allocation ne rattrape plus rien.",
                 Value = belligerent.SustainmentShortfall,
@@ -163,7 +163,7 @@ public static class PressureAnalyser
                 SideCode = belligerent.Side.Code,
                 Level = level,
                 Title = $"Fonds souverain : {quarters:F1} trimestre(s)",
-                Detail = $"{belligerent.Name} ponctionne {economy.LastTurnReserveDrawBillions:F1} Md par trimestre "
+                Detail = $"{belligerent.NameOpeningSentence} ponctionne {economy.LastTurnReserveDrawBillions:F1} Md par trimestre "
                     + $"pour tenir son effort de guerre. Il reste {economy.ReservesBillions:F0} Md. "
                     + "Après quoi la guerre ne coûte plus que ce qu'elle rapporte.",
                 TurnsAhead = quarters,
@@ -183,7 +183,7 @@ public static class PressureAnalyser
                 Title = $"Effort de guerre bridé à {(1d - gap) * 100d:F0} %",
                 Detail = $"Les recettes du trimestre ne financent que {economy.WarFundableBillions:F1} Md "
                     + $"sur les {economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare:F1} Md que "
-                    + $"{belligerent.Name} voudrait dépenser. L'appareil le voit avant le front.",
+                    + $"{belligerent.NameInProse} voudrait dépenser. L'appareil le voit avant le front.",
                 TurnsAhead = 1d,
                 Value = economy.WarFundableBillions,
                 Threshold = economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare,
@@ -207,7 +207,7 @@ public static class PressureAnalyser
                 Title = left <= 0
                     ? "Le front cède"
                     : $"Effondrement dans {left} tour(s)",
-                Detail = $"{belligerent.Name} régénère {ratio:F2} de ce qu'elle consomme, sous le seuil de "
+                Detail = $"{belligerent.NameOpeningSentence} régénère {ratio:F2} de ce qu'elle consomme, sous le seuil de "
                     + $"{ControlPhase.CollapseThreshold:F2} depuis {below} tour(s). Trois tours sous le seuil "
                     + "et le front ne cède pas sous un assaut : il cède faute de flux.",
                 TurnsAhead = left,
@@ -225,7 +225,7 @@ public static class PressureAnalyser
                 SideCode = belligerent.Side.Code,
                 Level = AlertLevel.Alert,
                 Title = $"Régénération à {ratio:F2}, seuil à {ControlPhase.CollapseThreshold:F2}",
-                Detail = $"{belligerent.Name} remplace tout juste ce qu'elle perd. Un mauvais trimestre "
+                Detail = $"{belligerent.NameOpeningSentence} remplace tout juste ce qu'elle perd. Un mauvais trimestre "
                     + "et le compte à rebours démarre.",
                 Value = ratio,
                 Threshold = ControlPhase.CollapseThreshold,
@@ -297,7 +297,7 @@ public static class PressureAnalyser
             Level = industrial < 1d ? AlertLevel.Critical : AlertLevel.Alert,
             Title = $"Hiver : délestage de {winterShortfall * 100d:F0} % au prochain tour",
             Detail = industrial < 1d
-                ? $"La demande hivernale dépasse ce que le réseau de {belligerent.Name} peut fournir, et le "
+                ? $"La demande hivernale dépasse ce que le réseau de {belligerent.NameInProse} peut fournir, et le "
                     + $"tampon civil est épuisé : {(1d - industrial) * 100d:F0} % de la production d'armes "
                     + "s'éteindra avec les usines."
                 : $"La demande hivernale dépasse la génération disponible. Le civil sera délesté le premier — "
@@ -331,7 +331,7 @@ public static class PressureAnalyser
             Level = AlertLevel.Watch,
             Title = $"Avance tactique périmée en 2 tours ({edge:F2} → {inTwo:F2})",
             Detail = $"L'adversaire s'adapte de {decay * 100d:F0} % par tour. Sans réinvestissement, "
-                + $"{belligerent.Name} retombe à sa consommation d'obus d'avant — et le goulot revient "
+                + $"{belligerent.NameInProse} retombe à sa consommation d'obus d'avant — et le goulot revient "
                 + "se placer là où il était.",
             TurnsAhead = 2d,
             Value = edge,
@@ -359,7 +359,7 @@ public static class PressureAnalyser
             SideCode = belligerent.Side.Code,
             Level = will <= 25d ? AlertLevel.Critical : AlertLevel.Alert,
             Title = $"Volonté des soutiens : {will:F0} / 100",
-            Detail = $"{belligerent.Name} vit d'un flux qu'elle ne paie pas et ne contrôle pas. "
+            Detail = $"{belligerent.NameOpeningSentence} vit d'un flux qu'elle ne paie pas et ne contrôle pas. "
                 + "Couper ce flux prend une journée et une élection ; le reconstituer prend des années.",
             Value = will,
             Threshold = 0d,

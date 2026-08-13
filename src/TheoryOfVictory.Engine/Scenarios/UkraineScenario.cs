@@ -115,6 +115,7 @@ public static class UkraineScenario
         {
             Side = Side.Invader,
             Name = "Russie",
+            NameInProse = "la Russie",
             Politics = new PoliticalState
             {
                 Regime = RegimeType.Authoritarian,
@@ -284,6 +285,7 @@ public static class UkraineScenario
         {
             Side = Side.Defender,
             Name = "Ukraine",
+            NameInProse = "l'Ukraine",
             Politics = new PoliticalState
             {
                 Regime = RegimeType.Democratic,

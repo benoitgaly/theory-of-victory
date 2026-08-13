@@ -358,6 +358,43 @@ public sealed class WarCapitalTests
     }
 
     [Fact]
+    public void EveryAlertSentence_CarriesTheArticle_BecauseTheBannerPrintsItVerbatim()
+    {
+        // The bottleneck banner prints the engine's own sentence, so that sentence is display
+        // copy and not a log line. A bare country name inside French prose reads as a caption
+        // — "que Ukraine voudrait dépenser" — and the elision is missing on top of it. The
+        // article is carried by the belligerent, so no call site has to remember the rule.
+        string[] broken =
+        [
+            "que Russie", "que Ukraine", "de Russie", "de Ukraine",
+            "l'Russie", "la Ukraine",
+        ];
+
+        foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
+        {
+            PlayedGame game = new GameRunner().Run(UkraineScenario.Build(variant));
+
+            foreach (TurnSnapshot turn in game.Turns)
+            {
+                foreach (PressureAlert alert in turn.Alerts)
+                {
+                    foreach (string fragment in broken)
+                    {
+                        Assert.False(
+                            alert.Detail.Contains(fragment, StringComparison.Ordinal),
+                            $"T{turn.Turn} / {alert.Code} : « {fragment} » dans « {alert.Detail} ».");
+                    }
+
+                    Assert.False(
+                        alert.Detail.StartsWith("Russie", StringComparison.Ordinal)
+                            || alert.Detail.StartsWith("Ukraine", StringComparison.Ordinal),
+                        $"T{turn.Turn} / {alert.Code} : la phrase s'ouvre sur un nom nu — « {alert.Detail} ».");
+                }
+            }
+        }
+    }
+
+    [Fact]
     public void TheDiplomaticPost_IsOneQuantity_ReadFromBothSidesOfTheTable()
     {
         // The only post of the eight where one side's gain is exactly the other's loss. Both

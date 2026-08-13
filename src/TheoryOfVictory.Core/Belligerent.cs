@@ -6,6 +6,32 @@ public sealed class Belligerent
 
     public required string Name { get; init; }
 
+    /// <summary>
+    /// The name as it reads INSIDE a sentence, article included: prose says "ce que la Russie
+    /// voudrait dépenser" and "les dépôts de l'Ukraine", never the bare noun. It is carried as
+    /// data rather than derived from the spelling, because an article belongs to the noun and
+    /// no rule guesses gender — a scenario that adds a masculine side just writes it down.
+    ///
+    /// It falls back to the bare name, so a side that never appears in prose declares nothing.
+    /// </summary>
+    public string NameInProse
+    {
+        get => prose ?? Name;
+        init => prose = value;
+    }
+
+    /// <summary>The same name opening a sentence, where the article takes the capital.</summary>
+    public string NameOpeningSentence
+    {
+        get
+        {
+            string written = NameInProse;
+            return written.Length == 0 ? written : char.ToUpperInvariant(written[0]) + written[1..];
+        }
+    }
+
+    private readonly string? prose;
+
     public required PoliticalState Politics { get; init; }
 
     public required ForeignSupport Foreign { get; init; }

@@ -148,10 +148,10 @@ Toutes les valeurs affichées sont converties en milliards de dollars par `Capit
 | Poste | Mesure du moteur | Repères et seuils |
 |---|---|---|
 | Réserves | `Economy.ReservesBillions` | `Economy.ReserveQuartersLeft` (le décompte, déjà calculé), `LastTurnReserveDrawBillions` (la ponction du tour) |
-| Centrales | `Grid.AvailableCapacityGw` × 1,5 Md$/GW, seuil sur `Grid.DemandGw(Winter)` | `Grid.ShortfallRatio`, `PermanentDamageGw`, `WinterDemandMultiplier` |
-| Pétrole | `Economy.LastTurnOilRevenueBillions` × 4, ou la facture dérivée de `OilImportMbd × 91,25 × OilPrice / 1000` × 4 | `Economy.RefiningIntegrity`, `Sanctions.ExportDiscountPerBarrel`, `Sanctions.FrictionRate`, `GameState.OilPrice` |
-| Usines civiles | `CivilianIndustry.CapacityBillions × Integrity` | `CivilianIndustry.LivingStandard` |
-| Usines d'armement | `Industry.TotalCapacityValueBillions()` × 4 | `Industry.GetCapacityPerTurn(kind)` contre `GetCapacityCeiling(kind)`, `Sanctions.ProductionCeilingMultiplier`, `Grid.IndustrialSupplyRatio(season)` |
+| Centrales | `CapitalReader.GridValue(Grid.AvailableCapacityGw)`, seuil sur `Grid.DemandGw(Winter)` | `Grid.ShortfallRatio`, `PermanentDamageGw`, `WinterDemandMultiplier` |
+| Pétrole | `Economy.LastTurnOilRevenueBillions` × 4 × 5, ou la facture dérivée de `OilImportMbd × 91,25 × OilPrice / 1000` × 4 × 5 | `Economy.RefiningIntegrity`, `Sanctions.ExportDiscountPerBarrel`, `Sanctions.FrictionRate`, `GameState.OilPrice` |
+| Usines civiles | `CivilianIndustry.CapacityBillions × Integrity` × 5 | `CivilianIndustry.LivingStandard` |
+| Usines d'armement | `Industry.TotalCapacityValueBillions()` × 4 × 5 | `Industry.GetCapacityPerTurn(kind)` contre `GetCapacityCeiling(kind)`, `Sanctions.ProductionCeilingMultiplier`, `Grid.IndustrialSupplyRatio(season)` |
 | Tenue du pouvoir | `part × Economy.ProductiveCapacityBillions × (58 − Politics.RegimeStress) / 58` | `PopularDiscontent`, `EliteCohesion`, `LatentTension`, `Repression`, `PoliticalCapital` |
 | Soutien étranger | Le robinet, annualisé : `Foreign.EffectiveGrantBillions × 4` ou le budget d'achat du tour × 4. La cuve — `Politics.ExternalWill` (UA), `min(TreasuryBillions, SupplyCeilingBillions × PricePremium × 4)` (RU) — descend en seconde lecture | `Foreign.Conditionality`, `Foreign.Dependency`, `Foreign.InKindShare` |
 
@@ -660,26 +660,49 @@ pour l'armement. Cinq langues font une liste, pas un bilan. On ne pouvait ni add
 postes, ni dire lequel pesait le plus, ni répondre à la seule question qu'un bilan pose : *ce
 camp vit-il sur ce qu'il possède ou sur ce qu'il produit ?*
 
-### 11.1 Ce qui a été converti, et ce qui ne l'a pas été
+### 11.1 La règle du bilan : un actif vaut cinq années de ce qu'il produit
 
-**Cinq postes sur sept n'ont demandé aucun coefficient** : le moteur les tenait déjà en argent.
-Deux coefficients seulement ont été posés, et ce sont les deux seuls chiffres de ce document qui
-ne viennent pas de la simulation.
+> **Demande de l'utilisateur, seconde passe** : « Un poste productif vaut cinq fois ce qu'il
+> produit en un an. » Une seule constante nommée, `CapitalReader.CapitalisationMultiple`.
+
+C'est **la** règle, et c'est elle qui rend les sept postes lisibles les uns contre les autres.
+Un gisement, un parc électrique, une chaîne d'obus et une industrie de biens de consommation
+n'ont rien en commun sauf ceci : chacun produit quelque chose chaque année. Chacun se valorise
+donc de la même façon, et **aucun poste ne reçoit un coefficient inventé pour lui**. Cinq est un
+multiple de capitalisation bas, ce qui est la fourchette honnête pour un actif situé en zone de
+guerre : personne ne paie vingt années de production future pour une raffinerie à portée de
+missile.
+
+**Deux postes ne sont délibérément pas capitalisés, et l'exception est le sujet, pas un oubli.**
+Le soutien extérieur est un flux qui peut s'arrêter en un jour — c'est la règle 5 du modèle — et
+le multiplier par cinq inscrirait au bilan cinq années garanties d'une aide qu'une élection
+annule. La tenue du pouvoir n'est pas une production non plus : c'est une facture que le régime
+paie, et ce que le bandeau valorise est la marge qui lui reste pour la payer.
+
+**Conséquence voulue : le pétrole se revalorise et se déprécie avec le baril, cinq fois.** Un
+baril qui s'effondre retire au capital russe bien plus que la recette perdue du trimestre — et
+c'est exactement le mécanisme sur lequel travaille le déroulé de la victoire. Du baril à 114 $
+au baril à 34 $, le poste passe de 839 à 168 Md$ : la moitié de ce que la Russie possède part
+avec le prix, sans qu'un hexagone change de main.
 
 | Poste | Ce qu'on compte | Conversion | T1 Russie | T1 Ukraine |
 |---|---|---|---|---|
-| **Réserves monétaires** | Le fonds souverain | aucune — c'est déjà de l'argent | 310 | 26,4 |
-| **Centrales électriques** | La valeur de remplacement du parc encore debout | **1,5 Md$ par GW installé** | 367,5 | 39,0 |
-| **Pétrole** | La production annuelle au baril du jour | recette (ou facture) du trimestre **× 4** | 148,9 | 7,0 *(facture)* |
-| **Usines civiles** | Une année de production civile | aucune — la capacité civile est déjà annuelle | 412,8 | 45,1 |
-| **Usines d'armement** | Une année de production d'armes | capacité installée par tour **× 4** | 12,7 | 1,9 |
-| **Tenue du pouvoir** | Ce que le régime peut encore consacrer à tenir | **3,5 % (autocratie) / 2,0 % (démocratie)** de la capacité productive soutenable, × la part de marge restante | 47,2 | 2,6 |
-| **Soutien extérieur** | Une année du flux obtenu du dehors | flux du trimestre **× 4** | 6,5 *(acheté)* | 16,5 *(reçu)* |
+| **Réserves monétaires** | Le fonds souverain | aucune — c'est déjà un stock d'argent, et un stock ne se capitalise pas | 310 | 26,4 |
+| **Centrales électriques** | Le parc encore debout, valorisé sur ce qu'il vend | **0,22 Md$/GW et par an** × 5 | 269,5 *(245 GW)* | 28,6 *(26 GW)* |
+| **Pétrole** | La production, au baril du jour | recette (ou facture) du trimestre **× 4 × 5** | 744,6 *(149/an)* | 35,0 *(facture, 7,0/an)* |
+| **Usines civiles** | L'appareil civil | capacité annuelle **× 5** | 2 064 *(413/an)* | 225,6 *(45/an)* |
+| **Usines d'armement** | Les chaînes d'armes | capacité par tour **× 4 × 5** | 63,4 *(12,7/an)* | 9,7 *(1,9/an)* |
+| **Tenue du pouvoir** | Ce que le régime peut encore consacrer à tenir | **3,5 % (autocratie) / 2,0 % (démocratie)** de la capacité productive soutenable, × la part de marge restante — **non capitalisé** | 47,2 | 2,6 |
+| **Soutien extérieur** | Une année du flux obtenu du dehors | flux du trimestre **× 4** — **non capitalisé** | 6,5 *(acheté)* | 16,5 *(reçu)* |
 
-**Production ou outil ?** Les deux usines sont comptées en **production annuelle**, et non en
-valeur de l'outil. C'est le seul choix qui les garde comparables entre elles — or leur écart est
-la leçon du bandeau — et c'est celui qui suit le moteur, où la capacité civile est déjà une
-production annuelle et la capacité d'armement une production par tour. Compter l'outil aurait
+La production annuelle de chaque poste capitalisé reste lisible : elle est publiée en seconde
+lecture dans l'infobulle, et la valeur affichée en vaut exactement cinq fois. La règle se vérifie
+donc à l'écran sans ouvrir ce document.
+
+**Production ou outil ?** Les deux usines sont comptées sur leur **production annuelle**, et non
+sur la valeur de l'outil. C'est le seul choix qui les garde comparables entre elles — or leur
+écart est la leçon du bandeau — et c'est celui qui suit le moteur, où la capacité civile est déjà
+une production annuelle et la capacité d'armement une production par tour. Compter l'outil aurait
 demandé un multiple capitalistique par filière, donc deux coefficients inventés de plus pour
 répondre à une question que le jeu ne pose pas.
 
@@ -705,10 +728,19 @@ Le [`README`](../../README.md) §« Statut des chiffres » vaut ici sans excepti
 **ordres de grandeur de travail**, posés pour que le bandeau produise un bilan discutable. Ils ne
 sont pas sourcés un par un et ne doivent pas être cités comme des faits.
 
-- **1,5 Md$ par GW** — un parc post-soviétique est thermique pour l'essentiel, avec du nucléaire
-  et de l'hydraulique dessous. Une tranche prise isolément vaut la moitié ou le double. Le
-  coefficient est **le même pour les deux camps** : il déplace le poids du poste dans le
-  patrimoine, jamais le rapport entre Moscou et Kyiv.
+- **Le multiple de cinq** — c'est une décision de conception avant d'être une estimation, et
+  elle est assumée comme telle. Elle ne déforme aucun rapport entre les deux camps, puisqu'elle
+  s'applique identiquement des deux côtés ; elle décide en revanche du **poids relatif des
+  postes entre eux**, et deux d'entre eux y échappent exprès (§11.1). À dix, le pétrole et
+  l'appareil civil écraseraient tout le reste du bilan ; à deux, le fonds souverain
+  redeviendrait le premier poste russe et le bandeau redirait ce que l'ancien indice disait
+  déjà.
+- **0,22 Md$ par GW et par an** — 8 760 heures à environ la moitié de la charge, ce qu'un parc
+  post-soviétique mixte tient en moyenne, vendues autour de 50 $ le mégawattheure. C'est le
+  dernier prix physique dont le bandeau a besoin, parce que le réseau est le seul poste que le
+  moteur tient dans une unité qui n'est pas de l'argent. Le coefficient est **le même pour les
+  deux camps** : il déplace le poids du poste dans le patrimoine, jamais le rapport entre Moscou
+  et Kyiv.
 - **3,5 % et 2,0 % de la capacité soutenable** — le chiffre le plus fragile des deux, et il est
   assumé comme tel. Il vise l'addition sécurité intérieure + clientèle + subventions à la paix
   sociale ; à un facteur deux près, le poste garderait la même forme, puisque c'est la marge qui
@@ -721,23 +753,38 @@ sont pas sourcés un par un et ne doivent pas être cités comme des faits.
 Un fonds souverain et une année de recette pétrolière ne s'additionnent pas. Chaque poste porte
 donc sa nature, et le bandeau publie **deux totaux par camp** :
 
+La ligne de partage est celle du §11.1 : **est un patrimoine ce qui se capitalise**, est un flux
+ce qu'on ne peut pas capitaliser parce qu'on n'y a pas de titre.
+
 | Nature | Postes | T1 Russie | T1 Ukraine |
 |---|---|---|---|
-| **Patrimoine** — ce qu'on détient | réserves, centrales | **678 Md$** | **65 Md$** |
-| **Flux annuel** — ce qu'on produit, reçoit ou doit payer | pétrole, usines civiles, usines d'armement, tenue du pouvoir, soutien extérieur | **628 Md$/an** | **59 Md$/an** |
+| **Patrimoine** — ce qu'on détient | réserves, centrales, pétrole, usines civiles, usines d'armement | **3 451 Md$** | **255 Md$** |
+| **Flux annuel** — ce qu'on reçoit, ou ce qu'on peut encore dépenser à tenir | tenue du pouvoir, soutien extérieur | **54 Md$/an** | **19 Md$/an** |
 
-La facture pétrolière ukrainienne est une **charge** : elle se retranche du flux au lieu de le
-gonfler. Le soutien international, lui, n'entre dans aucun des deux : ce n'est pas une
-possession mais une position, et il reste lu sur cent, dans l'infobulle du poste qu'il commande.
+La facture pétrolière ukrainienne est une **charge** : elle se retranche du patrimoine au lieu de
+le gonfler — d'où 255 Md$ et non 290. Le soutien international, lui, n'entre dans aucun des deux :
+ce n'est pas une possession mais une position, et il reste lu sur cent, dans l'infobulle du poste
+qu'il commande.
 
 **Ce que le bilan révèle et que l'indice base 100 cachait.** Les deux camps sont séparés d'un
-ordre de grandeur sur *tous* les postes — dix contre un sur le patrimoine, onze sur les réserves,
-neuf sur les centrales et l'appareil civil, sept sur l'armement, dix-huit sur la tenue du
-pouvoir — **sauf un seul, où le petit dépasse le grand** : le soutien extérieur, 16,5 Md$/an
+ordre de grandeur sur *tous* les postes — treize contre un sur le patrimoine, douze sur les
+réserves, neuf sur les centrales et l'appareil civil, sept sur l'armement, dix-huit sur la tenue
+du pouvoir — **sauf un seul, où le petit dépasse le grand** : le soutien extérieur, 16,5 Md$/an
 donnés à l'Ukraine contre 6,5 achetés par la Russie, et jusqu'à 80 contre 4 dans les déroulés où
 l'Occident tient. La seule ligne du bandeau qui penche vers la droite est celle qu'on ne fabrique
 pas chez soi — et c'est aussi la seule qui peut s'arrêter du jour au lendemain. Un test la
 verrouille (`TheBalanceSheet_ShowsRussiaAnOrderOfMagnitudeHeavier_ExceptOnForeignSupport`).
+
+**Et ce que la capitalisation révèle à son tour, qui n'était pas cherché.** L'appareil civil
+devient le premier poste du bilan russe — 2 064 Md$, six dixièmes du patrimoine — alors que
+**c'est le seul poste qu'aucune carte du calendrier ne vise** (écart assumé n° 4, en tête de ce
+document). Le total du patrimoine est donc porté à soixante pour cent par une masse qui ne bouge
+jamais, dans aucun des trois déroulés. Ce n'est pas un défaut de la règle des cinq ans, qui ne
+fait que rendre visible une proportion déjà vraie ; c'est l'argument le plus net en faveur de la
+carte « Frappe sur les entrepôts », qui reste à écrire. Deux autres lignes sont plates pour la
+même raison — les centrales russes, que personne ne frappe — de sorte que **deux des sept rangées
+russes ne bougent d'aucun trimestre sur toute la guerre**. C'est aussi pour cela que le bandeau
+publie deux totaux et jamais leur somme : le patrimoine seul se lirait comme un camp intact.
 
 ### 11.4 L'échelle des masses
 
@@ -746,8 +793,15 @@ poste atteint dans **tout le déroulé**. Trois conséquences, et chacune répon
 
 1. **Partagée par les deux camps** : un milliard vaut la même longueur à gauche et à droite,
    sinon le bilan en dollars ne se comparerait pas. La masse ukrainienne devient courte — dix à
-   trente pixels contre trois cents — et c'est une information, pas un défaut. Aucune ne
-   descend sous cinq pixels sur les soixante-quatre bandeaux des trois déroulés.
+   quarante-cinq pixels contre trois cents — et c'est une information, pas un défaut.
+   **Mesuré sur les soixante-quatre bandeaux des trois déroulés** (896 cartouches, longueurs
+   relevées dans le rendu et non estimées) : la plus courte masse encore pleine est la facture
+   pétrolière ukrainienne de l'été 2027, à 4,9 px, et c'est le seul cas sous cinq pixels. Les
+   quinze autres cartouches qui passent sous ce seuil sont des postes réellement tombés à zéro —
+   le régime russe après sa chute, l'aide occidentale après la coupure — et ceux-là ne sont plus
+   dessinés en masse du tout : ils basculent sur le dessin du poste détruit (§7.5), qui occupe
+   toute la distance jusqu'au pointillé de février 2022. **Un poste vide n'est jamais un trait
+   invisible ; c'est le trou le plus visible du bandeau.**
 2. **Posée sur le maximum du déroulé, pas sur février 2022** : l'aide occidentale quintuple dans
    le déroulé de la victoire. Une règle calée sur le premier trimestre aurait plafonné soixante
    masses sur la butée de la piste, et une masse plafonnée cache exactement ce que le poste
