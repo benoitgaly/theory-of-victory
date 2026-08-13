@@ -198,7 +198,7 @@
       "family": "Externe",
       "description": "Les stocks d'intercepteurs partent ailleurs, et les capitales aussi. Le soutien n'est pas retiré : il est distrait.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 2,
       "baseProbability": 0.3,
       "effects": [
         {
@@ -212,7 +212,8 @@
           "resourceCode": "heavy_interceptors",
           "value": -180
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "aid_blocked",
@@ -220,7 +221,7 @@
       "family": "Politique occidentale",
       "description": "Rien n'est annulé, tout est suspendu. Les dépôts se vident au rythme habituel, sans plus rien pour les remplir.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 4,
       "baseProbability": 0.35,
       "effects": [
         {
@@ -233,7 +234,8 @@
           "targetSideCode": "defender",
           "value": -6
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "aid_unblocked",
@@ -241,7 +243,7 @@
       "family": "Politique occidentale",
       "description": "Le robinet se rouvre, mais un trimestre de disette laisse des dépôts vides et un front qui a reculé.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 3,
       "baseProbability": 0.6,
       "effects": [
         {
@@ -254,7 +256,8 @@
           "targetSideCode": "defender",
           "value": 5
         }
-      ]
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "aid_collapse",
@@ -262,7 +265,7 @@
       "family": "Politique occidentale",
       "description": "Une élection, une lassitude, et le flux gratuit s'arrête net. C'est le risque que porte tout ce qu'on reçoit sans le payer.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 6,
       "baseProbability": 0.2,
       "effects": [
         {
@@ -280,7 +283,8 @@
           "targetSideCode": "defender",
           "value": -35
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "refinery_strikes",
@@ -434,7 +438,8 @@
           "targetSideCode": "invader",
           "value": 6
         }
-      ]
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "component_embargo",
@@ -564,7 +569,7 @@
       "family": "Économique",
       "description": "Le baril sous les cinquante dollars fait ce qu'aucune offensive n'a réussi : il coupe la caisse.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 5,
       "baseProbability": 0.2,
       "effects": [
         {
@@ -581,7 +586,8 @@
           "targetSideCode": "defender",
           "value": 6
         }
-      ]
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "sovereign_fund_empty",
@@ -589,7 +595,7 @@
       "family": "Économique",
       "description": "On ne pioche plus dans les réserves : il n'y en a plus. À partir d'ici, chaque obus se paie sur le vivant.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 3,
       "baseProbability": 0.2,
       "effects": [
         {
@@ -607,7 +613,8 @@
           "targetSideCode": "invader",
           "value": 10
         }
-      ]
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "elite_break",
@@ -615,7 +622,7 @@
       "family": "Politique interne",
       "description": "La guerre a cessé de payer ceux qui la tenaient. Un régime ne tombe pas parce que la rue crie : il tombe parce que l'appareil lâche.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 6,
       "baseProbability": 0.1,
       "effects": [
         {
@@ -633,7 +640,8 @@
           "targetSideCode": "invader",
           "value": -14
         }
-      ]
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "supplier_withdraws",
@@ -654,15 +662,16 @@
           "targetSideCode": "invader",
           "value": -8
         }
-      ]
+      ],
+      "ownerSideCode": "defender"
     },
     {
       "code": "harsh_winter",
       "title": "Hiver rigoureux",
       "family": "Énergie",
-      "description": "La même destruction ne vaut rien en juillet et devient une crise nationale en janvier.",
+      "description": "La même destruction ne vaut rien en juillet et devient une crise nationale en janvier. On ne choisit pas la saison : on choisit le trimestre où l'on frappe.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 1,
       "baseProbability": 0.25,
       "effects": [
         {
@@ -675,7 +684,8 @@
           "targetSideCode": "defender",
           "value": 7
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "electronic_warfare",
@@ -777,7 +787,7 @@
       "family": "Politique occidentale",
       "description": "Rien n'a été détruit, aucune ligne n'a bougé. Un scrutin à cinq mille kilomètres vient pourtant de décider du sort d'un front.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 5,
       "baseProbability": 0.3,
       "effects": [
         {
@@ -795,7 +805,8 @@
           "targetSideCode": "defender",
           "value": -8
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "budget_fatigue",
@@ -803,7 +814,7 @@
       "family": "Politique occidentale",
       "description": "Personne n'abandonne personne : on reporte, on rogne, on conditionne. Le flux gratuit ne s'arrête jamais d'un coup, il maigrit.",
       "type": "Permanent",
-      "politicalCost": 0,
+      "politicalCost": 3,
       "baseProbability": 0.45,
       "effects": [
         {
@@ -816,7 +827,8 @@
           "targetSideCode": "defender",
           "value": 0.1
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "chinese_pressure",
@@ -849,9 +861,9 @@
       "code": "air_defence_gap",
       "title": "Trou dans la couverture antiaérienne",
       "family": "Militaire et technologique",
-      "description": "Les magasins se vident plus vite qu'ils ne se remplissent. Ce n'est pas le taux d'interception qui décide, c'est le rapport de coût.",
+      "description": "Les magasins se vident plus vite qu'ils ne se remplissent. Ce n'est pas le taux d'interception qui décide, c'est le rapport de coût — et le trimestre où l'on choisit de l'exploiter.",
       "type": "Instant",
-      "politicalCost": 0,
+      "politicalCost": 2,
       "baseProbability": 0.3,
       "effects": [
         {
@@ -866,7 +878,8 @@
           "resourceCode": "cheap_interceptors",
           "value": -500
         }
-      ]
+      ],
+      "ownerSideCode": "invader"
     },
     {
       "code": "decapitation_strike",
@@ -960,6 +973,1436 @@
           "kind": "MoraleDelta",
           "targetSideCode": "defender",
           "value": -6
+        }
+      ]
+    },
+    {
+      "code": "contract_recruitment_drive",
+      "title": "Prime d'engagement",
+      "family": "Politique interne",
+      "description": "On n'appelle personne : on achète. Chaque hausse de la prime achète la paix civile et retire un homme au budget des obus.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 2,
+      "baseProbability": 0.75,
+      "effects": [
+        {
+          "kind": "RecruitmentCostMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.5
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": -5
+        }
+      ]
+    },
+    {
+      "code": "prison_recruitment",
+      "title": "Recrutement dans les prisons",
+      "family": "Politique interne",
+      "description": "Six mois de front contre la liberté. On paie des hommes avec une monnaie que l'État frappe lui-même, et l'on récolte une troupe qui ne tiendra pas deux assauts.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "MobilisationWave",
+          "targetSideCode": "invader",
+          "value": 45
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -3
+        }
+      ]
+    },
+    {
+      "code": "mobilisation_wave_two",
+      "title": "Seconde vague de mobilisation",
+      "family": "Politique interne",
+      "description": "Cette fois la vague atteint les régions qui produisent. Les hommes arrivent au front ; les obus, eux, cessent d'y arriver.",
+      "type": "SlowRitual",
+      "ownerSideCode": "invader",
+      "politicalCost": 12,
+      "baseProbability": 0.2,
+      "effects": [
+        {
+          "kind": "MobilisationWave",
+          "targetSideCode": "invader",
+          "value": 220,
+          "delayTurns": 1
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 15
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -6
+        }
+      ]
+    },
+    {
+      "code": "foreign_drones",
+      "title": "Drones achetés à l'étranger",
+      "family": "Externe",
+      "description": "Un moteur de scooter, une aile de mousse, le prix d'une berline. Contre un intercepteur à trois millions, l'échange se gagne à l'achat, pas au tir.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "ForeignSupplyCeilingDelta",
+          "targetSideCode": "invader",
+          "value": 4.0
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "strike_drones",
+          "value": 500
+        },
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": 0.08
+        }
+      ]
+    },
+    {
+      "code": "foreign_ballistic_missiles",
+      "title": "Missiles balistiques achetés à l'étranger",
+      "family": "Externe",
+      "description": "Le flux payant ne demande de vote à personne. Il se règle en devises et se rembourse en concessions, longtemps après la livraison.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.35,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "missiles",
+          "value": 140
+        },
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": 0.06
+        }
+      ]
+    },
+    {
+      "code": "shahed_plant",
+      "title": "La chaîne de montage domestique",
+      "family": "Externe",
+      "description": "Ce qui arrivait par cargaison sort désormais d'un hangar de la Volga. Acheter n'était que la première étape ; internaliser était le but — et l'usine dépend de puces qu'on n'y fabrique pas.",
+      "type": "SlowRitual",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "ProductionCapacityMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.2,
+          "delayTurns": 3
+        },
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "code": "shadow_fleet",
+      "title": "Flotte fantôme",
+      "family": "Économique",
+      "description": "Deux cents coques fatiguées, des pavillons introuvables, des assureurs qui n'existent pas. La décote se referme trajet après trajet, et chaque intermédiaire prend sa part au passage.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.7,
+      "effects": [
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": -0.28
+        },
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": -0.12
+        },
+        {
+          "kind": "CorruptionDelta",
+          "targetSideCode": "invader",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "code": "oil_export_rerouting",
+      "title": "Réorientation des flux vers l'Asie",
+      "family": "Économique",
+      "description": "Les barils ne manquent pas d'acheteurs, seulement de clients qui discutent le prix. Vendre à un seul, c'est le laisser fixer ce qu'on lui vend.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": -0.18
+        },
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": -0.1
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -1
+        }
+      ]
+    },
+    {
+      "code": "component_smuggling",
+      "title": "Les composants passent par ailleurs",
+      "family": "Économique",
+      "description": "Une société à Astana, un transitaire au Golfe, et la machine-outil arrive avec six mois de retard et trois fois son prix. Une sanction qu'on cesse d'entretenir n'est plus une sanction.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "component_embargo",
+      "politicalCost": 3,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "SanctionsComponentDelta",
+          "targetSideCode": "invader",
+          "value": -0.35
+        },
+        {
+          "kind": "CorruptionDelta",
+          "targetSideCode": "invader",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "code": "refinery_air_defence",
+      "title": "Parapluie sur les raffineries",
+      "family": "Énergie",
+      "description": "Couvrir Riazan revient à dégarnir Pokrovsk. Le même intercepteur ne peut pas être aux deux endroits, et l'arbitrage se paie au front.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "refinery_strikes",
+      "politicalCost": 3,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "heavy_interceptors",
+          "value": -170
+        },
+        {
+          "kind": "RefiningIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": 0.12
+        }
+      ]
+    },
+    {
+      "code": "rail_repair_brigades",
+      "title": "Bataillons ferroviaires",
+      "family": "Énergie",
+      "description": "Un nœud coupé le lundi roule à nouveau le jeudi. Un dégât réparable ne compte que si l'on revient le rouvrir avant qu'il ne cicatrise.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "rail_interdiction",
+      "politicalCost": 2,
+      "baseProbability": 0.55,
+      "effects": [
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": 0.2
+        }
+      ]
+    },
+    {
+      "code": "counter_intelligence",
+      "title": "Contre-espionnage",
+      "family": "Politique interne",
+      "description": "On ne protège pas un homme, on rend son emploi du temps illisible. Le prix se paie en méfiance, à l'intérieur même de l'appareil qu'on protège.",
+      "type": "Counter",
+      "ownerSideCode": "invader",
+      "countersCardCode": "decapitation_strike",
+      "politicalCost": 3,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": 4
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "code": "glide_bombs",
+      "title": "Bombes planantes",
+      "family": "Militaire et technologique",
+      "description": "Un kit de guidage sur une bombe des années soixante, larguée à soixante kilomètres. Le stock d'hier redevient l'arme d'aujourd'hui, et rien n'a été inventé.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 2,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "invader",
+          "value": 0.45
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -4
+        }
+      ]
+    },
+    {
+      "code": "electronic_warfare_scaling",
+      "title": "Montée en gamme du brouillage",
+      "family": "Militaire et technologique",
+      "description": "Ce qui couvrait un état-major couvre maintenant une division entière. Ce camp adopte tard, puis à l'échelle industrielle : c'est sa seule manière d'innover.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "InnovationCounterJump",
+          "targetSideCode": "invader",
+          "value": 0.45
+        },
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "defender",
+          "value": -0.18
+        }
+      ]
+    },
+    {
+      "code": "machine_hall_strikes",
+      "title": "Frappes sur les salles des machines",
+      "family": "Énergie",
+      "description": "On ne vise plus le transformateur qu'on remplace en trois semaines, mais la turbine qu'aucune usine amie ne fabrique. Viser juste inflige une perte définitive.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "GridPermanentDamage",
+          "targetSideCode": "defender",
+          "value": 4.5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "missiles",
+          "value": -180
+        }
+      ]
+    },
+    {
+      "code": "grain_port_strikes",
+      "title": "Frappes sur les ports céréaliers",
+      "family": "Économique",
+      "description": "Le blé n'a jamais tiré un coup de feu. Il paie des salaires, des impôts et une part des obus — et le monde entier regarde brûler les silos.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": -1.5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -4
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "strike_drones",
+          "value": -350
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "code": "decoy_saturation",
+      "title": "Vagues de leurres",
+      "family": "Militaire et technologique",
+      "description": "La moitié de l'essaim ne porte rien. Elle n'a rien à porter : elle a vidé les magasins avant que l'autre moitié n'arrive.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 2,
+      "baseProbability": 0.55,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "heavy_interceptors",
+          "value": -90
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "cheap_interceptors",
+          "value": -450
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "strike_drones",
+          "value": -600
+        }
+      ]
+    },
+    {
+      "code": "war_economy_conversion",
+      "title": "Conversion en économie de guerre",
+      "family": "Économique",
+      "description": "Trois équipes, sept jours sur sept, et un produit intérieur brut qui monte pendant que le pays s'appauvrit. Le compteur affiché n'est jamais celui qui contraint.",
+      "type": "SlowRitual",
+      "ownerSideCode": "invader",
+      "politicalCost": 6,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "ProductionCapacityMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.22,
+          "delayTurns": 2
+        },
+        {
+          "kind": "RecruitmentCostMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.15
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "code": "sovereign_fund_draw",
+      "title": "Ponction sur le fonds souverain",
+      "family": "Économique",
+      "description": "La réserve des mauvais jours finance le trimestre en cours. Chaque prélèvement rapproche celui où il n'y aura plus rien à prélever, et l'appareil sait compter.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "invader",
+          "value": 20
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -7
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "code": "war_tax_rise",
+      "title": "Impôt de guerre",
+      "family": "Économique",
+      "description": "On cesse de faire payer la guerre par la réserve pour la faire payer par ceux qui travaillent. La caisse se remplit ; le consentement, lui, ne se reconstitue pas.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 7,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "invader",
+          "value": 15
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 10
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -4
+        }
+      ]
+    },
+    {
+      "code": "industrial_requisition",
+      "title": "Réquisition industrielle",
+      "family": "Économique",
+      "description": "L'usine reste privée sur le papier et ne choisit plus ses commandes. On gagne des obus et l'on perd la loyauté de ceux qui les fabriquent.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 5,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "ProductionCapacityMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.15
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -2
+        },
+        {
+          "kind": "CorruptionDelta",
+          "targetSideCode": "invader",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "code": "domestic_repression",
+      "title": "Tour de vis intérieur",
+      "family": "Politique interne",
+      "description": "Le mécontentement ne disparaît pas, il cesse de se voir. Fermer la soupape repousse l'échéance en aggravant tout ce qui viendra après.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 8,
+      "baseProbability": 0.55,
+      "effects": [
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": -15
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -2
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "code": "state_propaganda_surge",
+      "title": "Offensive de propagande",
+      "family": "Politique interne",
+      "description": "On ne convainc personne, on occupe tout l'espace. Un régime centralisé fabrique du consentement comme il fabrique des obus, et sans avoir à demander.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.7,
+      "effects": [
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": 8
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": -7
+        },
+        {
+          "kind": "PoliticalCapitalDelta",
+          "targetSideCode": "invader",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "code": "diplomatic_complaisance",
+      "title": "Achat de complaisance diplomatique",
+      "family": "Externe",
+      "description": "Un prêt, un terminal, une abstention. Ce qui s'achète hors du champ de bataille se règle au comptant et ne s'annonce jamais.",
+      "type": "Permanent",
+      "ownerSideCode": "invader",
+      "politicalCost": 4,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -9
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -1.0
+        },
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": -0.1
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -2
+        }
+      ]
+    },
+    {
+      "code": "meat_assault",
+      "title": "Assauts d'infanterie à découvert",
+      "family": "Militaire et technologique",
+      "description": "Cinq cents mètres de terre noire contre un bataillon. Le gain se lit sur la carte le soir même ; le prix ne se lit que deux trimestres plus tard.",
+      "type": "Instant",
+      "ownerSideCode": "invader",
+      "politicalCost": 3,
+      "baseProbability": 0.6,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "weapons",
+          "value": -320
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 6
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -3
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -3
+        }
+      ]
+    },
+    {
+      "code": "depot_strikes",
+      "title": "Frappes sur les dépôts",
+      "family": "Militaire et technologique",
+      "description": "Un dépôt qui saute vaut trois offensives. Ce qui n'a jamais quitté l'arrière ne manquera au front qu'un mois plus tard, et personne ne fera le lien.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 3,
+      "baseProbability": 0.55,
+      "effects": [
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "weapons",
+          "value": -400
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.14
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "strike_drones",
+          "value": -220
+        }
+      ]
+    },
+    {
+      "code": "naval_drones_black_sea",
+      "title": "Drones navals en mer Noire",
+      "family": "Militaire et technologique",
+      "description": "Un pays sans marine a chassé une flotte de sa propre base. Le corridor rouvre, et le blé recommence à payer la guerre.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": 6
+        },
+        {
+          "kind": "RefiningIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.07
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 8
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "code": "domestic_drone_industry",
+      "title": "Production nationale de drones",
+      "family": "Économique",
+      "description": "Cent ateliers plutôt qu'une usine : rien de décisif à frapper, tout à remplacer. Ce qu'on fabrique soi-même ne s'arrête pas à une élection étrangère.",
+      "type": "SlowRitual",
+      "ownerSideCode": "defender",
+      "politicalCost": 5,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "ProductionCapacityMultiplier",
+          "targetSideCode": "defender",
+          "value": 1.25,
+          "delayTurns": 2
+        },
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "defender",
+          "value": 0.3,
+          "delayTurns": 2
+        },
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": -2
+        }
+      ]
+    },
+    {
+      "code": "cheap_interception",
+      "title": "Interception à bas coût",
+      "family": "Militaire et technologique",
+      "description": "Abattre un drone à cinquante mille dollars avec un missile à trois millions, c'est perdre en gagnant. Le rapport de coût tranche avant le taux d'interception.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 3,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "InnovationCounterJump",
+          "targetSideCode": "defender",
+          "value": 0.4
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "cheap_interceptors",
+          "value": 1400
+        }
+      ]
+    },
+    {
+      "code": "drone_coalition",
+      "title": "Coalition drones",
+      "family": "Politique occidentale",
+      "description": "Les soutiens cessent de livrer des systèmes et se mettent à financer une industrie. Reçu n'est pas possédé ; produit, si.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 5,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 3.5
+        },
+        {
+          "kind": "InnovationTacticalJump",
+          "targetSideCode": "defender",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "code": "allied_intelligence",
+      "title": "Renseignement allié",
+      "family": "Politique occidentale",
+      "description": "Une image satellite ne pèse rien et vaut un régiment. C'est aussi la dépendance la plus silencieuse : elle s'interrompt sans communiqué.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "defender",
+          "value": 0.35
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.09
+        }
+      ]
+    },
+    {
+      "code": "nato_training_pipeline",
+      "title": "Formation à l'étranger",
+      "family": "Politique occidentale",
+      "description": "Douze semaines dans une lande galloise, et l'homme revient autre. La formation ne se voit jamais au trimestre où on la paie.",
+      "type": "SlowRitual",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.5,
+      "effects": [
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 7,
+          "delayTurns": 2
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 4
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "code": "electronic_warfare_ukraine",
+      "title": "Brouillage des kits de guidage",
+      "family": "Militaire et technologique",
+      "description": "La bombe part quand même et tombe à côté. On n'abat pas ce qui vient : on lui retire son adresse.",
+      "type": "Counter",
+      "ownerSideCode": "defender",
+      "countersCardCode": "glide_bombs",
+      "politicalCost": 3,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "InnovationCounterJump",
+          "targetSideCode": "defender",
+          "value": 0.4
+        },
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "invader",
+          "value": -0.3
+        }
+      ]
+    },
+    {
+      "code": "decentralised_generation",
+      "title": "Cogénération et réseaux îlotés",
+      "family": "Énergie",
+      "description": "Mille petites machines à la place de dix grandes : plus rien de décisif à viser. On ne défend pas un réseau, on le rend indigne d'être frappé.",
+      "type": "Counter",
+      "ownerSideCode": "defender",
+      "countersCardCode": "machine_hall_strikes",
+      "politicalCost": 4,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": -2
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "code": "recruitment_reform",
+      "title": "Réforme du recrutement",
+      "family": "Politique interne",
+      "description": "Une durée de service écrite, une solde tenue, un retour possible. On achète du consentement avec un argent que l'on n'a pas.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.45,
+      "effects": [
+        {
+          "kind": "RecruitmentCostMultiplier",
+          "targetSideCode": "defender",
+          "value": 1.35
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "defender",
+          "value": -7
+        },
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": -2
+        }
+      ]
+    },
+    {
+      "code": "frozen_assets_windfall",
+      "title": "Prêt gagé sur les avoirs gelés",
+      "family": "Politique occidentale",
+      "description": "On ne touche pas au capital, on emprunte sur ses intérêts. La prudence juridique coûte deux ans, mais le robinet finit par s'ouvrir.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 7,
+      "baseProbability": 0.35,
+      "effects": [
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 5.0
+        },
+        {
+          "kind": "TreasuryDelta",
+          "targetSideCode": "defender",
+          "value": 12
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -4
+        }
+      ]
+    },
+    {
+      "code": "diplomatic_campaign",
+      "title": "Campagne diplomatique",
+      "family": "Politique occidentale",
+      "description": "Trente capitales en un trimestre. Le capital politique de ce camp ne se décrète pas : il se gagne dehors, une salle après l'autre.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 5,
+      "baseProbability": 0.55,
+      "effects": [
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 15
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 1.5
+        },
+        {
+          "kind": "PoliticalCapitalDelta",
+          "targetSideCode": "defender",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "code": "transparency_reform",
+      "title": "Réforme de la transparence",
+      "family": "Politique interne",
+      "description": "Assainir coûte avant de rapporter : la crise éclate au trimestre où l'on nettoie, le bénéfice arrive trois trimestres plus tard.",
+      "type": "SlowRitual",
+      "ownerSideCode": "defender",
+      "politicalCost": 6,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "CorruptionDelta",
+          "targetSideCode": "defender",
+          "value": -13,
+          "delayTurns": 3
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": -0.12,
+          "delayTurns": 3
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -3
+        }
+      ]
+    },
+    {
+      "code": "oil_price_spike",
+      "title": "Flambée du baril",
+      "family": "Économique",
+      "description": "Une seule variable, quatre canaux, tous dans le même sens. Le baril à cent dollars est la pire nouvelle possible pour l'envahi.",
+      "type": "Instant",
+      "politicalCost": 4,
+      "baseProbability": 0.3,
+      "effects": [
+        {
+          "kind": "OilPriceDelta",
+          "value": 18
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": 5
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -9
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -2.0
+        }
+      ],
+      "ownerSideCode": "invader"
+    },
+    {
+      "code": "global_recession",
+      "title": "Récession mondiale",
+      "family": "Économique",
+      "description": "La demande recule partout à la fois. Le baril tombe sans qu'aucune sanction n'ait été votée, et la caisse se vide quand même.",
+      "type": "Instant",
+      "politicalCost": 3,
+      "baseProbability": 0.2,
+      "effects": [
+        {
+          "kind": "OilPriceDelta",
+          "value": -18
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -3.0
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -6
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "currency_collapse",
+      "title": "Décrochage de la monnaie",
+      "family": "Économique",
+      "description": "Le taux ne dit rien de ce qu'on produit ; il dit ce qu'il faudra payer pour importer ce qu'on ne sait plus faire.",
+      "type": "Instant",
+      "politicalCost": 4,
+      "baseProbability": 0.25,
+      "effects": [
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": 0.15
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 9
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -5
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "mild_winter",
+      "title": "Hiver clément",
+      "family": "Énergie",
+      "description": "Quatre degrés de plus, et la campagne préparée tout l'automne tombe dans le vide. Se préparer au pire hiver reste la seule façon de le rendre clément.",
+      "type": "Instant",
+      "politicalCost": 1,
+      "baseProbability": 0.25,
+      "effects": [
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 6
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "rasputitsa",
+      "title": "Raspoutitsa",
+      "family": "Énergie",
+      "description": "Deux mois par an, la terre noire avale les convois et rend les blindés inutiles. Le camp qui n'attaque pas est celui qui y perd le moins.",
+      "type": "Instant",
+      "politicalCost": 1,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.13
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "defender",
+          "value": -0.09
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "dam_breach",
+      "title": "Un barrage cède",
+      "family": "Énergie",
+      "description": "L'attribution ne sera jamais établie. L'eau, elle, emporte les villages, les champs et le refroidissement d'une centrale.",
+      "type": "Instant",
+      "politicalCost": 3,
+      "baseProbability": 0.12,
+      "effects": [
+        {
+          "kind": "GridPermanentDamage",
+          "targetSideCode": "defender",
+          "value": 2.5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -7
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "defender",
+          "value": -0.1
+        }
+      ],
+      "ownerSideCode": "invader"
+    },
+    {
+      "code": "armed_mutiny",
+      "title": "Mutinerie armée",
+      "family": "Politique interne",
+      "description": "Une colonne remonte l'autoroute sans rencontrer personne, puis fait demi-tour. Tout le monde a vu le vide ; la purge qui suit referme l'appareil plus étroitement qu'avant.",
+      "type": "Instant",
+      "politicalCost": 5,
+      "baseProbability": 0.1,
+      "effects": [
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -10
+        },
+        {
+          "kind": "LogisticsIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.12
+        },
+        {
+          "kind": "PopularDiscontentDelta",
+          "targetSideCode": "invader",
+          "value": 8
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -6
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": 7,
+          "delayTurns": 2
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "parliament_veto",
+      "title": "Veto au conseil des soutiens",
+      "family": "Politique occidentale",
+      "description": "Un seul gouvernement suffit à suspendre ce que vingt-six ont voté. Le flux gratuit a autant de robinets que de capitales.",
+      "type": "Instant",
+      "politicalCost": 4,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "AidDisbursementRate",
+          "targetSideCode": "defender",
+          "value": -0.28
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": 0.08
+        }
+      ],
+      "ownerSideCode": "invader"
+    },
+    {
+      "code": "european_election_swing",
+      "title": "Bascule électorale européenne",
+      "family": "Politique occidentale",
+      "description": "Les urnes d'un pays qui n'a pas la guerre chez lui décident du calibre livré à celui qui l'a.",
+      "type": "Instant",
+      "politicalCost": 4,
+      "baseProbability": 0.25,
+      "effects": [
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -14
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -3.0
+        }
+      ],
+      "ownerSideCode": "invader"
+    },
+    {
+      "code": "inflation_surge",
+      "title": "Poussée inflationniste chez les soutiens",
+      "family": "Politique occidentale",
+      "description": "Sanctionner renchérit l'énergie, l'énergie nourrit l'inflation, l'inflation ronge la volonté. Frapper l'adversaire affaiblit mécaniquement l'ami.",
+      "type": "Permanent",
+      "politicalCost": 3,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -11
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -1.8
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": 0.06
+        }
+      ],
+      "ownerSideCode": "invader"
+    },
+    {
+      "code": "ceasefire_talks",
+      "title": "Pourparlers sans lendemain",
+      "family": "Externe",
+      "description": "On négocie une ligne que personne ne tient et que chacun compte améliorer d'ici la signature. L'annonce use l'arrière bien plus que le front.",
+      "type": "Instant",
+      "politicalCost": 4,
+      "baseProbability": 0.3,
+      "effects": [
+        {
+          "kind": "AidDisbursementRate",
+          "targetSideCode": "defender",
+          "value": -0.1
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": -5
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": 4
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -7
+        }
+      ],
+      "ownerSideCode": "invader"
+    },
+    {
+      "code": "pipeline_sabotage",
+      "title": "Sabotage sur un gazoduc",
+      "family": "Énergie",
+      "description": "Quatre tubes sous quatre-vingts mètres d'eau, et aucune enquête n'aboutira. Le marché, lui, a tranché le jour même.",
+      "type": "Instant",
+      "politicalCost": 5,
+      "baseProbability": 0.12,
+      "effects": [
+        {
+          "kind": "RefiningIntegrityDelta",
+          "targetSideCode": "invader",
+          "value": -0.07
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": -6
+        },
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": -1.5
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "demographic_wall",
+      "title": "Le mur démographique",
+      "family": "Politique interne",
+      "description": "Les classes creuses des années quatre-vingt-dix arrivent à l'âge de servir. Une armée qu'on achète paie ce manque au prix fort ; une armée qu'on mobilise le paie en consentement.",
+      "type": "Permanent",
+      "politicalCost": 2,
+      "baseProbability": 0.35,
+      "effects": [
+        {
+          "kind": "RecruitmentCostMultiplier",
+          "targetSideCode": "invader",
+          "value": 1.2
+        },
+        {
+          "kind": "RecruitmentCostMultiplier",
+          "targetSideCode": "defender",
+          "value": 1.3
+        }
+      ],
+      "ownerSideCode": "defender"
+    },
+    {
+      "code": "air_base_strikes",
+      "title": "Frappes sur les bases aériennes",
+      "family": "Militaire et technologique",
+      "description": "Une bombe planante ne se brouille pas au sol : elle n'y est plus. Frapper l'avion sur son tarmac coûte moins cher que de courir après ce qu'il largue.",
+      "type": "Instant",
+      "ownerSideCode": "defender",
+      "politicalCost": 4,
+      "baseProbability": 0.4,
+      "effects": [
+        {
+          "kind": "InnovationStrikeJump",
+          "targetSideCode": "invader",
+          "value": -0.25
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "invader",
+          "resourceCode": "missiles",
+          "value": -80
+        },
+        {
+          "kind": "StockDelta",
+          "targetSideCode": "defender",
+          "resourceCode": "strike_drones",
+          "value": -250
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "invader",
+          "value": -4
+        }
+      ]
+    },
+    {
+      "code": "security_guarantees",
+      "title": "Garanties de sécurité",
+      "family": "Politique occidentale",
+      "description": "Une promesse écrite ne livre pas un obus. Elle change ce qu'un pays ose planifier, et ce que ses soutiens osent financer.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 8,
+      "baseProbability": 0.25,
+      "effects": [
+        {
+          "kind": "AidPledgeDelta",
+          "targetSideCode": "defender",
+          "value": 3.0
+        },
+        {
+          "kind": "ExternalWillDelta",
+          "targetSideCode": "defender",
+          "value": 12
+        },
+        {
+          "kind": "MoraleDelta",
+          "targetSideCode": "defender",
+          "value": 8
+        },
+        {
+          "kind": "ConditionalityDelta",
+          "targetSideCode": "defender",
+          "value": -0.08
+        }
+      ]
+    },
+    {
+      "code": "major_oil_sanctions",
+      "title": "Les deux majors désignées",
+      "family": "Économique",
+      "description": "On cesse de plafonner le prix pour désigner les vendeurs. Les raffineurs d'Asie ne refusent pas le baril : ils exigent d'être payés pour le risque, et la décote double en trois semaines.",
+      "type": "Permanent",
+      "ownerSideCode": "defender",
+      "politicalCost": 7,
+      "baseProbability": 0.3,
+      "effects": [
+        {
+          "kind": "SanctionsPriceDelta",
+          "targetSideCode": "invader",
+          "value": 0.5
+        },
+        {
+          "kind": "SanctionsFrictionDelta",
+          "targetSideCode": "invader",
+          "value": 0.2
+        },
+        {
+          "kind": "EliteCohesionDelta",
+          "targetSideCode": "invader",
+          "value": -5
         }
       ]
     }
