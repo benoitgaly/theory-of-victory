@@ -78,6 +78,49 @@ try {
 
     Set-Content -Path (Join-Path $OutputPath "index.html") -Value $html -Encoding UTF8
 
+    # Les pages de provenance — une par chiffre du bandeau, plus leur sommaire. Elles sont
+    # rendues par le serveur, donc elles doivent être figées comme le plateau.
+    #
+    # La liste n'est pas écrite ici : elle est LUE sur le sommaire, qui l'énumère déjà. Un
+    # inventaire recopié dans ce script serait une deuxième vérité à maintenir, et il
+    # divergerait au premier chiffre ajouté au registre.
+    $pagesToFreeze = @("provenance.html")
+    $summary = Invoke-WebRequest -Uri "http://localhost:$Port/provenance.html" -UseBasicParsing -TimeoutSec 30
+    $pagesToFreeze += ([regex]::Matches($summary.Content, 'href="(provenance-[^"]+\.html)"') |
+        ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
+
+    # Le sommaire n'énumère que les chiffres DOCUMENTÉS, et le bandeau lie ses sept postes des
+    # deux camps, documentés ou non : un poste sans source mène à une page qui dit qu'il n'en a
+    # pas, et cette page-là est la promesse du plateau autant que l'autre. Sans elle, le lien
+    # tombe sur un 404 en ligne alors qu'il répond en développement.
+    #
+    # Les codes sont relevés sur le fichier qui écrit les liens — les recopier ici en ferait une
+    # deuxième vérité, qui divergerait au premier poste renommé.
+    $posts = [regex]::Match(
+        [System.IO.File]::ReadAllText((Join-Path $wwwroot "js\capital.js")),
+        'var POSTS = \[(?<body>.*?)\];',
+        [System.Text.RegularExpressions.RegexOptions]::Singleline)
+
+    if (-not $posts.Success) {
+        throw "Les postes du bandeau ne se lisent plus dans capital.js : la liste des pages à figer serait incomplète."
+    }
+
+    foreach ($match in [regex]::Matches($posts.Groups["body"].Value, 'code:\s*"(?<code>[^"]+)"')) {
+        foreach ($side in @("ru", "ua")) {
+            $pagesToFreeze += "provenance-$($match.Groups['code'].Value)-$side.html"
+        }
+    }
+
+    $pagesToFreeze = @($pagesToFreeze | Sort-Object -Unique)
+
+    foreach ($page in $pagesToFreeze) {
+        $rendered = Invoke-WebRequest -Uri "http://localhost:$Port/$page" -UseBasicParsing -TimeoutSec 30
+        $frozen = $rendered.Content -replace '(?<=(?:src|href)=")/(css/|js/|favicon)', '$1'
+        Set-Content -Path (Join-Path $OutputPath $page) -Value $frozen -Encoding UTF8
+    }
+
+    Write-Host "$($pagesToFreeze.Count) pages de provenance figées."
+
     foreach ($folder in @("css", "js")) {
         Copy-Item -Recurse -Force (Join-Path $wwwroot $folder) (Join-Path $OutputPath $folder)
     }

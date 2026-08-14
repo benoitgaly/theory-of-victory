@@ -358,10 +358,12 @@ public sealed class WarCapitalTests
     }
 
     [Fact]
-    public void EveryAlertSentence_CarriesTheArticle_BecauseTheBannerPrintsItVerbatim()
+    public void EveryAlertSentence_CarriesTheArticle_BecauseTheBandPrintsItVerbatim()
     {
-        // The bottleneck banner prints the engine's own sentence, so that sentence is display
-        // copy and not a log line. A bare country name inside French prose reads as a caption
+        // The band prints the engine's own sentence in the tooltip of the post under pressure,
+        // so that sentence is display copy and not a log line. It used to be printed by a
+        // banner above the band; the banner is gone, the verbatim printing is not.
+        // A bare country name inside French prose reads as a caption
         // — "que Ukraine voudrait dépenser" — and the elision is missing on top of it. The
         // article is carried by the belligerent, so no call site has to remember the rule.
         string[] broken =

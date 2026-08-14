@@ -1,0 +1,101 @@
+@using TheoryOfVictory.Core
+@model TheoryOfVictory.Core.HistoricalFigure
+@{
+    ViewData["Title"] = Model.Label;
+    List<FigureSource> sources = ViewBag.Sources as List<FigureSource> ?? [];
+
+    string badge(string confidence) => confidence switch
+    {
+        "Haute" => "high",
+        "Moyenne" => "mid",
+        _ => "low",
+    };
+}
+
+<article class="prov">
+    <nav class="prov-back"><a href="index.html">← Le plateau</a></nav>
+
+    <header class="prov-head">
+        <p class="prov-kicker">D'où vient ce chiffre</p>
+        <h1>@Model.Label</h1>
+    </header>
+
+    <section class="prov-block">
+        <h2>Les sources</h2>
+        @if (sources.Count == 0)
+        {
+            <p class="prov-empty">Aucune. Ce chiffre n'est soutenu par rien de publié.</p>
+        }
+        else
+        {
+            <ol class="prov-sources">
+                @foreach (FigureSource source in sources)
+                {
+                    <li>
+                        <p class="ps-title">
+                            @if (source.Url is not null)
+                            {
+                                <a href="@source.Url" rel="noreferrer">@source.Title</a>
+                            }
+                            else
+                            {
+                                @source.Title
+                            }
+                        </p>
+                        <p class="ps-org">
+                            @source.Organisation · @source.Kind
+                            @if (source.StatedUpdate is not null)
+                            {
+                                <text> · @source.StatedUpdate</text>
+                            }
+                            @if (source.Capture is not null)
+                            {
+                                <text> · relevée le @source.Capture</text>
+                            }
+                        </p>
+                        @if (!string.IsNullOrWhiteSpace(source.Note))
+                        {
+                            <p class="ps-note">@source.Note</p>
+                        }
+                    </li>
+                }
+            </ol>
+        }
+    </section>
+
+    <section class="prov-block">
+        <h2>Les observations</h2>
+        <div class="prov-scroll">
+            <table class="prov-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Valeur</th>
+                        <th>Confiance</th>
+                        <th>Retenue</th>
+                        <th>Pourquoi cette valeur à cette date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (FigureObservation observation in Model.Observations)
+                    {
+                        <tr class="@(observation.Retained ? "kept" : "")">
+                            <td class="date">@observation.Date</td>
+                            <td class="num">
+                                @observation.Value.ToString("N1") <span class="u">@observation.Unit</span>
+                            </td>
+                            <td>
+                                <span class="prov-badge @badge(observation.Confidence)">@observation.Confidence</span>
+                                <span class="conf-why">@observation.ConfidenceWhy</span>
+                            </td>
+                            <td class="kept-cell">@(observation.Retained ? "oui" : "non")</td>
+                            <td class="lab">@observation.Why</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <nav class="prov-back"><a href="provenance.html">Tous les chiffres →</a></nav>
+</article>

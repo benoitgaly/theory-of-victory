@@ -5,3 +5,6 @@ obj/
 .playwright-mcp/
 
 .artifacts/
+
+# Répertoire de travail : sorties brutes des agents de sourcing, jamais versionnées.
+.tmp/
