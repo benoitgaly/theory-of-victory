@@ -1,0 +1,395 @@
+/* ============================================================
+   Les pages de provenance.
+
+   Même papier et même encre que le plateau, mais une autre voix : ici on LIT, on ne joue
+   pas. La colonne est étroite, le texte respire, et rien ne clignote — c'est une page qu'on
+   consulte pour vérifier ou pour contredire, pas un tableau de bord.
+
+   Le seul signal appuyé est l'état d'un chiffre : sourcé, dérivé, ou posé. Il est appuyé
+   parce que c'est la première chose à savoir avant de lire le reste.
+   ============================================================ */
+
+.prov {
+    max-width: min(1560px, 96vw);
+    margin: 0 auto;
+    padding: 28px 32px 72px;
+}
+
+.prov-back {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin-bottom: 22px;
+}
+
+.prov-back a {
+    color: var(--ink-3);
+    text-decoration: none;
+}
+
+.prov-back a:hover { color: var(--ink); }
+
+.prov-head { margin-bottom: 26px; }
+
+.prov-kicker {
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 6px;
+}
+
+.prov h1 {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0 0 12px;
+    color: var(--ink);
+}
+
+.prov-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.prov-badge {
+    display: inline-block;
+    padding: 3px 10px 2px;
+    border-radius: 9px;
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink-3);
+}
+
+.prov-badge.high { background: var(--ok); }
+.prov-badge.mid { background: var(--gold-deep); }
+.prov-badge.low { background: var(--bad); }
+
+.prov-unit {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--ink-3);
+}
+
+/* L'aveu, et il est en tête : un ordre de grandeur pris pour une mesure est le seul vrai
+   danger de ce site. */
+.prov-warning {
+    margin: 0 0 26px;
+    padding: 10px 14px;
+    background: var(--card-2);
+    border-left: 3px solid var(--warn);
+    font-size: 13.5px;
+    color: var(--ink-2);
+}
+
+/* La page est large parce que la table l'est : cinq colonnes dont une porte un paragraphe.
+   Mais un texte courant ne se lit pas sur quinze cents pixels, alors les blocs de prose et les
+   notes de source gardent leur largeur de lecture — seule la table prend tout l'écran. */
+.prov-block { margin-bottom: 34px; }
+.prov-head, .prov > p, .prov-sources { max-width: 92ch; }
+
+.prov h2 {
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.prov h3.prov-run {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 22px 0 8px;
+    color: var(--ink);
+}
+
+.prov p {
+    margin: 0 0 12px;
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: var(--ink-2);
+}
+
+.prov-lead { color: var(--ink-3); font-size: 13px; }
+
+.prov-formula {
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    font-size: 13.5px;
+    color: var(--ink);
+}
+
+.prov-uncertainty { font-size: 13px; }
+
+.prov-empty { font-style: italic; color: var(--ink-3); }
+
+/* ---- Les sources ---- */
+
+.prov-sources {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.prov-sources li {
+    padding: 12px 0 14px 14px;
+    border-left: 3px solid var(--rule);
+    margin-bottom: 14px;
+}
+
+.prov-sources li.read { border-left-color: var(--ok); }
+.prov-sources li.unread { border-left-color: var(--warn); }
+
+.ps-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 4px !important;
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.ps-kind { color: var(--ink-3); }
+.ps-when { color: var(--ok); }
+.ps-unread { color: var(--warn); }
+
+.ps-title {
+    margin: 0 0 2px !important;
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--ink);
+}
+
+.ps-title a { color: var(--ink); }
+
+.ps-org {
+    margin: 0 0 6px !important;
+    font-size: 12.5px;
+    color: var(--ink-3);
+}
+
+.ps-note { margin: 0 !important; font-size: 13px; }
+
+/* ---- Les tables ---- */
+
+.prov-scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+}
+
+.prov-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.prov-table th {
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: left;
+    padding: 6px 10px 6px 0;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+}
+
+.prov-table td {
+    padding: 5px 10px 5px 0;
+    border-bottom: 1px solid var(--rule-2);
+    color: var(--ink-2);
+}
+
+.prov-table td.num {
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.prov-table td.num.soft { color: var(--ink-3); font-size: 13px; }
+.prov-table td.lab { font-size: 12.5px; color: var(--ink-3); }
+
+/* Même règle que le bandeau : la couleur suit le signe, une seule graisse pour tous les états. */
+.prov-table td.num.up { color: var(--ok); }
+.prov-table td.num.down { color: var(--bad); }
+.prov-table td.num.flat { color: var(--ink-3); }
+
+.prov-table tr:target td {
+    background: var(--gold-soft);
+}
+
+.prov-list td a { color: var(--ink); }
+
+.prov-docs {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13.5px;
+    line-height: 1.7;
+}
+
+@media (max-width: 620px) {
+    .prov { padding: 20px 14px 56px; }
+    .prov h1 { font-size: 24px; }
+}
+
+/* La ligne que le moteur porte vraiment : c'est la seule que le lecteur cherche. */
+.prov-table tr.kept td { background: var(--gold-soft); }
+.prov-table td.date { white-space: nowrap; font-weight: 600; color: var(--ink); }
+.prov-table td.num .u { font-family: var(--font-ui); font-size: 10px; color: var(--ink-3); }
+.prov-table td.kept-cell { font-family: var(--font-ui); font-size: 11px; color: var(--ink-3); }
+/* La justification de la confiance : sous le texte qu'elle nuance, en retrait et plus
+   petite. Elle se lit quand on la cherche, elle ne dispute plus la ligne. */
+.prov-table .conf-why {
+    display: block;
+    margin-top: 6px;
+    padding-left: 10px;
+    border-left: 2px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+}
+
+/* Les lignes se balayent : hauteur régulière, et la ligne retenue ressort par sa teinte,
+   pas par sa taille. */
+.prov-table tbody td { padding: 10px 12px 10px 0; }
+.prov-table th.num { text-align: right; }
+.prov-table td.kept-cell { text-align: center; }
+.prov-table td.lab { font-size: 13px; line-height: 1.55; color: var(--ink-2); min-width: 30ch; }
+
+/* Cinq colonnes dont une porte un paragraphe : sans largeurs déclarées, le navigateur donne
+   tout l'espace aux courtes et repousse la seule qu'on vient lire hors du cadre. */
+.prov-table { table-layout: fixed; }
+.prov-table th:nth-child(1), .prov-table td:nth-child(1) { width: 16%; }
+.prov-table th:nth-child(2), .prov-table td:nth-child(2) { width: 12%; }
+.prov-table th:nth-child(3), .prov-table td:nth-child(3) { width: 11%; }
+.prov-table th:nth-child(4), .prov-table td:nth-child(4) { width: 9%; }
+.prov-table th:nth-child(5), .prov-table td:nth-child(5) { width: 52%; }
+.prov-table td { vertical-align: top; }
+.prov-table td.lab { min-width: 0; }
+
+/* ---- Les observations ----
+
+   Le cœur de la page, et la seule pièce qui a droit à toute la largeur. Une gouttière fixe
+   porte la date et le chiffre ; le raisonnement occupe le reste, borné à une longueur de ligne
+   lisible. La ligne que le moteur retient est la seule qu'on cherche en arrivant : elle se
+   distingue par sa teinte et par son étiquette, jamais par sa taille. */
+
+.obs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+}
+
+.obs {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 0 32px;
+    padding: 20px 0 22px;
+    border-bottom: 1px solid var(--rule-2);
+}
+
+.obs.kept {
+    background: linear-gradient(90deg, var(--gold-soft), transparent 78%);
+    box-shadow: inset 3px 0 0 var(--gold);
+    padding-left: 18px;
+    margin-left: -18px;
+}
+
+.obs-rail { padding-top: 2px; }
+
+.prov .obs-date {
+    margin: 0 0 2px !important;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    line-height: 1.35;
+}
+
+.prov .obs-value {
+    margin: 0 !important;
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.prov .obs-value .u {
+    margin-left: 6px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+}
+
+.prov .obs-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px !important;
+}
+
+.prov .obs-kept {
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+}
+
+.prov .obs-why {
+    margin: 0 !important;
+    max-width: 88ch;
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: var(--ink-2);
+}
+
+.prov .obs .conf-why {
+    max-width: 88ch;
+    margin: 10px 0 0 !important;
+    padding-left: 12px;
+    border-left: 2px solid var(--rule);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-3);
+}
+
+/* Seule la section des observations prend toute la largeur ; le reste garde sa colonne. */
+.prov-block.wide { max-width: none; }
+
+@media (max-width: 860px) {
+    .obs { grid-template-columns: 1fr; gap: 10px; }
+    .obs-rail { display: flex; align-items: baseline; gap: 14px; }
+    .prov .obs-value { font-size: 24px; }
+}
