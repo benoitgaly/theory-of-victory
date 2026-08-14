@@ -140,7 +140,14 @@ public static class UkraineScenario
         russia.Economy.HeadlineGdpBillions = 1800d;
         russia.Economy.ProductiveCapacityBillions = 1720d;
         russia.Economy.TreasuryBillions = 40d;
-        russia.Economy.ReservesBillions = 310d;
+        // Measured, not posed: the Bank of Russia's own weekly series puts the international
+        // reserves at 611,9 billion dollars on 1 October 2021 — the exact date this scenario
+        // opens. The engine used to carry 310 here, which is the POST-freeze figure applied to a
+        // quarter of peace, months before anything was immobilised. The freeze is now played
+        // where it happened, on the invasion turn, by the first sanctions package.
+        //
+        // Source, observation and confidence: data/historical-figures.json, figure reserves-ru.
+        russia.Economy.ReservesBillions = 611.9d;
         russia.Economy.FiscalCaptureRate = 0.088d;
 
         // The war wants more than the ordinary budget funds — that is what makes it a war

@@ -4,11 +4,16 @@
       "code": "sanctions_package_1",
       "title": "Premier train de sanctions",
       "family": "Économique",
-      "description": "L'Occident gèle les avoirs et coupe les circuits bancaires. La friction s'installe, le pétrole se vend avec décote.",
+      "description": "L'Occident immobilise la moitié du fonds souverain et coupe les circuits bancaires. La friction s'installe, le pétrole se vend avec décote.",
       "type": "Permanent",
       "politicalCost": 3,
       "baseProbability": 0.95,
       "effects": [
+        {
+          "kind": "ReservesDelta",
+          "targetSideCode": "invader",
+          "value": -301.9
+        },
         {
           "kind": "SanctionsFrictionDelta",
           "targetSideCode": "invader",

@@ -46,6 +46,13 @@ public enum EffectKind
     RefiningIntegrityDelta,
     LogisticsIntegrityDelta,
     TreasuryDelta,
+
+    /// <summary>
+    /// Moves the sovereign reserve itself, not the quarter's cash. The one effect that can
+    /// immobilise a holding rather than spend it: a freeze does not empty the fund, it puts it
+    /// out of reach, and from the war's point of view those are the same thing.
+    /// </summary>
+    ReservesDelta,
     StockDelta,
     ConditionalityDelta,
 }

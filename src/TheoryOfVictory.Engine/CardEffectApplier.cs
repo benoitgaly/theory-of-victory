@@ -142,6 +142,10 @@ public static class CardEffectApplier
                 belligerent.Economy.TreasuryBillions = Math.Max(0d, belligerent.Economy.TreasuryBillions + value);
                 break;
 
+            case EffectKind.ReservesDelta:
+                belligerent.Economy.ReservesBillions = Math.Max(0d, belligerent.Economy.ReservesBillions + value);
+                break;
+
             case EffectKind.StockDelta:
                 if (!string.IsNullOrWhiteSpace(effect.ResourceCode))
                 {
