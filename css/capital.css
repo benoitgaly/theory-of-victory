@@ -208,6 +208,41 @@
     overscroll-behavior-x: contain;
 }
 
+/* Les deux présentations du bandeau cohabitent dans la page ; c'est ici, et nulle part dans le
+   script, qu'on décide laquelle se voit. Une rotation de téléphone ne peut donc pas laisser le
+   plateau dans un état que personne n'a prévu. */
+.cap-tabbed { display: none; }
+
+.cap-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+/* Un onglet par camp, à sa couleur. Celui qu'on regarde est plein, l'autre attend en creux :
+   la distinction se fait au fond et non à un liseré, parce qu'un liseré de deux pixels ne se
+   voit pas à bout de bras. */
+.cap-tab {
+    flex: 1;
+    padding: 9px 10px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.cap-tab.ru[aria-pressed="true"] { background: var(--ru); border-color: var(--ru); color: #fff; }
+.cap-tab.ua[aria-pressed="true"] { background: var(--ua); border-color: var(--ua); color: #fff; }
+
+.cap-page { display: none; }
+.cap-page.on { display: block; }
+
 @media (max-width: 900px) {
     /* La largeur sous laquelle les petites capitales du bandeau cessent d'être lisibles.
        Mesurée, pas devinée : à 940 px, les libellés de 9,5 px rendent à 7,2 px, ce qui est le
@@ -220,4 +255,14 @@
 
     .capital-band,
     .capital-scissor { padding: 14px 12px 12px; }
+}
+
+/* Sous cette largeur, le vis-à-vis ne tient plus : ou bien on réduit tout et plus rien ne se
+   lit, ou bien on fait défiler et on compare deux camps de mémoire. L'onglet tranche — un camp
+   entier, à sa taille, et l'autre à un doigt. La plaque d'un seul camp tient dans 690 unités,
+   donc elle ne défile pas. */
+@media (max-width: 720px) {
+    .cap-wide { display: none; }
+    .cap-tabbed { display: block; }
+    .cap-page .cap-svg { min-width: 0; width: 100%; }
 }
