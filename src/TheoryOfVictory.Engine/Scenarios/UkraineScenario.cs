@@ -171,6 +171,19 @@ public static class UkraineScenario
         russia.Economy.WarBudgetCeilingShare = 0.028d;
         russia.Economy.MilitaryFiscalShare = 0.085d;
         russia.Economy.ReserveDrawRate = 0.12d;
+        // L'assiette du poste civil, décomposée au lieu d'être posée. Elle valait 0,24 de la
+        // capacité productive, un nombre unique pour les deux camps qui ne disait ni ce qu'il
+        // contenait ni ce qu'il excluait — et qui comptait donc une deuxième fois le pétrole et
+        // les centrales que le bandeau dessine déjà sur leurs propres rangées.
+        //
+        // 0,414 d'industrie moins 0,174 d'énergie laissent les mêmes 0,24 au trimestre de paix
+        // qui ouvre la partie : le point de départ ne bouge pas, seule la suite bouge.
+        // Sources : Rosstat pour le poids du secteur pétro-gazier en 2021, SIPRI pour la
+        // dépense militaire — data/historical-figures.json, figure civilian-ru, où la série
+        // court de 2021 à 2026 et où seule l'année d'ouverture est marquée « retenue ».
+        russia.Economy.IndustrialShareOfCapacity = 0.414d;
+        russia.Economy.EnergyShareOfCapacity = 0.174d;
+        russia.Economy.PeacetimeMilitaryShareOfGdp = 0.041d;
         russia.Economy.CivilianGrowthPerTurn = 0.003d;
         russia.Economy.MilitarySpendingMultiplier = 0.6d;
         russia.Economy.CapitalDecayPerTurn = 0.007d;
@@ -335,6 +348,14 @@ public static class UkraineScenario
         ukraine.Economy.WarBudgetCeilingShare = 0.072d;
         ukraine.Economy.MilitaryFiscalShare = 0.62d;
         ukraine.Economy.ReserveDrawRate = 0.09d;
+        // Même décomposition côté ukrainien, à une case vide près : la part de l'énergie dans
+        // le PIB d'avant-guerre n'a PAS été trouvée à une source ouvrable, et elle vaut donc
+        // zéro ici plutôt qu'un nombre plausible. L'assiette industrielle porte du coup la
+        // même valeur qu'avant, 0,24, et le poste ukrainien démarre là où il démarrait.
+        // Source de la dépense militaire de paix : SIPRI, 3,2 % du PIB en 2021.
+        ukraine.Economy.IndustrialShareOfCapacity = 0.24d;
+        ukraine.Economy.EnergyShareOfCapacity = 0d;
+        ukraine.Economy.PeacetimeMilitaryShareOfGdp = 0.032d;
         ukraine.Economy.CivilianGrowthPerTurn = -0.02d;
         ukraine.Economy.MilitarySpendingMultiplier = 0.35d;
         ukraine.Economy.CapitalDecayPerTurn = 0.014d;

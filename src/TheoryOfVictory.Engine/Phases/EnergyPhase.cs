@@ -8,15 +8,9 @@ namespace TheoryOfVictory.Engine.Phases;
 /// </summary>
 public sealed class EnergyPhase : ITurnPhase
 {
-    /// <summary>
-    /// Share of the sustainable productive capacity that is civilian plant — warehouses,
-    /// distribution, consumer lines — rather than services, farmland or arms works. A working
-    /// order of magnitude for both economies, and the parameter that decides whether burning a
-    /// distribution hub is a nuisance or a crisis: at 0,24 a sustained campaign of two or three
-    /// quarters costs eight to twelve points of discontent, which is sensible without ever
-    /// being decisive on its own.
-    /// </summary>
-    private const double CivilianShareOfCapacity = 0.24d;
+    /// <summary>Share of the gap to its target the civilian plant closes each quarter.</summary>
+    private const double CivilianAdjustmentPerTurn = 0.2d;
+
 
     public string Name
     {
@@ -30,15 +24,24 @@ public sealed class EnergyPhase : ITurnPhase
             Belligerent belligerent = context.State.Get(side);
             belligerent.Grid.Repair();
 
-            // Warehouses are rebuilt on the same rhythm as substations, and the civilian base
-            // is sized off the economy the first time anyone looks at it, so no scenario has
-            // to state a figure it does not own.
+            // Warehouses are rebuilt on the same rhythm as substations. The civilian plant is
+            // then re-sized, every turn and not once at the outset: it used to be a fixed share
+            // of the economy, posed at 0,24, which meant that a country pouring a fifth of its
+            // GDP into the war owned exactly as much civilian industry as one at peace. What
+            // the war takes, the civilian base stops getting — unless somebody else is paying,
+            // which is the whole difference between the two belligerents here.
             belligerent.Civilian.Repair();
-            if (belligerent.Civilian.CapacityBillions <= 0d)
-            {
-                belligerent.Civilian.CapacityBillions =
-                    belligerent.Economy.ProductiveCapacityBillions * CivilianShareOfCapacity;
-            }
+
+            // Le stock rejoint sa cible, il ne saute pas dessus. Posée telle quelle, la cible
+            // faisait perdre trente pour cent d'appareil civil au trimestre où l'aide s'arrête
+            // et les rendait au suivant : un yo-yo qu'aucune usine ne sait faire. Un cinquième
+            // de l'écart par trimestre, c'est-à-dire quelques années pour encaisser un choc,
+            // ce qui est le rythme auquel une industrie se démonte ou se rebâtit.
+            double target = belligerent.Economy.CivilianCapacityBillions(belligerent.Foreign.EffectiveGrantBillions);
+            belligerent.Civilian.CapacityBillions = belligerent.Civilian.CapacityBillions <= 0d
+                ? target
+                : belligerent.Civilian.CapacityBillions
+                    + (target - belligerent.Civilian.CapacityBillions) * CivilianAdjustmentPerTurn;
 
             double civilian = belligerent.Grid.CivilianSupplyRatio(context.State.Season);
             double industrial = belligerent.Grid.IndustrialSupplyRatio(context.State.Season);

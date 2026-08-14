@@ -55,6 +55,60 @@ public sealed class Economy
     /// <summary>What this turn's revenue actually makes fundable, computed at the revenue phase.</summary>
     public double WarFundableBillions { get; set; }
 
+    /// <summary>
+    /// Share of the productive capacity that is INDUSTRY of any kind — the plant, before
+    /// anything is carved out of it. Services, farmland and trade are outside it and always
+    /// were: this post has never claimed to hold the whole economy.
+    /// </summary>
+    public double IndustrialShareOfCapacity { get; set; }
+
+    /// <summary>
+    /// Share of the productive capacity produced by the energy sector. Carved out of the
+    /// industrial base, because the band already draws it twice over — the power plants and
+    /// the oil — and a barrel counted in both places inflates the balance sheet on both sides.
+    /// </summary>
+    public double EnergyShareOfCapacity { get; set; }
+
+    /// <summary>
+    /// Whatever the war takes, the civilian plant stops getting. This is the share it may
+    /// never fall below: an economy at war does not stop feeding its people, and a post that
+    /// can reach zero would say it does.
+    /// </summary>
+    public double CivilianFloorShare { get; set; } = 0.06d;
+
+    /// <summary>
+    /// What a country already spent on its army while at peace. Carving the WHOLE war effort
+    /// out of the civilian base would say that an army costs a country its industry, which is
+    /// false: only the surplus over the peacetime line is a war economy.
+    /// </summary>
+    public double PeacetimeMilitaryShareOfGdp { get; set; }
+
+    /// <summary>
+    /// What the civilian plant is worth this turn, in billions: the industrial base, less the
+    /// energy sector the band already draws twice over, less the part of the war effort the
+    /// economy has to fund out of its own production.
+    ///
+    /// That last term is the whole point. A war paid for by somebody else's money, by the rent
+    /// on a barrel or by a sovereign fund built in peacetime costs the civilian base NOTHING —
+    /// which is exactly why both belligerents can hold four years without their people going
+    /// hungry, and exactly why the day the aid stops or the barrel falls is the day it starts
+    /// showing up on this row. The band stops asserting that the two economies are alike and
+    /// starts showing which one is being eaten.
+    /// </summary>
+    public double CivilianCapacityBillions(double aidBillions)
+    {
+        double funded = Math.Max(aidBillions, 0d)
+            + Math.Max(LastTurnOilRevenueBillions, 0d)
+            + Math.Max(LastTurnReserveDrawBillions, 0d);
+
+        double borne = Math.Max(LastTurnMilitarySpendBillions - funded, 0d) * 4d
+            - (HeadlineGdpBillions * PeacetimeMilitaryShareOfGdp);
+
+        double warShare = HeadlineGdpBillions > 0d ? Math.Max(borne, 0d) / HeadlineGdpBillions : 0d;
+        double left = IndustrialShareOfCapacity - EnergyShareOfCapacity - warShare;
+        return ProductiveCapacityBillions * Math.Max(left, CivilianFloorShare);
+    }
+
     /// <summary>Baseline civilian growth per turn, before war effects.</summary>
     public double CivilianGrowthPerTurn { get; set; } = 0.004d;
 
