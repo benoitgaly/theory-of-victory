@@ -310,6 +310,26 @@
       "statedUpdate": "La fiche affiche « Publication Date 06/2026 » — mois seul, sans jour",
       "kind": "Mesure publiée",
       "note": "Sert uniquement à établir que le fichier Release 30 téléchargé est bien celui que l'éditeur sert aujourd'hui comme version courante : le bouton « XLSX Download » pointe exactement sur l'adresse utilisée ici. Elle ne donne PAS la date de mise en ligne au jour près — « 06/2026 » désigne la fin de période couverte, pas la publication, laquelle est intervenue plus tard puisque le communiqué qui accompagne cette release est daté du 13 août 2026."
+    },
+    {
+      "code": "banque-mondiale-pib-2021",
+      "organisation": "Banque mondiale",
+      "title": "PIB aux prix courants du marché, en dollars des États-Unis — Russie et Ukraine, année 2021",
+      "url": "https://api.worldbank.org/v2/country/RUS;UKR/indicator/NY.GDP.MKTP.CD?date=2021&format=json",
+      "capture": "14 août 2026",
+      "statedUpdate": "Indicateur NY.GDP.MKTP.CD, millésime 2021",
+      "kind": "Mesure publiée",
+      "note": "L'adresse est celle de l'interface de données, et non celle d'une page de tableau de bord : elle porte l'année dans son URL et rend exactement les deux nombres cités, sans mise en page à interpréter. Le millésime 2021 est le dernier exercice complet avant l'invasion."
+    },
+    {
+      "code": "banque-mondiale-pop-2021",
+      "organisation": "Banque mondiale",
+      "title": "Population totale — Russie et Ukraine, année 2021",
+      "url": "https://api.worldbank.org/v2/country/RUS;UKR/indicator/SP.POP.TOTL?date=2021&format=json",
+      "capture": "14 août 2026",
+      "statedUpdate": "Indicateur SP.POP.TOTL, millésime 2021",
+      "kind": "Mesure publiée",
+      "note": "Série construite sur les estimations des Nations unies, qui rattachent la Crimée à l'Ukraine. Le recensement russe de 2021 compte au contraire 146,2 millions d'habitants, Crimée incluse : l'écart d'environ deux millions ne change pas l'ordre de grandeur du rapport entre les deux pays."
     }
   ],
   "figures": [
@@ -1337,6 +1357,84 @@
           "confidenceWhy": "Ligne publiée par l'émetteur, composée à cette date de deux actifs seulement : 189 793,8 millions de yuans et 141 082,8 kg d'or.",
           "retained": false,
           "why": "Dernier point connu, et le plus parlant : 46,4 Md$ mobilisables, soit 41 % du niveau d'octobre 2021 et 27,6 % seulement du fonds, ou 1,5 % du PIB. Deux avertissements l'accompagnent. D'abord, une part de ce montant est de l'or dont la valeur en dollars a fortement monté depuis 2021 : la liquidité affichée dépend d'un cours, pas d'un encaissement. Ensuite, ce fonds n'est pas hors d'atteinte du gel occidental — le règlement du Conseil du 12 décembre 2025 vise nommément le Fonds national de bien-être aux côtés de la banque centrale."
+        }
+      ]
+    },
+    {
+      "code": "civilian-ru",
+      "label": "Usines civiles — Russie",
+      "unit": "Md$",
+      "engineSide": "invader",
+      "enginePost": "civilian",
+      "observations": [
+        {
+          "date": "2021",
+          "value": 1829.2,
+          "unit": "Md$",
+          "sourceCode": "banque-mondiale-pib-2021",
+          "confidence": "Haute",
+          "confidenceWhy": "Mesure publiée par la Banque mondiale, relevée sur son interface de données, sans conversion ni interpolation.",
+          "retained": false,
+          "why": "Le PIB entier n'est pas ce que ce poste porte, mais c'est de lui que tout part. Le scénario ouvre sur un chiffre arrondi de 1 800 Md$, dont 1 720 de capacité productive."
+        },
+        {
+          "date": "2021",
+          "value": 144.7,
+          "unit": "M hab.",
+          "sourceCode": "banque-mondiale-pop-2021",
+          "confidence": "Haute",
+          "confidenceWhy": "Estimation des Nations unies reprise par la Banque mondiale. L'incertitude porte sur le rattachement de la Crimée, pas sur l'ordre de grandeur.",
+          "retained": false,
+          "why": "La population n'entre dans aucun calcul du moteur. Elle est citée ici parce qu'elle répond à la question que le bandeau pose sans le vouloir : l'écart entre les deux appareils civils tient pour un tiers au nombre d'habitants et pour deux tiers à ce que chacun produit."
+        },
+        {
+          "date": "1er octobre 2021",
+          "value": 2064.0,
+          "unit": "Md$",
+          "sourceCode": null,
+          "confidence": "Moyenne",
+          "confidenceWhy": "Deux conventions du jeu, assumées comme telles : la part civile de l'appareil productif, posée à 24 %, et la capitalisation à cinq années de production. Ni l'une ni l'autre n'est mesurée ; seule leur entrée, le PIB, l'est.",
+          "retained": true,
+          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 1 720 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 412,8 Md$ par an, que la capitalisation porte à 2 064 Md$. C'est le premier poste du bilan parce qu'il porte toute l'économie non militaire, quand les six autres sont des tranches étroites."
+        }
+      ]
+    },
+    {
+      "code": "civilian-ua",
+      "label": "Usines civiles — Ukraine",
+      "unit": "Md$",
+      "engineSide": "defender",
+      "enginePost": "civilian",
+      "observations": [
+        {
+          "date": "2021",
+          "value": 199.8,
+          "unit": "Md$",
+          "sourceCode": "banque-mondiale-pib-2021",
+          "confidence": "Haute",
+          "confidenceWhy": "Mesure publiée par la Banque mondiale, relevée sur son interface de données, sans conversion ni interpolation.",
+          "retained": false,
+          "why": "Le PIB entier n'est pas ce que ce poste porte, mais c'est de lui que tout part. Le scénario ouvre sur un chiffre arrondi de 196 Md$, dont 188 de capacité productive."
+        },
+        {
+          "date": "2021",
+          "value": 44.3,
+          "unit": "M hab.",
+          "sourceCode": "banque-mondiale-pop-2021",
+          "confidence": "Haute",
+          "confidenceWhy": "Estimation des Nations unies reprise par la Banque mondiale. L'incertitude porte sur le rattachement de la Crimée, pas sur l'ordre de grandeur.",
+          "retained": false,
+          "why": "La population n'entre dans aucun calcul du moteur. Elle est citée ici parce qu'elle répond à la question que le bandeau pose sans le vouloir : l'écart entre les deux appareils civils tient pour un tiers au nombre d'habitants et pour deux tiers à ce que chacun produit."
+        },
+        {
+          "date": "1er octobre 2021",
+          "value": 225.6,
+          "unit": "Md$",
+          "sourceCode": null,
+          "confidence": "Moyenne",
+          "confidenceWhy": "Deux conventions du jeu, assumées comme telles : la part civile de l'appareil productif, posée à 24 %, et la capitalisation à cinq années de production. Ni l'une ni l'autre n'est mesurée ; seule leur entrée, le PIB, l'est.",
+          "retained": true,
+          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 188 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 45,1 Md$ par an, que la capitalisation porte à 226 Md$. C'est le premier poste du bilan parce qu'il porte toute l'économie non militaire, quand les six autres sont des tranches étroites."
         }
       ]
     }

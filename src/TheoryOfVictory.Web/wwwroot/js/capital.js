@@ -36,16 +36,24 @@
         { code: "oil", colour: "#8a5a2b", yield: "recette pour qui l'exporte, charge nette pour qui l'importe" },
         { code: "civilian", colour: "#6f8060", yield: "le niveau de vie, donc le consentement à la guerre" },
         { code: "arms", colour: "#4a6070", yield: "les obus, les drones, les missiles, les intercepteurs" },
-        { code: "regime", colour: "#8a4b2a", yield: "le capital politique du trimestre, celui qui paie les cartes" },
         // Un flux donné à l'un, acheté par l'autre — et dans les deux cas c'est la position
         // diplomatique qui décide s'il se resserre ou se relâche. Cette position est mesurée
         // par le moteur et se lit sur ce poste, dans l'infobulle : elle n'a plus de colonne.
-        { code: "foreign", colour: "#2f8f8f", yield: "du matériel obtenu hors de la capacité nationale : donné à l'un, acheté par l'autre, et c'est la position diplomatique qui décide s'il continue" }
+        { code: "foreign", colour: "#2f8f8f", yield: "du matériel obtenu hors de la capacité nationale : donné à l'un, acheté par l'autre, et c'est la position diplomatique qui décide s'il continue" },
+
+        // La tenue du pouvoir ferme le bandeau, séparée des six autres, et ne se compte pas en
+        // dollars. Le moteur lui donne bien un montant — ce que le régime peut encore dépenser
+        // pour se tenir en place — mais un consentement n'est pas un avoir : le poser sur la
+        // même règle que deux mille milliards d'appareil industriel en faisait un trait, et
+        // laissait croire qu'on pouvait comparer les deux. Il se lit sur son indice, cent au
+        // départ, et se dessine en jauge et non en masse. Le montant reste dans l'infobulle,
+        // parce que c'est lui que le total « flux » compte.
+        { code: "regime", colour: "#8a4b2a", gauge: true, yield: "le capital politique du trimestre, celui qui paie les cartes" }
     ];
 
     var NAMES = {
         reserves: "Réserves", grid: "Centrales", oil: "Pétrole", civilian: "Usines civiles",
-        arms: "Armement", regime: "Tenue du pouvoir", foreign: "Soutien extérieur"
+        arms: "Usines d'armement", regime: "Tenue du pouvoir", foreign: "Soutien extérieur"
     };
 
     // Le poste que le moteur mesure encore, et que le bandeau ne dessine plus : le soutien
@@ -89,9 +97,15 @@
 
     var seq = 0;
 
+    // Un attribut absent se passe en null, et il ne doit PAS être écrit : setAttribute écrirait
+    // la chaîne « null », que le navigateur ignore poliment mais qui traîne dans le DOM et
+    // trompe quiconque l'inspecte. Même règle que dans depth.js.
     function svg(tag, attrs) {
         var n = document.createElementNS(NS, tag);
-        Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+        Object.keys(attrs || {}).forEach(function (k) {
+            if (attrs[k] === null || attrs[k] === undefined) { return; }
+            n.setAttribute(k, attrs[k]);
+        });
         return n;
     }
 
@@ -312,17 +326,19 @@
         defs.appendChild(p);
     }
 
-    // L'arête de coupe n'est jamais droite : on doit voir le morceau arraché, pas un
-    // rectangle propre. Même convention que les cinq parcs — elle est ici verticale, puisque
-    // les masses poussent à l'horizontale.
-    function tornEdge(x, y, h, amplitude) {
-        var steps = 5, d = "M" + x + " " + y;
-        for (var i = 1; i <= steps; i++) {
-            var py = y + (h * i / steps);
-            var wobble = i % 2 === 0 ? amplitude : -amplitude;
-            d += " L" + (x + (i === steps ? 0 : wobble)).toFixed(1) + " " + py.toFixed(1);
-        }
-        return d;
+    // Les rayures du gain : ce que le trimestre a ajouté au bout de la masse. Dans l'encre du
+    // poste, jamais en rouge — c'est un gain — et hachuré plutôt que plein, pour qu'on voie que
+    // ce bout-là est arrivé ce trimestre et n'était pas là avant. Plus serré et plus fin que la
+    // rayure de la charge, qui dit tout autre chose et ne doit pas se confondre avec lui.
+    function slicePattern(defs, id, colour) {
+        var p = svg("pattern", {
+            id: id, width: "4", height: "4", patternUnits: "userSpaceOnUse",
+            patternTransform: "rotate(45)"
+        });
+        p.appendChild(svg("line", {
+            x1: "0", y1: "0", x2: "0", y2: "4", stroke: colour, "stroke-width": "1.6", opacity: "0.85"
+        }));
+        defs.appendChild(p);
     }
 
     // Les rayures de la charge : le pétrole ukrainien n'est pas une recette mais une facture,
@@ -351,7 +367,34 @@
     // propre trajectoire. C'est le pourcentage, imprimé contre chaque masse, qui la porte
     // désormais : la longueur dit ce qu'on possède, le pourcentage dit ce que le trimestre en
     // a fait. Deux questions, deux réponses, et plus une seule ligne qui prétend aux deux.
-    function cartouche(host, defs, post, colour, invader, hatchId, pressure, row, scale, diplomatic) {
+    // La jauge de la tenue du pouvoir : une piste courte, cent au départ, et ce qu'il en reste.
+    // Ni la longueur des masses ni leur règle ne s'y appliquent — c'est bien le propos.
+    var GAUGE = 96;
+
+    function gaugeRow(g, post, colour, invader, top) {
+        var anchor = invader ? GUT_L : GUT_R;
+        var dir = invader ? -1 : 1;
+        var share = Math.max(0, Math.min(post.index / 100, 1.4));
+        var full = anchor + dir * GAUGE;
+        var end = anchor + dir * Math.min(GAUGE * share, GAUGE);
+
+        g.appendChild(svg("rect", {
+            x: Math.min(anchor, full), y: top + 3, width: GAUGE, height: BAR_H - 6,
+            fill: "#e6e0d0"
+        }));
+        g.appendChild(svg("rect", {
+            x: Math.min(anchor, end), y: top + 3, width: Math.abs(end - anchor), height: BAR_H - 6,
+            fill: colour, opacity: "0.9"
+        }));
+        // Le repère du départ : cent, la ligne au-delà de laquelle le régime tient mieux
+        // qu'au premier jour. Il ne bouge jamais, donc il se lit comme une graduation.
+        g.appendChild(svg("line", {
+            x1: full, y1: top, x2: full, y2: top + BAR_H,
+            stroke: "#8b8578", "stroke-width": "1", opacity: "0.8"
+        }));
+    }
+
+    function cartouche(host, defs, post, colour, invader, hatchId, pressure, row, scale, diplomatic, gauge) {
         var yc = HEAD_H + row * ROW_H + ROW_H / 2;
         var top = yc - BAR_H / 2;
         var anchor = invader ? GUT_L : GUT_R;
@@ -360,7 +403,7 @@
         var charge = !!post.inverted;
         var len = Math.min(Math.max(post.value, 0) * scale, MAX_LEN);
         var was = Math.min(Math.max(post.opening, 0) * scale, MAX_LEN);
-        var ruined = index < RUINED_INDEX && !charge;
+        var ruined = index < RUINED_INDEX && !charge && !gauge;
         var edge = anchor + dir * len;
         var wasEdge = anchor + dir * was;
 
@@ -420,18 +463,24 @@
         // le trimestre précédent —, et les deux autres descendent dans l'infobulle.
         var body = span(anchor, edge);
 
+        if (gauge) {
+            gaugeRow(g, post, colour, invader, top);
+        }
+
         // Une facture n'est pas un avoir, et un poste tombé sous le quart de son départ n'est
         // plus une masse : ces deux-là se disent par la MATIÈRE de la barre — rayée pour ce
         // qu'on paie, hachurée pour ce qui est en ruine — et non par un signe posé à côté.
         var fill = charge ? "url(#" + chargeId + ")" : (ruined ? "url(#" + hatchId + ")" : colour);
-        g.appendChild(svg("rect", {
-            x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
-            fill: fill,
-            stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
-            "stroke-width": charge || ruined ? "0.9" : "0.7"
-        }));
+        if (!gauge) {
+            g.appendChild(svg("rect", {
+                x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
+                fill: fill,
+                stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
+                "stroke-width": charge || ruined ? "0.9" : "0.7"
+            }));
+        }
 
-        if (!charge && !ruined) {
+        if (!charge && !ruined && !gauge) {
             // Chant supérieur biseauté : la matière a une épaisseur, comme les douves.
             g.appendChild(svg("rect", {
                 x: body.x + 1.2, y: top + 1.2, width: Math.max(body.width - 2.4, 0), height: 3.2,
@@ -440,41 +489,39 @@
         }
 
         // CE QUE LE TRIMESTRE A FAIT — dans le prolongement de la masse, jamais un trait posé
-        // par-dessus. La barre s'est allongée : le bout gagné est de la même encre, en clair.
-        // Elle a reculé : ce qui manque reste dessiné en creux, au bout, là où c'était. On lit
-        // « d'ici à là » sans rien consulter, et le pourcentage au bord dit de combien.
+        // par-dessus. DEUX états, et deux seulement, qui ne dépendent que du sens :
+        //
+        //   · la barre a reculé  → le manque reste dessiné EN CREUX, au bout, là où c'était ;
+        //   · la barre s'est allongée → le bout gagné est HACHURÉ dans l'encre du poste.
+        //
+        // Le creux se remplissait auparavant d'une hachure rouge dès que le moteur savait nommer
+        // un coupable, et restait vide sinon : une baisse sur deux changeait donc d'apparence
+        // sans que rien à l'écran ne dise pourquoi, et on cherchait une règle qui n'existait pas.
+        // Le coupable se lit dans l'infobulle ; il ne se devine pas à la texture d'un creux.
         var moved = Math.abs(post.percentDelta) >= FLAT_PERCENT;
-        if (moved && Math.abs(len - was) > 0.8) {
+        if (!gauge && moved && Math.abs(len - was) > 0.8) {
             var slice = span(edge, wasEdge);
+            var gained = len > was;
+            var gainId = null;
 
-            if (len > was) {
-                g.appendChild(svg("rect", {
-                    x: slice.x, y: top, width: slice.width, height: BAR_H,
-                    fill: colour, opacity: "0.32"
-                }));
-            } else {
-                // Une perte que le moteur sait imputer garde sa signature : la hachure rouge et
-                // l'arête déchirée. Une perte ordinaire n'est qu'un creux — le coupable se lit
-                // dans l'infobulle, il ne se devine pas à la nuance d'un gris.
-                var blamed = post.destruction > 0;
-                g.appendChild(svg("rect", {
-                    x: slice.x, y: top, width: slice.width, height: BAR_H,
-                    fill: blamed ? "url(#" + hatchId + ")" : "none",
-                    stroke: colour, "stroke-width": "1", "stroke-dasharray": "3 2", opacity: "0.8"
-                }));
-                if (blamed) {
-                    g.appendChild(svg("path", {
-                        d: tornEdge(edge, top, BAR_H, 2.2),
-                        fill: "none", stroke: "#a8322a", "stroke-width": "1.1", opacity: "0.85"
-                    }));
-                }
+            if (gained) {
+                gainId = "capGain" + (seq++);
+                slicePattern(defs, gainId, colour);
             }
+
+            g.appendChild(svg("rect", {
+                x: slice.x, y: top, width: slice.width, height: BAR_H,
+                fill: gained ? "url(#" + gainId + ")" : "none",
+                stroke: colour, "stroke-width": "1",
+                "stroke-dasharray": gained ? null : "3 2",
+                opacity: "0.85"
+            }));
         }
 
         // La masse bute sur son plafond : le chevron dit que la ligne est hors d'échelle, et
         // le chiffre de sa bande dit de combien. Il se grave DANS le chant de la masse, jamais
         // au-delà — posé dehors, il viendrait buter contre le chiffre.
-        if (post.value * scale > MAX_LEN) {
+        if (!gauge && post.value * scale > MAX_LEN) {
             var cx = edge - dir * 9;
             g.appendChild(svg("path", {
                 d: "M" + cx + " " + (yc - 5) + " l" + (dir * 5) + " 5 l" + (-dir * 5) + " 5",
@@ -512,7 +559,10 @@
             href: provenanceHref(post, invader),
             class: "cap-link"
         });
-        text(figure, out, yc + 6, (charge ? "−" : "") + money(post.value), {
+        // Un consentement se lit sur cent, pas en milliards : la jauge imprime son indice. Le
+        // montant que le moteur lui donne reste dans l'infobulle, parce que c'est lui que le
+        // total « flux » compte — l'écrire ici ferait croire qu'on peut le comparer au reste.
+        text(figure, out, yc + 6, gauge ? num(index, 0) + " %" : (charge ? "−" : "") + money(post.value), {
             "text-anchor": invader ? "start" : "end", class: "cap-value"
         });
         g.appendChild(figure);
@@ -732,11 +782,15 @@
         });
 
         // Un filet entre deux postes : c'est lui qui tient le regard sur sa ligne quand il
-        // traverse le bandeau d'un camp à l'autre.
+        // traverse le bandeau d'un camp à l'autre. Celui qui précède la dernière rangée est
+        // franc et non pâle : ce qui suit ne se compte pas dans la même unité que ce qui
+        // précède, et la coupure doit se voir avant qu'on ait lu quoi que ce soit.
         for (var r = 1; r < POSTS.length; r++) {
+            var parting = POSTS[r].gauge;
             s.appendChild(svg("line", {
                 x1: 22, y1: HEAD_H + r * ROW_H, x2: W - 22, y2: HEAD_H + r * ROW_H,
-                stroke: "#d9d1be", "stroke-width": "1", opacity: "0.55"
+                stroke: parting ? "#8b8578" : "#d9d1be",
+                "stroke-width": "1", opacity: parting ? "0.9" : "0.55"
             }));
         }
 
@@ -765,8 +819,8 @@
             var ruPressure = aimed && bottle.side === "invader" ? bottle.detail : null;
             var uaPressure = aimed && bottle.side !== "invader" ? bottle.detail : null;
 
-            if (ru) { cartouche(s, defs, ru, p.colour, true, hatchId, ruPressure, i, scale, carries ? ruDiplomatic : null); }
-            if (ua) { cartouche(s, defs, ua, p.colour, false, hatchId, uaPressure, i, scale, carries ? uaDiplomatic : null); }
+            if (ru) { cartouche(s, defs, ru, p.colour, true, hatchId, ruPressure, i, scale, carries ? ruDiplomatic : null, p.gauge); }
+            if (ua) { cartouche(s, defs, ua, p.colour, false, hatchId, uaPressure, i, scale, carries ? uaDiplomatic : null, p.gauge); }
         });
 
         // Le bandeau tient dans 1 240 unités de large : sur un téléphone, le laisser se
