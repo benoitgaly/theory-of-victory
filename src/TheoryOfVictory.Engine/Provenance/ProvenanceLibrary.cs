@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Provenance;
 
@@ -9,6 +10,13 @@ namespace TheoryOfVictory.Engine.Provenance;
 /// paragraphs compiled into the engine — which meant that adding an observation required a
 /// rebuild and that nothing could be checked without reading code. It is a data file now, and
 /// the rule that goes with it is simple: an observation without a dated source does not go in.
+///
+/// The file was split in two once the site became bilingual. The FIGURES live in
+/// historical-figures.json and exist exactly once: duplicating them per language would mean
+/// repeating every correction in every language, and losing the day someone forgets one. The
+/// PROSE lives in historical-figures.&lt;lang&gt;.json, keyed by an identifier rebuilt from the data
+/// itself. French is always loaded, and the requested language is laid over it — an observation
+/// nobody has translated yet reads in French rather than not at all.
 /// </summary>
 public static class ProvenanceLibrary
 {
@@ -18,13 +26,19 @@ public static class ProvenanceLibrary
         ReadCommentHandling = JsonCommentHandling.Skip,
     };
 
-    public static ProvenanceRegistry Load(string? dataDirectory = null)
+    public static ProvenanceRegistry Load(Language language = Language.French, string? dataDirectory = null)
     {
-        string path = ResolvePath(dataDirectory);
+        string path = ResolvePath(dataDirectory, "historical-figures.json");
         ProvenanceFile? file = JsonSerializer.Deserialize<ProvenanceFile>(File.ReadAllText(path), Options);
         if (file is null)
         {
             throw new InvalidDataException("historical-figures.json could not be read.");
+        }
+
+        TextFile texts = LoadTexts(dataDirectory, Language.French);
+        if (language != Language.French)
+        {
+            texts.Overlay(LoadTexts(dataDirectory, language));
         }
 
         ProvenanceRegistry registry = new();
@@ -40,16 +54,18 @@ public static class ProvenanceLibrary
                     $"Source '{dto.Code}' is declared twice in {path}: the second declaration would replace the first without anything saying so.");
             }
 
+            TextDto text = texts.Sources.GetValueOrDefault(dto.Code) ?? new TextDto();
+
             registry.Sources[dto.Code] = new FigureSource
             {
                 Code = dto.Code,
                 Organisation = dto.Organisation,
-                Title = dto.Title,
+                Title = text.Title ?? dto.Code,
                 Url = dto.Url,
                 Capture = dto.Capture,
                 StatedUpdate = dto.StatedUpdate,
                 Kind = dto.Kind,
-                Note = dto.Note,
+                Note = text.Note ?? string.Empty,
             };
         }
 
@@ -58,6 +74,9 @@ public static class ProvenanceLibrary
             List<FigureObservation> observations = [];
             foreach (ObservationDto observation in dto.Observations)
             {
+                string id = ProvenanceIds.Observation(dto.Code, observation.Date, observation.SourceCode, observation.Unit);
+                TextDto text = texts.Observations.GetValueOrDefault(id) ?? new TextDto();
+
                 observations.Add(new FigureObservation
                 {
                     Date = observation.Date,
@@ -65,16 +84,18 @@ public static class ProvenanceLibrary
                     Unit = observation.Unit,
                     SourceCode = observation.SourceCode,
                     Confidence = observation.Confidence,
-                    ConfidenceWhy = observation.ConfidenceWhy,
+                    ConfidenceWhy = text.ConfidenceWhy ?? string.Empty,
                     Retained = observation.Retained,
-                    Why = observation.Why,
+                    Why = text.Why ?? string.Empty,
                 });
             }
+
+            TextDto figureText = texts.Figures.GetValueOrDefault(dto.Code) ?? new TextDto();
 
             registry.Figures.Add(new HistoricalFigure
             {
                 Code = dto.Code,
-                Label = dto.Label,
+                Label = figureText.Label ?? dto.Code,
                 Unit = dto.Unit,
                 EngineSide = dto.EngineSide,
                 EnginePost = dto.EnginePost,
@@ -82,21 +103,26 @@ public static class ProvenanceLibrary
             });
         }
 
-        Validate(registry, path);
+        Validate(registry, texts, path);
         return registry;
     }
 
     /// <summary>
-    /// The two ways this database could lie while looking impeccable, both caught at load rather
-    /// than on the page.
+    /// The ways this database could lie while looking impeccable, all caught at load rather than
+    /// on the page.
     ///
     /// An observation citing a source the file does not define prints its value with nothing
     /// beside it — <see cref="ProvenanceRegistry.SourcesOf"/> derives the bibliography from what
     /// resolves, so the missing citation removes itself from the page instead of showing up as a
     /// gap. And a source without an address cannot be opened, which makes it a claim rather than
     /// a citation: the page would name an organisation and a title that nobody can go and check.
+    ///
+    /// The last one belongs to the split: a text keyed on something the data no longer contains
+    /// is a paragraph that will never be printed again. It is invisible from the page — the page
+    /// simply falls back — so it can only be caught here, and it is the signature of an
+    /// identifier that moved under the prose.
     /// </summary>
-    private static void Validate(ProvenanceRegistry registry, string path)
+    private static void Validate(ProvenanceRegistry registry, TextFile texts, string path)
     {
         foreach (FigureSource source in registry.Sources.Values)
         {
@@ -107,10 +133,15 @@ public static class ProvenanceLibrary
             }
         }
 
+        HashSet<string> observationIds = [];
+
         foreach (HistoricalFigure figure in registry.Figures)
         {
             foreach (FigureObservation observation in figure.Observations)
             {
+                observationIds.Add(ProvenanceIds.Observation(
+                    figure.Code, observation.Date, observation.SourceCode, observation.Unit));
+
                 if (observation.SourceCode is null)
                 {
                     // Deliberate, and the page says so in those words: a scenario constant that
@@ -125,22 +156,69 @@ public static class ProvenanceLibrary
                 }
             }
         }
+
+        foreach (string code in texts.Sources.Keys)
+        {
+            if (!registry.Sources.ContainsKey(code))
+            {
+                throw new InvalidOperationException(
+                    $"A translated text is keyed on source '{code}', which no longer exists in {path}: the paragraph would never be printed again.");
+            }
+        }
+
+        foreach (string code in texts.Figures.Keys)
+        {
+            if (registry.Find(code) is null)
+            {
+                throw new InvalidOperationException(
+                    $"A translated text is keyed on figure '{code}', which no longer exists in {path}: the label would never be printed again.");
+            }
+        }
+
+        foreach (string id in texts.Observations.Keys)
+        {
+            if (!observationIds.Contains(id))
+            {
+                throw new InvalidOperationException(
+                    $"A translated text is keyed on observation '{id}', which no longer exists in {path}: the paragraph would never be printed again.");
+            }
+        }
     }
 
-    private static string ResolvePath(string? dataDirectory)
+    private static TextFile LoadTexts(string? dataDirectory, Language language)
+    {
+        string name = $"historical-figures.{Languages.Code(language)}.json";
+        string path = ResolvePath(dataDirectory, name, required: language == Language.French);
+        if (!File.Exists(path))
+        {
+            // No catalogue at all for that language: everything falls back to French, which is
+            // the expected state of a language whose prose has not been written yet.
+            return new TextFile();
+        }
+
+        TextFile? texts = JsonSerializer.Deserialize<TextFile>(File.ReadAllText(path), Options);
+        if (texts is null)
+        {
+            throw new InvalidDataException($"{name} could not be read.");
+        }
+
+        return texts;
+    }
+
+    private static string ResolvePath(string? dataDirectory, string fileName, bool required = true)
     {
         if (!string.IsNullOrWhiteSpace(dataDirectory))
         {
-            return Path.Combine(dataDirectory, "historical-figures.json");
+            return Path.Combine(dataDirectory, fileName);
         }
 
-        string local = Path.Combine(AppContext.BaseDirectory, "data", "historical-figures.json");
-        if (File.Exists(local))
+        string local = Path.Combine(AppContext.BaseDirectory, "data", fileName);
+        if (File.Exists(local) || !required)
         {
             return local;
         }
 
-        throw new FileNotFoundException("historical-figures.json not found next to the executable.", local);
+        throw new FileNotFoundException($"{fileName} not found next to the executable.", local);
     }
 
     private sealed class ProvenanceFile
@@ -156,8 +234,6 @@ public static class ProvenanceLibrary
 
         public string Organisation { get; set; } = string.Empty;
 
-        public string Title { get; set; } = string.Empty;
-
         public string? Url { get; set; }
 
         public string? Capture { get; set; }
@@ -165,15 +241,11 @@ public static class ProvenanceLibrary
         public string? StatedUpdate { get; set; }
 
         public string Kind { get; set; } = string.Empty;
-
-        public string Note { get; set; } = string.Empty;
     }
 
     private sealed class FigureDto
     {
         public string Code { get; set; } = string.Empty;
-
-        public string Label { get; set; } = string.Empty;
 
         public string Unit { get; set; } = string.Empty;
 
@@ -196,10 +268,71 @@ public static class ProvenanceLibrary
 
         public string Confidence { get; set; } = string.Empty;
 
-        public string ConfidenceWhy { get; set; } = string.Empty;
-
         public bool Retained { get; set; }
+    }
 
-        public string Why { get; set; } = string.Empty;
+    /// <summary>
+    /// The prose of one language. One shape for the three families of text, because they are all
+    /// the same thing: a paragraph attached to an identifier that lives in the data file.
+    /// </summary>
+    private sealed class TextFile
+    {
+        public Dictionary<string, TextDto> Sources { get; set; } = [];
+
+        public Dictionary<string, TextDto> Figures { get; set; } = [];
+
+        public Dictionary<string, TextDto> Observations { get; set; } = [];
+
+        /// <summary>
+        /// Lays another language over French, field by field rather than entry by entry: a
+        /// translator who wrote the label but not the paragraph gets the label translated and
+        /// the paragraph in French, instead of losing one of the two.
+        /// </summary>
+        public void Overlay(TextFile other)
+        {
+            Merge(Sources, other.Sources);
+            Merge(Figures, other.Figures);
+            Merge(Observations, other.Observations);
+        }
+
+        private static void Merge(Dictionary<string, TextDto> into, Dictionary<string, TextDto> from)
+        {
+            foreach (KeyValuePair<string, TextDto> entry in from)
+            {
+                TextDto? existing = into.GetValueOrDefault(entry.Key);
+                if (existing is null)
+                {
+                    into[entry.Key] = entry.Value;
+                    continue;
+                }
+
+                into[entry.Key] = new TextDto
+                {
+                    Label = Pick(entry.Value.Label, existing.Label),
+                    Title = Pick(entry.Value.Title, existing.Title),
+                    Note = Pick(entry.Value.Note, existing.Note),
+                    Why = Pick(entry.Value.Why, existing.Why),
+                    ConfidenceWhy = Pick(entry.Value.ConfidenceWhy, existing.ConfidenceWhy),
+                };
+            }
+        }
+
+        private static string? Pick(string? translated, string? french)
+        {
+            return string.IsNullOrWhiteSpace(translated) ? french : translated;
+        }
+    }
+
+    private sealed class TextDto
+    {
+        public string? Label { get; set; }
+
+        public string? Title { get; set; }
+
+        public string? Note { get; set; }
+
+        public string? Why { get; set; }
+
+        public string? ConfidenceWhy { get; set; }
     }
 }

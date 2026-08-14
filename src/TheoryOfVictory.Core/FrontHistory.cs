@@ -1,6 +1,19 @@
 namespace TheoryOfVictory.Core;
 
 /// <summary>
+/// How the sentence of a quarter finds the quarter it belongs to, now that the chronicle and
+/// its prose live in two files. Year and season: the two things about a quarter that cannot
+/// move.
+/// </summary>
+public static class FrontHistoryIds
+{
+    public static string Quarter(int year, Season season)
+    {
+        return $"{year}|{season}";
+    }
+}
+
+/// <summary>
 /// The real position of the front at the END of one quarter, expressed in the twenty-zone
 /// vocabulary of <see cref="FrontHistory"/>. This is a chronicle, never an output of the model:
 /// nothing in this file is computed, everything in it is sourced.

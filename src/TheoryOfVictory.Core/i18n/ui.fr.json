@@ -1,0 +1,3 @@
+{
+  "_comment": "L'inventaire des étiquettes de l'interface. La clé est le texte français source, et la valeur lui est identique : ce fichier n'est pas une traduction, c'est la LISTE de ce qui doit en avoir une. Il est écrit par scripts/Sync-Translations.ps1, qui relit les appels à Localizer.Loc du code, et un test refuse la moindre divergence entre cette liste et ui.en.json."
+}

@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Les catalogues sont EMBARQUÉS, pas copiés à côté de l'exécutable : le site est figé en
+       HTML et publié sur un hébergement sans serveur, donc une traduction qui manquerait au
+       déploiement ne se rattraperait nulle part. -->
+  <ItemGroup>
+    <EmbeddedResource Include="i18n\*.json" />
+  </ItemGroup>
+
 </Project>

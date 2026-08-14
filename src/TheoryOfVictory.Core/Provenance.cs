@@ -1,6 +1,25 @@
 namespace TheoryOfVictory.Core;
 
 /// <summary>
+/// How a paragraph finds the figure it belongs to, now that the prose and the numbers live in
+/// two files. Written once, here, because the identifier has to be rebuilt identically by
+/// everything that touches the split — the loader, the tests, and the script that produced it.
+/// </summary>
+public static class ProvenanceIds
+{
+    /// <summary>
+    /// figure, date, source, unit. The source alone does not separate them: SIPRI publishes two
+    /// readings of the same year — a share of GDP and a share of public spending — from the same
+    /// fact sheet, and both belong in the registry. The VALUE is deliberately left out: a figure
+    /// gets corrected, and a correction must not orphan the paragraph that explains it.
+    /// </summary>
+    public static string Observation(string figureCode, string date, string? sourceCode, string unit)
+    {
+        return string.Join('|', figureCode, date, sourceCode ?? string.Empty, unit);
+    }
+}
+
+/// <summary>
 /// One source, named once and reusable by as many observations as need it. That reuse is the
 /// reason sources are a table rather than a field.
 /// </summary>

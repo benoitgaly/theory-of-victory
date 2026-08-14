@@ -1,16 +1,37 @@
 {
-  "vocabulary": ["crimea", "donbas_2014", "kyiv_axis", "chernihiv_axis", "sumy_axis",
-                 "kharkiv_north", "izioum", "lyman", "severodonetsk", "bakhmout",
-                 "avdiivka", "vouhledar", "pokrovsk", "koupiansk", "mariupol",
-                 "melitopol", "zaporijjia_south", "kherson_right", "kherson_left",
-                 "kursk_incursion"],
+  "vocabulary": [
+    "crimea",
+    "donbas_2014",
+    "kyiv_axis",
+    "chernihiv_axis",
+    "sumy_axis",
+    "kharkiv_north",
+    "izioum",
+    "lyman",
+    "severodonetsk",
+    "bakhmout",
+    "avdiivka",
+    "vouhledar",
+    "pokrovsk",
+    "koupiansk",
+    "mariupol",
+    "melitopol",
+    "zaporijjia_south",
+    "kherson_right",
+    "kherson_left",
+    "kursk_incursion"
+  ],
   "quarters": [
     {
-      "year": 2021, "season": "Autumn",
-      "heldByInvader": ["crimea", "donbas_2014", "kursk_incursion"],
+      "year": 2021,
+      "season": "Autumn",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "kursk_incursion"
+      ],
       "contested": [],
       "heldByDefender": [],
-      "headline": "Rien ne bouge : la ligne de 2014, la Crimée et les deux enclaves du Donbass. Cent mille hommes se massent aux frontières sans qu'un coup soit tiré.",
       "sources": [
         "Reuters, 3 novembre 2021 — premiers rapports de concentration de forces russes près de la frontière ukrainienne",
         "ISW, Russian Campaign Assessments, décembre 2021 — suivi du déploiement pré-invasion",
@@ -19,13 +40,27 @@
       "confidence": "haute"
     },
     {
-      "year": 2022, "season": "Winter",
-      "heldByInvader": ["crimea", "donbas_2014", "kyiv_axis", "chernihiv_axis", "sumy_axis",
-                        "kharkiv_north", "koupiansk", "melitopol", "zaporijjia_south",
-                        "kherson_right", "kherson_left", "kursk_incursion"],
-      "contested": ["izioum", "mariupol"],
+      "year": 2022,
+      "season": "Winter",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "kyiv_axis",
+        "chernihiv_axis",
+        "sumy_axis",
+        "kharkiv_north",
+        "koupiansk",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_right",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "izioum",
+        "mariupol"
+      ],
       "heldByDefender": [],
-      "headline": "L'invasion du 24 février sur quatre axes. Au nord, la colonne de Kyiv atteint Hostomel, Boutcha et Irpin ; Tchernihiv et Soumy sont contournées et assiégées. Au sud, Melitopol tombe le 1er mars et Kherson le 2. Marioupol est encerclée dès le 2 mars. Pic d'occupation d'environ 120 000 km² à la mi-mars.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 2 mars 2022 (prise de Kherson) et 31 mars 2022",
         "BBC / Reuters, 2 mars 2022 — Kherson, première grande ville tombée",
@@ -35,13 +70,26 @@
       "confidence": "haute"
     },
     {
-      "year": 2022, "season": "Spring",
-      "heldByInvader": ["crimea", "donbas_2014", "izioum", "lyman", "koupiansk", "mariupol",
-                        "melitopol", "zaporijjia_south", "kherson_right", "kherson_left",
-                        "kursk_incursion"],
-      "contested": ["kharkiv_north", "severodonetsk"],
+      "year": 2022,
+      "season": "Spring",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "izioum",
+        "lyman",
+        "koupiansk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_right",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "severodonetsk"
+      ],
       "heldByDefender": [],
-      "headline": "Le retrait du nord s'achève entre le 1er et le 6 avril : Kyiv, Tchernihiv et Soumy sont libérées. C'est une décision de commandement, pas une rupture du front — la manœuvre a échoué, elle n'a pas été enfoncée. Izioum tombe le 1er avril, Lyman le 27 mai, Marioupol capitule le 20 mai, Sievierodonetsk le 25 juin.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 29 mars et 6 avril 2022 (retrait de l'axe nord)",
         "AP / Reuters, 20 mai 2022 — reddition d'Azovstal, chute de Marioupol",
@@ -51,12 +99,25 @@
       "confidence": "haute"
     },
     {
-      "year": 2022, "season": "Summer",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "mariupol", "melitopol",
-                        "zaporijjia_south", "kherson_right", "kherson_left", "kursk_incursion"],
-      "contested": ["lyman", "koupiansk", "bakhmout"],
+      "year": 2022,
+      "season": "Summer",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_right",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "lyman",
+        "koupiansk",
+        "bakhmout"
+      ],
       "heldByDefender": [],
-      "headline": "Lyssytchansk tombe le 3 juillet, achevant la conquête de l'oblast de Louhansk ; la Russie marque une pause opérationnelle. Puis la percée de Kharkiv, du 6 au 12 septembre : Balakliia, Izioum et Koupiansk sont reprises en une semaine, environ 6 000 km² regagnés. La bataille de Bakhmout s'ouvre le 1er août.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 3 juillet 2022 (chute de Lyssytchansk)",
         "ISW, Russian Offensive Campaign Assessment, 10-12 septembre 2022 (contre-offensive de Kharkiv)",
@@ -66,12 +127,22 @@
       "confidence": "haute"
     },
     {
-      "year": 2022, "season": "Autumn",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "mariupol", "melitopol",
-                        "zaporijjia_south", "kherson_left", "kursk_incursion"],
-      "contested": ["bakhmout"],
+      "year": 2022,
+      "season": "Autumn",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "bakhmout"
+      ],
       "heldByDefender": [],
-      "headline": "Lyman est repris le 1er octobre. Le 11 novembre, la Russie achève l'évacuation de Kherson rive droite et le Dniepr devient la ligne — le seul chef-lieu d'oblast repris de toute la guerre. Le front sud ne bougera plus pendant deux ans.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 1er octobre 2022 (Lyman)",
         "ISW, Russian Offensive Campaign Assessment, 9-11 novembre 2022 (retrait de Kherson)",
@@ -81,12 +152,22 @@
       "confidence": "haute"
     },
     {
-      "year": 2023, "season": "Winter",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "mariupol", "melitopol",
-                        "zaporijjia_south", "kherson_left", "kursk_incursion"],
-      "contested": ["bakhmout"],
+      "year": 2023,
+      "season": "Winter",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "bakhmout"
+      ],
       "heldByDefender": [],
-      "headline": "Soledar tombe en janvier, Bakhmout est presque encerclée mais tient. Partout ailleurs la ligne est immobile : l'offensive d'hiver russe s'épuise à Vouhledar, où deux brigades de marine sont détruites sans gagner un village.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 16 janvier 2023 (Soledar)",
         "ISW, Russian Offensive Campaign Assessment, février 2023 (échec de l'offensive de Vouhledar)",
@@ -95,12 +176,21 @@
       "confidence": "haute"
     },
     {
-      "year": 2023, "season": "Spring",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "mariupol",
-                        "melitopol", "zaporijjia_south", "kherson_left", "kursk_incursion"],
+      "year": 2023,
+      "season": "Spring",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
       "contested": [],
       "heldByDefender": [],
-      "headline": "Bakhmout tombe le 20 mai après dix mois de siège, au prix de pertes russes sans équivalent dans la guerre. La contre-offensive ukrainienne s'ouvre le 4 juin et bute dès les premiers jours sur les champs de mines de la ligne Sourovikine.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 20-21 mai 2023 (Bakhmout)",
         "Reuters, 21 mai 2023 — Prigojine revendique la prise de Bakhmout",
@@ -110,12 +200,22 @@
       "confidence": "haute"
     },
     {
-      "year": 2023, "season": "Summer",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "mariupol",
-                        "melitopol", "kherson_left", "kursk_incursion"],
-      "contested": ["zaporijjia_south"],
+      "year": 2023,
+      "season": "Summer",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "mariupol",
+        "melitopol",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "zaporijjia_south"
+      ],
       "heldByDefender": [],
-      "headline": "La contre-offensive atteint Robotyne le 22 août et s'arrête là. Environ 370 km² repris en quatre mois, sur une dizaine de kilomètres de profondeur : la deuxième ligne russe n'a jamais été atteinte. Sur les flancs de Bakhmout, Klichtchiïvka et Andriïvka sont reprises à la mi-septembre.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 22 août 2023 (Robotyne)",
         "Reuters, 28 août 2023 — l'Ukraine confirme la libération de Robotyne",
@@ -125,12 +225,23 @@
       "confidence": "haute"
     },
     {
-      "year": 2023, "season": "Autumn",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "mariupol",
-                        "melitopol", "kherson_left", "kursk_incursion"],
-      "contested": ["zaporijjia_south", "avdiivka"],
+      "year": 2023,
+      "season": "Autumn",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "mariupol",
+        "melitopol",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "zaporijjia_south",
+        "avdiivka"
+      ],
       "heldByDefender": [],
-      "headline": "La contre-offensive s'éteint sans percée. La Russie reprend l'initiative sur Avdiïvka le 10 octobre. L'Ukraine établit une tête de pont à Krynky, sur la rive gauche du Dniepr — quelques kilomètres carrés, tenus au prix fort, qui ne changent pas le contrôle de la rive.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 10 octobre 2023 (début de l'offensive d'Avdiïvka)",
         "ISW, Russian Offensive Campaign Assessment, novembre 2023 (tête de pont de Krynky)",
@@ -139,12 +250,23 @@
       "confidence": "haute"
     },
     {
-      "year": 2024, "season": "Winter",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "mariupol", "melitopol", "kherson_left", "kursk_incursion"],
-      "contested": ["zaporijjia_south"],
+      "year": 2024,
+      "season": "Winter",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "mariupol",
+        "melitopol",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "zaporijjia_south"
+      ],
       "heldByDefender": [],
-      "headline": "Avdiïvka tombe le 17 février, faute d'obus : le blocage de l'aide américaine au Congrès est à son creux et la garnison se retire sous le feu. Première grande ville perdue depuis Bakhmout.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 17 février 2024 (retrait ukrainien d'Avdiïvka)",
         "Reuters, 17 février 2024 — Syrsky ordonne le retrait pour éviter l'encerclement",
@@ -153,12 +275,24 @@
       "confidence": "haute"
     },
     {
-      "year": 2024, "season": "Spring",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "mariupol", "melitopol", "kherson_left", "kursk_incursion"],
-      "contested": ["kharkiv_north", "zaporijjia_south"],
+      "year": 2024,
+      "season": "Spring",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "mariupol",
+        "melitopol",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "zaporijjia_south"
+      ],
       "heldByDefender": [],
-      "headline": "Le 10 mai, la Russie ouvre un front transfrontalier au nord de Kharkiv — Vovtchansk et Lyptsi — pour étirer la défense ukrainienne. L'avance s'arrête à quelques kilomètres de la frontière et devient une défense active dès le 23 mai. Le vote de l'aide américaine du 24 avril commence à produire ses effets.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 10-12 mai 2024 (offensive de Kharkiv)",
         "Kyiv Independent, mai 2024 — analyse de l'offensive de l'oblast de Kharkiv",
@@ -167,12 +301,27 @@
       "confidence": "haute"
     },
     {
-      "year": 2024, "season": "Summer",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "mariupol", "melitopol", "zaporijjia_south", "kherson_left"],
-      "contested": ["kharkiv_north", "pokrovsk", "vouhledar"],
-      "heldByDefender": ["kursk_incursion"],
-      "headline": "Le 6 août, l'Ukraine franchit la frontière et prend Soudja : environ 1 000 km² d'oblast de Koursk en une semaine, le seul terrain russe jamais tenu par le défenseur. Pendant ce temps la Russie avance sur Pokrovsk et reprend l'intégralité de Robotyne à la fin juillet, effaçant le gain de 2023. L'Ukraine évacue la tête de pont de Krynky.",
+      "year": 2024,
+      "season": "Summer",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "pokrovsk",
+        "vouhledar"
+      ],
+      "heldByDefender": [
+        "kursk_incursion"
+      ],
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 6-12 août 2024 (incursion de Koursk)",
         "Wikipedia, Kursk offensive (2024-present) — 1 000 km² revendiqués la première semaine",
@@ -182,12 +331,27 @@
       "confidence": "haute"
     },
     {
-      "year": 2024, "season": "Autumn",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "mariupol", "melitopol", "zaporijjia_south", "kherson_left"],
-      "contested": ["kharkiv_north", "pokrovsk"],
-      "heldByDefender": ["kursk_incursion"],
-      "headline": "Vouhledar tombe le 1er octobre après deux ans de sièges manqués. Le saillant de Koursk se réduit : appuyée par des troupes nord-coréennes engagées à partir de novembre, la Russie en a repris environ la moitié avant la fin du mois.",
+      "year": 2024,
+      "season": "Autumn",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "pokrovsk"
+      ],
+      "heldByDefender": [
+        "kursk_incursion"
+      ],
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 1-2 octobre 2024 (Vouhledar)",
         "ISW, novembre 2024 — engagement des forces nord-coréennes dans l'oblast de Koursk",
@@ -196,12 +360,26 @@
       "confidence": "haute"
     },
     {
-      "year": 2025, "season": "Winter",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "mariupol", "melitopol", "zaporijjia_south", "kherson_left"],
-      "contested": ["kharkiv_north", "pokrovsk", "kursk_incursion"],
+      "year": 2025,
+      "season": "Winter",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "pokrovsk",
+        "kursk_incursion"
+      ],
       "heldByDefender": [],
-      "headline": "Kourakhove le 6 janvier, Velyka Novossilka le 26 : la poche sud du Donetsk se referme, puis le secteur se stabilise. Le 11 mars, l'Ukraine perd Soudja et l'essentiel du saillant de Koursk — la contre-attaque russe s'intensifie le 6 mars, au lendemain de la suspension de l'aide et du renseignement américains.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 6-7 janvier 2025 (Kourakhove) et 26 janvier 2025 (Velyka Novossilka)",
         "CNN / Al Jazeera, 13 mars 2025 — la Russie revendique la reprise de Soudja",
@@ -211,13 +389,27 @@
       "confidence": "haute"
     },
     {
-      "year": 2025, "season": "Spring",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "mariupol", "melitopol", "zaporijjia_south", "kherson_left",
-                        "kursk_incursion"],
-      "contested": ["kharkiv_north", "sumy_axis", "pokrovsk"],
+      "year": 2025,
+      "season": "Spring",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "sumy_axis",
+        "pokrovsk"
+      ],
       "heldByDefender": [],
-      "headline": "Le 26 avril, Moscou déclare l'oblast de Koursk reconquis ; des positions ukrainiennes résiduelles tiennent encore à Tetkino en mai, et Poutine lui-même admet le 30 avril que des soldats ukrainiens y sont toujours. En miroir, la Russie ouvre une zone tampon dans l'oblast de Soumy : plus de 200 km² en juin, à une vingtaine de kilomètres de la ville.",
       "sources": [
         "Euronews / Meduza, 26-29 avril 2025 — Guerassimov déclare Koursk « libérée », l'Ukraine dément",
         "Kyiv Independent, 30 avril 2025 — Poutine admet la présence ukrainienne persistante",
@@ -228,13 +420,28 @@
       "confidence": "haute"
     },
     {
-      "year": 2025, "season": "Summer",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "mariupol", "melitopol", "zaporijjia_south", "kherson_left",
-                        "kursk_incursion"],
-      "contested": ["kharkiv_north", "sumy_axis", "koupiansk", "pokrovsk"],
+      "year": 2025,
+      "season": "Summer",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "sumy_axis",
+        "koupiansk",
+        "pokrovsk"
+      ],
       "heldByDefender": [],
-      "headline": "Tchassiv Yar tombe le 31 juillet et ouvre la « ceinture des forteresses » du Donetsk. Le 11 août, une infiltration russe pousse quinze kilomètres vers Dobropillia, au nord de Pokrovsk, et menace la logistique de tout le secteur ; l'Ukraine y engage ses réserves d'élite. La bataille de Koupiansk s'ouvre à l'est.",
       "sources": [
         "Al Jazeera, 6 août 2025 — la Russie vise la ceinture de forteresses après la chute de Tchassiv Yar",
         "Lviv Herald, 13 août 2025 — le saillant de Dobropillia",
@@ -244,13 +451,29 @@
       "confidence": "haute"
     },
     {
-      "year": 2025, "season": "Autumn",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "mariupol", "melitopol", "zaporijjia_south", "kherson_left",
-                        "kursk_incursion"],
-      "contested": ["kharkiv_north", "sumy_axis", "koupiansk", "lyman", "pokrovsk"],
+      "year": 2025,
+      "season": "Autumn",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "sumy_axis",
+        "koupiansk",
+        "lyman",
+        "pokrovsk"
+      ],
       "heldByDefender": [],
-      "headline": "Le saillant de Dobropillia est entièrement effacé le 29 novembre — le seul succès offensif ukrainien de l'année. La Russie revendique Koupiansk le 20 novembre et Pokrovsk le 2 décembre ; l'Ukraine contre-attaque dans les deux villes et affirme le 12 décembre que les assaillants de Koupiansk sont coupés. En décembre, les troupes russes entrent dans Lyman et prennent vraisemblablement Siversk ; au sud elles poussent vers Houliaïpole.",
       "sources": [
         "Wikipedia, Dobropillia offensive — fin le 29 novembre 2025, positions initiales rétablies",
         "News on Air, 21 novembre 2025 — la Russie revendique la prise de Koupiansk",
@@ -262,13 +485,29 @@
       "confidence": "haute"
     },
     {
-      "year": 2026, "season": "Winter",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "pokrovsk", "mariupol", "melitopol", "zaporijjia_south",
-                        "kherson_left", "kursk_incursion"],
-      "contested": ["kharkiv_north", "sumy_axis", "koupiansk", "lyman"],
+      "year": 2026,
+      "season": "Winter",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "pokrovsk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "sumy_axis",
+        "koupiansk",
+        "lyman"
+      ],
       "heldByDefender": [],
-      "headline": "Pokrovsk et Myrnohrad tombent : plus aucune activité ukrainienne n'est observée dans la ville après le 28 janvier, et l'ISW conclut à la prise le 25 février. Aucune percée n'en découle — la ville avait cessé d'être un nœud logistique dès l'été 2025. À Koupiansk les revendications s'annulent : le commandement russe dit tenir toute la ville en janvier, ses propres blogueurs militaires n'y voient que « quelques poches ». Les contre-attaques ukrainiennes de fin janvier au sud bloquent la jonction Orikhiv-Houliaïpole.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 25 février 2026 — prise probable de Pokrovsk, dernière présence ukrainienne le 28 janvier",
         "ISW, Russian Offensive Campaign Assessment, 2 et 6 février 2026 — infiltrations infructueuses dans Lyman",
@@ -279,13 +518,29 @@
       "confidence": "haute"
     },
     {
-      "year": 2026, "season": "Spring",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "pokrovsk", "mariupol", "melitopol", "zaporijjia_south",
-                        "kherson_left", "kursk_incursion"],
-      "contested": ["kharkiv_north", "sumy_axis", "koupiansk", "lyman"],
+      "year": 2026,
+      "season": "Spring",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "pokrovsk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "sumy_axis",
+        "koupiansk",
+        "lyman"
+      ],
       "heldByDefender": [],
-      "headline": "L'offensive de printemps russe n'aboutit à rien : 30,42 km² gagnés en juin 2026 contre 481,25 km² en juin 2025, soit 1,01 km² par jour au lieu de 16,04. Kostiantynivka est menacée d'enveloppement, Lyman tient, et le front sud est stabilisé par les contre-attaques ukrainiennes.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 1er juillet 2026 — comparaison des rythmes d'avance juin 2025 / juin 2026",
         "ISW, Russian Offensive Campaign Assessment, 1er juin 2026",
@@ -295,13 +550,29 @@
       "confidence": "haute"
     },
     {
-      "year": 2026, "season": "Summer",
-      "heldByInvader": ["crimea", "donbas_2014", "severodonetsk", "bakhmout", "avdiivka",
-                        "vouhledar", "pokrovsk", "mariupol", "melitopol", "zaporijjia_south",
-                        "kherson_left", "kursk_incursion"],
-      "contested": ["kharkiv_north", "sumy_axis", "koupiansk", "lyman"],
+      "year": 2026,
+      "season": "Summer",
+      "heldByInvader": [
+        "crimea",
+        "donbas_2014",
+        "severodonetsk",
+        "bakhmout",
+        "avdiivka",
+        "vouhledar",
+        "pokrovsk",
+        "mariupol",
+        "melitopol",
+        "zaporijjia_south",
+        "kherson_left",
+        "kursk_incursion"
+      ],
+      "contested": [
+        "kharkiv_north",
+        "sumy_axis",
+        "koupiansk",
+        "lyman"
+      ],
       "heldByDefender": [],
-      "headline": "Trimestre incomplet, arrêté au 13 août 2026. La Russie paie en juillet son taux de pertes le plus élevé de l'année sans accélérer d'un kilomètre. Lyman tient toujours le 18 juillet, l'axe de Houliaïpole est bloqué au 12 août, et l'ISW juge le 7 août « extrêmement irréaliste » l'objectif russe de prendre tout le Donbass avant la fin de l'année. La Russie contrôle environ 19 % du territoire ukrainien, Crimée comprise.",
       "sources": [
         "ISW, Russian Offensive Campaign Assessment, 1er août 2026 — taux de pertes russes le plus élevé de 2026 en juillet",
         "ISW, 7 août 2026 — objectif Donbass jugé extrêmement irréaliste",

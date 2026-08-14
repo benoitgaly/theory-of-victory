@@ -1,0 +1,3 @@
+{
+  "_comment": "The English catalogue: the French source text as key, its English label as value. Short interface labels only — the long prose of the provenance pages, the cards and the quarterly chronicles lives with its data, in historical-figures.<lang>.json, cards.<lang>.json and front-history.<lang>.json, and falls back to French until an author writes it."
+}

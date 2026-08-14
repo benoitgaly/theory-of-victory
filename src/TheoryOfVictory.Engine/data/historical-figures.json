@@ -1,611 +1,490 @@
 {
-  "_comment": "La base des données historiques. Une observation = une date, une valeur, une source, un indice de confiance, et la raison pour laquelle cette valeur est retenue à cette date. Rien d'autre. Une observation sans source n'entre pas ici : elle reste une constante du scénario, et la page le dit.",
+  "_comment": "La base des données historiques : des CHIFFRES et des IDENTIFIANTS, rien d'autre. Une observation = une date, une valeur, une source, un indice de confiance. La prose qui les accompagne — pourquoi cette valeur est retenue, ce que la source prouve — vit dans historical-figures.<langue>.json, indexée par figureCode|date|sourceCode|unit pour une observation et par le code pour une source. Un chiffre n'existe qu'une fois : le dupliquer par langue le ferait diverger à la première correction. Une observation sans source n'entre pas ici : elle reste une constante du scénario, et la page le dit.",
   "sources": [
     {
       "code": "cbr-reserves-hebdo",
       "organisation": "Banque centrale de la Fédération de Russie",
-      "title": "Réserves internationales de la Fédération de Russie — valeurs hebdomadaires en fin de période de déclaration",
       "url": "https://web.archive.org/web/20220228124103/http://www.cbr.ru/eng/hd_base/mrrf/mrrf_7d/",
       "capture": "28 février 2022",
       "statedUpdate": "Page datée par son éditeur du 18 février 2022",
-      "kind": "Mesure publiée",
-      "note": "L'URL est celle d'une archive horodatée, et non celle de la page vivante : cbr.ru republie la même adresse à chaque mise à jour, si bien qu'un lien vers la page courante ne prouverait pas ce qu'elle affichait à la date citée. Le tableau est publié par la banque centrale elle-même, en milliards de dollars, à la fin de chaque semaine de déclaration. C'est la mesure la plus directe qui existe sur ce poste."
+      "kind": "Mesure publiée"
     },
     {
       "code": "conseil-ue-sanctions",
       "organisation": "Conseil de l'Union européenne",
-      "title": "EU sanctions against Russia: questions and answers — section « How are immobilised Russian assets used? »",
       "url": "https://www.consilium.europa.eu/en/policies/sanctions-against-russia-explained/",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 5 août 2026",
-      "kind": "Mesure publiée",
-      "note": "Le Conseil y écrit deux choses distinctes : que le troisième train de sanctions de février 2022 a interdit toute transaction liée à la gestion des réserves de la Banque centrale de Russie, et que 210 milliards d'euros d'avoirs sont bloqués dans l'Union. Ce montant est celui de l'UE SEULE. Le total immobilisé par l'ensemble G7 + UE + Australie est plus élevé, et il n'est pas chiffré sur cette page : il n'est donc pas repris ici."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-graphique-2026-08-13",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Graphique « Aid allocations by donor group », 2022–juin 2026, moyennes mensuelles corrigées de l'inflation, en milliards d'euros",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/Media/Images/News_Press_Releases/2026/mi2026-08-13_UST-Aid-allocations-by-donor-group_EN.svg",
       "capture": "14 août 2026",
       "statedUpdate": "Le nom du fichier porte sa date de publication : 13 août 2026",
-      "kind": "Lecture graphique",
-      "note": "C'est le fichier du graphique lui-même, servi par l'éditeur, et son nom porte la date de publication — une adresse qui ne peut pas être remplacée en silence par une version ultérieure. Les valeurs ci-dessous en sont RELEVÉES À L'ŒIL, à ±0,05 Md€/mois : ce n'est pas une extraction du jeu de données. Le graphique mesure par ailleurs l'ALLOCATION — ce qui est affecté à un paquet concret — et non la livraison ; c'est l'échelon au-dessus de ce que le moteur représente, et tout l'écart de l'année 2024 vient de là."
+      "kind": "Lecture graphique"
     },
     {
       "code": "kiel-communique-2026-08-13",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker: Europe leads on aid – US weapons remain key",
       "url": "https://www.kielinstitut.de/publications/news/ukraine-support-tracker-europe-leads-on-aid-us-weapons-remain-key/",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 13 août 2026",
-      "kind": "Mesure publiée",
-      "note": "Le communiqué qui accompagne le graphique, et qui sert ici de CONTRÔLE de la lecture graphique. Il chiffre en toutes lettres une valeur que le graphique ne donne qu'en hauteur de barre : « financial and humanitarian aid was 41 percent lower than in 2025 » en moyenne mensuelle. Le relevé donne 1,77 contre 3,01, soit −41,2 % : la lecture est confirmée au dixième de point. Il chiffre aussi le prêt européen — près de 11 Md€ alloués sur mai et juin 2026, dont 4,3 militaires et 6,7 financiers, au titre d'un Ukraine Support Loan de 90 Md€ pour 2026-2027 — et précise que les donateurs européens ont acheté pour au moins 3 Md€ d'armement à l'industrie américaine sur le premier semestre 2026."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2021-10",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er octobre 2021",
       "url": "https://minfin.gov.ru/common/upload/library/2021/10/main/01.10.2021.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Communiqué mensuel du ministère russe des Finances, l'émetteur du fonds. Le nom du fichier porte la date d'arrêté, si bien que l'adresse ne peut pas être remplacée en silence par un mois ultérieur. Le document donne DEUX montants distincts : le volume total du fonds et, séparément, l'« objem likvidnykh aktivov » — le volume des actifs liquides, défini par le ministère lui-même comme les seules sommes déposées sur les comptes du fonds à la Banque de Russie. Le reste est immobilisé dans des dépôts à VEB.RF, des obligations et des actions d'émetteurs russes. Le fichier a été téléchargé depuis ce poste et son texte extrait ; la lecture directe des pages HTML de minfin.gov.ru passe, elle, par un outil de contournement. Cette source ne dit rien des réserves de change de la banque centrale, qui sont un tout autre poste."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2022-01",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2022",
       "url": "https://minfin.gov.ru/common/upload/library/2022/01/main/01.01.2022.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Même série mensuelle, dernier arrêté annuel avant l'invasion. Le nom du fichier porte la date d'arrêté. Il donne l'état du fonds sept semaines avant le 24 février 2022 et sert de borne haute d'avant-guerre pour la part liquide."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2022-03",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er mars 2022",
       "url": "https://minfin.gov.ru/common/upload/library/2022/03/main/01.03.2022.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Premier arrêté publié après l'invasion et après le gel du 28 février. Le document est décisif pour comprendre le piège de ce poste : il compte encore, dans la ligne « actifs liquides », 38 561,6 millions d'euros, 4 178,7 millions de livres sterling et 600 304,0 millions de yens — des devises que les sanctions occidentales venaient précisément de rendre inutilisables. À cette date la ligne « liquide » du ministère mesure donc ce que le fonds POSSÈDE, pas ce que Moscou peut DÉPENSER, et la source ne fait pas cette distinction."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2023-01",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2023",
       "url": "https://minfin.gov.ru/common/upload/library/2023/01/main/01.01.2023.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Même série. À cet arrêté la livre sterling et le yen ont disparu de la ligne liquide, l'euro n'y pèse plus que 10,46 milliards : la ligne commence à se rapprocher de ce qui est réellement mobilisable, sans y être encore."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2023-07",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er juillet 2023",
       "url": "https://minfin.gov.ru/common/upload/library/2023/07/main/01.07.2023.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Même série, point de milieu d'année 2023. Il reste 7,28 milliards d'euros dans la ligne liquide, soit un résidu marginal ; à partir de 2024 la ligne ne contient plus que du yuan, de l'or et des roubles."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2024-01",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2024",
       "url": "https://minfin.gov.ru/common/upload/library/2024/01/main/01.01.2024.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Même série. À partir de cet arrêté la part liquide ne se compose plus que de yuans, d'or en compte non alloué et de roubles : elle mesure enfin ce que le Trésor russe peut effectivement engager, et elle devient donc comparable d'une date à l'autre sans correction."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2025-01",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2025",
       "url": "https://minfin.gov.ru/common/upload/library/2025/01/main/20250101.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Même série. C'est le point bas de toute la série pour la part liquide exprimée en dollars. La source ne dit pas pourquoi : elle donne un état, pas une explication, et la baisse mêle les prélèvements budgétaires, la dépréciation du rouble et la valorisation de l'or."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2025-08",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er août 2025",
       "url": "https://minfin.gov.ru/common/upload/library/2025/08/main/20250801.docx",
       "capture": "14 août 2026",
       "statedUpdate": null,
-      "kind": "Mesure publiée",
-      "note": "Même série, point de milieu d'année 2025. Le nom du fichier porte la date d'arrêté."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2026-02",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er février 2026",
       "url": "https://minfin.gov.ru/common/upload/library/2026/02/main/FNB_20260201.docx",
       "capture": "14 août 2026",
       "statedUpdate": "Publication datée du 6 février 2026 dans la liste des communiqués du ministère",
-      "kind": "Mesure publiée",
-      "note": "Même série. Le fichier d'arrêté au 1er janvier 2026 existe aussi mais porte un nom générique — Informatsionnoe_soobshchenie.docx — qui ne prouve pas sa date ; c'est pourquoi le point de février, dont le nom de fichier est daté, lui est préféré ici. Pour mémoire, l'arrêté au 1er janvier 2026 donne 171 490,8 millions de dollars au total et 52 219,8 millions d'actifs liquides."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-2026-07",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er juillet 2026",
       "url": "https://minfin.gov.ru/common/upload/library/2026/07/main/FNB_20260701.docx",
       "capture": "14 août 2026",
       "statedUpdate": "Publication datée du 3 juillet 2026 dans la liste des communiqués du ministère",
-      "kind": "Mesure publiée",
-      "note": "Dernier arrêté publié à la date de capture. Les comptes du fonds à la Banque de Russie ne contiennent plus que 189 793,8 millions de yuans et 141 082,8 kg d'or : deux actifs seulement, dont l'un se valorise au cours du métal. La source s'arrête là — elle ne dit rien du rythme de tirage prévu, ni de la part de cette liquidité déjà engagée dans le budget."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-serie-xlsx",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Données sur les mouvements et les résultats de la gestion des ressources du Fonds national de bien-être — série mensuelle complète depuis 2008",
       "url": "https://minfin.gov.ru/common/upload/library/2026/07/main/Dannye_20260701.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Fichier daté du 7 juillet 2026 par son éditeur, et propriété interne du classeur horodatée au 7 juillet 2026 à 12h32 UTC",
-      "kind": "Mesure publiée",
-      "note": "Le classeur de référence du ministère : une colonne par mois depuis janvier 2008, le volume de fin de période en milliards de roubles et en milliards de dollars, et la composition détaillée des comptes à la Banque de Russie. Il sert ici de CONTRÔLE des communiqués mensuels : les totaux concordent au centième. Attention, il ne contient AUCUNE ligne « actifs liquides » — elle n'existe que dans les communiqués mensuels. C'est lui, en revanche, qui date la disparition des devises occidentales de la ligne liquide : livre sterling et yen tombent à zéro à la fin de décembre 2022, l'euro s'éteint progressivement au cours de 2023."
+      "kind": "Mesure publiée"
     },
     {
       "code": "minfin-fnb-table-volume",
       "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Volume du Fonds national de bien-être — tableau mensuel de février 2008 à novembre 2024",
       "url": "https://minfin.gov.ru/ru/document?id_4=27068-obem_fonda_natsionalnogo_blagosostoyaniya",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 8 novembre 2024",
-      "kind": "Mesure publiée",
-      "note": "Page vivante, mais gelée depuis novembre 2024 : le ministère a basculé la publication vers le classeur mensuel. Elle affiche la série longue du volume TOTAL, en roubles, en dollars et en pourcentage du PIB, et rien sur la part liquide. Le fichier daté qu'elle propose au téléchargement est Obem_na_01.11.2024.docx ; les valeurs lues ici l'ont été dans le tableau rendu en HTML, pas dans ce fichier. Utile comme troisième contrôle des totaux, sans valeur propre au-delà."
+      "kind": "Mesure publiée"
     },
     {
       "code": "cbr-reserves-mensuel-requete",
       "organisation": "Banque centrale de la Fédération de Russie",
-      "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles en fin de période de déclaration, janvier 2022 à août 2026",
       "url": "https://www.cbr.ru/eng/hd_base/mrrf/mrrf_m/?UniDbQuery.Posted=True&UniDbQuery.From=01.2022&UniDbQuery.To=08.2026",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 1er août 2026",
-      "kind": "Mesure publiée",
-      "note": "La série MENSUELLE de la banque centrale n'a jamais été interrompue : c'est la publication hebdomadaire, seule consultée dans la base existante, qui s'arrête au 18 février 2022. L'URL porte l'intervalle demandé dans ses paramètres, mais la PAGE reste vivante et republiée : elle ne prouve donc pas ce qu'elle affichait un jour donné. C'est pourquoi trois instantanés horodatés la doublent ci-dessous, qui couvrent tous les points retenus sauf mars 2022 et juillet 2026. Le tableau distingue les réserves de change, les DTS, la position de réserve au FMI et l'or, mais il ne distingue JAMAIS la part gelée de la part disponible."
+      "kind": "Mesure publiée"
     },
     {
       "code": "cbr-reserves-archive-2024-07",
       "organisation": "Banque centrale de la Fédération de Russie",
-      "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles, mai 2023 à mai 2024",
       "url": "http://web.archive.org/web/20240702134222/https://cbr.ru/eng/hd_base/mrrf/mrrf_m/",
       "capture": "14 août 2026",
       "statedUpdate": "Instantané du 2 juillet 2024 ; la page y est datée par son éditeur du 1er juin 2024",
-      "kind": "Mesure publiée",
-      "note": "Instantané horodaté servant de preuve d'affichage pour les points de 2023 et du premier semestre 2024. Il ne couvre rien avant mai 2023 ni après mai 2024."
+      "kind": "Mesure publiée"
     },
     {
       "code": "cbr-reserves-archive-2025-03",
       "organisation": "Banque centrale de la Fédération de Russie",
-      "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles, février 2024 à février 2025",
       "url": "http://web.archive.org/web/20250323032138/https://www.cbr.ru/eng/hd_base/mrrf/mrrf_m/",
       "capture": "14 août 2026",
       "statedUpdate": "Instantané du 23 mars 2025 ; la page y est datée par son éditeur du 1er mars 2025",
-      "kind": "Mesure publiée",
-      "note": "Instantané horodaté couvrant la fin de 2024. Il porte notamment la valeur de clôture au 31 décembre 2024, qu'aucun autre instantané disponible ne montre."
+      "kind": "Mesure publiée"
     },
     {
       "code": "cbr-reserves-archive-2026-07",
       "organisation": "Banque centrale de la Fédération de Russie",
-      "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles, juin 2025 à juin 2026",
       "url": "http://web.archive.org/web/20260723182037/https://cbr.ru/eng/hd_base/mrrf/mrrf_m/",
       "capture": "14 août 2026",
       "statedUpdate": "Instantané du 23 juillet 2026 ; la page y est datée par son éditeur du 1er juillet 2026",
-      "kind": "Mesure publiée",
-      "note": "Instantané horodaté le plus récent. Il couvre la clôture 2025 et le premier semestre 2026, mais pas la valeur de juillet 2026, publiée après lui."
+      "kind": "Mesure publiée"
     },
     {
       "code": "conseil-ue-immobilise-g7-2024-02-12",
       "organisation": "Conseil de l'Union européenne",
-      "title": "Immobilised Russian assets: Council decides to set aside extraordinary revenues — communiqué de presse du 12 février 2024",
       "url": "https://www.consilium.europa.eu/en/press/press-releases/2024/02/12/immobilised-russian-assets-council-decides-to-set-aside-extraordinary-revenues/",
       "capture": "14 août 2026",
       "statedUpdate": "Communiqué daté du 12 février 2024 à 17h14 ; mention « Last review: 28 January 2025 »",
-      "kind": "Mesure publiée",
-      "note": "C'est la source qui comble la lacune identifiée. Le Conseil y écrit en toutes lettres : « Around €260 billion in Central Bank of Russia assets have been immobilised in the form of securities and cash in the jurisdictions of the G7 partners, the EU and Australia, with more than two thirds of those immobilised in the EU. » Le périmètre est exactement celui recherché, et il englobe donc les 210 Md€ de l'UE seule déjà présents dans la base. L'URL porte la date de publication dans son chemin. Là où elle cesse de prouver quoi que ce soit : c'est un ordre de grandeur arrondi arrêté en février 2024, jamais rafraîchi depuis par le Conseil, et c'est une valorisation d'un encours de titres et d'espèces, non un inventaire audité juridiction par juridiction. La ventilation par pays n'y figure pas, et l'Australie n'y est pas chiffrée séparément."
+      "kind": "Mesure publiée"
     },
     {
       "code": "eprs-confiscation-2025-09",
       "organisation": "Service de recherche du Parlement européen (EPRS)",
-      "title": "Confiscation of immobilised Russian sovereign assets: State of play, arguments and scenarios — briefing PE 775.908",
       "url": "https://www.europarl.europa.eu/RegData/etudes/BRIE/2025/775908/EPRS_BRI(2025)775908_EN.pdf",
       "capture": "14 août 2026",
       "statedUpdate": "Document daté par son éditeur de septembre 2025 ; référence PE 775.908",
-      "kind": "Estimation d'un tiers",
-      "note": "Le nom du fichier porte l'année et le numéro de référence, une adresse qui ne peut pas être remplacée en silence. Le briefing sert ici de CONTRÔLE du chiffre du Conseil : il rappelle le montant de février 2024 — 260 Md€ pour l'UE et les autres pays du G7 — et ajoute qu'en incluant les pays hors G7 le total mondial approcherait 300 Md€. Sa figure 1 détaille un total de 289,5 Md€ pour 2025 : Union européenne 209,2 dont Belgique 180, Japon 28,1, Royaume-Uni 26,6, Canada 15,1, Suisse 6,2, États-Unis 4,3. Attention, ce périmètre n'est PAS celui du Conseil — il ajoute la Suisse et n'isole pas l'Australie — et l'EPRS indique lui-même que ces montants proviennent de calculs du PISM et du gouvernement fédéral suisse, non d'une déclaration officielle des juridictions détentrices, et que la valeur exacte par juridiction est difficile à établir faute d'information officielle cohérente. Ce chiffre ne peut donc pas remplacer celui du Conseil, seulement l'encadrer."
+      "kind": "Estimation d'un tiers"
     },
     {
       "code": "conseil-ue-fnb-interdiction-2025-12-12",
       "organisation": "Conseil de l'Union européenne",
-      "title": "Council decides to prohibit transfers of immobilised Central Bank of Russia assets back to Russia — communiqué de presse du 12 décembre 2025",
       "url": "https://www.consilium.europa.eu/en/press/press-releases/2025/12/12/council-decides-to-prohibit-transfers-of-immobilised-central-bank-of-russia-assets-back-to-russia/",
       "capture": "14 août 2026",
       "statedUpdate": "Communiqué daté du 12 décembre 2025 à 19h35 ; mention « Last review: 16 December 2025 »",
-      "kind": "Mesure publiée",
-      "note": "Source sans chiffre, retenue pour un seul fait de droit, vérifié dans le texte : le règlement du 12 décembre 2025 interdit tout transfert d'avoirs de la Banque centrale de Russie « or of any legal person, entity or body acting on behalf of, or at the direction of, the Central Bank of Russia, such as the Russian National Wealth Fund ». Elle établit donc que le Fonds national de bien-être est nommément visé par le gel européen, et qu'il ne faut pas le traiter comme un poste extérieur aux sanctions. Elle ne dit rien du montant du fonds détenu dans l'Union, et le Conseil n'en publie pas."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-fichier",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, classeur de données complet (onglet « ReadMe »)",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "L'onglet ReadMe se déclare lui-même « Ukraine Support Tracker — 30th release (covering January 24, 2022 to June 30, 2026) » et porte la date du 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "Fichier téléchargé (12 155 823 octets) et ouvert ici avec openpyxl : 95 onglets. Ce n'est pas un résumé de moteur de recherche. Le nom du fichier porte le numéro de release, donc l'adresse ne peut pas être remplacée en silence par une version ultérieure. Le ReadMe fixe le vocabulaire dont dépend tout le reste : « We report ALLOCATIONS as our primary metric. Commitments of future aid are reported in auxiliary figures. When information on deliveries or disbursements is available, we report these as well. » L'engagement est une annonce, l'allocation une affectation à un paquet concret, le décaissement un versement constaté — et le tracker ne publie ce dernier que là où l'information existe. Ce fichier prouve ce que les gouvernements ont ANNONCÉ et AFFECTÉ ; il cesse de prouver quoi que ce soit dès qu'on lui demande ce qui est arrivé au front."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-fig-a31",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, onglet « Fig A31 Monthly Avg 2022-2026 » (Monthly Average of Aid Allocations by Donor Group: 2022–June 2026, billion Euros)",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, couvrant le 24 janvier 2022 au 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "C'est le jeu de données SOUS le graphique « Aid allocations by donor group » jusqu'ici relevé à l'œil : mêmes trois groupes, mêmes deux types, mêmes cinq périodes. Les valeurs sont désormais lues dans la cellule, plus sur une hauteur de barre. Structure du tableau : lignes 12 à 16 = 2022, 2023, 2024, 2025, 2026 ; colonnes E, F, G, H = militaire (États-Unis, Europe, Autres donateurs, Total) ; colonnes I, J, K, L = financier et humanitaire (mêmes quatre). Les formules somment la colonne Q de la base bilatérale — « tot_sub_activity_value_constant_currency » —, donc des EUROS CONSTANTS, corrigés de l'inflation et du change, base 2021 (l'onglet Country_Deflator écrit « Currency Power Change (2021 = baseline) »). Filtres explicites dans la formule : mesure = allocation, type = Military ou Financial & Humanitarian, mois compris entre les bornes de l'année. « Europe » = États membres et institutions de l'UE, Norvège, Royaume-Uni, Islande, Suisse. « Autres donateurs » = Australie, Canada, Japon, Nouvelle-Zélande, Corée du Sud, Türkiye, Chine, Taïwan, Inde. L'onglet ne dit rien de ce qui a été livré : allocation seulement."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-fig-2",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, onglet « Fig 2. Country Groups (stacked) » (Aid allocations and residual commitments across donor groups, billion Euros)",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, cumuls du 24 janvier 2022 au 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "L'onglet publie côte à côte, pour l'Europe géographique et pour les États-Unis, l'ENGAGÉ et l'ALLOUÉ cumulés, et l'écart entre les deux. Il donne aussi la définition retenue par le tracker : « Allocations are defined as aid which has been delivered OR SPECIFIED FOR DELIVERY » — une allocation inclut donc du matériel désigné mais pas encore parti. C'est précisément pour cela qu'allocation n'est pas livraison. Montants en euros COURANTS (les formules remontent aux colonnes M et P de la base, non déflatées), à la différence de l'onglet Fig A31. L'onglet ne chiffre pas le groupe « Autres donateurs »."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-aggregates",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, onglets « Aggregates by Country Group » et « Fig A22. Cumulative Alloc. »",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, cumuls du 24 janvier 2022 au 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "« Aggregates by Country Group » ventile engagements et allocations par pays et par sous-groupe (UE, anglo-saxons, autres pays donateurs, Europe géographique), en milliards d'euros courants, sur les trois types d'aide. « Fig A22 » donne la série cumulée mensuelle et son point d'arrivée au 30 juin 2026. Ces onglets ne suivent pas la découpe de groupes de Fig A31 : le total « Autres donateurs » au sens du graphique doit être reconstitué en additionnant Canada, Australie, Nouvelle-Zélande et le bloc « Other donor countries ». Cette addition est faite ici et signalée comme telle. Écart connu entre les deux onglets — 179,80 contre 179,34 Md€ de militaire alloué — parce que la série mensuelle exclut les allocations sans date de mois."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-fig-9",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, onglets « Fig 9. Budget Support by Donor » et « Financial disb per Month (€) » (Foreign budgetary support: allocations vs. disbursements)",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, du 24 janvier 2022 au 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "LA source du décaissement réel, et la seule qui en donne des montants. Elle ne couvre qu'une catégorie : le soutien budgétaire à l'État ukrainien — prêts, dons et garanties versés au budget. Les décaissements ne viennent pas du tracker mais du MINISTÈRE DES FINANCES UKRAINIEN, c'est-à-dire du bénéficiaire, ce qui en fait un contrôle indépendant du donateur. L'onglet précise « nominal value » : euros COURANTS, non corrigés de l'inflation. Elle ne prouve rien sur l'aide militaire, rien sur l'humanitaire, et rien sur ce que valent les armes réellement arrivées."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-inkind",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, onglets « In-kind Military per Country », « Fig A4. Weapon Delivery » et « Delivery Transparency Index »",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, du 24 janvier 2022 au 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "La seconde et dernière fenêtre du tracker sur le livré. Elle est en NOMBRE D'UNITÉS, jamais en euros, et se limite à cinq catégories d'armes lourdes : obusiers 155/152 mm, lance-roquettes multiples, chars, systèmes sol-air, véhicules de combat d'infanterie. L'onglet publie un « delivery rate » par catégorie et par pays, rapporté à l'ENGAGÉ (colonnes « Committed / Delivered »), pas à l'alloué — la nuance interdit de recoller ces taux sur les montants alloués. Rien n'y couvre les munitions, les drones, les pièces détachées ni la maintenance."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-r30-maindata",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Ukraine Support Tracker — Release 30, onglet « Bilateral Assistance, MAIN DATA » (base ligne à ligne, 5 820 activités, colonne « tot_value_deliv_EUR »)",
       "url": "https://www.kielinstitut.de/fileadmin/Dateiverwaltung/IfW-Publications/fis-import/862b35e3-f2d5-47ad-b297-ffc16bd11b18-Ukraine_Support_Tracker_Release_30.xlsx",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, du 24 janvier 2022 au 30 juin 2026",
-      "kind": "Mesure publiée",
-      "note": "La base brute derrière tous les onglets de figures, 80 colonnes. Elle porte une colonne « tot_value_deliv_EUR » — la valeur en euros de ce qui a été livré — et c'est en la comptant qu'on mesure l'ampleur exacte de la lacune : le champ est presque toujours vide. Le décompte de remplissage rapporté ci-dessous est un dénombrement effectué ici sur cette base, non un chiffre publié par l'éditeur, et il est signalé comme tel."
+      "kind": "Mesure publiée"
     },
     {
       "code": "kiel-ust-page-publication",
       "organisation": "Institut de Kiel pour l'économie mondiale",
-      "title": "Page de publication « Ukraine Support Tracker Data » — fiche du jeu de données et lien de téléchargement",
       "url": "https://www.kielinstitut.de/publications/ukraine-support-tracker-data-6453/",
       "capture": "14 août 2026",
       "statedUpdate": "La fiche affiche « Publication Date 06/2026 » — mois seul, sans jour",
-      "kind": "Mesure publiée",
-      "note": "Sert uniquement à établir que le fichier Release 30 téléchargé est bien celui que l'éditeur sert aujourd'hui comme version courante : le bouton « XLSX Download » pointe exactement sur l'adresse utilisée ici. Elle ne donne PAS la date de mise en ligne au jour près — « 06/2026 » désigne la fin de période couverte, pas la publication, laquelle est intervenue plus tard puisque le communiqué qui accompagne cette release est daté du 13 août 2026."
+      "kind": "Mesure publiée"
     },
     {
       "code": "banque-mondiale-pib-2021",
       "organisation": "Banque mondiale",
-      "title": "PIB aux prix courants du marché, en dollars des États-Unis — Russie et Ukraine, année 2021",
       "url": "https://api.worldbank.org/v2/country/RUS;UKR/indicator/NY.GDP.MKTP.CD?date=2021&format=json",
       "capture": "14 août 2026",
       "statedUpdate": "Indicateur NY.GDP.MKTP.CD, millésime 2021",
-      "kind": "Mesure publiée",
-      "note": "L'adresse est celle de l'interface de données, et non celle d'une page de tableau de bord : elle porte l'année dans son URL et rend exactement les deux nombres cités, sans mise en page à interpréter. Le millésime 2021 est le dernier exercice complet avant l'invasion."
+      "kind": "Mesure publiée"
     },
     {
       "code": "banque-mondiale-pop-2021",
       "organisation": "Banque mondiale",
-      "title": "Population totale — Russie et Ukraine, année 2021",
       "url": "https://api.worldbank.org/v2/country/RUS;UKR/indicator/SP.POP.TOTL?date=2021&format=json",
       "capture": "14 août 2026",
       "statedUpdate": "Indicateur SP.POP.TOTL, millésime 2021",
-      "kind": "Mesure publiée",
-      "note": "Série construite sur les estimations des Nations unies, qui rattachent la Crimée à l'Ukraine. Le recensement russe de 2021 compte au contraire 146,2 millions d'habitants, Crimée incluse : l'écart d'environ deux millions ne change pas l'ordre de grandeur du rapport entre les deux pays."
+      "kind": "Mesure publiée"
     },
     {
       "code": "SIPRI-FS-2026",
       "organisation": "SIPRI (Stockholm International Peace Research Institute)",
-      "title": "SIPRI Fact Sheet, avril 2026 — « Trends in World Military Expenditure, 2025 »",
       "url": "https://www.sipri.org/sites/default/files/2026-04/2604_milex_2025.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Fact Sheet daté d'avril 2026 ; la base SIPRI Military Expenditure Database a été mise à jour le 27 avril 2026 et remplace toutes les données publiées antérieurement",
-      "kind": "Mesure publiée",
-      "note": "PDF horodaté par son millésime. Table 1 donne la dépense militaire en part du PIB pour 2025 et 2016. Méthodologie SIPRI (définition élargie de type OTAN) explicitée en dernière page : forces armées, ministères de la défense, forces paramilitaires militarisées, activités spatiales militaires, pensions militaires, R&D, aide militaire du pays donateur ; exclut défense civile et anciens combattants."
+      "kind": "Mesure publiée"
     },
     {
       "code": "SIPRI-FS-2025",
       "organisation": "SIPRI",
-      "title": "SIPRI Fact Sheet, avril 2025 — « Trends in World Military Expenditure, 2024 »",
       "url": "https://www.sipri.org/sites/default/files/2025-04/2504_fs_milex_2024.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2025 ; base mise à jour avril 2025",
-      "kind": "Mesure publiée",
-      "note": "Contient l'avertissement de SIPRI sur l'opacité russe : « environ 30 % des dépenses budgétaires ont été classifiées en 2024 » et « la dépense militaire réelle de la Russie en 2024 est probablement supérieure aux 149 milliards de dollars estimés ici »."
+      "kind": "Mesure publiée"
     },
     {
       "code": "SIPRI-FS-2024",
       "organisation": "SIPRI",
-      "title": "SIPRI Fact Sheet, avril 2024 — « Trends in World Military Expenditure, 2023 »",
       "url": "https://www.sipri.org/sites/default/files/2024-04/2404_fs_milex_2023.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2024 ; base mise à jour avril 2024",
-      "kind": "Mesure publiée",
-      "note": "Millésime utile pour l'année 2023, que les éditions ultérieures ne réaffichent pas en colonne."
+      "kind": "Mesure publiée"
     },
     {
       "code": "SIPRI-FS-2023",
       "organisation": "SIPRI",
-      "title": "SIPRI Fact Sheet, avril 2023 — « Trends in World Military Expenditure, 2022 »",
       "url": "https://www.sipri.org/sites/default/files/2023-04/2304_fs_milex_2022.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2023 ; base mise à jour avril 2023",
-      "kind": "Mesure publiée",
-      "note": "Précise que le total ukrainien de 2022 « n'inclut pas l'aide militaire fournie à l'Ukraine »."
+      "kind": "Mesure publiée"
     },
     {
       "code": "SIPRI-FS-2022",
       "organisation": "SIPRI",
-      "title": "SIPRI Fact Sheet, avril 2022 — « Trends in World Military Expenditure, 2021 »",
       "url": "https://www.sipri.org/sites/default/files/2022-04/fs_2204_milex_2021_0.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2022 ; base mise à jour avril 2022",
-      "kind": "Mesure publiée",
-      "note": "Année de référence d'avant-guerre pour les deux pays."
+      "kind": "Mesure publiée"
     },
     {
       "code": "MINFIN-ONBP-2026",
       "organisation": "Minfin",
-      "title": "« Основные направления бюджетной, налоговой и таможенно-тарифной политики на 2026 год и на плановый период 2027 и 2028 годов »",
       "url": "https://minfin.gov.ru/common/upload/library/2025/10/main/Osnovnye_napravleniya.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 03/10/2025 (date affichée sur https://minfin.gov.ru/ru/perfomance/budget/policy/)",
-      "kind": "Document budgétaire",
-      "note": "PDF de 182 pages, lu directement. Tableau 4.1.1 (recettes pétro-gazières en % du PIB et en % des recettes, 2023-2028), tableau 4.1.3 (dépenses fédérales par section 2026-2028), tableau 4.4.2 (structure des dépenses de l'ensemble du système budgétaire en % du PIB, 2026-2028)."
+      "kind": "Document budgétaire"
     },
     {
       "code": "MINFIN-BUDGET-CITOYEN",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » au projet de loi de finances 2026-2028",
       "url": "https://minfin.gov.ru/common/upload/library/2025/11/main/Budzhet.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Édition liée au projet de budget 2026-2028 (déposé à l'automne 2025) ; renvoie explicitement à la loi 419-ФЗ du 30/11/2024 amendée par la loi 152-ФЗ du 01/07/2025",
-      "kind": "Document budgétaire",
-      "note": "Page 6 : dépenses fédérales par section pour 2025 (loi amendée) et 2026-2028 (projet). C'est la seule publication Minfin ouverte trouvée qui rétablit la ligne « Défense nationale » pour 2025."
+      "kind": "Document budgétaire"
     },
     {
       "code": "INTERFAX-2022-07-20",
       "organisation": "Interfax (reprise des calculs de Rosstat)",
-      "title": "« Доля нефтегазового сектора в ВВП РФ в I кв. выросла до максимума с начала расчетов »",
       "url": "https://www.interfax.ru/business/853145",
       "capture": "2026-08-14",
       "statedUpdate": "Article horodaté « 19:15, 20 июля 2022 »",
-      "kind": "Mesure publiée",
-      "note": "Reprend la série annuelle complète publiée par Rosstat ce jour-là (2017 à 2021) ainsi que la définition méthodologique du « secteur pétro-gazier » retenue par Rosstat (sous-secteur primaire : extraction et raffinage ; sous-secteur secondaire : biens et services liés à l'extraction, au raffinage, au transport et à la vente)."
+      "kind": "Mesure publiée"
     },
     {
       "code": "KOMMERSANT-2024-04-05",
       "organisation": "Kommersant (reprise de Rosstat)",
-      "title": "« Доля нефтегазового сектора в ВВП РФ в 2023 году снизилась до 16,5% »",
       "url": "https://www.kommersant.ru/doc/6632852",
       "capture": "2026-08-14",
       "statedUpdate": "Article daté du 5 avril 2024",
-      "kind": "Mesure publiée",
-      "note": "Ne donne que deux années (2022 et 2023) ; ne reprend pas 2019-2021."
+      "kind": "Mesure publiée"
     },
     {
       "code": "ANGI-2026-04-20",
       "organisation": "Agence d'information pétrolière et gazière (ANGI), citant Rosstat via RIA Novosti",
-      "title": "« Вклад нефтегазовых доходов в ВВП России по итогам 2025 года достиг исторического минимума »",
       "url": "https://www.angi.ru/news/2932616-%D0%92%D0%BA%D0%BB%D0%B0%D0%B4%20%D0%BD%D0%B5%D1%84%D1%82%D0%B5%D0%B3%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D1%85%20%D0%B4%D0%BE%D1%85%D0%BE%D0%B4%D0%BE%D0%B2%20%D0%B2%20%D0%92%D0%92%D0%9F%20%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8%20%D0%BF%D0%BE%20%D0%B8%D1%82%D0%BE%D0%B3%D0%B0%D0%BC%202025%20%D0%B3%D0%BE%D0%B4%D0%B0%20%D0%B4%D0%BE%D1%81%D1%82%D0%B8%D0%B3%20%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%20%D0%BC%D0%B8%D0%BD%D0%B8%D0%BC%D1%83%D0%BC%D0%B0/",
       "capture": "2026-08-14",
       "statedUpdate": "Article horodaté « 20 апреля / 08:21 » (2026)",
-      "kind": "Mesure publiée",
-      "note": "Donne aussi le PIB nominal russe 2025 : 214,3 trillions de roubles, en hausse de 1 % en volume. Le titre de l'article emploie « нефтегазовых доходов » (recettes) alors que le corps mesure bien la part du SECTEUR dans le PIB — illustration exacte de la confusion à éviter."
+      "kind": "Mesure publiée"
     },
     {
       "code": "EPRUSSIA-2026-04-20",
       "organisation": "EPRussia (revue Энергетика и промышленность России), citant Rosstat",
-      "title": "« Доля нефтегазового сектора в ВВП России упала до исторического минимума »",
       "url": "https://www.eprussia.ru/news/base/2026/6679118.htm",
       "capture": "2026-08-14",
       "statedUpdate": "Article daté du 20 avril 2026",
-      "kind": "Mesure publiée",
-      "note": "Confirmation indépendante du chiffre 2025 (13 %), du minimum antérieur (14 % en 2020) et d'un écart de 3 points par rapport à 2024."
+      "kind": "Mesure publiée"
     },
     {
       "code": "UKRAINEINVEST-2024-08",
       "organisation": "UkraineInvest (agence gouvernementale ukrainienne de promotion des investissements), d'après YC.Market, Ember et l'AIE",
-      "title": "« Інвестиційні можливості сектору енергетики » — Енергетичний сектор України",
       "url": "https://ukraineinvest.gov.ua/wp-content/uploads/2024/08/energy-14.08-ua.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Fichier déposé en août 2024 (chemin /2024/08/, version datée du 14.08)",
-      "kind": "Estimation",
-      "note": "Page 2, graphique « Частка енергетики у ВВП країни, 2023 » plaçant l'Ukraine à 8 %, entre la Tchéquie (8-9 %) et la Slovaquie (7 %), la Pologne étant à 10 %. Il s'agit d'une infographie de promotion, sans tableau chiffré ni méthode publiée."
+      "kind": "Estimation"
     },
     {
       "code": "cia-factbook-russie",
       "organisation": "Central Intelligence Agency (via le dépôt factbook.json)",
-      "title": "The World Factbook — Russie, rubrique « Military expenditures »",
       "url": "https://raw.githubusercontent.com/factbook/factbook.json/783ed27f7a1116663c10e7b39d162d0c4500505d/central-asia/rs.json",
       "capture": "14 août 2026",
       "statedUpdate": "Fichier figé au 22 janvier 2026, deux semaines avant la fermeture du Factbook",
-      "kind": "Estimation",
-      "note": "Le Factbook lui-même a cessé d'exister : cia.gov annonce sa fermeture le 4 février 2026 et ses pages pays ne répondent plus. Les captures d'archive n'aident pas, la page chargeait ses valeurs en script. Le lien pointe donc sur le dépôt qui conserve le texte de la rubrique en JSON, épinglé sur un commit précis — une adresse suivant la branche principale changerait sous le lien."
+      "kind": "Estimation"
     },
     {
       "code": "cia-factbook-ukraine",
       "organisation": "Central Intelligence Agency (via le dépôt factbook.json)",
-      "title": "The World Factbook — Ukraine, rubrique « Military expenditures »",
       "url": "https://raw.githubusercontent.com/factbook/factbook.json/1d943e73e6f5ab6e846f50f4e2140321403ef2b2/europe/up.json",
       "capture": "14 août 2026",
       "statedUpdate": "Fichier figé au 21 janvier 2026",
-      "kind": "Estimation",
-      "note": "Même remarque que pour la Russie. La rubrique ukrainienne s'arrête à 2021 et ne reprend pas : la seule chose que le Factbook dit de la guerre est une note sans chiffre daté."
+      "kind": "Estimation"
     },
     {
       "code": "cia-factbook-fermeture",
       "organisation": "Central Intelligence Agency",
-      "title": "Spotlighting The World Factbook as We Bid a Fond Farewell",
       "url": "https://www.cia.gov/stories/story/spotlighting-the-world-factbook-as-we-bid-a-fond-farewell/",
       "capture": "14 août 2026",
       "statedUpdate": "Publié le 4 février 2026",
-      "kind": "Mesure publiée",
-      "note": "L'annonce de l'agence elle-même. Elle explique pourquoi aucune des adresses du Factbook ne peut plus servir de citation vivante, et pourquoi les séries qui en viennent s'arrêtent toutes au millésime 2024."
+      "kind": "Mesure publiée"
     },
     {
       "code": "SIPRI-DB-2026",
       "organisation": "SIPRI (Stockholm International Peace Research Institute)",
-      "title": "SIPRI Military Expenditure Database 1949-2025 (classeur complet, onglets « Share of GDP », « Share of Govt. spending », « Local currency calendar years », « Current US$ »)",
       "url": "https://www.sipri.org/sites/default/files/SIPRI-Milex-data-1949-2025.xlsx",
       "capture": "2026-08-14",
       "statedUpdate": "Base mise à jour le 27 avril 2026 selon le fact sheet d'avril 2026 qui l'accompagne ; elle remplace toutes les données SIPRI publiées antérieurement",
-      "kind": "Mesure publiée",
-      "note": "Classeur XLSX téléchargé et lu onglet par onglet. C'est la source qui manquait à la première passe : elle porte la ligne « part des dépenses publiques » pour chaque année et chaque pays, que les fact sheets ne publient que pour quelques pays et quelques années. Attention, ses valeurs sont RÉVISÉES et diffèrent de celles des fact sheets publiés à l'époque — l'écart est documenté ci-dessous."
+      "kind": "Mesure publiée"
     },
     {
       "code": "MINFIN-EXEC-ANNUEL",
       "organisation": "Ministère des finances de la Fédération de Russie (Minfin)",
-      "title": "« Краткая ежегодная информация об исполнении федерального бюджета (млрд руб.) » — Annexe 3.1, exécution annuelle du budget fédéral 2006-2025",
       "url": "https://minfin.gov.ru/common/upload/library/2026/05/main/Prilozhenie_3_dannye_109-111_%E2%80%94_god.xlsx",
       "capture": "2026-08-14",
       "statedUpdate": "Publié et modifié le 05/05/2026 (date affichée sur https://minfin.gov.ru/ru/statistics/fedbud/)",
-      "kind": "Document budgétaire",
-      "note": "Fichier XLSX primaire, relu pour cette passe. Seule source d'EXÉCUTION constatée : dépenses totales jusqu'en 2025, mais ventilation par section fonctionnelle jusqu'en 2021 seulement."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2022-LOI",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » à la loi de finances 390-ФЗ du 06/12/2021 (exercice 2022, période 2023-2024)",
       "url": "https://minfin.gov.ru/common/upload/library/2022/03/main/Budget_2022_razvorot_web.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 30/12/2021 (date affichée sur la page https://minfin.gov.ru/ru/perfomance/budget/process/utverzhdenie/budget_citizen/)",
-      "kind": "Document budgétaire",
-      "note": "Page 8, tableau « Расходы федерального бюджета по разделам функциональной классификации ». Page rendue en image et lue visuellement, l'extraction texte de ces infographies désappariant libellés et valeurs. Dernier budget voté avant l'invasion."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2023-PROJET",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » au projet de loi de finances pour 2023-2025",
       "url": "https://minfin.gov.ru/common/upload/library/2022/11/main/BG_2023.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 01/11/2022",
-      "kind": "Document budgétaire",
-      "note": "Page 8, série 2021-2025, avec la note explicite « показатели сводной бюджетной росписи на 1 сентября 2022 года » : les colonnes 2021 et 2022 sont donc des états de la répartition budgétaire consolidée en cours d'exercice, pas des lois initiales ni des exécutions. Document capital : c'est la dernière fois que le Minfin publie une ligne défense pour un exercice de guerre en cours."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2023-LOI",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » à la loi de finances 466-ФЗ du 05/12/2022 (exercice 2023, période 2024-2025)",
       "url": "https://minfin.gov.ru/common/upload/library/2023/02/main/BDG.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 30/12/2022",
-      "kind": "Document budgétaire",
-      "note": "Pages 14-15, tableau par sections 2023-2025. Page rendue en image et lue visuellement."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2024-PROJET",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » au projet de loi de finances pour 2024-2026",
       "url": "https://minfin.gov.ru/common/upload/library/2023/11/main/0749_Budget_2024-2026.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 01/11/2023",
-      "kind": "Document budgétaire",
-      "note": "Page 5, série 2023-2026, note « показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г. » pour la colonne 2023."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2024-LOI",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » à la loi de finances 540-ФЗ du 27/11/2023 (exercice 2024, période 2025-2026)",
       "url": "https://minfin.gov.ru/common/upload/library/2024/01/main/0407_BDG_2024.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 28/12/2023",
-      "kind": "Document budgétaire",
-      "note": "Pages 14-15, tableau par sections 2024-2026. Note de bas de page : « показатели сводной бюджетной росписи по состоянию на 1 декабря 2023 г. »."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2025-PROJET",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » au projet de loi de finances pour 2025-2027",
       "url": "https://minfin.gov.ru/common/upload/library/2024/11/main/0759_Budget_2025-2027.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 31/10/2024",
-      "kind": "Document budgétaire",
-      "note": "Page 5, série 2024-2027. Sa colonne 2024, pourtant référencée à la même base légale que celle de la brochure publiée deux mois plus tard, en diffère de plus de 1 500 milliards de roubles — divergence rapportée telle quelle plus bas."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2025-LOI",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » à la loi de finances 419-ФЗ du 30/11/2024 (exercice 2025, période 2026-2027)",
       "url": "https://minfin.gov.ru/common/upload/library/2025/04/main/BDG_2025-2027.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 27/12/2024",
-      "kind": "Document budgétaire",
-      "note": "Pages 12-13, série 2024-2027. Note de bas de page : la colonne 2024 suit la loi 540-ФЗ « с учетом изменений, внесенных Федеральным законом от 12 июля 2024 г. № 175-ФЗ ». Le fichier réellement servi par le site (chemin /2025/04/) diffère de celui référencé par les moteurs de recherche (/2024/12/) ; les deux ouvrent le même document."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2026-PROJET",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » au projet de loi de finances pour 2026-2028",
       "url": "https://minfin.gov.ru/common/upload/library/2025/11/main/Budzhet.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 31/10/2025",
-      "kind": "Document budgétaire",
-      "note": "Page 6, série 2025-2028. La colonne 2025 suit la loi 419-ФЗ amendée par la loi 152-ФЗ du 01/07/2025. Document déjà utilisé lors de la première passe."
+      "kind": "Document budgétaire"
     },
     {
       "code": "BDG-2026-LOI",
       "organisation": "Minfin",
-      "title": "« Бюджет для граждан » à la loi de finances 426-ФЗ du 28/11/2025 (exercice 2026, période 2027-2028)",
       "url": "https://minfin.gov.ru/common/upload/library/2026/02/main/BDG_2026.pdf",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 29/12/2025",
-      "kind": "Document budgétaire",
-      "note": "Pages 14-15, série 2025-2028. Note de bas de page : la colonne 2025 suit la loi 419-ФЗ « с учетом изменений, внесенных Федеральным законом от 4 ноября 2025 г. № 414-ФЗ » — c'est le second amendement de l'exercice 2025."
+      "kind": "Document budgétaire"
     },
     {
       "code": "CONSULTANT-466",
       "organisation": "ConsultantPlus (texte de la loi fédérale 466-ФЗ du 05/12/2022)",
-      "title": "Annexe de répartition des crédits par programmes d'État — section « 02 Национальная оборона »",
       "url": "https://www.consultant.ru/document/cons_doc_LAW_433298/3719a0e5bb43288724506aa5f0fbbf4aab283ed9/",
       "capture": "2026-08-14",
       "statedUpdate": "Texte de la loi du 05/12/2022, page consultée dans sa version courante",
-      "kind": "Document budgétaire",
-      "note": "Sert à mesurer l'opacité, pas le total : l'annexe de répartition par programmes ne publie que la fraction non classifiée de la section."
+      "kind": "Document budgétaire"
     }
   ],
   "figures": [
     {
       "code": "reserves-ru",
-      "label": "Réserves monétaires russes",
       "unit": "Md$",
       "engineSide": "invader",
       "enginePost": "reserves",
@@ -616,9 +495,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-hebdo",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre publié par l'émetteur lui-même, relevé sur une archive horodatée. Aucune conversion, aucune interpolation.",
-          "retained": true,
-          "why": "C'est la date exacte à laquelle s'ouvre le premier tour du jeu — l'automne 2021 — et le moteur porte donc cette valeur, à l'unité près. Le trimestre est un trimestre de paix : rien n'est gelé, les réserves sont intégralement disponibles."
+          "retained": true
         },
         {
           "date": "12 février 2024 — total immobilisé par le G7, l'UE et l'Australie",
@@ -626,9 +503,7 @@
           "unit": "Md€",
           "sourceCode": "conseil-ue-immobilise-g7-2024-02-12",
           "confidence": "Moyenne",
-          "confidenceWhy": "Le périmètre est exactement celui recherché et le montant est écrit en toutes lettres par le Conseil, mais c'est un ordre de grandeur arrondi arrêté en février 2024, jamais rafraîchi depuis, et libellé en euros et non en dollars.",
-          "retained": false,
-          "why": "C'est la lacune de la base qui est comblée : les 210 Md€ déjà présents ne couvraient que l'Union européenne, quand le blocage réel s'étend au G7 et à l'Australie pour environ 260 Md€, dont plus des deux tiers dans l'Union. Ce que ce chiffre NE dit pas : la ventilation par juridiction, la part australienne, et l'évolution depuis février 2024. Il ne dit pas davantage combien de ces avoirs sont des titres arrivés à échéance devenus des espèces — le Parlement européen évoque jusqu'à 90 %, ce qui change la nature de l'actif immobilisé sans en changer le montant. Enfin, la date compte : le Conseil publie ce total deux ans APRÈS le gel, si bien qu'aucune source officielle ne chiffre l'immobilisation au jour même du 28 février 2022."
+          "retained": false
         },
         {
           "date": "18 février 2022",
@@ -636,9 +511,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-hebdo",
           "confidence": "Haute",
-          "confidenceWhy": "Même série. C'est le dernier point publié avant l'invasion du 24 février, et la banque centrale a cessé de publier ensuite.",
-          "retained": false,
-          "why": "Non retenue, mais c'est le sommet historique du fonds, et il tombe six jours avant l'invasion. Il borne par le haut tout ce que la Russie pouvait avoir en caisse au premier jour de la guerre."
+          "retained": false
         },
         {
           "date": "Hiver 2022 — valeur du moteur",
@@ -646,9 +519,7 @@
           "unit": "Md$",
           "sourceCode": null,
           "confidence": "Moyenne",
-          "confidenceWhy": "Le montant du gel n'est plus arbitraire : il tombe ENTRE les deux totaux publiés. Le Conseil de l'UE chiffre 260 Md€ immobilisés par le G7, l'UE et l'Australie en février 2024, soit environ 281 Md$ au cours de l'époque ; l'EPRS avance 289,5 Md€ en 2025, soit environ 318 Md$. Le moteur en retire 301,9. Ce qui reste incertain est le cours retenu et la date d'arrêté, pas l'ordre de grandeur.",
-          "retained": true,
-          "why": "Le gel est joué au tour de l'invasion et retire 301,9 Md$ des 611,9 d'ouverture, ce qui laisse 310. Attention à ce que ce nombre représente : c'est ce que la Russie peut DÉPENSER, et aucune source ne le publie. La Banque de Russie ne ventile jamais ses réserves entre part gelée et part disponible — ses propres chiffres continuent de compter les avoirs immobilisés, et c'est pourquoi la série publiée ne baisse pas : 643 Md$ en février 2022, 598 fin 2023, 754 fin 2025. Le moteur ne modélise donc pas le total affiché par Moscou, il modélise la caisse réellement ouverte, obtenue par soustraction. C'est une grandeur dérivée, et elle doit être lue comme telle."
+          "retained": true
         },
         {
           "date": "Année 2025 — total immobilisé toutes juridictions, Suisse comprise",
@@ -656,9 +527,7 @@
           "unit": "Md€",
           "sourceCode": "eprs-confiscation-2025-09",
           "confidence": "Basse",
-          "confidenceWhy": "Compilation de l'EPRS à partir de calculs du PISM et du gouvernement fédéral suisse, et non d'une déclaration officielle des juridictions détentrices ; l'EPRS écrit lui-même que la valeur exacte par juridiction est difficile à établir faute d'information officielle cohérente, et retient un chiffre volontairement prudent pour le Luxembourg.",
-          "retained": false,
-          "why": "Retenu uniquement pour ENCADRER le chiffre du Conseil, jamais pour s'y substituer : le périmètre diffère, puisqu'il ajoute la Suisse — 6,2 Md€ — et n'isole pas l'Australie. Sa vraie valeur est ailleurs, dans la concentration qu'il révèle : sur 289,5 Md€, 209,2 sont dans l'Union et 180 en Belgique à eux seuls, soit 62 % du total mondial chez un seul dépositaire. Le gel occidental repose donc sur une décision belge, ce qu'aucun montant agrégé ne laisse deviner."
+          "retained": false
         },
         {
           "date": "28 février 2022",
@@ -666,9 +535,7 @@
           "unit": "Md€",
           "sourceCode": "conseil-ue-sanctions",
           "confidence": "Moyenne",
-          "confidenceWhy": "Le montant est publié par le Conseil, mais il ne couvre QUE l'Union européenne et il est libellé en euros. Le total immobilisé par l'ensemble des partenaires est supérieur et n'est pas chiffré sur cette page.",
-          "retained": false,
-          "why": "C'est la seule immobilisation que nous ayons pu vérifier à sa source. Elle date le gel — troisième train de sanctions, février 2022 — mais elle ne suffit pas à chiffrer ce que la Russie a réellement perdu."
+          "retained": false
         },
         {
           "date": "30 juin 2026",
@@ -676,9 +543,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-archive-2026-07",
           "confidence": "Haute",
-          "confidenceWhy": "Relevé sur un instantané horodaté du 23 juillet 2026, sur une page que son éditeur date du 1er juillet 2026.",
-          "retained": false,
-          "why": "À rapprocher, le même jour, des 46,4 Md$ réellement mobilisables du fonds souverain. Un rapport de quinze pour un entre ce que la Russie déclare détenir et ce que son Trésor peut engager : c'est l'écart que la base doit conserver, faute de quoi la lecture des réserves seule donnerait une puissance financière russe très supérieure à la réalité."
+          "retained": false
         },
         {
           "date": "30 juin 2026 — dont or monétaire",
@@ -686,9 +551,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-archive-2026-07",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne « gold » du tableau de la banque centrale, relevée sur instantané horodaté ; aucune conversion.",
-          "retained": false,
-          "why": "L'or représente 41,5 % des 720,4 Md$ déclarés à cette date. C'est le seul poste des réserves qui ait vraiment grossi depuis 2021, et c'est aussi le seul dont on puisse affirmer qu'il est physiquement hors d'atteinte des sanctions. Il ne s'ensuit pas qu'il soit dépensable : écouler 300 Md$ d'or sur des marchés fermés aux contreparties russes est une question distincte, sur laquelle la source est muette."
+          "retained": false
         },
         {
           "date": "31 décembre 2021",
@@ -696,9 +559,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-hebdo",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, même relevé.",
-          "retained": false,
-          "why": "Non retenue : le moteur ne rejoue pas la trajectoire d'avant-guerre, il l'ouvre. Ce point sert de contrôle — il montre que le fonds MONTE encore pendant que l'armée se masse, ce que le jeu ne représente pas."
+          "retained": false
         },
         {
           "date": "31 mars 2022",
@@ -706,9 +567,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-mensuel-requete",
           "confidence": "Moyenne",
-          "confidenceWhy": "Valeur publiée par la banque centrale elle-même, mais lue sur la page vivante : aucun instantané horodaté disponible ne couvre ce mois, et l'affichage du jour ne prouve donc pas l'affichage d'alors.",
-          "retained": false,
-          "why": "Le point le plus important de tout ce poste, et il tient dans une soustraction. Cinq semaines après le gel, les réserves déclarées ne passent que de 617,1 Md$ fin février à 606,4 Md$ fin mars, soit une baisse de 10,7 Md$ — alors qu'environ 300 Md$ venaient d'être immobilisés. La conclusion est mécanique : la Banque de Russie CONTINUE de compter les avoirs gelés dans son total publié. Toute la série postérieure à février 2022 mesure donc ce que la Russie possède sur le papier, jamais ce qu'elle peut mobiliser, et la banque centrale ne publie aucune ventilation entre les deux."
+          "retained": false
         },
         {
           "date": "31 décembre 2023",
@@ -716,9 +575,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-archive-2024-07",
           "confidence": "Haute",
-          "confidenceWhy": "Relevé sur un instantané horodaté du 2 juillet 2024, sur une page que son éditeur date du 1er juin 2024.",
-          "retained": false,
-          "why": "Deux ans après le gel, le total affiché est presque revenu à son niveau de fin 2021. Cela ne signifie pas que la Russie a récupéré ses avoirs : la part gelée y est toujours comptée, et la remontée vient de l'or, dont la contrevaleur passe de 133,1 Md$ fin 2021 à 155,9 Md$ à cette date."
+          "retained": false
         },
         {
           "date": "31 décembre 2024",
@@ -726,9 +583,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-archive-2025-03",
           "confidence": "Haute",
-          "confidenceWhy": "Relevé sur un instantané horodaté du 23 mars 2025, sur une page que son éditeur date du 1er mars 2025.",
-          "retained": false,
-          "why": "Trois ans après le gel, le total est stable. Sous cette stabilité, une bascule complète de composition : les réserves de change proprement dites tombent à 413,4 Md$ tandis que l'or monte à 195,7 Md$, soit 32 % du total contre 21 % fin 2021."
+          "retained": false
         },
         {
           "date": "31 décembre 2025",
@@ -736,9 +591,7 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-archive-2026-07",
           "confidence": "Haute",
-          "confidenceWhy": "Relevé sur un instantané horodaté du 23 juillet 2026, sur une page que son éditeur date du 1er juillet 2026.",
-          "retained": false,
-          "why": "Le total dépasse pour la première fois son sommet d'avant-guerre de 643,2 Md$. L'explication tient dans une seule ligne : l'or vaut 326,5 Md$, contre 133,1 Md$ fin 2021. Les réserves de change, elles, sont à 428,3 Md$ et n'ont pas bougé depuis deux ans. Une hausse de valorisation, donc, pas un réapprovisionnement — et elle porte largement sur des avoirs qui restent immobilisés."
+          "retained": false
         },
         {
           "date": "31 juillet 2026",
@@ -746,15 +599,12 @@
           "unit": "Md$",
           "sourceCode": "cbr-reserves-mensuel-requete",
           "confidence": "Moyenne",
-          "confidenceWhy": "Dernier point publié à la date de capture, donc postérieur au dernier instantané horodaté disponible : il n'est lisible que sur la page vivante.",
-          "retained": false,
-          "why": "Point le plus récent de la série. Il confirme le palier atteint : le total ne progresse plus, l'or reflue légèrement à 292,9 Md$ et les réserves de change restent inertes à 427,5 Md$."
+          "retained": false
         }
       ]
     },
     {
       "code": "foreign-ua",
-      "label": "Soutien extérieur ukrainien",
       "unit": "Md$ par an",
       "engineSide": "defender",
       "enginePost": "foreign",
@@ -765,9 +615,7 @@
           "unit": "Md$/an",
           "sourceCode": "kiel-graphique-2026-08-13",
           "confidence": "Moyenne",
-          "confidenceWhy": "Lecture graphique à ±0,05 Md€/mois, soit ±0,7 Md$/an. Aucune valeur de cette année n'est chiffrée en clair dans le communiqué.",
-          "retained": false,
-          "why": "Total alloué : 2,49 Md€/mois de militaire et 2,87 de financier et humanitaire, convertis par × 12 × 1,15. L'aide militaire seule vaut 34,4 Md$/an et fait le plancher. Le moteur porte 52,7 : il est dans l'encadrement, ce qui est la condition qu'il doit remplir, puisqu'il finance le matériel livré plus le budget de guerre, humanitaire exclu."
+          "retained": false
         },
         {
           "date": "2022 → 2026, part américaine de l'aide militaire",
@@ -775,9 +623,7 @@
           "unit": "points",
           "sourceCode": "kiel-graphique-2026-08-13",
           "confidence": "Haute",
-          "confidenceWhy": "L'écart est trop grand pour que l'incertitude de lecture le remette en cause : la barre américaine de 2022 fait plus de la moitié du total, celle de 2026 est un liseré.",
-          "retained": false,
-          "why": "C'est ce que la source apprend et que le moteur ne sait pas dire. La part américaine de l'aide militaire passe de 58 % à environ 1 %, l'Europe plus que double, et le total militaire ne perd que 7 %. Le premier soutien de l'Ukraine est sorti et le flux d'armes a tenu — un quatrième avenir que le jeu ne connaît pas, puisqu'il ne sait faire que tenir, s'intensifier ou s'arrêter. Côté financier, la même substitution ÉCHOUE, le total perdant 39 %."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide militaire, total tous donateurs",
@@ -785,9 +631,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur lue dans la cellule du jeu de données de l'éditeur, sans conversion ni interpolation ; l'ancien relevé graphique donnait 2,49, identique au centième.",
-          "retained": false,
-          "why": "Moyenne mensuelle de l'aide militaire ALLOUÉE sur les douze mois de 2022. Elle dit ce que les gouvernements ont affecté à des paquets d'armement concrets ; elle ne dit pas ce qui a franchi la frontière ukrainienne cette année-là."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide militaire, États-Unis",
@@ -795,9 +639,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Les États-Unis font 57,6 % de l'aide militaire allouée en 2022 — plus que tout le reste du monde réuni. C'est le point de départ du basculement qui suit."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide militaire, Europe",
@@ -805,9 +647,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe au sens large — UE, Norvège, Royaume-Uni, Islande, Suisse — n'est encore que le second contributeur militaire."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide militaire, autres donateurs",
@@ -815,9 +655,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Canada, Australie, Japon, Corée du Sud et les autres non-européens hors États-Unis : un appoint, jamais un pilier."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide financière et humanitaire, total tous donateurs",
@@ -825,9 +663,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; l'ancien relevé graphique donnait 2,87, soit un écart de 0,02.",
-          "retained": false,
-          "why": "En 2022 le budget de guerre pèse plus lourd que les armes. La catégorie mélange financier et humanitaire : un moteur qui ne finance pas l'humanitaire ne doit pas la reprendre telle quelle."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide financière et humanitaire, États-Unis",
@@ -835,9 +671,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Sur le poste financier, les États-Unis sont déjà minoritaires devant l'Europe dès la première année."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide financière et humanitaire, Europe",
@@ -845,9 +679,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe tient le budget ukrainien dès 2022, alors qu'elle ne tient pas encore l'armement."
+          "retained": false
         },
         {
           "date": "Année 2022 — aide financière et humanitaire, autres donateurs",
@@ -855,9 +687,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Essentiellement le Japon et le Canada, dont l'aide est presque entièrement financière."
+          "retained": false
         },
         {
           "date": "Année 2023",
@@ -865,9 +695,7 @@
           "unit": "Md$/an",
           "sourceCode": "kiel-graphique-2026-08-13",
           "confidence": "Moyenne",
-          "confidenceWhy": "Lecture graphique, même incertitude.",
-          "retained": false,
-          "why": "Militaire 3,08 et financier 2,84 Md€/mois. Plancher militaire 42,5 Md$/an. Le moteur porte 64,8, dans l'encadrement."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide militaire, total tous donateurs",
@@ -875,9 +703,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; l'ancien relevé graphique donnait 3,08.",
-          "retained": false,
-          "why": "Sommet de l'aide militaire allouée sur les cinq années. C'est le maximum d'affectation, pas le maximum de livraison — l'écart entre les deux est ce que le tracker ne mesure pas."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide militaire, États-Unis",
@@ -885,9 +711,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Pic américain absolu. Les États-Unis restent le premier fournisseur d'armes, à 50,7 % du total."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide militaire, Europe",
@@ -895,9 +719,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe militaire progresse de 56 % en un an et passe presque à parité avec Washington."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide militaire, autres donateurs",
@@ -905,9 +727,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Le reste du monde recule sur l'armement, et ne remontera jamais durablement."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide financière et humanitaire, total tous donateurs",
@@ -915,9 +735,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; l'ancien relevé graphique donnait 2,84.",
-          "retained": false,
-          "why": "Le poste financier stagne pendant que le militaire monte : 2023 est l'année où l'effort bascule vers l'armement."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide financière et humanitaire, États-Unis",
@@ -925,9 +743,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Chute de 34 % du financier américain en un an, avant même le blocage budgétaire de 2024."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide financière et humanitaire, Europe",
@@ -935,9 +751,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe compense presque exactement le retrait américain sur ce poste."
+          "retained": false
         },
         {
           "date": "Année 2023 — aide financière et humanitaire, autres donateurs",
@@ -945,9 +759,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Maximum du groupe sur les cinq années, tiré par les garanties de prêt japonaises."
+          "retained": false
         },
         {
           "date": "Année 2024",
@@ -955,9 +767,7 @@
           "unit": "Md$/an",
           "sourceCode": "kiel-graphique-2026-08-13",
           "confidence": "Moyenne",
-          "confidenceWhy": "Lecture graphique, même incertitude.",
-          "retained": false,
-          "why": "C'est le sommet de la source, et le moteur y creuse son minimum à 54,7 — le seul désaccord franc des cinq années, et il est volontaire. Kiel enregistre le paquet américain voté en avril 2024 au moment où il est ALLOUÉ ; le moteur représente la disette de munitions que le front a réellement subie. Recaler ce point ferait disparaître l'événement que le jeu s'est donné pour critère de validation."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide militaire, total tous donateurs",
@@ -965,9 +775,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'aide militaire allouée RECULE de 7,5 % en 2024 : le jeu de données contredit l'idée d'un sommet en 2024, qui ne vaut que pour le total toutes catégories confondues. C'est aussi l'année de la disette de munitions au front, ce que la métrique d'allocation ne peut pas montrer."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide militaire, États-Unis",
@@ -975,9 +783,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Le paquet américain voté en avril 2024 est enregistré ici au moment où il est affecté, non au moment où les obus arrivent. C'est la source exacte du désaccord entre cette série et le vécu du front."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide militaire, Europe",
@@ -985,9 +791,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Première année où l'Europe alloue PLUS d'armement que les États-Unis. Le basculement est daté par cette ligne."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide militaire, autres donateurs",
@@ -995,9 +799,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Plancher du groupe sur les cinq années."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide financière et humanitaire, total tous donateurs",
@@ -1005,9 +807,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Sommet absolu de la série, tous types et toutes années confondus. Il est FINANCIER, pas militaire : 2024 est l'année où l'on sauve le budget de l'État ukrainien, pas celle où l'on arme le mieux."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide financière et humanitaire, États-Unis",
@@ -1015,9 +815,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Sursaut américain de dernière heure — l'essentiel du soutien budgétaire des États-Unis est affecté cette année-là, et c'est le dernier."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide financière et humanitaire, Europe",
@@ -1025,9 +823,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe tient son niveau ; le pic de 2024 vient du renfort américain, pas d'elle."
+          "retained": false
         },
         {
           "date": "Année 2024 — aide financière et humanitaire, autres donateurs",
@@ -1035,9 +831,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Niveau tenu, tiré par les prêts adossés aux avoirs russes immobilisés (mécanisme ERA)."
+          "retained": false
         },
         {
           "date": "Année 2025",
@@ -1045,9 +839,7 @@
           "unit": "Md$/an",
           "sourceCode": "kiel-graphique-2026-08-13",
           "confidence": "Haute",
-          "confidenceWhy": "Lecture graphique CONTRÔLÉE : le communiqué du 13 août 2026 chiffre en clair le rapport entre l'aide financière de 2026 et celle de 2025 à −41 %, et le relevé donne −41,2 %. Les deux barres se valident l'une l'autre.",
-          "retained": false,
-          "why": "Militaire 2,56 et financier 3,01 Md€/mois. Le moteur porte 79,7, soit à peine au-dessus du plafond de la source — le déroulé de la victoire est une contrefactuelle où l'Occident joue les avoirs gelés, et cet écart est le propos de la variante, pas son défaut."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide militaire, total tous donateurs",
@@ -1055,9 +847,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; l'ancien relevé graphique donnait 2,56, identique.",
-          "retained": false,
-          "why": "Le total militaire ne perd que 10 % alors que la première puissance contributrice a disparu. C'est la mesure de la substitution européenne, et elle réussit sur ce poste."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide militaire, États-Unis",
@@ -1065,9 +855,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Effondrement à 1,3 % du total militaire, contre 57,6 % en 2022. Les États-Unis cessent d'allouer, sans cesser de vendre : les Européens achètent leur armement à l'industrie américaine, ce que cette ligne ne peut pas montrer."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide militaire, Europe",
@@ -1075,9 +863,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe alloue à elle seule 92 % de l'aide militaire, soit 2,6 fois son niveau de 2022. Elle absorbe le retrait américain en trois ans."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide militaire, autres donateurs",
@@ -1085,9 +871,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Remontée nette du groupe, qui dépasse pour la première fois les États-Unis sur l'armement."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide financière et humanitaire, total tous donateurs",
@@ -1095,9 +879,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; l'ancien relevé graphique donnait 3,01, et la baisse de −41 % annoncée pour 2026 se retrouve ici à −41,4 %.",
-          "retained": false,
-          "why": "Le poste financier tient encore en 2025 ; c'est l'année suivante qu'il cède."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide financière et humanitaire, États-Unis",
@@ -1105,9 +887,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "La cellule vaut exactement zéro dans le jeu de données — ce n'est pas un arrondi de lecture.",
-          "retained": false,
-          "why": "Zéro strict : aucune aide financière ou humanitaire américaine allouée en 2025. C'est le fait le plus net de toute la série, et il était invisible sur le graphique où la barre était simplement absente."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide financière et humanitaire, Europe",
@@ -1115,9 +895,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe porte 90 % du soutien budgétaire. Elle compense le zéro américain, une seule année."
+          "retained": false
         },
         {
           "date": "Année 2025 — aide financière et humanitaire, autres donateurs",
@@ -1125,9 +903,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Niveau tenu par le Japon et le Canada."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026",
@@ -1135,9 +911,7 @@
           "unit": "Md$/an",
           "sourceCode": "kiel-communique-2026-08-13",
           "confidence": "Basse",
-          "confidenceWhy": "Le point ne couvre que six mois et il est annualisé par simple multiplication, ce qui suppose un second semestre semblable au premier. L'hypothèse est déjà démentie à l'intérieur du semestre : mai et juin portent à eux seuls près de 11 Md€ de prêt européen.",
-          "retained": false,
-          "why": "Militaire 2,32 et financier 1,77 Md€/mois. À lire comme un plancher de tendance, jamais comme une prévision. Le moteur porte 71,6 sur cette année, très au-dessus : c'est là que la contrefactuelle s'écarte le plus du réel."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide militaire, total tous donateurs",
@@ -1145,9 +919,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; la moyenne porte sur six mois (mois 49 à 54 de la série), l'éditeur divisant bien par 6 et non par 12.",
-          "retained": false,
-          "why": "Sur quatre ans et demi, l'aide militaire allouée n'a perdu que 6,8 % de son niveau de 2022, alors que son premier contributeur est sorti. C'est une moyenne semestrielle, pas une prévision annuelle : rien n'autorise à la multiplier par douze pour bâtir une année 2026."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide militaire, États-Unis",
@@ -1155,9 +927,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "La cellule vaut exactement zéro dans le jeu de données.",
-          "retained": false,
-          "why": "Zéro strict sur l'armement aussi. Le premier soutien militaire de l'Ukraine n'alloue plus rien — et l'Ukraine continue pourtant de recevoir des armes américaines, payées par des tiers."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide militaire, Europe",
@@ -1165,9 +935,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe alloue 96 % de l'aide militaire, soit 2,4 fois son niveau de 2022. La substitution est achevée sur l'armement."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide militaire, autres donateurs",
@@ -1175,9 +943,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Repli du groupe après le sursaut de 2025."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, total tous donateurs",
@@ -1185,9 +951,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données ; l'ancien relevé graphique donnait 1,77, et la baisse annoncée à −41 % se vérifie ici à −41,4 %.",
-          "retained": false,
-          "why": "Le poste financier tombe de 38,6 % sous son niveau de 2022 pendant que le militaire n'en perd que 6,8. La substitution européenne réussit sur les armes et ÉCHOUE sur le budget : c'est le fait central de la source."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, États-Unis",
@@ -1195,9 +959,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "La cellule vaut exactement zéro dans le jeu de données.",
-          "retained": false,
-          "why": "Deuxième année consécutive à zéro. Les États-Unis sont intégralement sortis des deux postes."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, Europe",
@@ -1205,9 +967,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "L'Europe elle-même recule de 43 % sur le financier par rapport à 2025, alors qu'elle progressait encore sur le militaire. Le semestre est très inégal : mai et juin concentrent le prêt européen, ce qu'une moyenne semestrielle écrase."
+          "retained": false
         },
         {
           "date": "Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, autres donateurs",
@@ -1215,9 +975,7 @@
           "unit": "Md€/mois, euros constants base 2021",
           "sourceCode": "kiel-ust-r30-fig-a31",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule du jeu de données.",
-          "retained": false,
-          "why": "Repli modéré, sans effet sur l'ordre de grandeur."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, Europe géographique",
@@ -1225,9 +983,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-fig-2",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur publiée telle quelle dans l'onglet Fig 2, cohérente au centième avec la somme des lignes de l'onglet Aggregates (UE, Royaume-Uni, Suisse, Norvège, Islande).",
-          "retained": false,
-          "why": "Total de l'aide affectée par l'Europe depuis la rupture des relations diplomatiques. Euros COURANTS, non déflatés — ce cumul ne se compare donc pas directement aux moyennes mensuelles ci-dessus, qui sont en euros constants 2021."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ENGAGÉ, Europe géographique",
@@ -1235,9 +991,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-fig-2",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur publiée telle quelle dans l'onglet Fig 2.",
-          "retained": false,
-          "why": "L'Europe a ANNONCÉ 391 Md€ et n'en a AFFECTÉ que 230 : 160,6 Md€ restent au stade de la promesse, soit 41 % du total annoncé. Confondre les deux revient à surestimer le soutien européen de deux tiers."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, États-Unis",
@@ -1245,9 +999,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-fig-2",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur publiée telle quelle dans l'onglet Fig 2.",
-          "retained": false,
-          "why": "Total américain sur toute la guerre. Il est désormais figé : les deux dernières années sont à zéro."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ENGAGÉ, États-Unis",
@@ -1255,9 +1007,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-fig-2",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur publiée telle quelle dans l'onglet Fig 2.",
-          "retained": false,
-          "why": "L'écart engagé-alloué américain n'est que de 3,6 Md€, soit 3 %, contre 41 % côté européen. Washington a tenu ses annonces à la quasi-totalité ; l'Europe annonce beaucoup plus qu'elle n'affecte."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, autres donateurs",
@@ -1265,9 +1015,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-aggregates",
           "confidence": "Moyenne",
-          "confidenceWhy": "Chaque terme est publié, mais la somme est faite ici : Canada 14,277 + « Other donor countries » 12,9362 + Australie 1,0726 + Nouvelle-Zélande 0,0825. L'éditeur ne publie aucun total pour ce groupe au sens du graphique Fig A31.",
-          "retained": false,
-          "why": "Le troisième groupe pèse 7,6 % du total alloué. Il est presque entièrement financier — le Japon en fait à lui seul 12,2 Md€."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ENGAGÉ, autres donateurs",
@@ -1275,9 +1023,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-aggregates",
           "confidence": "Moyenne",
-          "confidenceWhy": "Même addition de lignes publiées : Canada 16,4197 + « Other donor countries » 21,7421 + Australie 1,1132 + Nouvelle-Zélande 0,0825.",
-          "retained": false,
-          "why": "Ce groupe aussi annonce nettement plus qu'il n'affecte — 28 % d'écart, à mi-chemin entre l'Europe et les États-Unis."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, tous donateurs, toutes catégories",
@@ -1285,9 +1031,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-aggregates",
           "confidence": "Haute",
-          "confidenceWhy": "Dernier point de la série cumulée mensuelle publiée dans l'onglet Fig A22, arrêté à juin 2026.",
-          "retained": false,
-          "why": "Le grand total de l'aide affectée à l'Ukraine en quatre ans et demi. Il se décompose en 179,343 Md€ de militaire, 168,147 de financier et 26,049 d'humanitaire. Il est très légèrement inférieur à la somme des groupes (374,224) parce que la série mensuelle exclut les allocations dont le mois n'est pas identifié."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ militaire, Europe géographique",
@@ -1295,9 +1039,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-fig-2",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur publiée telle quelle dans l'onglet Fig 2.",
-          "retained": false,
-          "why": "Sur l'armement, l'Europe a engagé 216,96 Md€ et n'en a affecté que 108,83 : la MOITIÉ de ses promesses militaires reste non allouée. C'est le plus gros réservoir de soutien non converti que la source identifie."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ militaire, États-Unis",
@@ -1305,9 +1047,7 @@
           "unit": "Md€, euros courants",
           "sourceCode": "kiel-ust-r30-fig-2",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur publiée telle quelle dans l'onglet Fig 2.",
-          "retained": false,
-          "why": "Les États-Unis ont affecté 98,5 % de leurs 65,58 Md€ d'engagements militaires. Sur toute la guerre, ils restent le premier fournisseur d'armes en cumul, malgré deux années à zéro."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — soutien budgétaire ALLOUÉ, tous donateurs",
@@ -1315,9 +1055,7 @@
           "unit": "Md€, euros courants nominaux",
           "sourceCode": "kiel-ust-r30-fig-9",
           "confidence": "Moyenne",
-          "confidenceWhy": "Somme des 42 lignes-pays publiées dans l'onglet Fig 9 ; l'éditeur publie chaque pays mais aucun total. Recoupée par l'onglet Fig 8, dont le total d'aide financière allouée est 168,050 Md€, dont 0,882 de ligne de swap polonaise hors soutien budgétaire — soit 167,169 exactement.",
-          "retained": false,
-          "why": "Base de comparaison pour la seule mesure de décaissement que la source publie."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — soutien budgétaire DÉCAISSÉ, tous donateurs",
@@ -1325,9 +1063,7 @@
           "unit": "Md€, euros courants nominaux",
           "sourceCode": "kiel-ust-r30-fig-9",
           "confidence": "Moyenne",
-          "confidenceWhy": "Somme des lignes-pays publiées, mêmes réserves ; les décaissements eux-mêmes proviennent du ministère des Finances ukrainien, pas d'une estimation du tracker.",
-          "retained": false,
-          "why": "LA réponse chiffrée à la question du décaissé : 76,5 % du soutien budgétaire affecté est effectivement arrivé sur le compte de l'État ukrainien. Un quart de l'argent budgétaire promis ET affecté n'a jamais été versé. Ce ratio ne vaut QUE pour le soutien budgétaire — ni pour l'armement, ni pour l'humanitaire."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — part du soutien budgétaire réellement décaissée, Europe",
@@ -1335,9 +1071,7 @@
           "unit": "%",
           "sourceCode": "kiel-ust-r30-fig-9",
           "confidence": "Moyenne",
-          "confidenceWhy": "Rapport calculé ici sur la somme des lignes européennes publiées : 80,310 décaissés sur 100,860 alloués. Les institutions de l'UE, à elles seules, affichent 71,111 sur 87,609, soit 81,2 %, et cette ligne-là est publiée telle quelle.",
-          "retained": false,
-          "why": "L'Europe verse quatre cinquièmes de ce qu'elle affecte au budget ukrainien. Les États membres pris isolément sont bien en dessous : la Suède a décaissé 4 % de ses 1,10 Md€, l'Espagne 19 %, la Norvège 33 %, la Pologne et la Slovaquie zéro. L'agrégat européen tient parce que les institutions de l'UE le tiennent."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — part du soutien budgétaire réellement décaissée, États-Unis",
@@ -1345,9 +1079,7 @@
           "unit": "%",
           "sourceCode": "kiel-ust-r30-fig-9",
           "confidence": "Haute",
-          "confidenceWhy": "Rapport de deux valeurs publiées sur la même ligne de l'onglet Fig 9 : 29,4601 Md€ décaissés sur 47,2972 alloués.",
-          "retained": false,
-          "why": "Près de 18 Md€ de soutien budgétaire américain affectés n'ont jamais été versés — et ne le seront pas, puisque les États-Unis n'allouent plus rien depuis 2025. C'est le plus grand écart absolu entre affectation et versement de toute la source."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — part du soutien budgétaire réellement décaissée, autres donateurs",
@@ -1355,9 +1087,7 @@
           "unit": "%",
           "sourceCode": "kiel-ust-r30-fig-9",
           "confidence": "Moyenne",
-          "confidenceWhy": "Rapport calculé sur la somme des lignes publiées du groupe : 18,173 décaissés sur 19,012 alloués.",
-          "retained": false,
-          "why": "Le groupe le plus fiable de la source : le Japon a versé 9,868 de ses 10,378 Md€, le Canada 8,214 de ses 8,424. Un petit donateur peut être un meilleur payeur qu'une grande puissance."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — taux de livraison des chars lourds",
@@ -1365,9 +1095,7 @@
           "unit": "% des unités engagées",
           "sourceCode": "kiel-ust-r30-inkind",
           "confidence": "Haute",
-          "confidenceWhy": "Taux publié en clair par l'éditeur : 696,8 chars livrés sur 893,3 engagés (les demi-unités viennent des livraisons conjointes entre pays).",
-          "retained": false,
-          "why": "Deuxième et dernière fenêtre du tracker sur le livré, en UNITÉS et non en euros. Elle rapporte le livré à l'ENGAGÉ, pas à l'alloué : ce taux ne peut pas être appliqué aux montants alloués ci-dessus. L'écart entre pays est énorme — Tchéquie 100 %, Pologne 81 %, États-Unis 30 %."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — taux de livraison des obusiers 155/152 mm",
@@ -1375,9 +1103,7 @@
           "unit": "% des unités engagées",
           "sourceCode": "kiel-ust-r30-inkind",
           "confidence": "Haute",
-          "confidenceWhy": "Taux publié en clair : 542 livrés sur 759 engagés.",
-          "retained": false,
-          "why": "Un obusier engagé sur trois n'est jamais arrivé. Les États-Unis livrent 98,5 % des leurs, l'Allemagne 30,8 % : la moyenne masque deux comportements opposés."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — taux de livraison des lance-roquettes multiples",
@@ -1385,9 +1111,7 @@
           "unit": "% des unités engagées",
           "sourceCode": "kiel-ust-r30-inkind",
           "confidence": "Haute",
-          "confidenceWhy": "Taux publié en clair : 65 livrés sur 84 engagés.",
-          "retained": false,
-          "why": "Petits volumes, donc taux fragile : un seul système non livré déplace le pourcentage de plus d'un point."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — taux de livraison des systèmes sol-air",
@@ -1395,9 +1119,7 @@
           "unit": "% des unités engagées",
           "sourceCode": "kiel-ust-r30-inkind",
           "confidence": "Haute",
-          "confidenceWhy": "Taux publié en clair : 63 livrés sur 85 engagés.",
-          "retained": false,
-          "why": "La catégorie qui décide de la survie du réseau électrique ukrainien, et un quart des systèmes promis manque à l'appel."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — taux de livraison des véhicules de combat d'infanterie",
@@ -1405,9 +1127,7 @@
           "unit": "% des unités engagées",
           "sourceCode": "kiel-ust-r30-inkind",
           "confidence": "Haute",
-          "confidenceWhy": "Taux publié en clair : 726 livrés sur 1 283 engagés.",
-          "retained": false,
-          "why": "Le pire taux des cinq catégories, et il tient à une ligne unique : les États-Unis ont engagé 305 véhicules et en ont livré ZÉRO. Les pays d'Europe de l'Est, eux, livrent 100 % des leurs."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — lignes d'aide militaire portant une valeur livrée en euros",
@@ -1415,9 +1135,7 @@
           "unit": "% des lignes d'allocation militaire",
           "sourceCode": "kiel-ust-r30-maindata",
           "confidence": "Moyenne",
-          "confidenceWhy": "Dénombrement effectué ici sur la base brute — 174 lignes renseignées sur 3 492 allocations militaires —, et non un chiffre publié par l'éditeur ; le champ compté, « tot_value_deliv_EUR », est bien celui de la base.",
-          "retained": false,
-          "why": "C'est la mesure de la lacune centrale. La colonne « valeur livrée » existe mais elle est vide dans 95 % des cas : 13,3 Md€ de militaire livré renseignés face à 179,8 Md€ alloués. Le financier est pire encore (5 lignes sur 365), l'humanitaire aussi (38 sur 1 644). Hors soutien budgétaire et hors comptage d'unités d'armes lourdes, le tracker ne sait PAS dire ce qui est arrivé — et il ne prétend pas le savoir."
+          "retained": false
         },
         {
           "date": "24 janvier 2022 au 30 juin 2026 — indice de transparence des livraisons d'armes lourdes",
@@ -1425,15 +1143,12 @@
           "unit": "score moyen sur 3",
           "sourceCode": "kiel-ust-r30-inkind",
           "confidence": "Haute",
-          "confidenceWhy": "Moyenne publiée telle quelle dans l'onglet « Delivery Transparency Index » (1,3239 sur 27 donateurs).",
-          "retained": false,
-          "why": "L'éditeur mesure lui-même son propre angle mort : seuls 4 donateurs sur 27 tiennent un site officiel recensant leurs livraisons d'armes lourdes, et 5 seulement documentent la majorité de leurs entrées. La Finlande et la Croatie sont à zéro, les États-Unis à 0,93 sur 3. Le déficit d'information sur le livré n'est pas un défaut de la base : c'est un choix des gouvernements."
+          "retained": false
         }
       ]
     },
     {
       "code": "nwf-ru",
-      "label": "Fonds national de bien-être russe (ФНБ)",
       "unit": "Md$",
       "engineSide": "invader",
       "enginePost": "nwf",
@@ -1444,9 +1159,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2021-10",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre publié par le ministère émetteur, lu dans le fichier daté lui-même, sans conversion ni interpolation.",
-          "retained": false,
-          "why": "C'est la trésorerie de guerre au jour même où s'ouvre le premier tour du jeu, et il ne faut surtout pas la confondre avec les 611,9 Md$ de réserves de la banque centrale à la même date : ce sont deux poches distinctes, et la seconde n'appartient pas au gouvernement. Ce montant NE dit pas ce que Moscou peut dépenser — il faut pour cela la ligne suivante."
+          "retained": false
         },
         {
           "date": "1er octobre 2021 — part liquide",
@@ -1454,9 +1167,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2021-10",
           "confidence": "Haute",
-          "confidenceWhy": "Ligne « actifs liquides » publiée séparément par le ministère dans le même document, avec sa définition explicite : les seules sommes déposées sur les comptes du fonds à la Banque de Russie.",
-          "retained": false,
-          "why": "Le fonds souverain n'est mobilisable qu'à hauteur de 60 % à la veille de la guerre : le reste dort dans des dépôts à VEB.RF, des obligations et des actions d'entreprises russes qu'on ne liquide pas pour financer un front. C'est cette part-là, et non le total, qui est l'homologue économique de ce que le moteur fait fondre. Réserve importante : à cette date la ligne compte encore des euros, des livres et des yens, que le gel de février 2022 rendra inutilisables sans que le ministère ne les retire aussitôt."
+          "retained": false
         },
         {
           "date": "1er janvier 2022 — volume total du fonds",
@@ -1464,9 +1175,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2022-01",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, même mode de lecture, valeur recoupée au centième par le classeur mensuel du ministère.",
-          "retained": false,
-          "why": "Sept semaines avant l'invasion. Le fonds souverain BAISSE légèrement en dollars pendant que les réserves de la banque centrale, elles, montent encore vers leur sommet de 643,2 Md$ : les deux poches ne bougent pas ensemble, et c'est précisément pourquoi il ne faut ni les additionner ni les substituer l'une à l'autre."
+          "retained": false
         },
         {
           "date": "1er janvier 2022 — part liquide",
@@ -1474,9 +1183,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2022-01",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, ligne publiée séparément par l'émetteur.",
-          "retained": false,
-          "why": "La part mobilisable est restée plate sur tout le dernier trimestre de paix. C'est la meilleure borne haute disponible de ce que le Trésor russe avait effectivement en caisse au premier jour de la guerre, sous la même réserve : une fraction de ce montant était libellée en devises occidentales qui allaient cesser d'être utilisables sept semaines plus tard."
+          "retained": false
         },
         {
           "date": "1er mars 2022 — volume total du fonds",
@@ -1484,9 +1191,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2022-03",
           "confidence": "Haute",
-          "confidenceWhy": "Premier arrêté publié après l'invasion, lu dans le fichier daté du ministère.",
-          "retained": false,
-          "why": "Le total perd 28 Md$ en deux mois, mais cette chute est un effet de change et de valorisation, pas un décaissement : le fonds n'a pas été vidé, il a été recompté dans un dollar devenu brutalement plus cher en roubles."
+          "retained": false
         },
         {
           "date": "1er mars 2022 — part liquide",
@@ -1494,9 +1199,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2022-03",
           "confidence": "Basse",
-          "confidenceWhy": "Le chiffre est publié tel quel par le ministère, mais le document montre qu'il inclut encore 38,6 Md€, 4,2 Md£ et 600,3 Md¥ gelés par les sanctions occidentales : la ligne mesure ce que le fonds possède, pas ce qu'il peut dépenser.",
-          "retained": false,
-          "why": "Point le plus trompeur de toute la série, et la raison pour laquelle il figure ici. Trois jours après le gel, la part dite liquide MONTE — de 113,5 à 116,6 Md$ — alors même qu'une partie substantielle de ces avoirs vient d'être rendue inaccessible. Toute lecture qui prendrait ce nombre pour de la trésorerie disponible surestimerait gravement la marge de manœuvre russe au premier tour de guerre. Le ministère ne retirera la livre et le yen qu'en décembre 2022, et l'euro qu'au fil de 2023."
+          "retained": false
         },
         {
           "date": "1er janvier 2023 — volume total du fonds",
@@ -1504,9 +1207,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2023-01",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, valeur recoupée au centième par le classeur mensuel du ministère.",
-          "retained": false,
-          "why": "Après une année pleine de guerre le total ne perd que 6 Md$ sur douze mois. Pris seul, ce chiffre suggérerait à tort que la trésorerie de guerre a tenu."
+          "retained": false
         },
         {
           "date": "1er janvier 2023 — part liquide",
@@ -1514,9 +1215,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2023-01",
           "confidence": "Moyenne",
-          "confidenceWhy": "Chiffre publié par l'émetteur, mais la ligne contient encore 10,46 Md€ dont l'usage était empêché par les sanctions ; le montant réellement mobilisable était donc inférieur d'environ ce montant.",
-          "retained": false,
-          "why": "Voilà ce que le total masquait : la part mobilisable perd 26 Md$ en un an, soit près d'un quart, pendant que le total ne bouge presque pas. C'est ici, et non dans le total, que se lit le coût financier de la première année de guerre — le fonds a converti du liquide en participations et en dépôts qu'il ne peut plus dépenser."
+          "retained": false
         },
         {
           "date": "1er juillet 2023 — part liquide",
@@ -1524,9 +1223,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2023-07",
           "confidence": "Moyenne",
-          "confidenceWhy": "Chiffre publié par l'émetteur ; la ligne contient encore un résidu de 7,28 Md€ inutilisables.",
-          "retained": false,
-          "why": "Point de milieu d'année qui montre que l'érosion est continue, et non concentrée sur les clôtures annuelles. Le total, lui, vaut 145,58 Md$ à la même date : il n'a pratiquement pas bougé depuis janvier."
+          "retained": false
         },
         {
           "date": "1er janvier 2024 — volume total du fonds",
@@ -1534,9 +1231,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2024-01",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, valeur recoupée par le classeur mensuel et par le tableau long du ministère.",
-          "retained": false,
-          "why": "Deux années de guerre ont coûté 58 Md$ au total, soit 30 % du fonds. La comparaison avec la ligne suivante est le cœur du sujet."
+          "retained": false
         },
         {
           "date": "1er janvier 2024 — part liquide",
@@ -1544,9 +1239,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2024-01",
           "confidence": "Haute",
-          "confidenceWhy": "À partir de cet arrêté la ligne ne contient plus que du yuan, de l'or et des roubles : elle mesure enfin, sans correction, ce qui est réellement mobilisable.",
-          "retained": false,
-          "why": "La part mobilisable a fondu de moitié en deux ans — de 113,8 à 55,9 Md$ — quand le total n'a perdu que 30 %. La part liquide dans le total tombe de 60 % à 42 %. C'est la mesure la plus honnête de ce que la guerre a coûté à la trésorerie russe, et c'est cette pente-là, non celle du total, que le moteur devrait chercher à reproduire."
+          "retained": false
         },
         {
           "date": "1er janvier 2025 — volume total du fonds",
@@ -1554,9 +1247,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2025-01",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, valeur recoupée au centième par le classeur mensuel.",
-          "retained": false,
-          "why": "Plancher du total sur toute la période observée. Il ne durera pas : la valorisation de l'or fera remonter ce chiffre en 2025 et 2026 sans qu'un rouble supplémentaire soit disponible."
+          "retained": false
         },
         {
           "date": "1er janvier 2025 — part liquide",
@@ -1564,9 +1255,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2025-01",
           "confidence": "Haute",
-          "confidenceWhy": "Ligne composée uniquement de yuan, d'or et de roubles à cette date ; aucune correction nécessaire.",
-          "retained": false,
-          "why": "Point bas absolu de la part mobilisable : un tiers de ce qu'elle valait à l'ouverture du jeu, et 32 % seulement du fonds. Si un seul chiffre devait dater le moment où la trésorerie de guerre russe a cessé d'être une réserve de manœuvre, c'est celui-ci. Il ne dit rien, en revanche, de la capacité d'emprunt intérieur ni des recettes d'exportation, qui sont les autres robinets et ne figurent pas dans ce poste."
+          "retained": false
         },
         {
           "date": "1er août 2025 — volume total du fonds",
@@ -1574,9 +1263,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2025-08",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, valeur recoupée au centième par le classeur mensuel.",
-          "retained": false,
-          "why": "Le total remonte de 43 Md$ en sept mois. Aucun apport ne l'explique : c'est la réévaluation des actifs, or en tête, et le raffermissement du rouble. Une lecture pressée y verrait un réarmement financier, ce que la ligne suivante dément."
+          "retained": false
         },
         {
           "date": "1er août 2025 — part liquide",
@@ -1584,9 +1271,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2025-08",
           "confidence": "Haute",
-          "confidenceWhy": "Ligne composée uniquement de yuan, d'or et de roubles ; publiée par l'émetteur.",
-          "retained": false,
-          "why": "La part mobilisable remonte aussi, mais bien moins vite : elle ne représente plus que 30 % du fonds. L'écart entre les deux courbes ne cesse de s'ouvrir, et c'est cet écart qui est l'information."
+          "retained": false
         },
         {
           "date": "1er février 2026 — volume total du fonds",
@@ -1594,9 +1279,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2026-02",
           "confidence": "Haute",
-          "confidenceWhy": "Même série, nom de fichier daté, valeur recoupée par le classeur mensuel.",
-          "retained": false,
-          "why": "Sommet du total sur toute la période de guerre, au-dessus du niveau d'octobre 2021. Pris isolément, ce chiffre dirait que la trésorerie de guerre russe est plus riche qu'avant l'invasion. C'est faux, et la ligne suivante le montre."
+          "retained": false
         },
         {
           "date": "1er février 2026 — part liquide",
@@ -1604,9 +1287,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2026-02",
           "confidence": "Haute",
-          "confidenceWhy": "Ligne composée uniquement de yuan, d'or et de roubles ; publiée par l'émetteur.",
-          "retained": false,
-          "why": "Au moment même où le total dépasse son niveau d'avant-guerre, la part mobilisable reste inférieure de moitié à celle d'octobre 2021 — 55,8 contre 113,8 Md$. C'est la démonstration, en un seul couple de nombres, de tout le piège de ce sujet : suivre le fonds souverain par son total revient à conclure l'inverse de la réalité."
+          "retained": false
         },
         {
           "date": "1er juillet 2026 — volume total du fonds",
@@ -1614,9 +1295,7 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2026-07",
           "confidence": "Haute",
-          "confidenceWhy": "Dernier arrêté publié à la date de capture, nom de fichier daté, valeur recoupée au centième par le classeur mensuel du 7 juillet 2026.",
-          "retained": false,
-          "why": "Équivalent à 13 104,2 milliards de roubles, soit 5,6 % du PIB projeté pour 2026 contre 12,0 % en octobre 2021 : rapporté à l'économie, le fonds a perdu plus de la moitié de son poids, même quand son montant en dollars paraît tenir."
+          "retained": false
         },
         {
           "date": "1er juillet 2026 — part liquide",
@@ -1624,15 +1303,12 @@
           "unit": "Md$",
           "sourceCode": "minfin-fnb-2026-07",
           "confidence": "Haute",
-          "confidenceWhy": "Ligne publiée par l'émetteur, composée à cette date de deux actifs seulement : 189 793,8 millions de yuans et 141 082,8 kg d'or.",
-          "retained": false,
-          "why": "Dernier point connu, et le plus parlant : 46,4 Md$ mobilisables, soit 41 % du niveau d'octobre 2021 et 27,6 % seulement du fonds, ou 1,5 % du PIB. Deux avertissements l'accompagnent. D'abord, une part de ce montant est de l'or dont la valeur en dollars a fortement monté depuis 2021 : la liquidité affichée dépend d'un cours, pas d'un encaissement. Ensuite, ce fonds n'est pas hors d'atteinte du gel occidental — le règlement du Conseil du 12 décembre 2025 vise nommément le Fonds national de bien-être aux côtés de la banque centrale."
+          "retained": false
         }
       ]
     },
     {
       "code": "civilian-ru",
-      "label": "Usines civiles — Russie",
       "unit": "Md$",
       "engineSide": "invader",
       "enginePost": "civilian",
@@ -1643,9 +1319,7 @@
           "unit": "Md$",
           "sourceCode": null,
           "confidence": "Moyenne",
-          "confidenceWhy": "Deux conventions du jeu, assumées comme telles : la part civile de l'appareil productif, posée à 24 %, et la capitalisation à cinq années de production. Ni l'une ni l'autre n'est mesurée ; seule leur entrée, le PIB, l'est.",
-          "retained": true,
-          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 1 720 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 412,8 Md$ par an, que la capitalisation porte à 2 064 Md$. Ce n'est pas toute l’économie non militaire — les services, l’agriculture et les usines d’armement en sont exclus — mais c’est de loin la plus large des sept assiettes, et c’est ce qui en fait le premier poste du bilan."
+          "retained": true
         },
         {
           "date": "2020",
@@ -1653,9 +1327,7 @@
           "unit": "% du PIB · estimation CIA",
           "sourceCode": "cia-factbook-russie",
           "confidence": "Basse",
-          "confidenceWhy": "Estimation d'un service de renseignement, publiée sans méthode ni intervalle. Elle vaut par sa continuité, pas par sa précision — d'où l'arrondi au point entier.",
-          "retained": false,
-          "why": "Le régime d'avant-guerre. La CIA et SIPRI s'accordent ici au dixième près, ce qui est rassurant sur les deux."
+          "retained": false
         },
         {
           "date": "2021",
@@ -1663,9 +1335,7 @@
           "unit": "Md$",
           "sourceCode": "banque-mondiale-pib-2021",
           "confidence": "Haute",
-          "confidenceWhy": "Mesure publiée par la Banque mondiale, relevée sur son interface de données, sans conversion ni interpolation.",
-          "retained": false,
-          "why": "Le PIB entier n'est pas ce que ce poste porte, mais c'est de lui que tout part. Le scénario ouvre sur un chiffre arrondi de 1 800 Md$, dont 1 720 de capacité productive."
+          "retained": false
         },
         {
           "date": "2021",
@@ -1673,9 +1343,7 @@
           "unit": "M hab.",
           "sourceCode": "banque-mondiale-pop-2021",
           "confidence": "Haute",
-          "confidenceWhy": "Estimation des Nations unies reprise par la Banque mondiale. L'incertitude porte sur le rattachement de la Crimée, pas sur l'ordre de grandeur.",
-          "retained": false,
-          "why": "La population n'entre dans aucun calcul du moteur. Elle est citée ici parce qu'elle répond à la question que le bandeau pose sans le vouloir : l'écart entre les deux appareils civils tient pour un tiers au nombre d'habitants et pour deux tiers à ce que chacun produit."
+          "retained": false
         },
         {
           "date": "2021",
@@ -1683,9 +1351,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2022",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur lue directement dans la table 1 du fact sheet, colonne « Spending as a share of GDP (%) 2021 », ligne Russie.",
-          "retained": true,
-          "why": "Dépense associée : 65,9 milliards de dollars courants, 5e rang mondial. Année de référence d'avant l'invasion à grande échelle."
+          "retained": true
         },
         {
           "date": "2021",
@@ -1693,9 +1359,7 @@
           "unit": "% du PIB",
           "sourceCode": "INTERFAX-2022-07-20",
           "confidence": "Moyenne",
-          "confidenceWhy": "Le chiffre est bien attribué nommément à Rosstat et daté du jour de sa publication, mais je n'ai pas pu ouvrir la publication Rosstat elle-même (le certificat TLS de rosstat.gov.ru n'est pas vérifiable et le site renvoie une page vide au scraping), et Rosstat a révisé cette série depuis.",
-          "retained": true,
-          "why": "Série Rosstat telle que publiée le 20 juillet 2022 : 16,6 % en 2017, 20,7 % en 2018, 18,8 % en 2019, 13,9 % en 2020, 17,4 % en 2021. Détail trimestriel 2021 : 17,3 %, 17,7 %, 17,1 %, 17,5 %. Rosstat ne calcule cet indicateur que depuis 2017."
+          "retained": true
         },
         {
           "date": "2021",
@@ -1703,9 +1367,7 @@
           "unit": "% du PIB · estimation CIA",
           "sourceCode": "cia-factbook-russie",
           "confidence": "Basse",
-          "confidenceWhy": "Même réserve. L'écart avec SIPRI, qui donne 4,1 %, est inférieur à la précision affichée.",
-          "retained": false,
-          "why": "Dernière année de paix, et le point sur lequel le scénario cale sa dépense militaire de référence."
+          "retained": false
         },
         {
           "date": "2021",
@@ -1713,9 +1375,7 @@
           "unit": "% des dépenses publiques",
           "sourceCode": "SIPRI-DB-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur lue dans la cellule 2021 de la ligne Russia de l'onglet « Share of Govt. spending » du classeur SIPRI, ouvert et parsé localement.",
-          "retained": false,
-          "why": "Le champ nature est vide : SIPRI ne mesure ni un budget voté ni une exécution comptable, mais reconstruit une dépense militaire au sens élargi à partir de sources ouvertes. Année d'avant-guerre, à retenir comme point de départ."
+          "retained": false
         },
         {
           "date": "2021",
@@ -1723,9 +1383,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2022-LOI",
           "confidence": "Basse",
-          "confidenceWhy": "La valeur est lue sans ambiguïté sur la page rendue en image, mais la brochure n'attache aucune note à sa colonne 2021 : impossible de dire si elle reprend la loi de finances 2021 initiale ou un état amendé en cours d'exercice, d'où l'étiquette prudente.",
-          "retained": false,
-          "why": "À ne pas utiliser comme référence pour 2021 : l'exécution constatée de la même année, elle, est certaine et vaut 3 573,6 milliards (voir ligne suivante). L'écart de 166 milliards entre les deux donne l'ordre de grandeur du glissement infra-annuel en temps de paix — glissement qui deviendra sans commune mesure dès 2022."
+          "retained": false
         },
         {
           "date": "2021",
@@ -1733,9 +1391,7 @@
           "unit": "Md ₽ · exécuté",
           "sourceCode": "MINFIN-EXEC-ANNUEL",
           "confidence": "Haute",
-          "confidenceWhy": "Cellule 2021 de la ligne 2.2 du fichier XLSX officiel d'exécution du budget fédéral, téléchargé et parsé ; la valeur est confirmée à l'identique par la colonne 2021 de la brochure BDG-2023-PROJET, qui affiche 3 573,6.",
-          "retained": false,
-          "why": "Seule année de la période où l'exécution de la section défense est publiée. Rapportée au PIB de 134 727,5 milliards, elle vaut 2,65 % — calcul, non recopie. Sécurité intérieure la même année : 2 335,9 milliards exécutés."
+          "retained": false
         },
         {
           "date": "2022",
@@ -1743,9 +1399,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2023",
           "confidence": "Haute",
-          "confidenceWhy": "Table 1, colonne 2022, valeur entre crochets [4,1] signalant une estimation SIPRI, ce que le fact sheet documente explicitement.",
-          "retained": false,
-          "why": "86,4 milliards de dollars, +9,2 % en termes réels. Le ratio est stable par rapport à 2021 parce que le PIB nominal russe a fortement augmenté en 2022 sous l'effet des prix des hydrocarbures : la stabilité du ratio masque une hausse réelle de la dépense."
+          "retained": false
         },
         {
           "date": "2022",
@@ -1753,9 +1407,7 @@
           "unit": "% du PIB",
           "sourceCode": "KOMMERSANT-2024-04-05",
           "confidence": "Moyenne",
-          "confidenceWhy": "Chiffre attribué à Rosstat dans un article daté, mais lu dans une reprise de presse et non dans la publication d'origine ; d'autres reprises donnent 18,1 % pour la même année, ce qui traduit des révisions successives.",
-          "retained": false,
-          "why": "Pic conjoncturel lié aux prix des hydrocarbures de 2022. Un chiffre trimestriel très cité pour cette année — 21,7 % au premier trimestre 2022, record depuis le début des calculs — est confirmé par INTERFAX-2022-07-20, mais c'est un trimestre, pas une année, et le confondre avec l'année gonfle l'estimation de près de 4 points."
+          "retained": false
         },
         {
           "date": "2022",
@@ -1763,9 +1415,7 @@
           "unit": "% du PIB · estimation CIA",
           "sourceCode": "cia-factbook-russie",
           "confidence": "Basse",
-          "confidenceWhy": "Estimation faite alors que le budget russe cessait d'être publié par section : elle repose sur des sources que l'agence n'expose pas.",
-          "retained": false,
-          "why": "L'année de l'invasion ne coûte qu'un demi-point de PIB de plus. SIPRI, lui, ne bouge pas du tout cette année-là et reste à 4,1 %. Les deux services voient donc la même chose : le choc de 2022 est militaire, il n'est pas encore budgétaire."
+          "retained": false
         },
         {
           "date": "2022",
@@ -1773,9 +1423,7 @@
           "unit": "% des dépenses publiques",
           "sourceCode": "SIPRI-DB-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Même onglet, même ligne, colonne 2022 du classeur SIPRI.",
-          "retained": false,
-          "why": "Première année de guerre : +2,65 points en un an. La progression est réelle mais modérée, parce que les dépenses publiques totales ont elles aussi bondi en 2022 (de 24 762 à 31 119 milliards de roubles à l'exécution)."
+          "retained": false
         },
         {
           "date": "2022",
@@ -1783,9 +1431,7 @@
           "unit": "Md ₽ · budget voté",
           "sourceCode": "BDG-2022-LOI",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2022 du tableau par sections de la brochure publiée le 30/12/2021 à la loi 390-ФЗ du 06/12/2021, lue sur la page rendue en image.",
-          "retained": false,
-          "why": "Le dernier budget voté avant l'invasion, adopté onze semaines avant elle. Soit 2,23 % du PIB de 2022 — calcul sur la série Banque mondiale. Sécurité intérieure votée la même année : 2 826,0 milliards. Dépenses totales votées : 23 694,2 milliards, à comparer aux 31 119,0 finalement exécutés."
+          "retained": false
         },
         {
           "date": "2022",
@@ -1793,9 +1439,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2023-PROJET",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2022 de la page 8, sous la note explicite « показатели сводной бюджетной росписи на 1 сентября 2022 года », lue sur la page rendue en image.",
-          "retained": false,
-          "why": "Photographie de la répartition budgétaire consolidée au 1er septembre 2022, soit six mois de guerre : la ligne défense a déjà gagné 1 177 milliards sur le voté, +33,6 %, et l'exercice n'est pas fini. Soit 2,98 % du PIB. C'est la dernière fois que le Minfin publie une ligne défense pour un exercice de guerre en cours."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1803,9 +1447,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2024",
           "confidence": "Haute",
-          "confidenceWhy": "Table 1 et encadré « Key facts » du fact sheet d'avril 2024 concordent sur 5,9 % et 109 milliards de dollars.",
-          "retained": false,
-          "why": "+24 % en termes réels sur un an. Valeur entre crochets ([109]) : estimation SIPRI."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1813,9 +1455,7 @@
           "unit": "% du PIB",
           "sourceCode": "KOMMERSANT-2024-04-05",
           "confidence": "Moyenne",
-          "confidenceWhy": "Chiffre attribué à Rosstat, cohérent avec la tendance des années encadrantes, mais issu d'une reprise de presse plutôt que de la publication primaire.",
-          "retained": false,
-          "why": "Formulation citée : la part du secteur pétro-gazier dans le PIB « est passée de 18 % en 2022 à 16,5 % » en 2023."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1823,9 +1463,7 @@
           "unit": "% du PIB · estimation CIA",
           "sourceCode": "cia-factbook-russie",
           "confidence": "Basse",
-          "confidenceWhy": "C'est l'année où les deux estimations divergent le plus — près d'un point — sans qu'aucune ne publie de quoi trancher.",
-          "retained": false,
-          "why": "La CIA voit 5 %, SIPRI 5,9 %. Un point de PIB russe, c'est dix-huit milliards de dollars : l'ordre de grandeur de tout l'appareil d'armement ukrainien. Deux services alliés, la même année, la même question, et un écart de cette taille — c'est la mesure honnête de ce qu'on sait vraiment."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1833,9 +1471,7 @@
           "unit": "% des dépenses publiques",
           "sourceCode": "SIPRI-DB-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Même onglet, colonne 2023 du classeur SIPRI, mise à jour d'avril 2026.",
-          "retained": false,
-          "why": "Divergence à signaler avec la publication de l'époque : le fact sheet d'avril 2024 écrivait « 16 per cent » pour 2023 (voir l'observation suivante). L'écart de 1,2 point vient des révisions apportées à la base entre 2024 et 2026, pas d'une contradiction de méthode."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1843,9 +1479,7 @@
           "unit": "% des dépenses publiques",
           "sourceCode": "SIPRI-FS-2024",
           "confidence": "Haute",
-          "confidenceWhy": "Deux occurrences concordantes dans le PDF, pages 3 et 4 : « military spending as a share of government expenditure was highest in Ukraine (58 per cent), followed by Saudi Arabia (24 per cent) and Russia (16 per cent) » et « 16 per cent of total government expenditure, which were the highest levels recorded by Russia since the dissolution of the Soviet Union ».",
-          "retained": false,
-          "why": "Conservée à côté de la valeur révisée parce que c'est elle qui a circulé pendant deux ans. Pour une série homogène, utiliser la base révisée ; pour citer ce que SIPRI affirmait en 2024, utiliser celle-ci. Le même passage donne l'Ukraine à 58 % en 2023."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1853,9 +1487,7 @@
           "unit": "Md ₽ · budget voté",
           "sourceCode": "BDG-2023-LOI",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2023 du tableau par sections des pages 14-15 de la brochure publiée le 30/12/2022 à la loi 466-ФЗ du 05/12/2022, lue sur la page rendue en image.",
-          "retained": false,
-          "why": "2,85 % du PIB 2023. Le projet déposé un mois plus tôt portait 4 981,6 milliards (BDG-2023-PROJET) : l'écart entre projet et loi est de 9 milliards, soit 0,2 % — le Parlement n'a rien modifié de substantiel. Sécurité intérieure votée : 3 564,3 milliards."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1863,9 +1495,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2024-PROJET",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2023 de la page 5, sous la note « показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г. », lue sur la page rendue en image.",
-          "retained": false,
-          "why": "3,68 % du PIB. Au 1er septembre 2023, la ligne défense dépasse déjà de 1 434 milliards le montant voté neuf mois plus tôt, soit +28,8 %. Le même écart apparaît sur la sécurité intérieure, mais en sens inverse (3 225,6 contre 3 564,3 votés)."
+          "retained": false
         },
         {
           "date": "2023",
@@ -1873,9 +1503,7 @@
           "unit": "Md ₽ · budget voté",
           "sourceCode": "CONSULTANT-466",
           "confidence": "Moyenne",
-          "confidenceWhy": "Le total de tête de l'annexe est lu sans ambiguïté (1 486 270 867,1 milliers de roubles), mais l'unité du tableau — le millier de roubles — est déduite de sa cohérence avec les sous-lignes et n'est pas rappelée dans le fragment de page consulté.",
-          "retained": false,
-          "why": "Mesure de l'opacité plutôt que du budget : l'annexe de répartition par programmes de la loi 466-ФЗ ne publie que 1 486,3 milliards sur les 4 972,6 votés pour 2023, soit 29,9 % de la section. Les 70 % restants ne figurent dans aucune annexe publique. À rapprocher de l'estimation de SIPRI, qui chiffre le « résidu classifié » à environ 73 % du budget de la Défense nationale en 2024 et 79 % en 2025 : les deux approches convergent."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1883,9 +1511,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2025",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre affiché à la fois dans les « Key facts », dans la table 1 et dans le corps du texte du fact sheet d'avril 2025.",
-          "retained": false,
-          "why": "149 milliards de dollars, +38 % en un an, soit le double du niveau de 2015. SIPRI ajoute deux réserves importantes : environ 30 % des dépenses budgétaires étaient classifiées en 2024, et « la dépense militaire réelle de la Russie en 2024 est vraisemblablement supérieure » à cette estimation."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1893,9 +1519,7 @@
           "unit": "% du PIB",
           "sourceCode": "EPRUSSIA-2026-04-20",
           "confidence": "Basse",
-          "confidenceWhy": "Ce n'est pas un chiffre publié directement : il se déduit de l'énoncé selon lequel la contribution du secteur a reculé de 3 points par rapport à 2024, à partir de la valeur 2025 de 13 %.",
-          "retained": false,
-          "why": "À traiter comme un ordre de grandeur (« environ 16 % ») et non comme une mesure. Si la précision compte, il faut aller chercher la publication Rosstat de printemps 2025 sur les comptes nationaux."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1903,9 +1527,7 @@
           "unit": "% du PIB · estimation CIA",
           "sourceCode": "cia-factbook-russie",
           "confidence": "Basse",
-          "confidenceWhy": "Dernier millésime publié avant la fermeture du Factbook. L'estimation s'aligne cette fois sur SIPRI, à un dixième près.",
-          "retained": false,
-          "why": "Les deux services convergent à nouveau, et sur un chiffre qui a presque doublé en deux ans. C'est le trimestre où la guerre cesse d'être finançable à la marge."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1913,9 +1535,7 @@
           "unit": "% des dépenses publiques",
           "sourceCode": "SIPRI-DB-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2024 de l'onglet « Share of Govt. spending » du classeur SIPRI.",
-          "retained": false,
-          "why": "Le fact sheet d'avril 2025 arrondissait à 19 %, chiffre déjà vérifié lors de la première passe : les deux sont cohérents."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1923,9 +1543,7 @@
           "unit": "Md ₽ · budget voté",
           "sourceCode": "BDG-2024-LOI",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2024 du tableau par sections des pages 14-15 de la brochure publiée le 28/12/2023 à la loi 540-ФЗ du 27/11/2023, lue sur la page rendue en image.",
-          "retained": false,
-          "why": "5,13 % du PIB 2024 : la ligne défense votée a doublé en un exercice. Le projet déposé en novembre 2023 portait 10 775,4 milliards (BDG-2024-PROJET), soit 397 milliards de plus que la loi finalement adoptée. Sécurité intérieure votée : 3 285,2 milliards ; dépenses totales votées : 36 660,7 milliards."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1933,9 +1551,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2025-LOI",
           "confidence": "Moyenne",
-          "confidenceWhy": "Valeur lue sans ambiguïté sur la page rendue en image, avec sa note de bas de page référençant la loi 540-ФЗ amendée par la loi 175-ФЗ du 12/07/2024 — mais une autre brochure du même ministère, publiée deux mois plus tôt et citant exactement la même base légale, donne 8 866,5 pour la même colonne.",
-          "retained": false,
-          "why": "Divergence non résolue entre deux publications Minfin : 8 866,5 milliards dans la brochure au projet du 31/10/2024, 10 374,7 dans la brochure à la loi du 27/12/2024, avec la même référence légale en note. Les deux ont été lues visuellement sur la page rendue, il ne s'agit pas d'une erreur d'extraction. Je retiens 10 374,7 comme valeur de travail parce qu'elle est cohérente avec le voté (10 378,2) et avec l'estimation SIPRI, et je signale l'autre plutôt que de la taire."
+          "retained": false
         },
         {
           "date": "2024",
@@ -1943,9 +1559,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2025-PROJET",
           "confidence": "Basse",
-          "confidenceWhy": "La lecture est certaine — page rendue en image, libellé « Национальная оборона » et quatre valeurs 2024*/2025/2026/2027 dans le même cadre — mais la valeur contredit celle publiée deux mois plus tard sous la même référence légale, sans qu'aucun des deux documents n'explique l'écart.",
-          "retained": false,
-          "why": "Rapportée pour que la divergence soit visible, pas pour être utilisée. Si un arbitrage est nécessaire, la brochure à la loi (postérieure et cohérente avec le reste de la série) l'emporte."
+          "retained": false
         },
         {
           "date": "2025",
@@ -1953,9 +1567,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur reprise trois fois dans le document (Key facts, table 1 colonne 2025, figure 3 de la carte des fardeaux militaires) : 7,5 %.",
-          "retained": false,
-          "why": "190 milliards de dollars, +5,9 % — la plus faible progression annuelle depuis 2022. La part de la dépense militaire dans les dépenses publiques atteint 20 %, « le niveau le plus élevé jamais enregistré par SIPRI pour la Russie ». À titre de comparaison, la Russie était à 5,4 % du PIB en 2016."
+          "retained": false
         },
         {
           "date": "2025",
@@ -1963,9 +1575,7 @@
           "unit": "% du PIB",
           "sourceCode": "MINFIN-BUDGET-CITOYEN",
           "confidence": "Moyenne",
-          "confidenceWhy": "Ratio que j'ai calculé moi-même — 13 503,7 milliards de roubles rapportés au PIB nominal 2025 de 214,3 trillions de roubles publié par Rosstat — et non un chiffre publié en l'état par une institution.",
-          "retained": false,
-          "why": "Le PIB nominal 2025 vient de la source ANGI-2026-04-20. À retenir comme ordre de grandeur : la seule ligne budgétaire « Défense nationale » vaut environ 6,3 % du PIB, contre 7,5 % pour la mesure SIPRI qui couvre en plus les pensions militaires, une partie des forces paramilitaires et des dépenses militarisées logées dans d'autres sections. L'écart entre les deux mesures est donc d'environ 1,2 point de PIB, et il va dans le sens attendu."
+          "retained": false
         },
         {
           "date": "2025",
@@ -1973,9 +1583,7 @@
           "unit": "% du PIB",
           "sourceCode": "ANGI-2026-04-20",
           "confidence": "Moyenne",
-          "confidenceWhy": "Deux reprises indépendantes et datées, attribuées à Rosstat, donnent le même chiffre — mais toutes deux sont des reprises, et l'une porte un titre qui confond secteur et recettes.",
-          "retained": false,
-          "why": "Minimum historique depuis le début des calculs de Rosstat en 2017, contre 14 % lors du précédent creux de 2020. Le secteur non pétro-gazier atteint 87 % du PIB. Le PIB nominal 2025 est de 214,3 trillions de roubles, en hausse de 1 % en volume. EPRUSSIA-2026-04-20 confirme la même valeur, et ajoute un profil trimestriel décroissant sur l'année : 15,5 % au premier trimestre, 11,6 % au quatrième."
+          "retained": false
         },
         {
           "date": "2025",
@@ -1983,9 +1591,7 @@
           "unit": "% du PIB",
           "sourceCode": "MINFIN-ONBP-2026",
           "confidence": "Moyenne",
-          "confidenceWhy": "Valeur publiée par le Minfin, mais explicitement présentée comme une estimation d'exécution au moment de la rédaction du document, en octobre 2025.",
-          "retained": false,
-          "why": "Série complète publiée par le Minfin pour cette troisième grandeur : 5,0 % du PIB en 2023, 5,5 % en 2024, 4,0 % estimé en 2025, 3,8 % prévu en 2026 et 3,5 % en 2028. Les trois indicateurs à ne jamais confondre pour 2025 sont donc : 13 % (poids du secteur dans le PIB), 22,7 % (part dans les recettes fédérales), 4,0 % (recettes pétro-gazières rapportées au PIB)."
+          "retained": false
         },
         {
           "date": "2025",
@@ -1993,9 +1599,7 @@
           "unit": "% des dépenses publiques",
           "sourceCode": "SIPRI-DB-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2025 de l'onglet « Share of Govt. spending » du classeur SIPRI.",
-          "retained": false,
-          "why": "Le fact sheet d'avril 2026 arrondit à 20 % et le qualifie du niveau le plus élevé jamais enregistré par SIPRI pour la Russie. La série complète 2021-2025 est donc : 10,31 — 12,96 — 14,77 — 18,64 — 19,83, soit un doublement en quatre ans."
+          "retained": false
         },
         {
           "date": "2025",
@@ -2003,9 +1607,7 @@
           "unit": "Md ₽ · budget voté",
           "sourceCode": "BDG-2025-LOI",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2025 du tableau par sections des pages 12-13 de la brochure publiée le 27/12/2024 à la loi 419-ФЗ du 30/11/2024, lue sur la page rendue en image.",
-          "retained": false,
-          "why": "6,11 % du PIB 2025. Sécurité intérieure votée : 3 438,4 milliards ; dépenses totales votées : 41 469,5 milliards. La défense représente 31,6 % du budget fédéral voté."
+          "retained": false
         },
         {
           "date": "2025",
@@ -2013,9 +1615,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2026-PROJET",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2025 de la page 6, avec la note référençant la loi 419-ФЗ modifiée par la loi 152-ФЗ du 01/07/2025, déjà vérifiée lors de la première passe et reconfirmée ici.",
-          "retained": false,
-          "why": "Premier amendement de l'exercice 2025 : +416 milliards sur le voté. Soit 6,30 % du PIB."
+          "retained": false
         },
         {
           "date": "2025",
@@ -2023,9 +1623,7 @@
           "unit": "Md ₽ · budget amendé",
           "sourceCode": "BDG-2026-LOI",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2025 du tableau des pages 14-15, avec la note référençant la loi 419-ФЗ modifiée par la loi 414-ФЗ du 04/11/2025, lue sur la page rendue en image.",
-          "retained": false,
-          "why": "Second amendement de l'exercice, et état final de la loi pour 2025 : 13 574,8 milliards, soit 6,34 % du PIB et +487 milliards sur le voté initial. Trajectoire complète de l'exercice 2025 : voté 13 087,4 en novembre 2024, puis 13 503,7 en juillet 2025, puis 13 574,8 en novembre 2025. Sécurité intérieure au même stade : 3 448,7 milliards ; dépenses totales : 42 298,7 milliards, contre 42 910,3 finalement exécutés."
+          "retained": false
         },
         {
           "date": "2026",
@@ -2033,9 +1631,7 @@
           "unit": "% du PIB",
           "sourceCode": "MINFIN-ONBP-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur lue dans le tableau 4.4.2 du document budgétaire du Minfin, colonne « %ВВП » 2026, ligne « Национальная оборона » (12 989 milliards de roubles).",
-          "retained": false,
-          "why": "C'est le seul endroit où le Minfin publie lui-même une part de PIB pour la défense. Trajectoire annoncée : 5,5 % en 2026, 5,3 % en 2027, 4,7 % en 2028. La section « Sécurité intérieure et maintien de l'ordre » s'y ajoute à 1,8 % du PIB sur les trois années. Au seul budget fédéral, la défense 2026 est fixée à 12 930,5 milliards de roubles et la sécurité intérieure à 3 910,1 milliards (tableau 4.1.3)."
+          "retained": false
         },
         {
           "date": "2026",
@@ -2043,15 +1639,12 @@
           "unit": "Md ₽ · budget voté",
           "sourceCode": "BDG-2026-LOI",
           "confidence": "Haute",
-          "confidenceWhy": "Colonne 2026 du tableau des pages 14-15 de la brochure publiée le 29/12/2025 à la loi 426-ФЗ du 28/11/2025, lue sur la page rendue en image.",
-          "retained": false,
-          "why": "Première baisse de la ligne défense depuis le début de la guerre : −1 454 milliards sur l'état final de 2025, soit −10,7 %. Écart notable avec le projet : le tableau 4.1.3 du document de programmation d'octobre 2025 portait 12 930,5 milliards, et la brochure au projet du 31/10/2025 le même chiffre ; la loi votée retient 12 121,0, soit 809 milliards de moins. Sécurité intérieure votée : 3 826,7 milliards, en hausse de 378 milliards — une partie de la baisse affichée sur la défense se retrouve sur la section voisine. Dépenses totales votées : 44 069,7 milliards. Le ratio au PIB n'est pas calculable ici faute de PIB 2026 observé."
+          "retained": false
         }
       ]
     },
     {
       "code": "civilian-ua",
-      "label": "Usines civiles — Ukraine",
       "unit": "Md$",
       "engineSide": "defender",
       "enginePost": "civilian",
@@ -2062,9 +1655,7 @@
           "unit": "Md$",
           "sourceCode": null,
           "confidence": "Moyenne",
-          "confidenceWhy": "Deux conventions du jeu, assumées comme telles : la part civile de l'appareil productif, posée à 24 %, et la capitalisation à cinq années de production. Ni l'une ni l'autre n'est mesurée ; seule leur entrée, le PIB, l'est.",
-          "retained": true,
-          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 188 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 45,1 Md$ par an, que la capitalisation porte à 226 Md$. Ce n'est pas toute l’économie non militaire — les services, l’agriculture et les usines d’armement en sont exclus — mais c’est de loin la plus large des sept assiettes, et c’est ce qui en fait le premier poste du bilan."
+          "retained": true
         },
         {
           "date": "2021",
@@ -2072,9 +1663,7 @@
           "unit": "Md$",
           "sourceCode": "banque-mondiale-pib-2021",
           "confidence": "Haute",
-          "confidenceWhy": "Mesure publiée par la Banque mondiale, relevée sur son interface de données, sans conversion ni interpolation.",
-          "retained": false,
-          "why": "Le PIB entier n'est pas ce que ce poste porte, mais c'est de lui que tout part. Le scénario ouvre sur un chiffre arrondi de 196 Md$, dont 188 de capacité productive."
+          "retained": false
         },
         {
           "date": "2021",
@@ -2082,9 +1671,7 @@
           "unit": "M hab.",
           "sourceCode": "banque-mondiale-pop-2021",
           "confidence": "Haute",
-          "confidenceWhy": "Estimation des Nations unies reprise par la Banque mondiale. L'incertitude porte sur le rattachement de la Crimée, pas sur l'ordre de grandeur.",
-          "retained": false,
-          "why": "La population n'entre dans aucun calcul du moteur. Elle est citée ici parce qu'elle répond à la question que le bandeau pose sans le vouloir : l'écart entre les deux appareils civils tient pour un tiers au nombre d'habitants et pour deux tiers à ce que chacun produit."
+          "retained": false
         },
         {
           "date": "2021",
@@ -2092,9 +1679,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2022",
           "confidence": "Haute",
-          "confidenceWhy": "Valeur lue dans la table 1 du fact sheet d'avril 2022, ligne Ukraine, entre crochets ([3,2]) donc estimée par SIPRI.",
-          "retained": true,
-          "why": "5,9 milliards de dollars, 36e rang mondial. Point de départ d'avant-guerre, à comparer à 1,6 % en 2012."
+          "retained": true
         },
         {
           "date": "2021",
@@ -2102,9 +1687,7 @@
           "unit": "% du PIB · estimation CIA",
           "sourceCode": "cia-factbook-ukraine",
           "confidence": "Basse",
-          "confidenceWhy": "Estimation sensiblement plus haute que celle de SIPRI pour la même année, sans que ni l'une ni l'autre n'expose son périmètre.",
-          "retained": false,
-          "why": "La CIA donne 4 % là où SIPRI donne 3,2 %. Le scénario retient le second, parce que sa série couvre les années de guerre que le Factbook n'a jamais publiées. Après 2021 la rubrique ukrainienne s'arrête net : la seule chose que le Factbook dit de la guerre est une note affirmant « plus de 30 % du PIB selon certaines estimations », sans année ni source — elle n'entre donc pas dans cette table."
+          "retained": false
         },
         {
           "date": "2022",
@@ -2112,9 +1695,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2023",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre affiché dans les « Key facts » et dans la table 1 du fact sheet d'avril 2023.",
-          "retained": false,
-          "why": "44,0 milliards de dollars, +640 % en un an — la plus forte hausse annuelle jamais enregistrée par SIPRI pour un pays. Le total « n'inclut pas l'aide militaire fournie à l'Ukraine », précision du fact sheet lui-même."
+          "retained": false
         },
         {
           "date": "2023",
@@ -2122,9 +1703,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2024",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre affiché dans les « Key facts » et dans la table 1 du fact sheet d'avril 2024, en cohérence avec les 64,8 milliards de dollars du même tableau.",
-          "retained": false,
-          "why": "Correction de l'hypothèse de travail : l'ordre de grandeur de 34 % évoqué dans la mission ne correspond pas à 2023 mais à 2024. En 2023 SIPRI publie 37 %, année du maximum relatif de la série ukrainienne avant 2025."
+          "retained": false
         },
         {
           "date": "2023",
@@ -2132,9 +1711,7 @@
           "unit": "% du PIB",
           "sourceCode": "UKRAINEINVEST-2024-08",
           "confidence": "Basse",
-          "confidenceWhy": "Chiffre lu dans une infographie de promotion des investissements, sans tableau chiffré, sans définition du périmètre « énergie » et sans méthode publiée ; les sources indiquées (YC.Market, Ember, AIE) ne sont pas des comptes nationaux.",
-          "retained": false,
-          "why": "Ne répond pas à la question posée, qui portait sur l'avant-guerre : cette valeur est postérieure à la destruction de plus de la moitié des infrastructures énergétiques ukrainiennes et à la perte de 23 GW de capacité, que le même document chiffre. Elle est fournie à titre de repère supérieur, l'ordre de grandeur d'avant-guerre étant vraisemblablement du même ordre ou légèrement supérieur, sans que je puisse l'établir. Le graphique situe l'Ukraine entre la Tchéquie (8-9 %) et la Slovaquie (7 %), la Pologne étant à 10 %."
+          "retained": false
         },
         {
           "date": "2024",
@@ -2142,9 +1719,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2025",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre affiché dans les « Key facts » et dans la table 1 du fact sheet d'avril 2025 : 64,7 milliards de dollars, 34 % du PIB, 8e rang mondial.",
-          "retained": false,
-          "why": "Le recul apparent par rapport aux 37 % de 2023 tient largement à la croissance du PIB ukrainien et à des révisions de la base SIPRI, pas à une baisse de la dépense — celle-ci progresse de 2,9 % en termes réels sur l'année."
+          "retained": false
         },
         {
           "date": "2025",
@@ -2152,9 +1727,7 @@
           "unit": "% du PIB",
           "sourceCode": "SIPRI-FS-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Chiffre repris quatre fois dans le fact sheet d'avril 2026 : Key facts, table 1, section Europe et carte des fardeaux militaires (figure 3, Ukraine au 1er rang mondial).",
-          "retained": false,
-          "why": "84,1 milliards de dollars, +20 % sur un an, 7e rang mondial et fardeau militaire le plus élevé du monde pour la quatrième année consécutive. La dépense militaire atteint 63 % des dépenses publiques. La hausse de 5,6 points du fardeau en 2025 est la plus forte de tous les pays. Le budget initial 2025 a été révisé deux fois en cours d'année pour ajouter 17,7 milliards de dollars. En regard, l'Ukraine a reçu 52,2 milliards de dollars de ses partenaires pour son budget d'État en 2025, dont 37,9 milliards de prêts ERA du G7 adossés aux avoirs russes gelés."
+          "retained": false
         }
       ]
     }

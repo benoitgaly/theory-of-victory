@@ -1,0 +1,20 @@
+{
+  "_comment": "The English prose of the historical database. Deliberately partial: only the figure labels, which are page headings, are translated. The reasoning behind each observation and what each source proves is authored writing, not interface copy, and it falls back to French until an author writes it — which is why the loader lays this file over the French one field by field rather than replacing it.",
+  "figures": {
+    "reserves-ru": {
+      "label": "Russian monetary reserves"
+    },
+    "foreign-ua": {
+      "label": "Foreign support to Ukraine"
+    },
+    "nwf-ru": {
+      "label": "Russian National Wealth Fund (ФНБ)"
+    },
+    "civilian-ru": {
+      "label": "Civilian industry — Russia"
+    },
+    "civilian-ua": {
+      "label": "Civilian industry — Ukraine"
+    }
+  }
+}

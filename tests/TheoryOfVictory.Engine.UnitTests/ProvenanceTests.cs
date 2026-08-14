@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine.Provenance;
 using Xunit;
 
@@ -79,22 +80,29 @@ public sealed class ProvenanceTests
             """
             {
               "sources": [
-                { "code": "connue", "organisation": "O", "title": "T", "url": "https://exemple.test/", "kind": "K", "note": "N" }
+                { "code": "connue", "organisation": "O", "url": "https://exemple.test/", "kind": "K" }
               ],
               "figures": [
                 {
-                  "code": "reserves-ru", "label": "L", "unit": "Md$", "engineSide": "invader", "enginePost": "reserves",
+                  "code": "reserves-ru", "unit": "Md$", "engineSide": "invader", "enginePost": "reserves",
                   "observations": [
-                    { "date": "1er octobre 2021", "value": 1.0, "unit": "Md$", "sourceCode": "inconnue", "confidence": "Haute", "confidenceWhy": "C", "retained": true, "why": "P" }
+                    { "date": "1er octobre 2021", "value": 1.0, "unit": "Md$", "sourceCode": "inconnue", "confidence": "Haute", "retained": true }
                   ]
                 }
               ]
+            }
+            """,
+            """
+            {
+              "sources": { "connue": { "title": "T", "note": "N" } },
+              "figures": { "reserves-ru": { "label": "L" } },
+              "observations": { "reserves-ru|1er octobre 2021|inconnue|Md$": { "why": "P", "confidenceWhy": "C" } }
             }
             """);
 
         try
         {
-            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(directory));
+            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(Language.French, directory));
             Assert.Contains("inconnue", error.Message, StringComparison.Ordinal);
         }
         finally
@@ -110,15 +118,18 @@ public sealed class ProvenanceTests
             """
             {
               "sources": [
-                { "code": "sans-adresse", "organisation": "O", "title": "T", "kind": "K", "note": "N" }
+                { "code": "sans-adresse", "organisation": "O", "kind": "K" }
               ],
               "figures": []
             }
+            """,
+            """
+            { "sources": { "sans-adresse": { "title": "T", "note": "N" } } }
             """);
 
         try
         {
-            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(directory));
+            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(Language.French, directory));
             Assert.Contains("sans-adresse", error.Message, StringComparison.Ordinal);
         }
         finally
@@ -138,16 +149,19 @@ public sealed class ProvenanceTests
             """
             {
               "sources": [
-                { "code": "doublon", "organisation": "O", "title": "Première", "url": "https://exemple.test/1", "kind": "K", "note": "N" },
-                { "code": "doublon", "organisation": "O", "title": "Seconde", "url": "https://exemple.test/2", "kind": "K", "note": "N" }
+                { "code": "doublon", "organisation": "O", "url": "https://exemple.test/1", "kind": "K" },
+                { "code": "doublon", "organisation": "O", "url": "https://exemple.test/2", "kind": "K" }
               ],
               "figures": []
             }
+            """,
+            """
+            { "sources": { "doublon": { "title": "Première", "note": "N" } } }
             """);
 
         try
         {
-            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(directory));
+            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(Language.French, directory));
             Assert.Contains("doublon", error.Message, StringComparison.Ordinal);
         }
         finally
@@ -156,10 +170,85 @@ public sealed class ProvenanceTests
         }
     }
 
-    private static string WriteDatabase(string content)
+    /// <summary>
+    /// The one failure the split introduced, and the only one that is invisible from the page: a
+    /// paragraph keyed on an identifier the data no longer contains. Nothing breaks — the page
+    /// falls back to French and prints — so the orphan would survive every visual check and the
+    /// text would simply never be read again.
+    /// </summary>
+    [Fact]
+    public void ATextKeyedOnAnObservationThatNoLongerExists_StopsTheLoad_BecauseNothingElseWouldEverSayIt()
+    {
+        string directory = WriteDatabase(
+            """
+            {
+              "sources": [
+                { "code": "connue", "organisation": "O", "url": "https://exemple.test/", "kind": "K" }
+              ],
+              "figures": [
+                {
+                  "code": "reserves-ru", "unit": "Md$", "engineSide": "invader", "enginePost": "reserves",
+                  "observations": [
+                    { "date": "1er octobre 2021", "value": 1.0, "unit": "Md$", "sourceCode": "connue", "confidence": "Haute", "retained": true }
+                  ]
+                }
+              ]
+            }
+            """,
+            """
+            {
+              "sources": { "connue": { "title": "T", "note": "N" } },
+              "figures": { "reserves-ru": { "label": "L" } },
+              "observations": {
+                "reserves-ru|1er octobre 2021|connue|Md$": { "why": "P" },
+                "reserves-ru|1er janvier 2022|connue|Md$": { "why": "Orpheline" }
+              }
+            }
+            """);
+
+        try
+        {
+            InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => ProvenanceLibrary.Load(Language.French, directory));
+            Assert.Contains("1er janvier 2022", error.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    /// <summary>
+    /// A figure exists ONCE. Asking for English must return the same value read from the same
+    /// file — the translation brings words and nothing else — and any paragraph nobody has
+    /// translated must read in French rather than empty.
+    /// </summary>
+    [Fact]
+    public void AskingForEnglish_ChangesTheWords_NeverTheFigures()
+    {
+        ProvenanceRegistry english = ProvenanceLibrary.Load(Language.English);
+
+        Assert.Equal(Registry.Figures.Count, english.Figures.Count);
+
+        foreach (HistoricalFigure figure in Registry.Figures)
+        {
+            HistoricalFigure? twin = english.Find(figure.Code);
+            Assert.NotNull(twin);
+            Assert.Equal(figure.Observations.Count, twin.Observations.Count);
+
+            for (int index = 0; index < figure.Observations.Count; index++)
+            {
+                Assert.Equal(figure.Observations[index].Value, twin.Observations[index].Value);
+                Assert.Equal(figure.Observations[index].Date, twin.Observations[index].Date);
+                Assert.False(string.IsNullOrWhiteSpace(twin.Observations[index].Why));
+            }
+        }
+    }
+
+    private static string WriteDatabase(string content, string? texts = null)
     {
         DirectoryInfo directory = Directory.CreateTempSubdirectory("tov-provenance");
         File.WriteAllText(Path.Combine(directory.FullName, "historical-figures.json"), content);
+        File.WriteAllText(Path.Combine(directory.FullName, "historical-figures.fr.json"), texts ?? "{}");
         return directory.FullName;
     }
 }

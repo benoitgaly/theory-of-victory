@@ -1,0 +1,4 @@
+{
+  "_comment": "The English words of the deck, by card code. Titles and descriptions only: the costs, the effects and the probabilities live once, in cards.fr.json, and are never repeated here — a rebalancing must not be able to hold in one language and not in the other. Empty for now, and that is a stated state rather than an oversight: a card's flavour text is authored writing and falls back to French until an author writes it.",
+  "cards": {}
+}
