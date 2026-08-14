@@ -88,9 +88,10 @@
     // longueur de la masse, le chiffre reste lisible et jamais recouvert.
     var NUM_IN = 186, NUM_OUT = 22;
     // TRACK : la longueur de la piste, et la butée de toute masse. Ce qui la dépasse est taillé
-    // à cette longueur et le dit par une coupure en éclair à son extrémité. CUT est la
-    // profondeur de cette dent, mordue vers l'intérieur de la barre.
-    var BAR_H = 16, TRACK = 306, CUT = 6;
+    // à cette longueur et le dit par une déchirure en éclair. SEAM place cette déchirure le long
+    // de la barre, SEAM_GAP en donne la largeur et SEAM_AMP l'amplitude du zigzag.
+    var BAR_H = 16, TRACK = 306;
+    var SEAM = 0.55, SEAM_GAP = 9, SEAM_AMP = 4;
     var RUINED_INDEX = 25;
 
     var ICON_X = GUT_L + 7, ICON_S = 22, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
@@ -109,22 +110,33 @@
         return n;
     }
 
-    // Le contour d'une masse taillée : trois côtés droits, et le quatrième — celui du bout —
-    // en dents de scie mordant vers l'intérieur. Une barre qui finit ainsi n'annonce pas sa
-    // valeur par sa longueur, et c'est précisément ce qu'elle doit faire comprendre sans qu'on
-    // le lui explique nulle part.
-    function sawEdge(anchor, edge, top, dir) {
+    // Une masse taillée se rompt EN SON MILIEU, et non au bout : deux tronçons pleins, aux
+    // quatre coins francs, séparés par une déchirure en éclair. C'est le signe de l'axe brisé,
+    // et il ne se lit que si la barre garde un morceau normal de chaque côté — rognée à son
+    // extrémité, elle ressemblait à un fanion et disait surtout qu'elle finissait mal.
+    //
+    // Les deux bords de la déchirure portent le même zigzag, décalé : la fente garde une
+    // largeur constante, et rien ne la remplit — c'est le fond de la carte qui passe au travers.
+    function brokenBar(anchor, edge, top, dir) {
         var teeth = 6;
-        var bite = edge - dir * CUT;
-        var d = ["M" + anchor + " " + top, "L" + edge + " " + top];
+        var mid = anchor + (edge - anchor) * SEAM;
+        var near = mid - dir * SEAM_GAP / 2;
+        var far = mid + dir * SEAM_GAP / 2;
+        var bottom = top + BAR_H;
 
-        for (var i = 1; i <= teeth; i++) {
-            var y = top + (BAR_H * i / teeth);
-            d.push("L" + (i % 2 ? bite : edge) + " " + y);
-        }
+        var zig = function (base) {
+            var pts = [];
+            for (var i = 0; i <= teeth; i++) {
+                pts.push("L" + (base - (i % 2 ? dir * SEAM_AMP : 0)) + " " + (top + BAR_H * i / teeth));
+            }
+            return pts;
+        };
 
-        d.push("L" + anchor + " " + (top + BAR_H), "Z");
-        return d.join(" ");
+        return [
+            ["M" + anchor + " " + top].concat(zig(near), ["L" + anchor + " " + bottom, "Z"]).join(" "),
+            ["M" + far + " " + top].concat(zig(far).slice(1),
+                ["L" + edge + " " + bottom, "L" + edge + " " + top, "Z"]).join(" ")
+        ];
     }
 
     function text(host, x, y, value, attrs) {
@@ -491,33 +503,46 @@
         // qu'on paie, hachurée pour ce qui est en ruine — et non par un signe posé à côté.
         var fill = charge ? "url(#" + chargeId + ")" : (ruined ? "url(#" + hatchId + ")" : colour);
         if (!gauge) {
-            // Une masse qui tient dans la piste est un rectangle. Une masse taillée finit en
-            // éclair : trois dents mordues vers l'intérieur, le signe qu'un axe brisé porte
-            // depuis toujours. Le chiffre au bord reste, lui, la valeur entière.
-            g.appendChild(cut
-                ? svg("path", {
-                    d: sawEdge(anchor, edge, top, dir), class: "cap-mass",
-                    fill: fill,
-                    stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
-                    "stroke-width": charge || ruined ? "0.9" : "0.7",
-                    "stroke-linejoin": "miter"
-                })
-                : svg("rect", {
-                    x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
-                    fill: fill,
-                    stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
-                    "stroke-width": charge || ruined ? "0.9" : "0.7"
+            // Une masse qui tient dans la piste est un rectangle. Une masse taillée est la même
+            // barre, rompue en son milieu : deux tronçons francs et une déchirure entre eux.
+            // Le chiffre au bord reste, lui, la valeur entière.
+            var edging = charge || ruined ? colour : "rgba(26,24,21,0.3)";
+            var thickness = charge || ruined ? "0.9" : "0.7";
+
+            if (cut) {
+                brokenBar(anchor, edge, top, dir).forEach(function (d) {
+                    g.appendChild(svg("path", {
+                        d: d, class: "cap-mass", fill: fill,
+                        stroke: edging, "stroke-width": thickness
+                    }));
+                });
+            } else {
+                g.appendChild(svg("rect", {
+                    x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H,
+                    class: "cap-mass", fill: fill,
+                    stroke: edging, "stroke-width": thickness
                 }));
+            }
         }
 
         if (!charge && !ruined && !gauge) {
-            // Chant supérieur biseauté : la matière a une épaisseur, comme les douves. Il
-            // s'arrête avant la coupure, sinon il en repeindrait la première dent.
-            var bevel = Math.max(body.width - 2.4 - (cut ? CUT : 0), 0);
-            g.appendChild(svg("rect", {
-                x: body.x + 1.2 + (cut && !invader ? CUT : 0), y: top + 1.2, width: bevel, height: 3.2,
-                fill: "#fff", opacity: "0.34"
-            }));
+            // Chant supérieur biseauté : la matière a une épaisseur, comme les douves. Sur une
+            // barre rompue il se rompt avec elle, sinon il enjamberait la déchirure en blanc.
+            var lip = function (from, to) {
+                g.appendChild(svg("rect", {
+                    x: Math.min(from, to) + 1.2, y: top + 1.2,
+                    width: Math.max(Math.abs(to - from) - 2.4, 0), height: 3.2,
+                    fill: "#fff", opacity: "0.34"
+                }));
+            };
+
+            if (cut) {
+                var seam = anchor + (edge - anchor) * SEAM;
+                lip(anchor, seam - dir * (SEAM_GAP / 2 + SEAM_AMP));
+                lip(seam + dir * SEAM_GAP / 2, edge);
+            } else {
+                lip(anchor, edge);
+            }
         }
 
         // CE QUE LE TRIMESTRE A FAIT — dans le prolongement de la masse, jamais un trait posé
