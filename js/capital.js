@@ -701,19 +701,13 @@
         var t = game.turns[turnIndex];
         var host = el("section", "panel capital-band");
 
+        // Un titre, et rien d'autre. La règle de valorisation, la lecture des masses et le sens
+        // du tiret tenaient ici en un paragraphe de dix lignes : c'était de la documentation de
+        // conception posée sur un plateau de jeu. Un plateau se lit, il ne se préface pas — et
+        // ce qui doit rester atteignable l'est à sa place, la production de l'année dans
+        // l'infobulle de chaque poste, la règle des cinq ans dans 08-capital-de-guerre.md.
         var head = el("div", "cap-head");
         head.appendChild(el("h3", null, "Le capital de guerre"));
-        head.appendChild(el("p", null,
-            "Ce que chaque camp possède encore pour faire la guerre, et ce que le trimestre lui a pris. " +
-            "La Russie à gauche, l'Ukraine à droite, poste par poste en vis-à-vis. Tout est compté en " +
-            "milliards de dollars, sous une seule règle : un actif vaut cinq années de ce qu'il produit. " +
-            "Le pétrole, les centrales et les deux usines s'évaluent ainsi ; les réserves sont déjà un " +
-            "stock ; le soutien extérieur et la tenue du pouvoir restent une année, parce qu'on ne " +
-            "capitalise pas ce qui peut s'arrêter du jour au lendemain. Les deux camps partagent la règle " +
-            "graphique de chaque ligne — mais chaque ligne a la sienne, sinon l'armement ne serait qu'un " +
-            "trait à côté de l'appareil civil, et ce sont donc les chiffres qui comparent un poste à un " +
-            "autre. Le pourcentage contre chaque masse dit ce que le trimestre en a fait ; un tiret dit " +
-            "que rien n'a bougé."));
         host.appendChild(head);
 
         var bottle = bottleneck(t);
@@ -784,7 +778,25 @@
             if (ua) { cartouche(s, defs, ua, p.colour, false, hatchId, p.code === alerted, i, scale, carries ? uaDiplomatic : null); }
         });
 
-        host.appendChild(s);
+        // Le bandeau tient dans 1 240 unités de large : sur un téléphone, le laisser se
+        // réduire à la largeur de l'écran ramène ses libellés de 9,5 px à 2,2 px, et un
+        // cartouche illisible ne vaut pas mieux qu'un cartouche absent. Il défile donc à
+        // l'intérieur de son propre cadre, à une échelle où il se lit — la page, elle, ne
+        // défile jamais latéralement. On ne simplifie pas le plateau : on le déplace.
+        var scroller = el("div", "cap-scroll");
+        scroller.appendChild(s);
+        host.appendChild(scroller);
+
+        // Et on ouvre sur la gouttière plutôt que sur le bord gauche. Le nom des postes y est
+        // écrit une seule fois, au centre, et les deux masses le tirent de part et d'autre :
+        // arriver par la gauche, c'est arriver sur sept chiffres russes sans savoir de quoi
+        // ils parlent. En partant du centre, on voit les noms, la fin des masses russes et le
+        // début des masses ukrainiennes — le vis-à-vis, qui est tout le propos du bandeau.
+        requestAnimationFrame(function () {
+            if (scroller.scrollWidth <= scroller.clientWidth + 1) { return; }
+            var middle = (GUT_L + GUT_R) / 2 / W * scroller.scrollWidth;
+            scroller.scrollLeft = Math.max(0, middle - scroller.clientWidth / 2);
+        });
 
         var ruRibbon = ribbon(t.invader, "ru");
         var uaRibbon = ribbon(t.defender, "ua");
