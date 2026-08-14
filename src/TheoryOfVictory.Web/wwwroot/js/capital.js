@@ -81,6 +81,12 @@
     //
     // La bande de partage devient une gouttière centrale : le poste y est nommé une seule
     // fois, avec son icône, et les deux masses le tirent de part et d'autre comme une corde.
+    // Deux présentations, et le mode courant décide de la géométrie. Face à face sur un écran
+    // large ; un camp à la fois sur un téléphone, où un bandeau de 1 240 unités ramené à la
+    // largeur de l'écran réduirait ses libellés à deux pixels. Dans ce second mode la gouttière
+    // passe à gauche, le camp affiché tire ses masses vers la droite, et l'autre camp attend
+    // derrière son onglet.
+    var solo = false;
     var GUT_L = 528, GUT_R = 712;
     var HEAD_H = 54, ROW_H = 36, H = HEAD_H + POSTS.length * ROW_H + 12;
 
@@ -93,7 +99,29 @@
     var BAR_H = 16, TRACK = 306;
     var SEAM = 0.55, SEAM_GAP = 9, SEAM_AMP = 4;
 
-    var ICON_X = GUT_L + 7, ICON_S = 22, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
+    var ICON_S = 22;
+    var ICON_X = GUT_L + 7, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
+
+    // Bascule de géométrie. Tout le dessin lit ces variables, si bien qu'un seul appel change
+    // la présentation entière sans qu'aucune fonction de tracé ait à savoir dans quel mode
+    // elle travaille.
+    function layout(mobile) {
+        solo = mobile;
+        // 420 unités et pas une de plus : c'est la largeur d'un téléphone courant, donc la
+        // plaque s'y affiche à l'échelle 1 et ses libellés de 9,5 px rendent à 9,5 px. À 690,
+        // la même plaque était réduite d'un tiers et retombait sous six pixels — soit
+        // exactement le défaut qu'on prétendait corriger, à un camp près.
+        W = mobile ? 420 : 1240;
+        GUT_L = mobile ? 4 : 528;
+        GUT_R = mobile ? 148 : 712;
+        NUM_IN = mobile ? 104 : 186;
+        NUM_OUT = mobile ? 6 : 22;
+        TRACK = mobile ? 164 : 306;
+        H = HEAD_H + POSTS.length * ROW_H + 12;
+        ICON_X = GUT_L + 7;
+        NAME_X = GUT_L + 37;
+        NAME_MAX = GUT_R - 6;
+    }
 
     var seq = 0;
 
@@ -391,8 +419,9 @@
     var GAUGE = 96;
 
     function gaugeRow(g, post, colour, invader, top) {
-        var anchor = invader ? GUT_L : GUT_R;
-        var dir = invader ? -1 : 1;
+        var right = solo || !invader;
+        var anchor = right ? GUT_R : GUT_L;
+        var dir = right ? 1 : -1;
         var share = Math.max(0, Math.min(post.index / 100, 1.4));
         var full = anchor + dir * GAUGE;
         var end = anchor + dir * Math.min(GAUGE * share, GAUGE);
@@ -416,8 +445,12 @@
     function cartouche(host, defs, post, colour, invader, pressure, row, scale, diplomatic, gauge) {
         var yc = HEAD_H + row * ROW_H + ROW_H / 2;
         var top = yc - BAR_H / 2;
-        var anchor = invader ? GUT_L : GUT_R;
-        var dir = invader ? -1 : 1;
+        // Le camp donne l'IDENTITÉ — la couleur, le lien de provenance — mais plus le sens du
+        // dessin : sur un téléphone les deux onglets tirent vers la droite, sinon on comparerait
+        // deux images en miroir de mémoire.
+        var right = solo || !invader;
+        var anchor = right ? GUT_R : GUT_L;
+        var dir = right ? 1 : -1;
         var index = post.index;
         var charge = !!post.inverted;
         var len = Math.min(Math.max(post.value, 0) * scale, TRACK);
@@ -571,8 +604,8 @@
         // La valeur au bord du bandeau, le delta contre elle : la Russie se lit de gauche à
         // droite, l'Ukraine de droite à gauche, et chaque camp aligne ses chiffres sur son
         // propre bord.
-        var out = invader ? NUM_OUT : W - NUM_OUT;
-        var inner = invader ? NUM_IN : W - NUM_IN;
+        var out = right ? W - NUM_OUT : NUM_OUT;
+        var inner = right ? W - NUM_IN : NUM_IN;
 
         // Une charge s'imprime en négatif, comme dans n'importe quel bilan : c'est de l'argent
         // qui sort, et le total du camp la retranche. La masse, elle, dessine son ampleur —
@@ -589,7 +622,7 @@
         // montant que le moteur lui donne reste dans l'infobulle, parce que c'est lui que le
         // total « flux » compte — l'écrire ici ferait croire qu'on peut le comparer au reste.
         text(figure, out, yc + 6, gauge ? num(index, 0) + " %" : (charge ? "−" : "") + money(post.value), {
-            "text-anchor": invader ? "start" : "end", class: "cap-value"
+            "text-anchor": right ? "end" : "start", class: "cap-value"
         });
         g.appendChild(figure);
 
@@ -602,7 +635,7 @@
         // vert quand il monte — la seule convention qu'on n'a pas à apprendre. Le coupable,
         // lui, se lit sur la masse, qui garde son arête déchirée.
         text(g, inner, yc + 5, pct(post.percentDelta), {
-            "text-anchor": invader ? "end" : "start",
+            "text-anchor": right ? "start" : "end",
             class: "cap-delta" + (moved ? (post.percentDelta > 0 ? " up" : " down") : "")
         });
 
@@ -613,18 +646,24 @@
     // de la colonne des noms, à égale distance des deux camps, parce qu'il n'appartient à
     // aucun des deux.
     function quarterCartouche(host, t) {
+        // Le cartouche vit dans la gouttière — sauf en mode onglet, où la gouttière porte déjà
+        // le nom du camp et ses habitants. Il passe alors au bord droit, où la place est libre
+        // parce qu'un seul camp occupe la plaque.
+        var x0 = solo ? W - 176 : GUT_L;
+        var x1 = solo ? W - 4 : GUT_R;
+
         var g = svg("g", {});
         g.appendChild(svg("rect", {
-            x: GUT_L, y: 8, width: GUT_R - GUT_L, height: 38, rx: "2",
+            x: x0, y: 8, width: x1 - x0, height: 38, rx: "2",
             fill: "#fbf9f4", stroke: "#d9d1be", "stroke-width": "1"
         }));
-        text(g, GUT_L + 12, 25, dateOf(t), { class: "cap-quarter" });
-        text(g, GUT_L + 12, 41, num(t.oilPrice, 0) + " $", { class: "cap-brent" });
-        text(g, GUT_R - 12, 41, "le baril", { "text-anchor": "end", class: "cap-label" });
+        text(g, x0 + 12, 25, dateOf(t), { class: "cap-quarter" });
+        text(g, x0 + 12, 41, num(t.oilPrice, 0) + " $", { class: "cap-brent" });
+        text(g, x1 - 12, 41, "le baril", { "text-anchor": "end", class: "cap-label" });
 
         // La saison décide : elle mérite un signe et pas un mot.
         if (t.season === "Winter") {
-            var cx = GUT_R - 18, cy = 21;
+            var cx = x1 - 18, cy = 21;
             [0, 60, 120].forEach(function (a) {
                 var r = a * Math.PI / 180, dx = Math.cos(r) * 6, dy = Math.sin(r) * 6;
                 g.appendChild(svg("line", {
@@ -774,19 +813,11 @@
         return row;
     }
 
-    function band(game, turnIndex) {
+    // UNE plaque du bandeau, dessinée dans la géométrie courante. `only` vaut « invader » ou
+    // « defender » pour n'en tracer qu'un camp — c'est la vue des onglets — et null pour le
+    // vis-à-vis complet.
+    function plate(game, turnIndex, only) {
         var t = game.turns[turnIndex];
-        var host = el("section", "panel capital-band");
-
-        // Un titre, et rien d'autre. La règle de valorisation, la lecture des masses et le sens
-        // du tiret tenaient ici en un paragraphe de dix lignes : c'était de la documentation de
-        // conception posée sur un plateau de jeu. Un plateau se lit, il ne se préface pas — et
-        // ce qui doit rester atteignable l'est à sa place, la production de l'année dans
-        // l'infobulle de chaque poste, la règle des cinq ans dans 08-capital-de-guerre.md.
-        var head = el("div", "cap-head");
-        head.appendChild(el("h3", null, "Le capital de guerre"));
-        host.appendChild(head);
-
         var bottle = bottleneck(t);
 
         var s = svg("svg",{ viewBox: "0 0 " + W + " " + H, class: "cap-svg", role: "img" });
@@ -795,8 +826,15 @@
 
         // Le camp est rappelé par son nom au bord qui lui revient et par le filet qui court
         // sous lui : à gauche l'envahisseur, à droite l'envahi, et plus rien à chercher.
-        s.appendChild(svg("rect", { x: 22, y: 46, width: GUT_L - 36, height: 3, fill: "#a8322a" }));
-        s.appendChild(svg("rect", { x: GUT_R + 14, y: 46, width: W - 36 - GUT_R, height: 3, fill: "#1e5fa8" }));
+        if (!only) {
+            s.appendChild(svg("rect", { x: 22, y: 46, width: GUT_L - 36, height: 3, fill: "#a8322a" }));
+            s.appendChild(svg("rect", { x: GUT_R + 14, y: 46, width: W - 36 - GUT_R, height: 3, fill: "#1e5fa8" }));
+        } else {
+            s.appendChild(svg("rect", {
+                x: 22, y: 46, width: W - 202, height: 3,
+                fill: only === "invader" ? "#a8322a" : "#1e5fa8"
+            }));
+        }
         // Le nombre d'habitants se pose contre le nom, du côté de la gouttière. Il n'entre dans
         // aucun calcul : il est là parce que l'écart entre les deux bilans est trois fois plus
         // de gens produisant trois fois plus chacun, et que la seconde moitié de cette phrase
@@ -817,8 +855,12 @@
                 n.appendChild(people);
             }
         };
-        side(t.invader, 22, false, "ru");
-        side(t.defender, W - 22, true, "ua");
+        if (only) {
+            side(t[only], 22, false, only === "invader" ? "ru" : "ua");
+        } else {
+            side(t.invader, 22, false, "ru");
+            side(t.defender, W - 22, true, "ua");
+        }
 
         // Deux totaux par camp, jamais leur somme : un fonds souverain et une année de recette
         // pétrolière ne s'additionnent pas, et le chiffre unique qui prétendrait le contraire
@@ -830,12 +872,16 @@
                 "patrimoine " + money(side.capitalStock) + " Md$  ·  flux " + money(side.capitalFlow) + " Md$/an",
                 { "text-anchor": anchorEnd ? "end" : "start", class: "cap-total" });
         };
-        totals(t.invader, 22, false);
-        totals(t.defender, W - 22, true);
+        if (only) {
+            totals(t[only], 22, false);
+        } else {
+            totals(t.invader, 22, false);
+            totals(t.defender, W - 22, true);
+        }
 
         // Les deux bords de la gouttière : c'est le sol commun, et c'est de là que les deux
         // masses partent en sens contraire.
-        [GUT_L, GUT_R].forEach(function (x) {
+        (only ? [GUT_R] : [GUT_L, GUT_R]).forEach(function (x) {
             s.appendChild(svg("line", {
                 x1: x, y1: HEAD_H - 2, x2: x, y2: H - 6, stroke: "#d9d1be", "stroke-width": "1"
             }));
@@ -879,29 +925,88 @@
             var ruPressure = aimed && bottle.side === "invader" ? bottle.detail : null;
             var uaPressure = aimed && bottle.side !== "invader" ? bottle.detail : null;
 
-            if (ru) { cartouche(s, defs, ru, p.colour, true, ruPressure, i, scale, carries ? ruDiplomatic : null, p.gauge); }
-            if (ua) { cartouche(s, defs, ua, p.colour, false, uaPressure, i, scale, carries ? uaDiplomatic : null, p.gauge); }
+            if (ru && only !== "defender") {
+                cartouche(s, defs, ru, p.colour, true, ruPressure, i, scale, carries ? ruDiplomatic : null, p.gauge);
+            }
+            if (ua && only !== "invader") {
+                cartouche(s, defs, ua, p.colour, false, uaPressure, i, scale, carries ? uaDiplomatic : null, p.gauge);
+            }
         });
 
-        // Le bandeau tient dans 1 240 unités de large : sur un téléphone, le laisser se
-        // réduire à la largeur de l'écran ramène ses libellés de 9,5 px à 2,2 px, et un
-        // cartouche illisible ne vaut pas mieux qu'un cartouche absent. Il défile donc à
-        // l'intérieur de son propre cadre, à une échelle où il se lit — la page, elle, ne
-        // défile jamais latéralement. On ne simplifie pas le plateau : on le déplace.
-        var scroller = el("div", "cap-scroll");
-        scroller.appendChild(s);
-        host.appendChild(scroller);
+        return s;
+    }
 
-        // Et on ouvre sur la gouttière plutôt que sur le bord gauche. Le nom des postes y est
-        // écrit une seule fois, au centre, et les deux masses le tirent de part et d'autre :
-        // arriver par la gauche, c'est arriver sur sept chiffres russes sans savoir de quoi
-        // ils parlent. En partant du centre, on voit les noms, la fin des masses russes et le
-        // début des masses ukrainiennes — le vis-à-vis, qui est tout le propos du bandeau.
+    // Le bandeau, dans ses deux présentations, toutes deux posées dans la page. Aucune écoute
+    // de redimensionnement, aucune détection de largeur en JavaScript : c'est la feuille de
+    // style qui décide laquelle s'affiche, et une rotation de téléphone ne peut donc pas
+    // laisser le plateau dans un état qu'il n'a pas prévu.
+    function band(game, turnIndex) {
+        var t = game.turns[turnIndex];
+        var host = el("section", "panel capital-band");
+
+        // Un titre, et rien d'autre. La règle de valorisation, la lecture des masses et le sens
+        // du tiret tenaient ici en un paragraphe de dix lignes : c'était de la documentation de
+        // conception posée sur un plateau de jeu. Un plateau se lit, il ne se préface pas — et
+        // ce qui doit rester atteignable l'est à sa place, la production de l'année dans
+        // l'infobulle de chaque poste, la règle des cinq ans dans 08-capital-de-guerre.md.
+        var head = el("div", "cap-head");
+        head.appendChild(el("h3", null, "Le capital de guerre"));
+        host.appendChild(head);
+
+        // ── Écran large : les deux camps en vis-à-vis ────────────────────────────────────
+        layout(false);
+        var wide = el("div", "cap-scroll cap-wide");
+        wide.appendChild(plate(game, turnIndex, null));
+        host.appendChild(wide);
+
+        // Le bandeau large tient dans 1 240 unités : sur un écran juste un peu étroit il défile
+        // à l'intérieur de son propre cadre, à une échelle où il se lit — la page, elle, ne
+        // défile jamais latéralement. Et il s'ouvre sur la gouttière plutôt que sur le bord
+        // gauche : arriver par la gauche, c'est arriver sur sept chiffres russes sans savoir de
+        // quoi ils parlent, alors que le centre montre les noms et le vis-à-vis des deux masses.
+        var opened = W, gut = (GUT_L + GUT_R) / 2;
         requestAnimationFrame(function () {
-            if (scroller.scrollWidth <= scroller.clientWidth + 1) { return; }
-            var middle = (GUT_L + GUT_R) / 2 / W * scroller.scrollWidth;
-            scroller.scrollLeft = Math.max(0, middle - scroller.clientWidth / 2);
+            if (wide.scrollWidth <= wide.clientWidth + 1) { return; }
+            wide.scrollLeft = Math.max(0, gut / opened * wide.scrollWidth - wide.clientWidth / 2);
         });
+
+        // ── Téléphone : un onglet par camp ───────────────────────────────────────────────
+        //
+        // Le vis-à-vis ne survit pas à un écran de trois cent cinquante points : ou bien on
+        // réduit tout et plus rien ne se lit, ou bien on fait défiler et on compare deux camps
+        // de mémoire. L'onglet tranche — un camp entier, lisible, et l'autre à un doigt.
+        layout(true);
+        var tabbed = el("div", "cap-tabbed");
+        var tabs = el("div", "cap-tabs");
+        var pages = el("div", "cap-pages");
+
+        [["invader", "ru"], ["defender", "ua"]].forEach(function (pair, i) {
+            var page = el("div", "cap-page " + pair[1]);
+            page.appendChild(plate(game, turnIndex, pair[0]));
+
+            var tab = el("button", "cap-tab " + pair[1]);
+            tab.type = "button";
+            tab.textContent = t[pair[0]].name;
+            tab.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+            tab.addEventListener("click", function () {
+                Array.prototype.forEach.call(tabs.children, function (other) {
+                    other.setAttribute("aria-pressed", other === tab ? "true" : "false");
+                });
+                Array.prototype.forEach.call(pages.children, function (other) {
+                    other.classList.toggle("on", other === page);
+                });
+            });
+
+            if (i === 0) { page.classList.add("on"); }
+            tabs.appendChild(tab);
+            pages.appendChild(page);
+        });
+
+        tabbed.appendChild(tabs);
+        tabbed.appendChild(pages);
+        host.appendChild(tabbed);
+
+        layout(false);
 
         var ruRibbon = ribbon(t.invader, "ru");
         var uaRibbon = ribbon(t.defender, "ua");
@@ -936,6 +1041,21 @@
         }
 
         return out;
+    }
+
+    // La hachure du ciseau, et elle seule. Le bandeau en avait une autre, qui teignait toute une
+    // masse tombée sous le quart de son départ : un signe muet, illisible sur un téléphone, et
+    // redondant avec la longueur de la barre. Ici elle dit tout autre chose — la SURFACE entre
+    // deux courbes, celle où le front brûle le capital — et c'est une aire, pas un objet, donc
+    // elle n'a que sa texture pour se dire.
+    function hatch(defs, id) {
+        var p = svg("pattern", {
+            id: id, width: "6", height: "6", patternUnits: "userSpaceOnUse",
+            patternTransform: "rotate(45)"
+        });
+        p.appendChild(svg("rect", { width: "6", height: "6", fill: "#a8322a", opacity: "0.12" }));
+        p.appendChild(svg("line", { x1: "0", y1: "0", x2: "0", y2: "6", stroke: "#a8322a", "stroke-width": "2.6", opacity: "0.45" }));
+        defs.appendChild(p);
     }
 
     function scissor(game, invader, upTo, colour, title, top) {
