@@ -10,9 +10,9 @@
    ============================================================ */
 
 .prov {
-    max-width: 92ch;
+    max-width: min(1560px, 96vw);
     margin: 0 auto;
-    padding: 28px 22px 72px;
+    padding: 28px 32px 72px;
 }
 
 .prov-back {
@@ -91,7 +91,11 @@
     color: var(--ink-2);
 }
 
+/* La page est large parce que la table l'est : cinq colonnes dont une porte un paragraphe.
+   Mais un texte courant ne se lit pas sur quinze cents pixels, alors les blocs de prose et les
+   notes de source gardent leur largeur de lecture — seule la table prend tout l'écran. */
 .prov-block { margin-bottom: 34px; }
+.prov-head, .prov > p, .prov-sources { max-width: 92ch; }
 
 .prov h2 {
     font-family: var(--font-ui);
@@ -255,16 +259,137 @@
 .prov-table td.date { white-space: nowrap; font-weight: 600; color: var(--ink); }
 .prov-table td.num .u { font-family: var(--font-ui); font-size: 10px; color: var(--ink-3); }
 .prov-table td.kept-cell { font-family: var(--font-ui); font-size: 11px; color: var(--ink-3); }
-.prov-table .conf-why { display: block; margin-top: 4px; font-size: 11.5px; color: var(--ink-3); line-height: 1.45; }
+/* La justification de la confiance : sous le texte qu'elle nuance, en retrait et plus
+   petite. Elle se lit quand on la cherche, elle ne dispute plus la ligne. */
+.prov-table .conf-why {
+    display: block;
+    margin-top: 6px;
+    padding-left: 10px;
+    border-left: 2px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+}
+
+/* Les lignes se balayent : hauteur régulière, et la ligne retenue ressort par sa teinte,
+   pas par sa taille. */
+.prov-table tbody td { padding: 10px 12px 10px 0; }
+.prov-table th.num { text-align: right; }
+.prov-table td.kept-cell { text-align: center; }
 .prov-table td.lab { font-size: 13px; line-height: 1.55; color: var(--ink-2); min-width: 30ch; }
 
 /* Cinq colonnes dont une porte un paragraphe : sans largeurs déclarées, le navigateur donne
    tout l'espace aux courtes et repousse la seule qu'on vient lire hors du cadre. */
 .prov-table { table-layout: fixed; }
-.prov-table th:nth-child(1), .prov-table td:nth-child(1) { width: 18%; }
-.prov-table th:nth-child(2), .prov-table td:nth-child(2) { width: 10%; }
-.prov-table th:nth-child(3), .prov-table td:nth-child(3) { width: 18%; }
-.prov-table th:nth-child(4), .prov-table td:nth-child(4) { width: 6%; }
-.prov-table th:nth-child(5), .prov-table td:nth-child(5) { width: 48%; }
+.prov-table th:nth-child(1), .prov-table td:nth-child(1) { width: 16%; }
+.prov-table th:nth-child(2), .prov-table td:nth-child(2) { width: 12%; }
+.prov-table th:nth-child(3), .prov-table td:nth-child(3) { width: 11%; }
+.prov-table th:nth-child(4), .prov-table td:nth-child(4) { width: 9%; }
+.prov-table th:nth-child(5), .prov-table td:nth-child(5) { width: 52%; }
 .prov-table td { vertical-align: top; }
 .prov-table td.lab { min-width: 0; }
+
+/* ---- Les observations ----
+
+   Le cœur de la page, et la seule pièce qui a droit à toute la largeur. Une gouttière fixe
+   porte la date et le chiffre ; le raisonnement occupe le reste, borné à une longueur de ligne
+   lisible. La ligne que le moteur retient est la seule qu'on cherche en arrivant : elle se
+   distingue par sa teinte et par son étiquette, jamais par sa taille. */
+
+.obs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+}
+
+.obs {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 0 32px;
+    padding: 20px 0 22px;
+    border-bottom: 1px solid var(--rule-2);
+}
+
+.obs.kept {
+    background: linear-gradient(90deg, var(--gold-soft), transparent 78%);
+    box-shadow: inset 3px 0 0 var(--gold);
+    padding-left: 18px;
+    margin-left: -18px;
+}
+
+.obs-rail { padding-top: 2px; }
+
+.prov .obs-date {
+    margin: 0 0 2px !important;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    line-height: 1.35;
+}
+
+.prov .obs-value {
+    margin: 0 !important;
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.05;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.prov .obs-value .u {
+    margin-left: 6px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+}
+
+.prov .obs-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px !important;
+}
+
+.prov .obs-kept {
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+}
+
+.prov .obs-why {
+    margin: 0 !important;
+    max-width: 88ch;
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: var(--ink-2);
+}
+
+.prov .obs .conf-why {
+    max-width: 88ch;
+    margin: 10px 0 0 !important;
+    padding-left: 12px;
+    border-left: 2px solid var(--rule);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-3);
+}
+
+/* Seule la section des observations prend toute la largeur ; le reste garde sa colonne. */
+.prov-block.wide { max-width: none; }
+
+@media (max-width: 860px) {
+    .obs { grid-template-columns: 1fr; gap: 10px; }
+    .obs-rail { display: flex; align-items: baseline; gap: 14px; }
+    .prov .obs-value { font-size: 24px; }
+}

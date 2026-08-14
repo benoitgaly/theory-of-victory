@@ -63,38 +63,42 @@
         }
     </section>
 
-    <section class="prov-block">
+    <section class="prov-block wide">
         <h2>Les observations</h2>
-        <div class="prov-scroll">
-            <table class="prov-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Valeur</th>
-                        <th>Confiance</th>
-                        <th>Retenue</th>
-                        <th>Pourquoi cette valeur à cette date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (FigureObservation observation in Model.Observations)
-                    {
-                        <tr class="@(observation.Retained ? "kept" : "")">
-                            <td class="date">@observation.Date</td>
-                            <td class="num">
-                                @observation.Value.ToString("N1") <span class="u">@observation.Unit</span>
-                            </td>
-                            <td>
-                                <span class="prov-badge @badge(observation.Confidence)">@observation.Confidence</span>
-                                <span class="conf-why">@observation.ConfidenceWhy</span>
-                            </td>
-                            <td class="kept-cell">@(observation.Retained ? "oui" : "non")</td>
-                            <td class="lab">@observation.Why</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+
+        @* Une table à cinq colonnes imposait une grille à des lignes qui n'en sont pas une :
+           quatre cellules courtes, une cinquième portant un paragraphe, et donc du vide à
+           gauche sur toute la hauteur du texte. Chaque observation est un bloc — sa date et son
+           chiffre tiennent la gouttière, le raisonnement occupe la largeur. La ligne que le
+           moteur retient se distingue par sa teinte et par son étiquette, plus par une colonne
+           où l'on écrivait « oui » quatorze fois. *@
+        <ol class="obs-list">
+            @foreach (FigureObservation observation in Model.Observations)
+            {
+                <li class="obs @(observation.Retained ? "kept" : "")">
+                    <div class="obs-rail">
+                        <p class="obs-date">@observation.Date</p>
+                        <p class="obs-value">
+                            @observation.Value.ToString("N1").Replace("-", "−")<span class="u">@observation.Unit</span>
+                        </p>
+                    </div>
+                    <div class="obs-body">
+                        <p class="obs-tags">
+                            <span class="prov-badge @badge(observation.Confidence)">@observation.Confidence</span>
+                            @if (observation.Retained)
+                            {
+                                <span class="obs-kept">retenue par le moteur</span>
+                            }
+                        </p>
+                        <p class="obs-why">@observation.Why</p>
+                        @if (!string.IsNullOrWhiteSpace(observation.ConfidenceWhy))
+                        {
+                            <p class="conf-why">@observation.ConfidenceWhy</p>
+                        }
+                    </div>
+                </li>
+            }
+        </ol>
     </section>
 
     <nav class="prov-back"><a href="provenance.html">Tous les chiffres →</a></nav>
