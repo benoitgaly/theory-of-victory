@@ -261,10 +261,10 @@
 /* Cinq colonnes dont une porte un paragraphe : sans largeurs déclarées, le navigateur donne
    tout l'espace aux courtes et repousse la seule qu'on vient lire hors du cadre. */
 .prov-table { table-layout: fixed; }
-.prov-table th:nth-child(1), .prov-table td:nth-child(1) { width: 13%; }
-.prov-table th:nth-child(2), .prov-table td:nth-child(2) { width: 11%; }
-.prov-table th:nth-child(3), .prov-table td:nth-child(3) { width: 20%; }
-.prov-table th:nth-child(4), .prov-table td:nth-child(4) { width: 7%; }
-.prov-table th:nth-child(5), .prov-table td:nth-child(5) { width: 49%; }
+.prov-table th:nth-child(1), .prov-table td:nth-child(1) { width: 18%; }
+.prov-table th:nth-child(2), .prov-table td:nth-child(2) { width: 10%; }
+.prov-table th:nth-child(3), .prov-table td:nth-child(3) { width: 18%; }
+.prov-table th:nth-child(4), .prov-table td:nth-child(4) { width: 6%; }
+.prov-table th:nth-child(5), .prov-table td:nth-child(5) { width: 48%; }
 .prov-table td { vertical-align: top; }
 .prov-table td.lab { min-width: 0; }
