@@ -272,6 +272,19 @@
 
             host.appendChild(b);
         }
+
+        // Sur un écran étroit, la piste déborde de son cadre et défile : le trimestre courant
+        // peut alors se trouver hors du champ après un rendu, et une frise dont la case active
+        // est invisible ne dit plus où l'on est. On la ramène. Sur un écran large la piste
+        // tient entière, rien ne défile, et cet appel ne fait rien.
+        // On mesure sur les rectangles et non sur offsetLeft : ce dernier se compte depuis
+        // l'ancêtre positionné, qui n'est pas la piste, et le décalage se voyait à l'écran.
+        var active = host.querySelector(".tick.active");
+        if (active && host.scrollWidth > host.clientWidth + 1) {
+            var track = host.getBoundingClientRect();
+            var cell = active.getBoundingClientRect();
+            host.scrollLeft += (cell.left - track.left) - ((track.width - cell.width) / 2);
+        }
     }
 
     function bindPhases() {

@@ -21,6 +21,12 @@
     margin: 0 0 4px;
 }
 
+/* Le bandeau n'a plus qu'un titre : les 4 px se justifiaient sous un paragraphe, pas au-dessus
+   de la bannière du goulot, contre laquelle le titre venait buter. */
+.capital-band .cap-head h3 {
+    margin: 0 0 12px;
+}
+
 .capital-band .cap-head p,
 .capital-scissor .cap-head p {
     margin: 0 0 12px;
@@ -224,4 +230,33 @@
 
 @media (max-width: 900px) {
     .sc-pair { grid-template-columns: 1fr; }
+}
+
+/* ---------- Le plateau sur un téléphone ----------
+
+   Une seule règle, et elle vaut pour tout ce fichier comme pour site.css : la PAGE ne défile
+   jamais latéralement, et ce qui est plus large que l'écran défile à l'intérieur de son propre
+   cadre. Le bandeau tient dans 1 240 unités ; réduit à 375, ses libellés tombent sous trois
+   pixels. On ne le simplifie pas — un plateau de wargame est dense par choix, et le simplifier
+   reviendrait à retirer du jeu ce qu'on est venu y montrer. On le laisse se déplacer. */
+
+.cap-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+@media (max-width: 900px) {
+    /* La largeur sous laquelle les petites capitales du bandeau cessent d'être lisibles.
+       Mesurée, pas devinée : à 940 px, les libellés de 9,5 px rendent à 7,2 px, ce qui est le
+       plancher de ce jeu de caractères ; en dessous, on perd le nom des postes avant les
+       chiffres. */
+    .cap-scroll .cap-svg { min-width: 940px; }
+
+    .sc-svg { min-width: 460px; }
+    .scissor { overflow-x: auto; overscroll-behavior-x: contain; }
+
+    .capital-band,
+    .capital-scissor { padding: 14px 12px 12px; }
 }

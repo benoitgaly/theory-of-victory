@@ -1703,3 +1703,96 @@ main {
     .link::after { display: none; }
     .field { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   Le plateau sur un téléphone
+
+   Une seule règle gouverne tout ce bloc : **la page ne défile jamais latéralement**, et ce
+   qui est plus large que l'écran défile à l'intérieur de son propre cadre. Le reste en
+   découle.
+
+   Ce qu'on ne fait PAS, et c'est une décision plutôt qu'un renoncement : on ne simplifie
+   rien. Pas de version allégée, pas de poste masqué, pas de frise raccourcie. Un plateau de
+   wargame est dense par choix — la densité EST le propos — et une version mobile qui retire
+   des cartouches retirerait du jeu exactement ce qu'on est venu y montrer. Ce qui ne tient
+   pas dans l'écran se déplace ; rien ne disparaît.
+   ============================================================ */
+
+@media (max-width: 760px) {
+    /* La marge de 30 px mangeait un douzième de la largeur utile. */
+    main { padding: 16px 14px 52px; }
+    .masthead { padding: 13px 14px; gap: 14px; }
+    .masthead h1 { font-size: 21px; }
+    .timeline { padding: 10px 14px 12px; gap: 8px; }
+    .phases { padding: 12px 14px; gap: 8px; }
+
+    /* Les trois déroulés s'empilent : côte à côte, le troisième — « Le soutien s'arrête »,
+       celui dont l'issue est la chute de l'Ukraine — sortait de l'écran, et un choix qu'on
+       ne voit pas n'est pas un choix. */
+    .variant-picker { flex-direction: column; width: 100%; gap: 6px; }
+    .variant { width: 100%; }
+
+    /* Les trois écrans du tour restent une rangée, mais une rangée qu'on pousse : empilés,
+       ils auraient repoussé le plateau lui-même sous la ligne de flottaison. */
+    .phases {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+    }
+
+    .phase {
+        flex: 0 0 auto;
+        min-width: 186px;
+        scroll-snap-align: start;
+    }
+
+    /* LA correction qui compte pour la navigation. Vingt-six cases se partageaient 198 px :
+       six pixels par trimestre, où le texte de saison débordait de sa propre case. Les cases
+       restent strictement égales — c'est une piste de jeu, toutes les cases s'y valent — et
+       c'est la piste qui défile. Rien de la frise n'est perdu, et le trimestre courant est
+       amené dans le champ par le script. */
+    .ticks {
+        /* `overflow-y: hidden` explicitement : régler un seul axe sur `auto` fait passer
+           l'autre en `auto` aussi, et la piste se dotait d'une barre verticale parasite. */
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        gap: 3px;
+    }
+
+    /* Pas d'ancrage magnétique ici : il se bat avec le recentrage du trimestre courant que
+       le script applique après chaque rendu, et c'est le script qui a raison — lui sait
+       quelle case compte. */
+    .tick {
+        flex: 0 0 52px;
+    }
+
+    .tick .t-quarter b { font-size: 9px; }
+
+    /* Les commandes de la frise ne doivent pas rétrécir quand la piste devient un
+       défilement : ce sont les seules cibles tactiles de cette barre. */
+    .timeline .step { flex: 0 0 auto; min-width: 34px; min-height: 34px; }
+
+    .stage-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+    /* La main. Six cartes au format Magic se partageaient la largeur : cinquante-trois
+       pixels chacune, où il ne restait ni illustration, ni boîte de règles, ni texte
+       d'ambiance — et onze pixels qui débordaient de la page par-dessus le marché.
+       La règle du plateau dit qu'une main qui déborde GLISSE, elle ne se replie pas ; elle
+       glisse donc pour de bon, et chaque carte retrouve sa largeur de carte. Elles restent
+       strictement égales entre elles : la seule qui se distingue est celle qui a été jouée,
+       et elle se distingue par son or, jamais par sa taille. */
+    .card-rail.hand {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+    }
+
+    .card-rail.hand .mtg {
+        flex: 0 0 252px;
+        width: 252px;
+        scroll-snap-align: center;
+    }
+}
