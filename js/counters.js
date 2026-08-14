@@ -77,6 +77,9 @@
 window.tovCounters = (function () {
     "use strict";
 
+    var T = window.tov.t;
+    var num = window.tov.num;
+
     /* ---------------- Display constants ----------------
        None of these is a rule. Changing any of them must change no engine output — they only
        decide how a published number is drawn. */
@@ -149,20 +152,15 @@ window.tovCounters = (function () {
     }
 
     // Grouping only. Sector figures leave the engine in men, already rounded to the thousand,
-    // so converting here a second time would multiply an army by a thousand.
+    // so converting here a second time would multiply an army by a thousand. The separator
+    // follows the language: a space in French, a comma in English.
     function men(value) {
-        var s = String(Math.round(value));
-        var out = "";
-        for (var i = 0; i < s.length; i++) {
-            if (i > 0 && (s.length - i) % 3 === 0) { out += " "; }
-            out += s[i];
-        }
-        return out;
+        return num(Math.round(value));
     }
 
     function km(hexes) {
         var v = Math.abs(hexes * 10);
-        return v.toFixed(v < 10 ? 1 : 0).replace(".", ",");
+        return num(v, v < 10 ? 1 : 0);
     }
 
     /* ---------------- Reading the turn ---------------- */
@@ -266,21 +264,21 @@ window.tovCounters = (function () {
         var lines = [sector.name.toUpperCase(), sector.outcome];
 
         [sector.invader, sector.defender].forEach(function (side) {
-            var label = side.code === "invader" ? "Russie" : "Ukraine";
+            var label = side.code === "invader" ? T("Russie") : T("Ukraine");
             if (side.power === null) {
-                lines.push(label + " : puissance non publiée");
+                lines.push(T("%1 : puissance non publiée", label));
                 return;
             }
-            var line = label + " : " + men(side.power) + " hommes-équivalents engagés";
+            var line = T("%1 : %2 hommes-équivalents engagés", label, men(side.power));
             if (side.establishment !== null && side.establishment > side.power) {
-                line += ", " + men(side.establishment) + " si les flux suivaient";
+                line += T(", %1 si les flux suivaient", men(side.establishment));
             }
             lines.push(line);
         });
 
-        lines.push("Rapport de force : " + sector.ratio.toFixed(2).replace(".", ","));
+        lines.push(T("Rapport de force : %1", num(sector.ratio, 2)));
         if (sector.cost > 0) {
-            lines.push("Coût du trimestre : " + men(sector.cost) + " hommes, les deux camps réunis.");
+            lines.push(T("Coût du trimestre : %1 hommes, les deux camps réunis.", men(sector.cost)));
         }
         return lines.join("\n");
     }

@@ -142,6 +142,44 @@ h1, h2, h3, h4 {
     font-size: 14px;
 }
 
+/* ---------- Sélecteur de langue ---------- */
+
+/* Deux mots posés côte à côte, celui qu'on lit encré, l'autre estompé. Assez discret pour
+   qu'on ne le voie qu'en le cherchant, assez lisible pour qu'on le trouve du premier coup. */
+.masthead-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.lang-picker {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+}
+
+.lang-picker .lang {
+    color: var(--ink-3);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+}
+
+.lang-picker a.lang:hover {
+    color: var(--ink);
+    border-bottom-color: var(--rule);
+}
+
+.lang-picker .current {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+}
+
 /* ---------- Sélecteur de déroulé ---------- */
 
 .variant-picker {

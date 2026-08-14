@@ -28,18 +28,22 @@
 
     var NS = "http://www.w3.org/2000/svg";
 
+    // La clé EST le texte français source, comme dans le C# : une étiquette traduite une fois
+    // l'est des deux côtés, et une traduction absente se lit en français.
+    var T = window.tov.t;
+
     // La teinte porte le poste, la position porte le camp : sept postes doivent se
     // distinguer dans une rangée, les deux camps le sont déjà par la gauche et la droite.
     var POSTS = [
-        { code: "reserves", colour: "#8a6f2b", yield: "comble ce que la recette du trimestre ne finance plus" },
-        { code: "grid", colour: "#c2621a", yield: "ne va jamais au front : ouvre ou ferme les usines, le raffinage, le chauffage" },
-        { code: "oil", colour: "#8a5a2b", yield: "recette pour qui l'exporte, charge nette pour qui l'importe" },
-        { code: "civilian", colour: "#6f8060", yield: "le niveau de vie, donc le consentement à la guerre" },
-        { code: "arms", colour: "#4a6070", yield: "les obus, les drones, les missiles, les intercepteurs" },
+        { code: "reserves", colour: "#8a6f2b", yield: T("comble ce que la recette du trimestre ne finance plus") },
+        { code: "grid", colour: "#c2621a", yield: T("ne va jamais au front : ouvre ou ferme les usines, le raffinage, le chauffage") },
+        { code: "oil", colour: "#8a5a2b", yield: T("recette pour qui l'exporte, charge nette pour qui l'importe") },
+        { code: "civilian", colour: "#6f8060", yield: T("le niveau de vie, donc le consentement à la guerre") },
+        { code: "arms", colour: "#4a6070", yield: T("les obus, les drones, les missiles, les intercepteurs") },
         // Un flux donné à l'un, acheté par l'autre — et dans les deux cas c'est la position
         // diplomatique qui décide s'il se resserre ou se relâche. Cette position est mesurée
         // par le moteur et se lit sur ce poste, dans l'infobulle : elle n'a plus de colonne.
-        { code: "foreign", colour: "#2f8f8f", yield: "du matériel obtenu hors de la capacité nationale : donné à l'un, acheté par l'autre, et c'est la position diplomatique qui décide s'il continue" },
+        { code: "foreign", colour: "#2f8f8f", yield: T("du matériel obtenu hors de la capacité nationale : donné à l'un, acheté par l'autre, et c'est la position diplomatique qui décide s'il continue") },
 
         // La tenue du pouvoir ferme le bandeau, séparée des six autres, et ne se compte pas en
         // dollars. Le moteur lui donne bien un montant — ce que le régime peut encore dépenser
@@ -48,12 +52,12 @@
         // laissait croire qu'on pouvait comparer les deux. Il se lit sur son indice, cent au
         // départ, et se dessine en jauge et non en masse. Le montant reste dans l'infobulle,
         // parce que c'est lui que le total « flux » compte.
-        { code: "regime", colour: "#8a4b2a", gauge: true, yield: "le capital politique du trimestre, celui qui paie les cartes" }
+        { code: "regime", colour: "#8a4b2a", gauge: true, yield: T("le capital politique du trimestre, celui qui paie les cartes") }
     ];
 
     var NAMES = {
-        reserves: "Réserves", grid: "Centrales", oil: "Pétrole", civilian: "Usines civiles",
-        arms: "Usines d'armement", regime: "Tenue du pouvoir", foreign: "Soutien extérieur"
+        reserves: T("Réserves"), grid: T("Centrales"), oil: T("Pétrole"), civilian: T("Usines civiles"),
+        arms: T("Usines d'armement"), regime: T("Tenue du pouvoir"), foreign: T("Soutien extérieur")
     };
 
     // Le poste que le moteur mesure encore, et que le bandeau ne dessine plus : le soutien
@@ -182,11 +186,9 @@
         return n;
     }
 
-    function num(v, d) {
-        if (v === null || v === undefined || isNaN(v)) { return "—"; }
-        return v.toLocaleString("fr-FR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 })
-            .replace(/ /g, " ");
-    }
+    // Le formatage suit la langue : « 2 064 » et « 2,064 » sont la même quantité écrite pour
+    // deux lecteurs. La règle est dans i18n.js, partagée avec le reste du plateau.
+    var num = window.tov.num;
 
     function signed(v, d) {
         return (v > 0 ? "+" : v < 0 ? "−" : "±") + num(Math.abs(v), d);
@@ -240,9 +242,10 @@
 
     // Le nom du poste fusionné. Le moteur mesure encore « soutien étranger » et « soutien
     // international » séparément, et on ne touche pas à la mesure pour renommer un cartouche :
-    // la vue les réunit sous le nom que le bandeau porte.
+    // la vue les réunit sous le nom que le bandeau porte, lu dans sa table par CODE — un nom
+    // reconnu à son libellé ne se reconnaîtrait plus dans une autre langue.
     function nameOf(post) {
-        return post.name.replace(/^Soutien étranger/, "Soutien extérieur");
+        return NAMES[post.code] || post.name;
     }
 
     function postIn(side, code) {
@@ -473,30 +476,30 @@
 
         var tip = svg("title", {});
         tip.textContent = nameOf(post) + " — " + (charge ? "−" : "") + money(post.value) + " Md$" +
-            (post.nature === "AnnualFlow" ? " par an" : "") +
-            (charge ? " : une facture, retranchée du bilan" : "") + "\n" + yieldOf(post.code) +
-            "\nAu trimestre précédent : " + (charge ? "−" : "") + money(post.opening) + " Md$" +
-            "\nVariation du trimestre : " + pct(post.percentDelta) +
-            (post.destructionCause ? "\nDétruit par : " + post.destructionCause : "") +
-            (post.permanentLoss ? "\nPerte définitive à l'échelle de cette guerre" : "") +
+            (post.nature === "AnnualFlow" ? T(" par an") : "") +
+            (charge ? T(" : une facture, retranchée du bilan") : "") + "\n" + yieldOf(post.code) +
+            "\n" + T("Au trimestre précédent : %1 Md$", (charge ? "−" : "") + money(post.opening)) +
+            "\n" + T("Variation du trimestre : %1", pct(post.percentDelta)) +
+            (post.destructionCause ? "\n" + T("Détruit par : %1", post.destructionCause) : "") +
+            (post.permanentLoss ? "\n" + T("Perte définitive à l'échelle de cette guerre") : "") +
             // Ce que le dessin ne porte plus. La pression du trimestre valait au lecteur une
             // pastille noire et une bannière qu'il fallait relier lui-même ; elle se lit ici,
             // dans la phrase que le moteur a écrite, sur le poste qu'elle vise.
-            (pressure ? "\nSous pression : " + pressure : "") +
+            (pressure ? "\n" + T("Sous pression : %1", pressure) : "") +
             (post.secondaryLabel
                 ? "\n" + post.secondaryLabel + " : " + num(post.secondary, post.secondary < 10 ? 1 : 0) +
                   (post.secondaryUnit ? " " + post.secondaryUnit : "")
                 : "") +
-            (post.thresholdLabel ? "\nCe poste rompt à : " + post.thresholdLabel : "") +
+            (post.thresholdLabel ? "\n" + T("Ce poste rompt à : %1", post.thresholdLabel) : "") +
             // La position diplomatique n'a plus de colonne, mais elle reste mesurée et elle
             // reste la raison du resserrement : elle se lit ici, du point de vue du camp qui
             // la lit — un verrou que le monde referme est une perte à Moscou et un gain à Kyiv.
             // C'est le seul poste qui ne se compte pas en dollars, parce que c'est le seul qui
             // ne se possède pas : une latitude commerciale ne se met pas au bilan.
             (diplomatic
-                ? "\n" + diplomatic.name.replace(/^Soutien international/, "Position diplomatique") +
+                ? "\n" + T("Position diplomatique") +
                   " : " + num(diplomatic.value, 0) + " " + diplomatic.unit +
-                  " (" + pct(diplomatic.percentDelta) + " ce trimestre)" +
+                  " " + T("(%1 ce trimestre)", pct(diplomatic.percentDelta)) +
                   (diplomatic.secondaryLabel
                       ? "\n" + diplomatic.secondaryLabel + " : " + num(diplomatic.secondary, 0) +
                         (diplomatic.secondaryUnit ? " " + diplomatic.secondaryUnit : "")
@@ -659,7 +662,7 @@
         }));
         text(g, x0 + 12, 25, dateOf(t), { class: "cap-quarter" });
         text(g, x0 + 12, 41, num(t.oilPrice, 0) + " $", { class: "cap-brent" });
-        text(g, x1 - 12, 41, "le baril", { "text-anchor": "end", class: "cap-label" });
+        text(g, x1 - 12, 41, T("le baril"), { "text-anchor": "end", class: "cap-label" });
 
         // La saison décide : elle mérite un signe et pas un mot.
         if (t.season === "Winter") {
@@ -797,12 +800,13 @@
         if (!side.chain) { return null; }
 
         var row = el("div", "cap-ribbon " + cls);
-        row.appendChild(el("span", "cr-origin", "« " + side.chain.origin + " »"));
+        // Les guillemets appartiennent à la langue autant que les mots qu'ils entourent.
+        row.appendChild(el("span", "cr-origin", T("« %1 »", side.chain.origin)));
 
         (side.chain.links || []).forEach(function (link) {
             row.appendChild(el("span", "cr-arrow", "→"));
             var box = el("span", "cr-link");
-            box.appendChild(el("b", null, link.label.replace(/^Soutien étranger/, "Soutien extérieur")));
+            box.appendChild(el("b", null, NAMES[link.postCode] || link.label));
 
             var moved = Math.abs(link.percentDelta) >= FLAT_PERCENT;
             box.appendChild(el("i", moved ? (link.percentDelta > 0 ? "up" : "down") : null,
@@ -844,7 +848,7 @@
             var name = svg("tspan", {});
             name.textContent = camp.name.toUpperCase();
             var people = svg("tspan", { class: "cap-people", dx: anchorEnd ? "-10" : "10" });
-            people.textContent = num(camp.population, 1) + " M hab.";
+            people.textContent = T("%1 M hab.", num(camp.population, 1));
             if (anchorEnd) {
                 people.setAttribute("dx", "0");
                 name.setAttribute("dx", "10");
@@ -869,7 +873,7 @@
         // qu'il possède ou sur ce qu'il produit ?
         var totals = function (side, x, anchorEnd) {
             text(s, x, 41,
-                "patrimoine " + money(side.capitalStock) + " Md$  ·  flux " + money(side.capitalFlow) + " Md$/an",
+                T("patrimoine %1 Md$  ·  flux %2 Md$/an", money(side.capitalStock), money(side.capitalFlow)),
                 { "text-anchor": anchorEnd ? "end" : "start", class: "cap-total" });
         };
         if (only) {
@@ -950,7 +954,7 @@
         // ce qui doit rester atteignable l'est à sa place, la production de l'année dans
         // l'infobulle de chaque poste, la règle des cinq ans dans 08-capital-de-guerre.md.
         var head = el("div", "cap-head");
-        head.appendChild(el("h3", null, "Le capital de guerre"));
+        head.appendChild(el("h3", null, T("Le capital de guerre")));
         host.appendChild(head);
 
         // ── Écran large : les deux camps en vis-à-vis ────────────────────────────────────
@@ -1091,8 +1095,7 @@
         if (burning) {
             var burn = svg("path", { d: burning, fill: "url(#" + burnId + ")", opacity: "0.6" });
             var burnTip = svg("title", {});
-            burnTip.textContent = "Le front tient au-dessus de ce que le capital produit : "
-                + "ce camp avance en brûlant ce qui lui reste.";
+            burnTip.textContent = T("Le front tient au-dessus de ce que le capital produit : ce camp avance en brûlant ce qui lui reste.");
             burn.appendChild(burnTip);
             s.appendChild(burn);
         }
@@ -1128,7 +1131,7 @@
                 stroke: "#1a1815", "stroke-width": "1", opacity: "0.5"
             }));
             text(s, Math.min(x(crossing) + 6, SX1 - 250), SYTOP - 6,
-                "le front vit sur le capital — " + dateOf(pts[crossing].t), { class: "cap-label" });
+                T("le front vit sur le capital — %1", dateOf(pts[crossing].t)), { class: "cap-label" });
         }
 
         // Chaque courbe porte son nom au bout d'elle-même. Le paragraphe qui coiffait la pièce
@@ -1173,7 +1176,7 @@
         var host = el("section", "panel capital-scissor");
 
         var head = el("div", "cap-head");
-        head.appendChild(el("h3", null, "Le front contre le capital"));
+        head.appendChild(el("h3", null, T("Le front contre le capital")));
         host.appendChild(head);
 
         // Une seule ordonnée pour les deux panneaux. Deux échelles côte à côte laisseraient

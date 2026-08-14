@@ -31,9 +31,16 @@
 window.tovHexMap = (function () {
     "use strict";
 
+    var T = window.tov.t;
+
     var HEX_KM = 40;        // across the flats
     var W = 900, H = 520, PAD = 10;
-    var SEASON_FR = { Winter: "l'hiver", Spring: "le printemps", Summer: "l'été", Autumn: "l'automne" };
+
+    // La saison porte son article : « après l'été 2026 » laisse la phrase choisir sa
+    // préposition, et l'anglais choisira de n'en mettre aucune.
+    var SEASON_ARTICLE = {
+        Winter: T("l'hiver"), Spring: T("le printemps"), Summer: T("l'été"), Autumn: T("l'automne")
+    };
 
     var COLOUR = {
         foreign: "#eae5d9",
@@ -642,18 +649,22 @@ window.tovHexMap = (function () {
        authority in force and nothing else, because a map of a war still being fought that does
        not say whether it is reporting or projecting is worse than no map. */
 
-    var NOTE = {
-        documented: "Front réel — position reconstituée, sources dans le dépôt",
-        counterfactual: "Déroulé hypothétique — après {q}, le front est celui du modèle",
-        projection: "Après {q}, le front est projeté par le modèle"
-    };
+    function note(regime, when) {
+        if (regime === "documented") {
+            return T("Front réel — position reconstituée, sources dans le dépôt");
+        }
+        if (regime === "counterfactual") {
+            return T("Déroulé hypothétique — après %1, le front est celui du modèle", when);
+        }
+        return T("Après %1, le front est projeté par le modèle", when);
+    }
 
     function caption(svg, regime) {
         var quarter = window.tovFront.handover();
         var when = quarter
-            ? (SEASON_FR[quarter.season] || "") + " " + quarter.year
-            : "la période documentée";
-        var label = (NOTE[regime] || NOTE.projection).replace("{q}", when);
+            ? (SEASON_ARTICLE[quarter.season] || "") + " " + quarter.year
+            : T("la période documentée");
+        var label = note(regime, when);
 
         var y = H - 13;
         if (regime !== "documented") {
