@@ -450,6 +450,36 @@
       "statedUpdate": "Fichier déposé en août 2024 (chemin /2024/08/, version datée du 14.08)",
       "kind": "Estimation",
       "note": "Page 2, graphique « Частка енергетики у ВВП країни, 2023 » plaçant l'Ukraine à 8 %, entre la Tchéquie (8-9 %) et la Slovaquie (7 %), la Pologne étant à 10 %. Il s'agit d'une infographie de promotion, sans tableau chiffré ni méthode publiée."
+    },
+    {
+      "code": "minfin-loi-2024-2026",
+      "organisation": "Ministère des Finances de la Fédération de Russie",
+      "title": "Le président de la Russie a signé la loi de finances pour 2024 et la période de planification 2025-2026",
+      "url": "https://minfin.gov.ru/ru/press-center/?id_4=38772-prezident_rossii_podpisal_zakon_o_federalnom_byudzhete_na_2024_god_i_planovyi_period_2025-2026_godov",
+      "capture": "14 août 2026",
+      "statedUpdate": "Communiqué de la signature de la loi de finances 2024-2026",
+      "kind": "Document budgétaire",
+      "note": "Communiqué du ministère lui-même à la promulgation de la loi. Il donne la ligne « Défense nationale » et le total des dépenses fédérales, ce qui permet de calculer la part sans la recopier ailleurs."
+    },
+    {
+      "code": "interfax-defense-2025-2027",
+      "organisation": "Interfax",
+      "title": "13 490 milliards de roubles prévus au budget 2025 pour la défense nationale",
+      "url": "https://www.interfax.ru/russia/986161",
+      "capture": "14 août 2026",
+      "statedUpdate": "Dépêche du 10 octobre 2024",
+      "kind": "Document budgétaire",
+      "note": "Dépêche citant nommément le président de la commission de la défense de la Douma sur le projet de loi de finances triennal. Le montant de 2025 concorde à la décimale près avec le document « Budget pour les citoyens » du ministère des Finances, ce qui est une confirmation croisée et non une reprise."
+    },
+    {
+      "code": "minfin-loi-2026-2028",
+      "organisation": "Ministère des Finances de la Fédération de Russie",
+      "title": "Le président de la Russie Vladimir Poutine a signé les lois du paquet budgétaire",
+      "url": "https://minfin.gov.ru/ru/press-center/?id_4=40094-prezident_rossii_vladimir_putin_podpisal_zakony_byudzhetnogo_paketa",
+      "capture": "14 août 2026",
+      "statedUpdate": "Communiqué du 28 novembre 2025, exercices 2026-2028",
+      "kind": "Document budgétaire",
+      "note": "Le communiqué donne le total des dépenses fédérales de 2026 mais NE détaille PAS la ligne « Défense nationale » : contrairement aux millésimes précédents, le ministère ne la publie plus dans son communiqué de promulgation."
     }
   ],
   "figures": [
@@ -1598,6 +1628,16 @@
           "why": "À traiter comme un ordre de grandeur (« environ 16 % ») et non comme une mesure. Si la précision compte, il faut aller chercher la publication Rosstat de printemps 2025 sur les comptes nationaux."
         },
         {
+          "date": "2024",
+          "value": 10400.0,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "minfin-loi-2024-2026",
+          "confidence": "Haute",
+          "confidenceWhy": "Chiffre publié par le ministère des Finances dans son propre communiqué de promulgation, sans intermédiaire.",
+          "retained": false,
+          "why": "La ligne « Défense nationale » de la loi de finances 2024. Rapportée aux 36 600 Md ₽ de dépenses fédérales du même texte, elle en représente 28 %, et le texte situant ce total à 20,4 % du PIB, elle vaut 5,8 % du PIB. C'est un point et demi sous l'estimation SIPRI pour la même année, et l'écart est le sujet : le budget dit ce que l'État s'autorise sur cette ligne, SIPRI estime ce qui sort réellement, sécurité intérieure et financements hors budget compris."
+        },
+        {
           "date": "2025",
           "value": 7.5,
           "unit": "% du PIB",
@@ -1638,6 +1678,16 @@
           "why": "Série complète publiée par le Minfin pour cette troisième grandeur : 5,0 % du PIB en 2023, 5,5 % en 2024, 4,0 % estimé en 2025, 3,8 % prévu en 2026 et 3,5 % en 2028. Les trois indicateurs à ne jamais confondre pour 2025 sont donc : 13 % (poids du secteur dans le PIB), 22,7 % (part dans les recettes fédérales), 4,0 % (recettes pétro-gazières rapportées au PIB)."
         },
         {
+          "date": "2025",
+          "value": 13490.0,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "interfax-defense-2025-2027",
+          "confidence": "Haute",
+          "confidenceWhy": "Montant attribué nommément au président de la commission de la défense de la Douma, et confirmé par un second document du ministère des Finances qui donne 13 503,7.",
+          "retained": false,
+          "why": "Le sommet de la série : la ligne défense progresse de 30 % en un an quand le total des dépenses fédérales recule. C'est le trimestre où la guerre cesse d'être financée à la marge du budget pour en devenir la charpente."
+        },
+        {
           "date": "2026",
           "value": 5.5,
           "unit": "% du PIB",
@@ -1646,6 +1696,26 @@
           "confidenceWhy": "Valeur lue dans le tableau 4.4.2 du document budgétaire du Minfin, colonne « %ВВП » 2026, ligne « Национальная оборона » (12 989 milliards de roubles).",
           "retained": false,
           "why": "C'est le seul endroit où le Minfin publie lui-même une part de PIB pour la défense. Trajectoire annoncée : 5,5 % en 2026, 5,3 % en 2027, 4,7 % en 2028. La section « Sécurité intérieure et maintien de l'ordre » s'y ajoute à 1,8 % du PIB sur les trois années. Au seul budget fédéral, la défense 2026 est fixée à 12 930,5 milliards de roubles et la sécurité intérieure à 3 910,1 milliards (tableau 4.1.3)."
+        },
+        {
+          "date": "2026",
+          "value": 12790.0,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "interfax-defense-2025-2027",
+          "confidence": "Moyenne",
+          "confidenceWhy": "Montant voté pour un exercice à venir au moment de la publication : c'est une programmation, révisable, et les millésimes précédents montrent qu'elle l'est.",
+          "retained": false,
+          "why": "Première baisse programmée depuis l'invasion — mais programmée seulement. Le budget 2024 avait lui aussi été projeté à 4 640 Md ₽ deux ans avant, puis voté à 10 400 : sur cette ligne, la prévision à deux ans n'a encore jamais tenu."
+        },
+        {
+          "date": "2027",
+          "value": 13070.0,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "interfax-defense-2025-2027",
+          "confidence": "Basse",
+          "confidenceWhy": "Troisième année d'une programmation triennale, l'horizon où ces documents se sont le plus trompés.",
+          "retained": false,
+          "why": "Citée pour montrer la forme de la trajectoire officielle, pas pour être crue."
         }
       ]
     },
