@@ -452,34 +452,154 @@
       "note": "Page 2, graphique « Частка енергетики у ВВП країни, 2023 » plaçant l'Ukraine à 8 %, entre la Tchéquie (8-9 %) et la Slovaquie (7 %), la Pologne étant à 10 %. Il s'agit d'une infographie de promotion, sans tableau chiffré ni méthode publiée."
     },
     {
-      "code": "minfin-loi-2024-2026",
-      "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Le président de la Russie a signé la loi de finances pour 2024 et la période de planification 2025-2026",
-      "url": "https://minfin.gov.ru/ru/press-center/?id_4=38772-prezident_rossii_podpisal_zakon_o_federalnom_byudzhete_na_2024_god_i_planovyi_period_2025-2026_godov",
+      "code": "cia-factbook-russie",
+      "organisation": "Central Intelligence Agency (via le dépôt factbook.json)",
+      "title": "The World Factbook — Russie, rubrique « Military expenditures »",
+      "url": "https://raw.githubusercontent.com/factbook/factbook.json/783ed27f7a1116663c10e7b39d162d0c4500505d/central-asia/rs.json",
       "capture": "14 août 2026",
-      "statedUpdate": "Communiqué de la signature de la loi de finances 2024-2026",
-      "kind": "Document budgétaire",
-      "note": "Communiqué du ministère lui-même à la promulgation de la loi. Il donne la ligne « Défense nationale » et le total des dépenses fédérales, ce qui permet de calculer la part sans la recopier ailleurs."
+      "statedUpdate": "Fichier figé au 22 janvier 2026, deux semaines avant la fermeture du Factbook",
+      "kind": "Estimation",
+      "note": "Le Factbook lui-même a cessé d'exister : cia.gov annonce sa fermeture le 4 février 2026 et ses pages pays ne répondent plus. Les captures d'archive n'aident pas, la page chargeait ses valeurs en script. Le lien pointe donc sur le dépôt qui conserve le texte de la rubrique en JSON, épinglé sur un commit précis — une adresse suivant la branche principale changerait sous le lien."
     },
     {
-      "code": "interfax-defense-2025-2027",
-      "organisation": "Interfax",
-      "title": "13 490 milliards de roubles prévus au budget 2025 pour la défense nationale",
-      "url": "https://www.interfax.ru/russia/986161",
+      "code": "cia-factbook-ukraine",
+      "organisation": "Central Intelligence Agency (via le dépôt factbook.json)",
+      "title": "The World Factbook — Ukraine, rubrique « Military expenditures »",
+      "url": "https://raw.githubusercontent.com/factbook/factbook.json/1d943e73e6f5ab6e846f50f4e2140321403ef2b2/europe/up.json",
       "capture": "14 août 2026",
-      "statedUpdate": "Dépêche du 10 octobre 2024",
-      "kind": "Document budgétaire",
-      "note": "Dépêche citant nommément le président de la commission de la défense de la Douma sur le projet de loi de finances triennal. Le montant de 2025 concorde à la décimale près avec le document « Budget pour les citoyens » du ministère des Finances, ce qui est une confirmation croisée et non une reprise."
+      "statedUpdate": "Fichier figé au 21 janvier 2026",
+      "kind": "Estimation",
+      "note": "Même remarque que pour la Russie. La rubrique ukrainienne s'arrête à 2021 et ne reprend pas : la seule chose que le Factbook dit de la guerre est une note sans chiffre daté."
     },
     {
-      "code": "minfin-loi-2026-2028",
-      "organisation": "Ministère des Finances de la Fédération de Russie",
-      "title": "Le président de la Russie Vladimir Poutine a signé les lois du paquet budgétaire",
-      "url": "https://minfin.gov.ru/ru/press-center/?id_4=40094-prezident_rossii_vladimir_putin_podpisal_zakony_byudzhetnogo_paketa",
+      "code": "cia-factbook-fermeture",
+      "organisation": "Central Intelligence Agency",
+      "title": "Spotlighting The World Factbook as We Bid a Fond Farewell",
+      "url": "https://www.cia.gov/stories/story/spotlighting-the-world-factbook-as-we-bid-a-fond-farewell/",
       "capture": "14 août 2026",
-      "statedUpdate": "Communiqué du 28 novembre 2025, exercices 2026-2028",
+      "statedUpdate": "Publié le 4 février 2026",
+      "kind": "Mesure publiée",
+      "note": "L'annonce de l'agence elle-même. Elle explique pourquoi aucune des adresses du Factbook ne peut plus servir de citation vivante, et pourquoi les séries qui en viennent s'arrêtent toutes au millésime 2024."
+    },
+    {
+      "code": "SIPRI-DB-2026",
+      "organisation": "SIPRI (Stockholm International Peace Research Institute)",
+      "title": "SIPRI Military Expenditure Database 1949-2025 (classeur complet, onglets « Share of GDP », « Share of Govt. spending », « Local currency calendar years », « Current US$ »)",
+      "url": "https://www.sipri.org/sites/default/files/SIPRI-Milex-data-1949-2025.xlsx",
+      "capture": "2026-08-14",
+      "statedUpdate": "Base mise à jour le 27 avril 2026 selon le fact sheet d'avril 2026 qui l'accompagne ; elle remplace toutes les données SIPRI publiées antérieurement",
+      "kind": "Mesure publiée",
+      "note": "Classeur XLSX téléchargé et lu onglet par onglet. C'est la source qui manquait à la première passe : elle porte la ligne « part des dépenses publiques » pour chaque année et chaque pays, que les fact sheets ne publient que pour quelques pays et quelques années. Attention, ses valeurs sont RÉVISÉES et diffèrent de celles des fact sheets publiés à l'époque — l'écart est documenté ci-dessous."
+    },
+    {
+      "code": "MINFIN-EXEC-ANNUEL",
+      "organisation": "Ministère des finances de la Fédération de Russie (Minfin)",
+      "title": "« Краткая ежегодная информация об исполнении федерального бюджета (млрд руб.) » — Annexe 3.1, exécution annuelle du budget fédéral 2006-2025",
+      "url": "https://minfin.gov.ru/common/upload/library/2026/05/main/Prilozhenie_3_dannye_109-111_%E2%80%94_god.xlsx",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié et modifié le 05/05/2026 (date affichée sur https://minfin.gov.ru/ru/statistics/fedbud/)",
       "kind": "Document budgétaire",
-      "note": "Le communiqué donne le total des dépenses fédérales de 2026 mais NE détaille PAS la ligne « Défense nationale » : contrairement aux millésimes précédents, le ministère ne la publie plus dans son communiqué de promulgation."
+      "note": "Fichier XLSX primaire, relu pour cette passe. Seule source d'EXÉCUTION constatée : dépenses totales jusqu'en 2025, mais ventilation par section fonctionnelle jusqu'en 2021 seulement."
+    },
+    {
+      "code": "BDG-2022-LOI",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » à la loi de finances 390-ФЗ du 06/12/2021 (exercice 2022, période 2023-2024)",
+      "url": "https://minfin.gov.ru/common/upload/library/2022/03/main/Budget_2022_razvorot_web.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 30/12/2021 (date affichée sur la page https://minfin.gov.ru/ru/perfomance/budget/process/utverzhdenie/budget_citizen/)",
+      "kind": "Document budgétaire",
+      "note": "Page 8, tableau « Расходы федерального бюджета по разделам функциональной классификации ». Page rendue en image et lue visuellement, l'extraction texte de ces infographies désappariant libellés et valeurs. Dernier budget voté avant l'invasion."
+    },
+    {
+      "code": "BDG-2023-PROJET",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » au projet de loi de finances pour 2023-2025",
+      "url": "https://minfin.gov.ru/common/upload/library/2022/11/main/BG_2023.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 01/11/2022",
+      "kind": "Document budgétaire",
+      "note": "Page 8, série 2021-2025, avec la note explicite « показатели сводной бюджетной росписи на 1 сентября 2022 года » : les colonnes 2021 et 2022 sont donc des états de la répartition budgétaire consolidée en cours d'exercice, pas des lois initiales ni des exécutions. Document capital : c'est la dernière fois que le Minfin publie une ligne défense pour un exercice de guerre en cours."
+    },
+    {
+      "code": "BDG-2023-LOI",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » à la loi de finances 466-ФЗ du 05/12/2022 (exercice 2023, période 2024-2025)",
+      "url": "https://minfin.gov.ru/common/upload/library/2023/02/main/BDG.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 30/12/2022",
+      "kind": "Document budgétaire",
+      "note": "Pages 14-15, tableau par sections 2023-2025. Page rendue en image et lue visuellement."
+    },
+    {
+      "code": "BDG-2024-PROJET",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » au projet de loi de finances pour 2024-2026",
+      "url": "https://minfin.gov.ru/common/upload/library/2023/11/main/0749_Budget_2024-2026.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 01/11/2023",
+      "kind": "Document budgétaire",
+      "note": "Page 5, série 2023-2026, note « показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г. » pour la colonne 2023."
+    },
+    {
+      "code": "BDG-2024-LOI",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » à la loi de finances 540-ФЗ du 27/11/2023 (exercice 2024, période 2025-2026)",
+      "url": "https://minfin.gov.ru/common/upload/library/2024/01/main/0407_BDG_2024.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 28/12/2023",
+      "kind": "Document budgétaire",
+      "note": "Pages 14-15, tableau par sections 2024-2026. Note de bas de page : « показатели сводной бюджетной росписи по состоянию на 1 декабря 2023 г. »."
+    },
+    {
+      "code": "BDG-2025-PROJET",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » au projet de loi de finances pour 2025-2027",
+      "url": "https://minfin.gov.ru/common/upload/library/2024/11/main/0759_Budget_2025-2027.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 31/10/2024",
+      "kind": "Document budgétaire",
+      "note": "Page 5, série 2024-2027. Sa colonne 2024, pourtant référencée à la même base légale que celle de la brochure publiée deux mois plus tard, en diffère de plus de 1 500 milliards de roubles — divergence rapportée telle quelle plus bas."
+    },
+    {
+      "code": "BDG-2025-LOI",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » à la loi de finances 419-ФЗ du 30/11/2024 (exercice 2025, période 2026-2027)",
+      "url": "https://minfin.gov.ru/common/upload/library/2025/04/main/BDG_2025-2027.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 27/12/2024",
+      "kind": "Document budgétaire",
+      "note": "Pages 12-13, série 2024-2027. Note de bas de page : la colonne 2024 suit la loi 540-ФЗ « с учетом изменений, внесенных Федеральным законом от 12 июля 2024 г. № 175-ФЗ ». Le fichier réellement servi par le site (chemin /2025/04/) diffère de celui référencé par les moteurs de recherche (/2024/12/) ; les deux ouvrent le même document."
+    },
+    {
+      "code": "BDG-2026-PROJET",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » au projet de loi de finances pour 2026-2028",
+      "url": "https://minfin.gov.ru/common/upload/library/2025/11/main/Budzhet.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 31/10/2025",
+      "kind": "Document budgétaire",
+      "note": "Page 6, série 2025-2028. La colonne 2025 suit la loi 419-ФЗ amendée par la loi 152-ФЗ du 01/07/2025. Document déjà utilisé lors de la première passe."
+    },
+    {
+      "code": "BDG-2026-LOI",
+      "organisation": "Minfin",
+      "title": "« Бюджет для граждан » à la loi de finances 426-ФЗ du 28/11/2025 (exercice 2026, période 2027-2028)",
+      "url": "https://minfin.gov.ru/common/upload/library/2026/02/main/BDG_2026.pdf",
+      "capture": "2026-08-14",
+      "statedUpdate": "Publié le 29/12/2025",
+      "kind": "Document budgétaire",
+      "note": "Pages 14-15, série 2025-2028. Note de bas de page : la colonne 2025 suit la loi 419-ФЗ « с учетом изменений, внесенных Федеральным законом от 4 ноября 2025 г. № 414-ФЗ » — c'est le second amendement de l'exercice 2025."
+    },
+    {
+      "code": "CONSULTANT-466",
+      "organisation": "ConsultantPlus (texte de la loi fédérale 466-ФЗ du 05/12/2022)",
+      "title": "Annexe de répartition des crédits par programmes d'État — section « 02 Национальная оборона »",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_433298/3719a0e5bb43288724506aa5f0fbbf4aab283ed9/",
+      "capture": "2026-08-14",
+      "statedUpdate": "Texte de la loi du 05/12/2022, page consultée dans sa version courante",
+      "kind": "Document budgétaire",
+      "note": "Sert à mesurer l'opacité, pas le total : l'annexe de répartition par programmes ne publie que la fraction non classifiée de la section."
     }
   ],
   "figures": [
@@ -1528,6 +1648,16 @@
           "why": "Le poste vaut cinq années de ce qu'il produit. Sur 1 720 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 412,8 Md$ par an, que la capitalisation porte à 2 064 Md$. Ce n'est pas toute l’économie non militaire — les services, l’agriculture et les usines d’armement en sont exclus — mais c’est de loin la plus large des sept assiettes, et c’est ce qui en fait le premier poste du bilan."
         },
         {
+          "date": "2020",
+          "value": 4.0,
+          "unit": "% du PIB · estimation CIA",
+          "sourceCode": "cia-factbook-russie",
+          "confidence": "Basse",
+          "confidenceWhy": "Estimation d'un service de renseignement, publiée sans méthode ni intervalle. Elle vaut par sa continuité, pas par sa précision — d'où l'arrondi au point entier.",
+          "retained": false,
+          "why": "Le régime d'avant-guerre. La CIA et SIPRI s'accordent ici au dixième près, ce qui est rassurant sur les deux."
+        },
+        {
           "date": "2021",
           "value": 1829.2,
           "unit": "Md$",
@@ -1568,6 +1698,46 @@
           "why": "Série Rosstat telle que publiée le 20 juillet 2022 : 16,6 % en 2017, 20,7 % en 2018, 18,8 % en 2019, 13,9 % en 2020, 17,4 % en 2021. Détail trimestriel 2021 : 17,3 %, 17,7 %, 17,1 %, 17,5 %. Rosstat ne calcule cet indicateur que depuis 2017."
         },
         {
+          "date": "2021",
+          "value": 4.0,
+          "unit": "% du PIB · estimation CIA",
+          "sourceCode": "cia-factbook-russie",
+          "confidence": "Basse",
+          "confidenceWhy": "Même réserve. L'écart avec SIPRI, qui donne 4,1 %, est inférieur à la précision affichée.",
+          "retained": false,
+          "why": "Dernière année de paix, et le point sur lequel le scénario cale sa dépense militaire de référence."
+        },
+        {
+          "date": "2021",
+          "value": 10.31,
+          "unit": "% des dépenses publiques",
+          "sourceCode": "SIPRI-DB-2026",
+          "confidence": "Haute",
+          "confidenceWhy": "Valeur lue dans la cellule 2021 de la ligne Russia de l'onglet « Share of Govt. spending » du classeur SIPRI, ouvert et parsé localement.",
+          "retained": false,
+          "why": "Le champ nature est vide : SIPRI ne mesure ni un budget voté ni une exécution comptable, mais reconstruit une dépense militaire au sens élargi à partir de sources ouvertes. Année d'avant-guerre, à retenir comme point de départ."
+        },
+        {
+          "date": "2021",
+          "value": 3407.0,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2022-LOI",
+          "confidence": "Basse",
+          "confidenceWhy": "La valeur est lue sans ambiguïté sur la page rendue en image, mais la brochure n'attache aucune note à sa colonne 2021 : impossible de dire si elle reprend la loi de finances 2021 initiale ou un état amendé en cours d'exercice, d'où l'étiquette prudente.",
+          "retained": false,
+          "why": "À ne pas utiliser comme référence pour 2021 : l'exécution constatée de la même année, elle, est certaine et vaut 3 573,6 milliards (voir ligne suivante). L'écart de 166 milliards entre les deux donne l'ordre de grandeur du glissement infra-annuel en temps de paix — glissement qui deviendra sans commune mesure dès 2022."
+        },
+        {
+          "date": "2021",
+          "value": 3573.56,
+          "unit": "Md ₽ · exécuté",
+          "sourceCode": "MINFIN-EXEC-ANNUEL",
+          "confidence": "Haute",
+          "confidenceWhy": "Cellule 2021 de la ligne 2.2 du fichier XLSX officiel d'exécution du budget fédéral, téléchargé et parsé ; la valeur est confirmée à l'identique par la colonne 2021 de la brochure BDG-2023-PROJET, qui affiche 3 573,6.",
+          "retained": false,
+          "why": "Seule année de la période où l'exécution de la section défense est publiée. Rapportée au PIB de 134 727,5 milliards, elle vaut 2,65 % — calcul, non recopie. Sécurité intérieure la même année : 2 335,9 milliards exécutés."
+        },
+        {
           "date": "2022",
           "value": 4.1,
           "unit": "% du PIB",
@@ -1588,6 +1758,46 @@
           "why": "Pic conjoncturel lié aux prix des hydrocarbures de 2022. Un chiffre trimestriel très cité pour cette année — 21,7 % au premier trimestre 2022, record depuis le début des calculs — est confirmé par INTERFAX-2022-07-20, mais c'est un trimestre, pas une année, et le confondre avec l'année gonfle l'estimation de près de 4 points."
         },
         {
+          "date": "2022",
+          "value": 4.5,
+          "unit": "% du PIB · estimation CIA",
+          "sourceCode": "cia-factbook-russie",
+          "confidence": "Basse",
+          "confidenceWhy": "Estimation faite alors que le budget russe cessait d'être publié par section : elle repose sur des sources que l'agence n'expose pas.",
+          "retained": false,
+          "why": "L'année de l'invasion ne coûte qu'un demi-point de PIB de plus. SIPRI, lui, ne bouge pas du tout cette année-là et reste à 4,1 %. Les deux services voient donc la même chose : le choc de 2022 est militaire, il n'est pas encore budgétaire."
+        },
+        {
+          "date": "2022",
+          "value": 12.96,
+          "unit": "% des dépenses publiques",
+          "sourceCode": "SIPRI-DB-2026",
+          "confidence": "Haute",
+          "confidenceWhy": "Même onglet, même ligne, colonne 2022 du classeur SIPRI.",
+          "retained": false,
+          "why": "Première année de guerre : +2,65 points en un an. La progression est réelle mais modérée, parce que les dépenses publiques totales ont elles aussi bondi en 2022 (de 24 762 à 31 119 milliards de roubles à l'exécution)."
+        },
+        {
+          "date": "2022",
+          "value": 3502.1,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "BDG-2022-LOI",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2022 du tableau par sections de la brochure publiée le 30/12/2021 à la loi 390-ФЗ du 06/12/2021, lue sur la page rendue en image.",
+          "retained": false,
+          "why": "Le dernier budget voté avant l'invasion, adopté onze semaines avant elle. Soit 2,23 % du PIB de 2022 — calcul sur la série Banque mondiale. Sécurité intérieure votée la même année : 2 826,0 milliards. Dépenses totales votées : 23 694,2 milliards, à comparer aux 31 119,0 finalement exécutés."
+        },
+        {
+          "date": "2022",
+          "value": 4678.7,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2023-PROJET",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2022 de la page 8, sous la note explicite « показатели сводной бюджетной росписи на 1 сентября 2022 года », lue sur la page rendue en image.",
+          "retained": false,
+          "why": "Photographie de la répartition budgétaire consolidée au 1er septembre 2022, soit six mois de guerre : la ligne défense a déjà gagné 1 177 milliards sur le voté, +33,6 %, et l'exercice n'est pas fini. Soit 2,98 % du PIB. C'est la dernière fois que le Minfin publie une ligne défense pour un exercice de guerre en cours."
+        },
+        {
           "date": "2023",
           "value": 5.9,
           "unit": "% du PIB",
@@ -1606,6 +1816,66 @@
           "confidenceWhy": "Chiffre attribué à Rosstat, cohérent avec la tendance des années encadrantes, mais issu d'une reprise de presse plutôt que de la publication primaire.",
           "retained": false,
           "why": "Formulation citée : la part du secteur pétro-gazier dans le PIB « est passée de 18 % en 2022 à 16,5 % » en 2023."
+        },
+        {
+          "date": "2023",
+          "value": 5.0,
+          "unit": "% du PIB · estimation CIA",
+          "sourceCode": "cia-factbook-russie",
+          "confidence": "Basse",
+          "confidenceWhy": "C'est l'année où les deux estimations divergent le plus — près d'un point — sans qu'aucune ne publie de quoi trancher.",
+          "retained": false,
+          "why": "La CIA voit 5 %, SIPRI 5,9 %. Un point de PIB russe, c'est dix-huit milliards de dollars : l'ordre de grandeur de tout l'appareil d'armement ukrainien. Deux services alliés, la même année, la même question, et un écart de cette taille — c'est la mesure honnête de ce qu'on sait vraiment."
+        },
+        {
+          "date": "2023",
+          "value": 14.77,
+          "unit": "% des dépenses publiques",
+          "sourceCode": "SIPRI-DB-2026",
+          "confidence": "Haute",
+          "confidenceWhy": "Même onglet, colonne 2023 du classeur SIPRI, mise à jour d'avril 2026.",
+          "retained": false,
+          "why": "Divergence à signaler avec la publication de l'époque : le fact sheet d'avril 2024 écrivait « 16 per cent » pour 2023 (voir l'observation suivante). L'écart de 1,2 point vient des révisions apportées à la base entre 2024 et 2026, pas d'une contradiction de méthode."
+        },
+        {
+          "date": "2023",
+          "value": 16,
+          "unit": "% des dépenses publiques",
+          "sourceCode": "SIPRI-FS-2024",
+          "confidence": "Haute",
+          "confidenceWhy": "Deux occurrences concordantes dans le PDF, pages 3 et 4 : « military spending as a share of government expenditure was highest in Ukraine (58 per cent), followed by Saudi Arabia (24 per cent) and Russia (16 per cent) » et « 16 per cent of total government expenditure, which were the highest levels recorded by Russia since the dissolution of the Soviet Union ».",
+          "retained": false,
+          "why": "Conservée à côté de la valeur révisée parce que c'est elle qui a circulé pendant deux ans. Pour une série homogène, utiliser la base révisée ; pour citer ce que SIPRI affirmait en 2024, utiliser celle-ci. Le même passage donne l'Ukraine à 58 % en 2023."
+        },
+        {
+          "date": "2023",
+          "value": 4972.6,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "BDG-2023-LOI",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2023 du tableau par sections des pages 14-15 de la brochure publiée le 30/12/2022 à la loi 466-ФЗ du 05/12/2022, lue sur la page rendue en image.",
+          "retained": false,
+          "why": "2,85 % du PIB 2023. Le projet déposé un mois plus tôt portait 4 981,6 milliards (BDG-2023-PROJET) : l'écart entre projet et loi est de 9 milliards, soit 0,2 % — le Parlement n'a rien modifié de substantiel. Sécurité intérieure votée : 3 564,3 milliards."
+        },
+        {
+          "date": "2023",
+          "value": 6406.7,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2024-PROJET",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2023 de la page 5, sous la note « показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г. », lue sur la page rendue en image.",
+          "retained": false,
+          "why": "3,68 % du PIB. Au 1er septembre 2023, la ligne défense dépasse déjà de 1 434 milliards le montant voté neuf mois plus tôt, soit +28,8 %. Le même écart apparaît sur la sécurité intérieure, mais en sens inverse (3 225,6 contre 3 564,3 votés)."
+        },
+        {
+          "date": "2023",
+          "value": 1486.3,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "CONSULTANT-466",
+          "confidence": "Moyenne",
+          "confidenceWhy": "Le total de tête de l'annexe est lu sans ambiguïté (1 486 270 867,1 milliers de roubles), mais l'unité du tableau — le millier de roubles — est déduite de sa cohérence avec les sous-lignes et n'est pas rappelée dans le fragment de page consulté.",
+          "retained": false,
+          "why": "Mesure de l'opacité plutôt que du budget : l'annexe de répartition par programmes de la loi 466-ФЗ ne publie que 1 486,3 milliards sur les 4 972,6 votés pour 2023, soit 29,9 % de la section. Les 70 % restants ne figurent dans aucune annexe publique. À rapprocher de l'estimation de SIPRI, qui chiffre le « résidu classifié » à environ 73 % du budget de la Défense nationale en 2024 et 79 % en 2025 : les deux approches convergent."
         },
         {
           "date": "2024",
@@ -1629,13 +1899,53 @@
         },
         {
           "date": "2024",
-          "value": 10400.0,
-          "unit": "Md ₽ · budget voté",
-          "sourceCode": "minfin-loi-2024-2026",
-          "confidence": "Haute",
-          "confidenceWhy": "Chiffre publié par le ministère des Finances dans son propre communiqué de promulgation, sans intermédiaire.",
+          "value": 7.0,
+          "unit": "% du PIB · estimation CIA",
+          "sourceCode": "cia-factbook-russie",
+          "confidence": "Basse",
+          "confidenceWhy": "Dernier millésime publié avant la fermeture du Factbook. L'estimation s'aligne cette fois sur SIPRI, à un dixième près.",
           "retained": false,
-          "why": "La ligne « Défense nationale » de la loi de finances 2024. Rapportée aux 36 600 Md ₽ de dépenses fédérales du même texte, elle en représente 28 %, et le texte situant ce total à 20,4 % du PIB, elle vaut 5,8 % du PIB. C'est un point et demi sous l'estimation SIPRI pour la même année, et l'écart est le sujet : le budget dit ce que l'État s'autorise sur cette ligne, SIPRI estime ce qui sort réellement, sécurité intérieure et financements hors budget compris."
+          "why": "Les deux services convergent à nouveau, et sur un chiffre qui a presque doublé en deux ans. C'est le trimestre où la guerre cesse d'être finançable à la marge."
+        },
+        {
+          "date": "2024",
+          "value": 18.64,
+          "unit": "% des dépenses publiques",
+          "sourceCode": "SIPRI-DB-2026",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2024 de l'onglet « Share of Govt. spending » du classeur SIPRI.",
+          "retained": false,
+          "why": "Le fact sheet d'avril 2025 arrondissait à 19 %, chiffre déjà vérifié lors de la première passe : les deux sont cohérents."
+        },
+        {
+          "date": "2024",
+          "value": 10378.2,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "BDG-2024-LOI",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2024 du tableau par sections des pages 14-15 de la brochure publiée le 28/12/2023 à la loi 540-ФЗ du 27/11/2023, lue sur la page rendue en image.",
+          "retained": false,
+          "why": "5,13 % du PIB 2024 : la ligne défense votée a doublé en un exercice. Le projet déposé en novembre 2023 portait 10 775,4 milliards (BDG-2024-PROJET), soit 397 milliards de plus que la loi finalement adoptée. Sécurité intérieure votée : 3 285,2 milliards ; dépenses totales votées : 36 660,7 milliards."
+        },
+        {
+          "date": "2024",
+          "value": 10374.7,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2025-LOI",
+          "confidence": "Moyenne",
+          "confidenceWhy": "Valeur lue sans ambiguïté sur la page rendue en image, avec sa note de bas de page référençant la loi 540-ФЗ amendée par la loi 175-ФЗ du 12/07/2024 — mais une autre brochure du même ministère, publiée deux mois plus tôt et citant exactement la même base légale, donne 8 866,5 pour la même colonne.",
+          "retained": false,
+          "why": "Divergence non résolue entre deux publications Minfin : 8 866,5 milliards dans la brochure au projet du 31/10/2024, 10 374,7 dans la brochure à la loi du 27/12/2024, avec la même référence légale en note. Les deux ont été lues visuellement sur la page rendue, il ne s'agit pas d'une erreur d'extraction. Je retiens 10 374,7 comme valeur de travail parce qu'elle est cohérente avec le voté (10 378,2) et avec l'estimation SIPRI, et je signale l'autre plutôt que de la taire."
+        },
+        {
+          "date": "2024",
+          "value": 8866.5,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2025-PROJET",
+          "confidence": "Basse",
+          "confidenceWhy": "La lecture est certaine — page rendue en image, libellé « Национальная оборона » et quatre valeurs 2024*/2025/2026/2027 dans le même cadre — mais la valeur contredit celle publiée deux mois plus tard sous la même référence légale, sans qu'aucun des deux documents n'explique l'écart.",
+          "retained": false,
+          "why": "Rapportée pour que la divergence soit visible, pas pour être utilisée. Si un arbitrage est nécessaire, la brochure à la loi (postérieure et cohérente avec le reste de la série) l'emporte."
         },
         {
           "date": "2025",
@@ -1679,13 +1989,43 @@
         },
         {
           "date": "2025",
-          "value": 13490.0,
-          "unit": "Md ₽ · budget voté",
-          "sourceCode": "interfax-defense-2025-2027",
+          "value": 19.83,
+          "unit": "% des dépenses publiques",
+          "sourceCode": "SIPRI-DB-2026",
           "confidence": "Haute",
-          "confidenceWhy": "Montant attribué nommément au président de la commission de la défense de la Douma, et confirmé par un second document du ministère des Finances qui donne 13 503,7.",
+          "confidenceWhy": "Colonne 2025 de l'onglet « Share of Govt. spending » du classeur SIPRI.",
           "retained": false,
-          "why": "Le sommet de la série : la ligne défense progresse de 30 % en un an quand le total des dépenses fédérales recule. C'est le trimestre où la guerre cesse d'être financée à la marge du budget pour en devenir la charpente."
+          "why": "Le fact sheet d'avril 2026 arrondit à 20 % et le qualifie du niveau le plus élevé jamais enregistré par SIPRI pour la Russie. La série complète 2021-2025 est donc : 10,31 — 12,96 — 14,77 — 18,64 — 19,83, soit un doublement en quatre ans."
+        },
+        {
+          "date": "2025",
+          "value": 13087.4,
+          "unit": "Md ₽ · budget voté",
+          "sourceCode": "BDG-2025-LOI",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2025 du tableau par sections des pages 12-13 de la brochure publiée le 27/12/2024 à la loi 419-ФЗ du 30/11/2024, lue sur la page rendue en image.",
+          "retained": false,
+          "why": "6,11 % du PIB 2025. Sécurité intérieure votée : 3 438,4 milliards ; dépenses totales votées : 41 469,5 milliards. La défense représente 31,6 % du budget fédéral voté."
+        },
+        {
+          "date": "2025",
+          "value": 13503.7,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2026-PROJET",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2025 de la page 6, avec la note référençant la loi 419-ФЗ modifiée par la loi 152-ФЗ du 01/07/2025, déjà vérifiée lors de la première passe et reconfirmée ici.",
+          "retained": false,
+          "why": "Premier amendement de l'exercice 2025 : +416 milliards sur le voté. Soit 6,30 % du PIB."
+        },
+        {
+          "date": "2025",
+          "value": 13574.8,
+          "unit": "Md ₽ · budget amendé",
+          "sourceCode": "BDG-2026-LOI",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2025 du tableau des pages 14-15, avec la note référençant la loi 419-ФЗ modifiée par la loi 414-ФЗ du 04/11/2025, lue sur la page rendue en image.",
+          "retained": false,
+          "why": "Second amendement de l'exercice, et état final de la loi pour 2025 : 13 574,8 milliards, soit 6,34 % du PIB et +487 milliards sur le voté initial. Trajectoire complète de l'exercice 2025 : voté 13 087,4 en novembre 2024, puis 13 503,7 en juillet 2025, puis 13 574,8 en novembre 2025. Sécurité intérieure au même stade : 3 448,7 milliards ; dépenses totales : 42 298,7 milliards, contre 42 910,3 finalement exécutés."
         },
         {
           "date": "2026",
@@ -1699,23 +2039,13 @@
         },
         {
           "date": "2026",
-          "value": 12790.0,
+          "value": 12121.0,
           "unit": "Md ₽ · budget voté",
-          "sourceCode": "interfax-defense-2025-2027",
-          "confidence": "Moyenne",
-          "confidenceWhy": "Montant voté pour un exercice à venir au moment de la publication : c'est une programmation, révisable, et les millésimes précédents montrent qu'elle l'est.",
+          "sourceCode": "BDG-2026-LOI",
+          "confidence": "Haute",
+          "confidenceWhy": "Colonne 2026 du tableau des pages 14-15 de la brochure publiée le 29/12/2025 à la loi 426-ФЗ du 28/11/2025, lue sur la page rendue en image.",
           "retained": false,
-          "why": "Première baisse programmée depuis l'invasion — mais programmée seulement. Le budget 2024 avait lui aussi été projeté à 4 640 Md ₽ deux ans avant, puis voté à 10 400 : sur cette ligne, la prévision à deux ans n'a encore jamais tenu."
-        },
-        {
-          "date": "2027",
-          "value": 13070.0,
-          "unit": "Md ₽ · budget voté",
-          "sourceCode": "interfax-defense-2025-2027",
-          "confidence": "Basse",
-          "confidenceWhy": "Troisième année d'une programmation triennale, l'horizon où ces documents se sont le plus trompés.",
-          "retained": false,
-          "why": "Citée pour montrer la forme de la trajectoire officielle, pas pour être crue."
+          "why": "Première baisse de la ligne défense depuis le début de la guerre : −1 454 milliards sur l'état final de 2025, soit −10,7 %. Écart notable avec le projet : le tableau 4.1.3 du document de programmation d'octobre 2025 portait 12 930,5 milliards, et la brochure au projet du 31/10/2025 le même chiffre ; la loi votée retient 12 121,0, soit 809 milliards de moins. Sécurité intérieure votée : 3 826,7 milliards, en hausse de 378 milliards — une partie de la baisse affichée sur la défense se retrouve sur la section voisine. Dépenses totales votées : 44 069,7 milliards. Le ratio au PIB n'est pas calculable ici faute de PIB 2026 observé."
         }
       ]
     },
@@ -1765,6 +2095,16 @@
           "confidenceWhy": "Valeur lue dans la table 1 du fact sheet d'avril 2022, ligne Ukraine, entre crochets ([3,2]) donc estimée par SIPRI.",
           "retained": true,
           "why": "5,9 milliards de dollars, 36e rang mondial. Point de départ d'avant-guerre, à comparer à 1,6 % en 2012."
+        },
+        {
+          "date": "2021",
+          "value": 4.0,
+          "unit": "% du PIB · estimation CIA",
+          "sourceCode": "cia-factbook-ukraine",
+          "confidence": "Basse",
+          "confidenceWhy": "Estimation sensiblement plus haute que celle de SIPRI pour la même année, sans que ni l'une ni l'autre n'expose son périmètre.",
+          "retained": false,
+          "why": "La CIA donne 4 % là où SIPRI donne 3,2 %. Le scénario retient le second, parce que sa série couvre les années de guerre que le Factbook n'a jamais publiées. Après 2021 la rubrique ukrainienne s'arrête net : la seule chose que le Factbook dit de la guerre est une note affirmant « plus de 30 % du PIB selon certaines estimations », sans année ni source — elle n'entre donc pas dans cette table."
         },
         {
           "date": "2022",

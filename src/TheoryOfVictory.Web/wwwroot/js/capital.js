@@ -92,7 +92,6 @@
     // de la barre, SEAM_GAP en donne la largeur et SEAM_AMP l'amplitude du zigzag.
     var BAR_H = 16, TRACK = 306;
     var SEAM = 0.55, SEAM_GAP = 9, SEAM_AMP = 4;
-    var RUINED_INDEX = 25;
 
     var ICON_X = GUT_L + 7, ICON_S = 22, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
 
@@ -346,16 +345,6 @@
 
     /* ---------------- Le bandeau ---------------- */
 
-    function hatch(defs, id) {
-        var p = svg("pattern", {
-            id: id, width: "6", height: "6", patternUnits: "userSpaceOnUse",
-            patternTransform: "rotate(45)"
-        });
-        p.appendChild(svg("rect", { width: "6", height: "6", fill: "#a8322a", opacity: "0.12" }));
-        p.appendChild(svg("line", { x1: "0", y1: "0", x2: "0", y2: "6", stroke: "#a8322a", "stroke-width": "2.6", opacity: "0.45" }));
-        defs.appendChild(p);
-    }
-
     // Les rayures du gain : ce que le trimestre a ajouté au bout de la masse. Dans l'encre du
     // poste, jamais en rouge — c'est un gain — et hachuré plutôt que plein, pour qu'on voie que
     // ce bout-là est arrivé ce trimestre et n'était pas là avant. Plus serré et plus fin que la
@@ -424,7 +413,7 @@
         }));
     }
 
-    function cartouche(host, defs, post, colour, invader, hatchId, pressure, row, scale, diplomatic, gauge) {
+    function cartouche(host, defs, post, colour, invader, pressure, row, scale, diplomatic, gauge) {
         var yc = HEAD_H + row * ROW_H + ROW_H / 2;
         var top = yc - BAR_H / 2;
         var anchor = invader ? GUT_L : GUT_R;
@@ -434,7 +423,6 @@
         var len = Math.min(Math.max(post.value, 0) * scale, TRACK);
         var was = Math.min(Math.max(post.opening, 0) * scale, TRACK);
         var cut = !gauge && post.value * scale > TRACK + 0.5;
-        var ruined = index < RUINED_INDEX && !charge && !gauge;
         var edge = anchor + dir * len;
         var wasEdge = anchor + dir * was;
 
@@ -501,13 +489,18 @@
         // Une facture n'est pas un avoir, et un poste tombé sous le quart de son départ n'est
         // plus une masse : ces deux-là se disent par la MATIÈRE de la barre — rayée pour ce
         // qu'on paie, hachurée pour ce qui est en ruine — et non par un signe posé à côté.
-        var fill = charge ? "url(#" + chargeId + ")" : (ruined ? "url(#" + hatchId + ")" : colour);
+        // Un poste tombé sous le quart de son départ se dessinait entièrement en hachures. Deux
+        // rangées sur sept y passaient en fin de partie, et une trame pâle sur fond clair ne se
+        // lit plus du tout sur un téléphone : on ne voyait ni la masse, ni ce que la trame
+        // voulait dire. Elle ne disait d'ailleurs rien que la barre ne dise déjà — cent contre
+        // six cent douze au départ, c'est une longueur, et le pourcentage est écrit à côté.
+        var fill = charge ? "url(#" + chargeId + ")" : colour;
         if (!gauge) {
             // Une masse qui tient dans la piste est un rectangle. Une masse taillée est la même
             // barre, rompue en son milieu : deux tronçons francs et une déchirure entre eux.
             // Le chiffre au bord reste, lui, la valeur entière.
-            var edging = charge || ruined ? colour : "rgba(26,24,21,0.3)";
-            var thickness = charge || ruined ? "0.9" : "0.7";
+            var edging = charge ? colour : "rgba(26,24,21,0.3)";
+            var thickness = charge ? "0.9" : "0.7";
 
             if (cut) {
                 brokenBar(anchor, edge, top, dir).forEach(function (d) {
@@ -525,7 +518,7 @@
             }
         }
 
-        if (!charge && !ruined && !gauge) {
+        if (!charge && !gauge) {
             // Chant supérieur biseauté : la matière a une épaisseur, comme les douves. Sur une
             // barre rompue il se rompt avec elle, sinon il enjamberait la déchirure en blanc.
             var lip = function (from, to) {
@@ -799,8 +792,6 @@
         var s = svg("svg",{ viewBox: "0 0 " + W + " " + H, class: "cap-svg", role: "img" });
         var defs = svg("defs", {});
         s.appendChild(defs);
-        var hatchId = "capHatch" + (seq++);
-        hatch(defs, hatchId);
 
         // Le camp est rappelé par son nom au bord qui lui revient et par le filet qui court
         // sous lui : à gauche l'envahisseur, à droite l'envahi, et plus rien à chercher.
@@ -888,8 +879,8 @@
             var ruPressure = aimed && bottle.side === "invader" ? bottle.detail : null;
             var uaPressure = aimed && bottle.side !== "invader" ? bottle.detail : null;
 
-            if (ru) { cartouche(s, defs, ru, p.colour, true, hatchId, ruPressure, i, scale, carries ? ruDiplomatic : null, p.gauge); }
-            if (ua) { cartouche(s, defs, ua, p.colour, false, hatchId, uaPressure, i, scale, carries ? uaDiplomatic : null, p.gauge); }
+            if (ru) { cartouche(s, defs, ru, p.colour, true, ruPressure, i, scale, carries ? ruDiplomatic : null, p.gauge); }
+            if (ua) { cartouche(s, defs, ua, p.colour, false, uaPressure, i, scale, carries ? uaDiplomatic : null, p.gauge); }
         });
 
         // Le bandeau tient dans 1 240 unités de large : sur un téléphone, le laisser se
