@@ -68,7 +68,7 @@ public static class ProvenanceLibrary
                 Url = dto.Url,
                 Capture = text.Capture ?? dto.Capture,
                 StatedUpdate = text.StatedUpdate ?? dto.StatedUpdate,
-                Kind = dto.Kind,
+                Kind = text.Kind ?? dto.Kind,
                 Note = text.Note ?? string.Empty,
             };
         }
@@ -319,6 +319,7 @@ public static class ProvenanceLibrary
                     Organisation = Pick(entry.Value.Organisation, existing.Organisation),
                     Capture = Pick(entry.Value.Capture, existing.Capture),
                     StatedUpdate = Pick(entry.Value.StatedUpdate, existing.StatedUpdate),
+                    Kind = Pick(entry.Value.Kind, existing.Kind),
                     Date = Pick(entry.Value.Date, existing.Date),
                     Unit = Pick(entry.Value.Unit, existing.Unit),
                     Note = Pick(entry.Value.Note, existing.Note),
@@ -350,6 +351,13 @@ public static class ProvenanceLibrary
         public string? Capture { get; set; }
 
         public string? StatedUpdate { get; set; }
+
+        /// <summary>
+        /// What kind of thing the source is — a published measurement, an estimate, a budget
+        /// document. It is printed next to the organisation, in the same breath, so it belongs
+        /// to a language exactly as much as the organisation does.
+        /// </summary>
+        public string? Kind { get; set; }
 
         /// <summary>
         /// The date and the unit as the page prints them. The data file keeps the two that index

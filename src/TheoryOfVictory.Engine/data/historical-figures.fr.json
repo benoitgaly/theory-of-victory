@@ -6,412 +6,472 @@
       "organisation": "Banque centrale de la Fédération de Russie",
       "capture": "28 février 2022",
       "statedUpdate": "Page datée par son éditeur du 18 février 2022",
-      "note": "L'URL est celle d'une archive horodatée, et non celle de la page vivante : cbr.ru republie la même adresse à chaque mise à jour, si bien qu'un lien vers la page courante ne prouverait pas ce qu'elle affichait à la date citée. Le tableau est publié par la banque centrale elle-même, en milliards de dollars, à la fin de chaque semaine de déclaration. C'est la mesure la plus directe qui existe sur ce poste."
+      "note": "L'URL est celle d'une archive horodatée, et non celle de la page vivante : cbr.ru republie la même adresse à chaque mise à jour, si bien qu'un lien vers la page courante ne prouverait pas ce qu'elle affichait à la date citée. Le tableau est publié par la banque centrale elle-même, en milliards de dollars, à la fin de chaque semaine de déclaration. C'est la mesure la plus directe qui existe sur ce poste.",
+      "kind": "Mesure publiée"
     },
     "conseil-ue-sanctions": {
       "title": "EU sanctions against Russia: questions and answers — section « How are immobilised Russian assets used? »",
       "organisation": "Conseil de l'Union européenne",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 5 août 2026",
-      "note": "Le Conseil y écrit deux choses distinctes : que le troisième train de sanctions de février 2022 a interdit toute transaction liée à la gestion des réserves de la Banque centrale de Russie, et que 210 milliards d'euros d'avoirs sont bloqués dans l'Union. Ce montant est celui de l'UE SEULE. Le total immobilisé par l'ensemble G7 + UE + Australie est plus élevé, et il n'est pas chiffré sur cette page : il n'est donc pas repris ici."
+      "note": "Le Conseil y écrit deux choses distinctes : que le troisième train de sanctions de février 2022 a interdit toute transaction liée à la gestion des réserves de la Banque centrale de Russie, et que 210 milliards d'euros d'avoirs sont bloqués dans l'Union. Ce montant est celui de l'UE SEULE. Le total immobilisé par l'ensemble G7 + UE + Australie est plus élevé, et il n'est pas chiffré sur cette page : il n'est donc pas repris ici.",
+      "kind": "Mesure publiée"
     },
     "kiel-graphique-2026-08-13": {
       "title": "Graphique « Aid allocations by donor group », 2022–juin 2026, moyennes mensuelles corrigées de l'inflation, en milliards d'euros",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Le nom du fichier porte sa date de publication : 13 août 2026",
-      "note": "C'est le fichier du graphique lui-même, servi par l'éditeur, et son nom porte la date de publication — une adresse qui ne peut pas être remplacée en silence par une version ultérieure. Les valeurs ci-dessous en sont RELEVÉES À L'ŒIL, à ±0,05 Md€/mois : ce n'est pas une extraction du jeu de données. Le graphique mesure par ailleurs l'ALLOCATION — ce qui est affecté à un paquet concret — et non la livraison ; c'est l'échelon au-dessus de ce que le moteur représente, et tout l'écart de l'année 2024 vient de là."
+      "note": "C'est le fichier du graphique lui-même, servi par l'éditeur, et son nom porte la date de publication — une adresse qui ne peut pas être remplacée en silence par une version ultérieure. Les valeurs ci-dessous en sont RELEVÉES À L'ŒIL, à ±0,05 Md€/mois : ce n'est pas une extraction du jeu de données. Le graphique mesure par ailleurs l'ALLOCATION — ce qui est affecté à un paquet concret — et non la livraison ; c'est l'échelon au-dessus de ce que le moteur représente, et tout l'écart de l'année 2024 vient de là.",
+      "kind": "Lecture graphique"
     },
     "kiel-communique-2026-08-13": {
       "title": "Ukraine Support Tracker: Europe leads on aid – US weapons remain key",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 13 août 2026",
-      "note": "Le communiqué qui accompagne le graphique, et qui sert ici de CONTRÔLE de la lecture graphique. Il chiffre en toutes lettres une valeur que le graphique ne donne qu'en hauteur de barre : « financial and humanitarian aid was 41 percent lower than in 2025 » en moyenne mensuelle. Le relevé donne 1,77 contre 3,01, soit −41,2 % : la lecture est confirmée au dixième de point. Il chiffre aussi le prêt européen — près de 11 Md€ alloués sur mai et juin 2026, dont 4,3 militaires et 6,7 financiers, au titre d'un Ukraine Support Loan de 90 Md€ pour 2026-2027 — et précise que les donateurs européens ont acheté pour au moins 3 Md€ d'armement à l'industrie américaine sur le premier semestre 2026."
+      "note": "Le communiqué qui accompagne le graphique, et qui sert ici de CONTRÔLE de la lecture graphique. Il chiffre en toutes lettres une valeur que le graphique ne donne qu'en hauteur de barre : « financial and humanitarian aid was 41 percent lower than in 2025 » en moyenne mensuelle. Le relevé donne 1,77 contre 3,01, soit −41,2 % : la lecture est confirmée au dixième de point. Il chiffre aussi le prêt européen — près de 11 Md€ alloués sur mai et juin 2026, dont 4,3 militaires et 6,7 financiers, au titre d'un Ukraine Support Loan de 90 Md€ pour 2026-2027 — et précise que les donateurs européens ont acheté pour au moins 3 Md€ d'armement à l'industrie américaine sur le premier semestre 2026.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2021-10": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er octobre 2021",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Communiqué mensuel du ministère russe des Finances, l'émetteur du fonds. Le nom du fichier porte la date d'arrêté, si bien que l'adresse ne peut pas être remplacée en silence par un mois ultérieur. Le document donne DEUX montants distincts : le volume total du fonds et, séparément, l'« objem likvidnykh aktivov » — le volume des actifs liquides, défini par le ministère lui-même comme les seules sommes déposées sur les comptes du fonds à la Banque de Russie. Le reste est immobilisé dans des dépôts à VEB.RF, des obligations et des actions d'émetteurs russes. Le fichier a été téléchargé depuis ce poste et son texte extrait ; la lecture directe des pages HTML de minfin.gov.ru passe, elle, par un outil de contournement. Cette source ne dit rien des réserves de change de la banque centrale, qui sont un tout autre poste."
+      "note": "Communiqué mensuel du ministère russe des Finances, l'émetteur du fonds. Le nom du fichier porte la date d'arrêté, si bien que l'adresse ne peut pas être remplacée en silence par un mois ultérieur. Le document donne DEUX montants distincts : le volume total du fonds et, séparément, l'« objem likvidnykh aktivov » — le volume des actifs liquides, défini par le ministère lui-même comme les seules sommes déposées sur les comptes du fonds à la Banque de Russie. Le reste est immobilisé dans des dépôts à VEB.RF, des obligations et des actions d'émetteurs russes. Le fichier a été téléchargé depuis ce poste et son texte extrait ; la lecture directe des pages HTML de minfin.gov.ru passe, elle, par un outil de contournement. Cette source ne dit rien des réserves de change de la banque centrale, qui sont un tout autre poste.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2022-01": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2022",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Même série mensuelle, dernier arrêté annuel avant l'invasion. Le nom du fichier porte la date d'arrêté. Il donne l'état du fonds sept semaines avant le 24 février 2022 et sert de borne haute d'avant-guerre pour la part liquide."
+      "note": "Même série mensuelle, dernier arrêté annuel avant l'invasion. Le nom du fichier porte la date d'arrêté. Il donne l'état du fonds sept semaines avant le 24 février 2022 et sert de borne haute d'avant-guerre pour la part liquide.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2022-03": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er mars 2022",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Premier arrêté publié après l'invasion et après le gel du 28 février. Le document est décisif pour comprendre le piège de ce poste : il compte encore, dans la ligne « actifs liquides », 38 561,6 millions d'euros, 4 178,7 millions de livres sterling et 600 304,0 millions de yens — des devises que les sanctions occidentales venaient précisément de rendre inutilisables. À cette date la ligne « liquide » du ministère mesure donc ce que le fonds POSSÈDE, pas ce que Moscou peut DÉPENSER, et la source ne fait pas cette distinction."
+      "note": "Premier arrêté publié après l'invasion et après le gel du 28 février. Le document est décisif pour comprendre le piège de ce poste : il compte encore, dans la ligne « actifs liquides », 38 561,6 millions d'euros, 4 178,7 millions de livres sterling et 600 304,0 millions de yens — des devises que les sanctions occidentales venaient précisément de rendre inutilisables. À cette date la ligne « liquide » du ministère mesure donc ce que le fonds POSSÈDE, pas ce que Moscou peut DÉPENSER, et la source ne fait pas cette distinction.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2023-01": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2023",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Même série. À cet arrêté la livre sterling et le yen ont disparu de la ligne liquide, l'euro n'y pèse plus que 10,46 milliards : la ligne commence à se rapprocher de ce qui est réellement mobilisable, sans y être encore."
+      "note": "Même série. À cet arrêté la livre sterling et le yen ont disparu de la ligne liquide, l'euro n'y pèse plus que 10,46 milliards : la ligne commence à se rapprocher de ce qui est réellement mobilisable, sans y être encore.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2023-07": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er juillet 2023",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Même série, point de milieu d'année 2023. Il reste 7,28 milliards d'euros dans la ligne liquide, soit un résidu marginal ; à partir de 2024 la ligne ne contient plus que du yuan, de l'or et des roubles."
+      "note": "Même série, point de milieu d'année 2023. Il reste 7,28 milliards d'euros dans la ligne liquide, soit un résidu marginal ; à partir de 2024 la ligne ne contient plus que du yuan, de l'or et des roubles.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2024-01": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2024",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Même série. À partir de cet arrêté la part liquide ne se compose plus que de yuans, d'or en compte non alloué et de roubles : elle mesure enfin ce que le Trésor russe peut effectivement engager, et elle devient donc comparable d'une date à l'autre sans correction."
+      "note": "Même série. À partir de cet arrêté la part liquide ne se compose plus que de yuans, d'or en compte non alloué et de roubles : elle mesure enfin ce que le Trésor russe peut effectivement engager, et elle devient donc comparable d'une date à l'autre sans correction.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2025-01": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er janvier 2025",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Même série. C'est le point bas de toute la série pour la part liquide exprimée en dollars. La source ne dit pas pourquoi : elle donne un état, pas une explication, et la baisse mêle les prélèvements budgétaires, la dépréciation du rouble et la valorisation de l'or."
+      "note": "Même série. C'est le point bas de toute la série pour la part liquide exprimée en dollars. La source ne dit pas pourquoi : elle donne un état, pas une explication, et la baisse mêle les prélèvements budgétaires, la dépréciation du rouble et la valorisation de l'or.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2025-08": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er août 2025",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
-      "note": "Même série, point de milieu d'année 2025. Le nom du fichier porte la date d'arrêté."
+      "note": "Même série, point de milieu d'année 2025. Le nom du fichier porte la date d'arrêté.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2026-02": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er février 2026",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Publication datée du 6 février 2026 dans la liste des communiqués du ministère",
-      "note": "Même série. Le fichier d'arrêté au 1er janvier 2026 existe aussi mais porte un nom générique — Informatsionnoe_soobshchenie.docx — qui ne prouve pas sa date ; c'est pourquoi le point de février, dont le nom de fichier est daté, lui est préféré ici. Pour mémoire, l'arrêté au 1er janvier 2026 donne 171 490,8 millions de dollars au total et 52 219,8 millions d'actifs liquides."
+      "note": "Même série. Le fichier d'arrêté au 1er janvier 2026 existe aussi mais porte un nom générique — Informatsionnoe_soobshchenie.docx — qui ne prouve pas sa date ; c'est pourquoi le point de février, dont le nom de fichier est daté, lui est préféré ici. Pour mémoire, l'arrêté au 1er janvier 2026 donne 171 490,8 millions de dollars au total et 52 219,8 millions d'actifs liquides.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-2026-07": {
       "title": "Communiqué d'information sur les résultats du placement des ressources du Fonds national de bien-être — situation au 1er juillet 2026",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Publication datée du 3 juillet 2026 dans la liste des communiqués du ministère",
-      "note": "Dernier arrêté publié à la date de capture. Les comptes du fonds à la Banque de Russie ne contiennent plus que 189 793,8 millions de yuans et 141 082,8 kg d'or : deux actifs seulement, dont l'un se valorise au cours du métal. La source s'arrête là — elle ne dit rien du rythme de tirage prévu, ni de la part de cette liquidité déjà engagée dans le budget."
+      "note": "Dernier arrêté publié à la date de capture. Les comptes du fonds à la Banque de Russie ne contiennent plus que 189 793,8 millions de yuans et 141 082,8 kg d'or : deux actifs seulement, dont l'un se valorise au cours du métal. La source s'arrête là — elle ne dit rien du rythme de tirage prévu, ni de la part de cette liquidité déjà engagée dans le budget.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-serie-xlsx": {
       "title": "Données sur les mouvements et les résultats de la gestion des ressources du Fonds national de bien-être — série mensuelle complète depuis 2008",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Fichier daté du 7 juillet 2026 par son éditeur, et propriété interne du classeur horodatée au 7 juillet 2026 à 12h32 UTC",
-      "note": "Le classeur de référence du ministère : une colonne par mois depuis janvier 2008, le volume de fin de période en milliards de roubles et en milliards de dollars, et la composition détaillée des comptes à la Banque de Russie. Il sert ici de CONTRÔLE des communiqués mensuels : les totaux concordent au centième. Attention, il ne contient AUCUNE ligne « actifs liquides » — elle n'existe que dans les communiqués mensuels. C'est lui, en revanche, qui date la disparition des devises occidentales de la ligne liquide : livre sterling et yen tombent à zéro à la fin de décembre 2022, l'euro s'éteint progressivement au cours de 2023."
+      "note": "Le classeur de référence du ministère : une colonne par mois depuis janvier 2008, le volume de fin de période en milliards de roubles et en milliards de dollars, et la composition détaillée des comptes à la Banque de Russie. Il sert ici de CONTRÔLE des communiqués mensuels : les totaux concordent au centième. Attention, il ne contient AUCUNE ligne « actifs liquides » — elle n'existe que dans les communiqués mensuels. C'est lui, en revanche, qui date la disparition des devises occidentales de la ligne liquide : livre sterling et yen tombent à zéro à la fin de décembre 2022, l'euro s'éteint progressivement au cours de 2023.",
+      "kind": "Mesure publiée"
     },
     "minfin-fnb-table-volume": {
       "title": "Volume du Fonds national de bien-être — tableau mensuel de février 2008 à novembre 2024",
       "organisation": "Ministère des Finances de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 8 novembre 2024",
-      "note": "Page vivante, mais gelée depuis novembre 2024 : le ministère a basculé la publication vers le classeur mensuel. Elle affiche la série longue du volume TOTAL, en roubles, en dollars et en pourcentage du PIB, et rien sur la part liquide. Le fichier daté qu'elle propose au téléchargement est Obem_na_01.11.2024.docx ; les valeurs lues ici l'ont été dans le tableau rendu en HTML, pas dans ce fichier. Utile comme troisième contrôle des totaux, sans valeur propre au-delà."
+      "note": "Page vivante, mais gelée depuis novembre 2024 : le ministère a basculé la publication vers le classeur mensuel. Elle affiche la série longue du volume TOTAL, en roubles, en dollars et en pourcentage du PIB, et rien sur la part liquide. Le fichier daté qu'elle propose au téléchargement est Obem_na_01.11.2024.docx ; les valeurs lues ici l'ont été dans le tableau rendu en HTML, pas dans ce fichier. Utile comme troisième contrôle des totaux, sans valeur propre au-delà.",
+      "kind": "Mesure publiée"
     },
     "cbr-reserves-mensuel-requete": {
       "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles en fin de période de déclaration, janvier 2022 à août 2026",
       "organisation": "Banque centrale de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Page datée par son éditeur du 1er août 2026",
-      "note": "La série MENSUELLE de la banque centrale n'a jamais été interrompue : c'est la publication hebdomadaire, seule consultée dans la base existante, qui s'arrête au 18 février 2022. L'URL porte l'intervalle demandé dans ses paramètres, mais la PAGE reste vivante et republiée : elle ne prouve donc pas ce qu'elle affichait un jour donné. C'est pourquoi trois instantanés horodatés la doublent ci-dessous, qui couvrent tous les points retenus sauf mars 2022 et juillet 2026. Le tableau distingue les réserves de change, les DTS, la position de réserve au FMI et l'or, mais il ne distingue JAMAIS la part gelée de la part disponible."
+      "note": "La série MENSUELLE de la banque centrale n'a jamais été interrompue : c'est la publication hebdomadaire, seule consultée dans la base existante, qui s'arrête au 18 février 2022. L'URL porte l'intervalle demandé dans ses paramètres, mais la PAGE reste vivante et republiée : elle ne prouve donc pas ce qu'elle affichait un jour donné. C'est pourquoi trois instantanés horodatés la doublent ci-dessous, qui couvrent tous les points retenus sauf mars 2022 et juillet 2026. Le tableau distingue les réserves de change, les DTS, la position de réserve au FMI et l'or, mais il ne distingue JAMAIS la part gelée de la part disponible.",
+      "kind": "Mesure publiée"
     },
     "cbr-reserves-archive-2024-07": {
       "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles, mai 2023 à mai 2024",
       "organisation": "Banque centrale de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Instantané du 2 juillet 2024 ; la page y est datée par son éditeur du 1er juin 2024",
-      "note": "Instantané horodaté servant de preuve d'affichage pour les points de 2023 et du premier semestre 2024. Il ne couvre rien avant mai 2023 ni après mai 2024."
+      "note": "Instantané horodaté servant de preuve d'affichage pour les points de 2023 et du premier semestre 2024. Il ne couvre rien avant mai 2023 ni après mai 2024.",
+      "kind": "Mesure publiée"
     },
     "cbr-reserves-archive-2025-03": {
       "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles, février 2024 à février 2025",
       "organisation": "Banque centrale de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Instantané du 23 mars 2025 ; la page y est datée par son éditeur du 1er mars 2025",
-      "note": "Instantané horodaté couvrant la fin de 2024. Il porte notamment la valeur de clôture au 31 décembre 2024, qu'aucun autre instantané disponible ne montre."
+      "note": "Instantané horodaté couvrant la fin de 2024. Il porte notamment la valeur de clôture au 31 décembre 2024, qu'aucun autre instantané disponible ne montre.",
+      "kind": "Mesure publiée"
     },
     "cbr-reserves-archive-2026-07": {
       "title": "Réserves internationales de la Fédération de Russie — valeurs mensuelles, juin 2025 à juin 2026",
       "organisation": "Banque centrale de la Fédération de Russie",
       "capture": "14 août 2026",
       "statedUpdate": "Instantané du 23 juillet 2026 ; la page y est datée par son éditeur du 1er juillet 2026",
-      "note": "Instantané horodaté le plus récent. Il couvre la clôture 2025 et le premier semestre 2026, mais pas la valeur de juillet 2026, publiée après lui."
+      "note": "Instantané horodaté le plus récent. Il couvre la clôture 2025 et le premier semestre 2026, mais pas la valeur de juillet 2026, publiée après lui.",
+      "kind": "Mesure publiée"
     },
     "conseil-ue-immobilise-g7-2024-02-12": {
       "title": "Immobilised Russian assets: Council decides to set aside extraordinary revenues — communiqué de presse du 12 février 2024",
       "organisation": "Conseil de l'Union européenne",
       "capture": "14 août 2026",
       "statedUpdate": "Communiqué daté du 12 février 2024 à 17h14 ; mention « Last review: 28 January 2025 »",
-      "note": "C'est la source qui comble la lacune identifiée. Le Conseil y écrit en toutes lettres : « Around €260 billion in Central Bank of Russia assets have been immobilised in the form of securities and cash in the jurisdictions of the G7 partners, the EU and Australia, with more than two thirds of those immobilised in the EU. » Le périmètre est exactement celui recherché, et il englobe donc les 210 Md€ de l'UE seule déjà présents dans la base. L'URL porte la date de publication dans son chemin. Là où elle cesse de prouver quoi que ce soit : c'est un ordre de grandeur arrondi arrêté en février 2024, jamais rafraîchi depuis par le Conseil, et c'est une valorisation d'un encours de titres et d'espèces, non un inventaire audité juridiction par juridiction. La ventilation par pays n'y figure pas, et l'Australie n'y est pas chiffrée séparément."
+      "note": "C'est la source qui comble la lacune identifiée. Le Conseil y écrit en toutes lettres : « Around €260 billion in Central Bank of Russia assets have been immobilised in the form of securities and cash in the jurisdictions of the G7 partners, the EU and Australia, with more than two thirds of those immobilised in the EU. » Le périmètre est exactement celui recherché, et il englobe donc les 210 Md€ de l'UE seule déjà présents dans la base. L'URL porte la date de publication dans son chemin. Là où elle cesse de prouver quoi que ce soit : c'est un ordre de grandeur arrondi arrêté en février 2024, jamais rafraîchi depuis par le Conseil, et c'est une valorisation d'un encours de titres et d'espèces, non un inventaire audité juridiction par juridiction. La ventilation par pays n'y figure pas, et l'Australie n'y est pas chiffrée séparément.",
+      "kind": "Mesure publiée"
     },
     "eprs-confiscation-2025-09": {
       "title": "Confiscation of immobilised Russian sovereign assets: State of play, arguments and scenarios — briefing PE 775.908",
       "organisation": "Service de recherche du Parlement européen (EPRS)",
       "capture": "14 août 2026",
       "statedUpdate": "Document daté par son éditeur de septembre 2025 ; référence PE 775.908",
-      "note": "Le nom du fichier porte l'année et le numéro de référence, une adresse qui ne peut pas être remplacée en silence. Le briefing sert ici de CONTRÔLE du chiffre du Conseil : il rappelle le montant de février 2024 — 260 Md€ pour l'UE et les autres pays du G7 — et ajoute qu'en incluant les pays hors G7 le total mondial approcherait 300 Md€. Sa figure 1 détaille un total de 289,5 Md€ pour 2025 : Union européenne 209,2 dont Belgique 180, Japon 28,1, Royaume-Uni 26,6, Canada 15,1, Suisse 6,2, États-Unis 4,3. Attention, ce périmètre n'est PAS celui du Conseil — il ajoute la Suisse et n'isole pas l'Australie — et l'EPRS indique lui-même que ces montants proviennent de calculs du PISM et du gouvernement fédéral suisse, non d'une déclaration officielle des juridictions détentrices, et que la valeur exacte par juridiction est difficile à établir faute d'information officielle cohérente. Ce chiffre ne peut donc pas remplacer celui du Conseil, seulement l'encadrer."
+      "note": "Le nom du fichier porte l'année et le numéro de référence, une adresse qui ne peut pas être remplacée en silence. Le briefing sert ici de CONTRÔLE du chiffre du Conseil : il rappelle le montant de février 2024 — 260 Md€ pour l'UE et les autres pays du G7 — et ajoute qu'en incluant les pays hors G7 le total mondial approcherait 300 Md€. Sa figure 1 détaille un total de 289,5 Md€ pour 2025 : Union européenne 209,2 dont Belgique 180, Japon 28,1, Royaume-Uni 26,6, Canada 15,1, Suisse 6,2, États-Unis 4,3. Attention, ce périmètre n'est PAS celui du Conseil — il ajoute la Suisse et n'isole pas l'Australie — et l'EPRS indique lui-même que ces montants proviennent de calculs du PISM et du gouvernement fédéral suisse, non d'une déclaration officielle des juridictions détentrices, et que la valeur exacte par juridiction est difficile à établir faute d'information officielle cohérente. Ce chiffre ne peut donc pas remplacer celui du Conseil, seulement l'encadrer.",
+      "kind": "Estimation d'un tiers"
     },
     "conseil-ue-fnb-interdiction-2025-12-12": {
       "title": "Council decides to prohibit transfers of immobilised Central Bank of Russia assets back to Russia — communiqué de presse du 12 décembre 2025",
       "organisation": "Conseil de l'Union européenne",
       "capture": "14 août 2026",
       "statedUpdate": "Communiqué daté du 12 décembre 2025 à 19h35 ; mention « Last review: 16 December 2025 »",
-      "note": "Source sans chiffre, retenue pour un seul fait de droit, vérifié dans le texte : le règlement du 12 décembre 2025 interdit tout transfert d'avoirs de la Banque centrale de Russie « or of any legal person, entity or body acting on behalf of, or at the direction of, the Central Bank of Russia, such as the Russian National Wealth Fund ». Elle établit donc que le Fonds national de bien-être est nommément visé par le gel européen, et qu'il ne faut pas le traiter comme un poste extérieur aux sanctions. Elle ne dit rien du montant du fonds détenu dans l'Union, et le Conseil n'en publie pas."
+      "note": "Source sans chiffre, retenue pour un seul fait de droit, vérifié dans le texte : le règlement du 12 décembre 2025 interdit tout transfert d'avoirs de la Banque centrale de Russie « or of any legal person, entity or body acting on behalf of, or at the direction of, the Central Bank of Russia, such as the Russian National Wealth Fund ». Elle établit donc que le Fonds national de bien-être est nommément visé par le gel européen, et qu'il ne faut pas le traiter comme un poste extérieur aux sanctions. Elle ne dit rien du montant du fonds détenu dans l'Union, et le Conseil n'en publie pas.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-fichier": {
       "title": "Ukraine Support Tracker — Release 30, classeur de données complet (onglet « ReadMe »)",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "L'onglet ReadMe se déclare lui-même « Ukraine Support Tracker — 30th release (covering January 24, 2022 to June 30, 2026) » et porte la date du 30 juin 2026",
-      "note": "Fichier téléchargé (12 155 823 octets) et ouvert ici avec openpyxl : 95 onglets. Ce n'est pas un résumé de moteur de recherche. Le nom du fichier porte le numéro de release, donc l'adresse ne peut pas être remplacée en silence par une version ultérieure. Le ReadMe fixe le vocabulaire dont dépend tout le reste : « We report ALLOCATIONS as our primary metric. Commitments of future aid are reported in auxiliary figures. When information on deliveries or disbursements is available, we report these as well. » L'engagement est une annonce, l'allocation une affectation à un paquet concret, le décaissement un versement constaté — et le tracker ne publie ce dernier que là où l'information existe. Ce fichier prouve ce que les gouvernements ont ANNONCÉ et AFFECTÉ ; il cesse de prouver quoi que ce soit dès qu'on lui demande ce qui est arrivé au front."
+      "note": "Fichier téléchargé (12 155 823 octets) et ouvert ici avec openpyxl : 95 onglets. Ce n'est pas un résumé de moteur de recherche. Le nom du fichier porte le numéro de release, donc l'adresse ne peut pas être remplacée en silence par une version ultérieure. Le ReadMe fixe le vocabulaire dont dépend tout le reste : « We report ALLOCATIONS as our primary metric. Commitments of future aid are reported in auxiliary figures. When information on deliveries or disbursements is available, we report these as well. » L'engagement est une annonce, l'allocation une affectation à un paquet concret, le décaissement un versement constaté — et le tracker ne publie ce dernier que là où l'information existe. Ce fichier prouve ce que les gouvernements ont ANNONCÉ et AFFECTÉ ; il cesse de prouver quoi que ce soit dès qu'on lui demande ce qui est arrivé au front.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-fig-a31": {
       "title": "Ukraine Support Tracker — Release 30, onglet « Fig A31 Monthly Avg 2022-2026 » (Monthly Average of Aid Allocations by Donor Group: 2022–June 2026, billion Euros)",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, couvrant le 24 janvier 2022 au 30 juin 2026",
-      "note": "C'est le jeu de données SOUS le graphique « Aid allocations by donor group » jusqu'ici relevé à l'œil : mêmes trois groupes, mêmes deux types, mêmes cinq périodes. Les valeurs sont désormais lues dans la cellule, plus sur une hauteur de barre. Structure du tableau : lignes 12 à 16 = 2022, 2023, 2024, 2025, 2026 ; colonnes E, F, G, H = militaire (États-Unis, Europe, Autres donateurs, Total) ; colonnes I, J, K, L = financier et humanitaire (mêmes quatre). Les formules somment la colonne Q de la base bilatérale — « tot_sub_activity_value_constant_currency » —, donc des EUROS CONSTANTS, corrigés de l'inflation et du change, base 2021 (l'onglet Country_Deflator écrit « Currency Power Change (2021 = baseline) »). Filtres explicites dans la formule : mesure = allocation, type = Military ou Financial & Humanitarian, mois compris entre les bornes de l'année. « Europe » = États membres et institutions de l'UE, Norvège, Royaume-Uni, Islande, Suisse. « Autres donateurs » = Australie, Canada, Japon, Nouvelle-Zélande, Corée du Sud, Türkiye, Chine, Taïwan, Inde. L'onglet ne dit rien de ce qui a été livré : allocation seulement."
+      "note": "C'est le jeu de données SOUS le graphique « Aid allocations by donor group » jusqu'ici relevé à l'œil : mêmes trois groupes, mêmes deux types, mêmes cinq périodes. Les valeurs sont désormais lues dans la cellule, plus sur une hauteur de barre. Structure du tableau : lignes 12 à 16 = 2022, 2023, 2024, 2025, 2026 ; colonnes E, F, G, H = militaire (États-Unis, Europe, Autres donateurs, Total) ; colonnes I, J, K, L = financier et humanitaire (mêmes quatre). Les formules somment la colonne Q de la base bilatérale — « tot_sub_activity_value_constant_currency » —, donc des EUROS CONSTANTS, corrigés de l'inflation et du change, base 2021 (l'onglet Country_Deflator écrit « Currency Power Change (2021 = baseline) »). Filtres explicites dans la formule : mesure = allocation, type = Military ou Financial & Humanitarian, mois compris entre les bornes de l'année. « Europe » = États membres et institutions de l'UE, Norvège, Royaume-Uni, Islande, Suisse. « Autres donateurs » = Australie, Canada, Japon, Nouvelle-Zélande, Corée du Sud, Türkiye, Chine, Taïwan, Inde. L'onglet ne dit rien de ce qui a été livré : allocation seulement.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-fig-2": {
       "title": "Ukraine Support Tracker — Release 30, onglet « Fig 2. Country Groups (stacked) » (Aid allocations and residual commitments across donor groups, billion Euros)",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, cumuls du 24 janvier 2022 au 30 juin 2026",
-      "note": "L'onglet publie côte à côte, pour l'Europe géographique et pour les États-Unis, l'ENGAGÉ et l'ALLOUÉ cumulés, et l'écart entre les deux. Il donne aussi la définition retenue par le tracker : « Allocations are defined as aid which has been delivered OR SPECIFIED FOR DELIVERY » — une allocation inclut donc du matériel désigné mais pas encore parti. C'est précisément pour cela qu'allocation n'est pas livraison. Montants en euros COURANTS (les formules remontent aux colonnes M et P de la base, non déflatées), à la différence de l'onglet Fig A31. L'onglet ne chiffre pas le groupe « Autres donateurs »."
+      "note": "L'onglet publie côte à côte, pour l'Europe géographique et pour les États-Unis, l'ENGAGÉ et l'ALLOUÉ cumulés, et l'écart entre les deux. Il donne aussi la définition retenue par le tracker : « Allocations are defined as aid which has been delivered OR SPECIFIED FOR DELIVERY » — une allocation inclut donc du matériel désigné mais pas encore parti. C'est précisément pour cela qu'allocation n'est pas livraison. Montants en euros COURANTS (les formules remontent aux colonnes M et P de la base, non déflatées), à la différence de l'onglet Fig A31. L'onglet ne chiffre pas le groupe « Autres donateurs ».",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-aggregates": {
       "title": "Ukraine Support Tracker — Release 30, onglets « Aggregates by Country Group » et « Fig A22. Cumulative Alloc. »",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, cumuls du 24 janvier 2022 au 30 juin 2026",
-      "note": "« Aggregates by Country Group » ventile engagements et allocations par pays et par sous-groupe (UE, anglo-saxons, autres pays donateurs, Europe géographique), en milliards d'euros courants, sur les trois types d'aide. « Fig A22 » donne la série cumulée mensuelle et son point d'arrivée au 30 juin 2026. Ces onglets ne suivent pas la découpe de groupes de Fig A31 : le total « Autres donateurs » au sens du graphique doit être reconstitué en additionnant Canada, Australie, Nouvelle-Zélande et le bloc « Other donor countries ». Cette addition est faite ici et signalée comme telle. Écart connu entre les deux onglets — 179,80 contre 179,34 Md€ de militaire alloué — parce que la série mensuelle exclut les allocations sans date de mois."
+      "note": "« Aggregates by Country Group » ventile engagements et allocations par pays et par sous-groupe (UE, anglo-saxons, autres pays donateurs, Europe géographique), en milliards d'euros courants, sur les trois types d'aide. « Fig A22 » donne la série cumulée mensuelle et son point d'arrivée au 30 juin 2026. Ces onglets ne suivent pas la découpe de groupes de Fig A31 : le total « Autres donateurs » au sens du graphique doit être reconstitué en additionnant Canada, Australie, Nouvelle-Zélande et le bloc « Other donor countries ». Cette addition est faite ici et signalée comme telle. Écart connu entre les deux onglets — 179,80 contre 179,34 Md€ de militaire alloué — parce que la série mensuelle exclut les allocations sans date de mois.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-fig-9": {
       "title": "Ukraine Support Tracker — Release 30, onglets « Fig 9. Budget Support by Donor » et « Financial disb per Month (€) » (Foreign budgetary support: allocations vs. disbursements)",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, du 24 janvier 2022 au 30 juin 2026",
-      "note": "LA source du décaissement réel, et la seule qui en donne des montants. Elle ne couvre qu'une catégorie : le soutien budgétaire à l'État ukrainien — prêts, dons et garanties versés au budget. Les décaissements ne viennent pas du tracker mais du MINISTÈRE DES FINANCES UKRAINIEN, c'est-à-dire du bénéficiaire, ce qui en fait un contrôle indépendant du donateur. L'onglet précise « nominal value » : euros COURANTS, non corrigés de l'inflation. Elle ne prouve rien sur l'aide militaire, rien sur l'humanitaire, et rien sur ce que valent les armes réellement arrivées."
+      "note": "LA source du décaissement réel, et la seule qui en donne des montants. Elle ne couvre qu'une catégorie : le soutien budgétaire à l'État ukrainien — prêts, dons et garanties versés au budget. Les décaissements ne viennent pas du tracker mais du MINISTÈRE DES FINANCES UKRAINIEN, c'est-à-dire du bénéficiaire, ce qui en fait un contrôle indépendant du donateur. L'onglet précise « nominal value » : euros COURANTS, non corrigés de l'inflation. Elle ne prouve rien sur l'aide militaire, rien sur l'humanitaire, et rien sur ce que valent les armes réellement arrivées.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-inkind": {
       "title": "Ukraine Support Tracker — Release 30, onglets « In-kind Military per Country », « Fig A4. Weapon Delivery » et « Delivery Transparency Index »",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, du 24 janvier 2022 au 30 juin 2026",
-      "note": "La seconde et dernière fenêtre du tracker sur le livré. Elle est en NOMBRE D'UNITÉS, jamais en euros, et se limite à cinq catégories d'armes lourdes : obusiers 155/152 mm, lance-roquettes multiples, chars, systèmes sol-air, véhicules de combat d'infanterie. L'onglet publie un « delivery rate » par catégorie et par pays, rapporté à l'ENGAGÉ (colonnes « Committed / Delivered »), pas à l'alloué — la nuance interdit de recoller ces taux sur les montants alloués. Rien n'y couvre les munitions, les drones, les pièces détachées ni la maintenance."
+      "note": "La seconde et dernière fenêtre du tracker sur le livré. Elle est en NOMBRE D'UNITÉS, jamais en euros, et se limite à cinq catégories d'armes lourdes : obusiers 155/152 mm, lance-roquettes multiples, chars, systèmes sol-air, véhicules de combat d'infanterie. L'onglet publie un « delivery rate » par catégorie et par pays, rapporté à l'ENGAGÉ (colonnes « Committed / Delivered »), pas à l'alloué — la nuance interdit de recoller ces taux sur les montants alloués. Rien n'y couvre les munitions, les drones, les pièces détachées ni la maintenance.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-r30-maindata": {
       "title": "Ukraine Support Tracker — Release 30, onglet « Bilateral Assistance, MAIN DATA » (base ligne à ligne, 5 820 activités, colonne « tot_value_deliv_EUR »)",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Release 30, du 24 janvier 2022 au 30 juin 2026",
-      "note": "La base brute derrière tous les onglets de figures, 80 colonnes. Elle porte une colonne « tot_value_deliv_EUR » — la valeur en euros de ce qui a été livré — et c'est en la comptant qu'on mesure l'ampleur exacte de la lacune : le champ est presque toujours vide. Le décompte de remplissage rapporté ci-dessous est un dénombrement effectué ici sur cette base, non un chiffre publié par l'éditeur, et il est signalé comme tel."
+      "note": "La base brute derrière tous les onglets de figures, 80 colonnes. Elle porte une colonne « tot_value_deliv_EUR » — la valeur en euros de ce qui a été livré — et c'est en la comptant qu'on mesure l'ampleur exacte de la lacune : le champ est presque toujours vide. Le décompte de remplissage rapporté ci-dessous est un dénombrement effectué ici sur cette base, non un chiffre publié par l'éditeur, et il est signalé comme tel.",
+      "kind": "Mesure publiée"
     },
     "kiel-ust-page-publication": {
       "title": "Page de publication « Ukraine Support Tracker Data » — fiche du jeu de données et lien de téléchargement",
       "organisation": "Institut de Kiel pour l'économie mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "La fiche affiche « Publication Date 06/2026 » — mois seul, sans jour",
-      "note": "Sert uniquement à établir que le fichier Release 30 téléchargé est bien celui que l'éditeur sert aujourd'hui comme version courante : le bouton « XLSX Download » pointe exactement sur l'adresse utilisée ici. Elle ne donne PAS la date de mise en ligne au jour près — « 06/2026 » désigne la fin de période couverte, pas la publication, laquelle est intervenue plus tard puisque le communiqué qui accompagne cette release est daté du 13 août 2026."
+      "note": "Sert uniquement à établir que le fichier Release 30 téléchargé est bien celui que l'éditeur sert aujourd'hui comme version courante : le bouton « XLSX Download » pointe exactement sur l'adresse utilisée ici. Elle ne donne PAS la date de mise en ligne au jour près — « 06/2026 » désigne la fin de période couverte, pas la publication, laquelle est intervenue plus tard puisque le communiqué qui accompagne cette release est daté du 13 août 2026.",
+      "kind": "Mesure publiée"
     },
     "banque-mondiale-pib-2021": {
       "title": "PIB aux prix courants du marché, en dollars des États-Unis — Russie et Ukraine, année 2021",
       "organisation": "Banque mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Indicateur NY.GDP.MKTP.CD, millésime 2021",
-      "note": "L'adresse est celle de l'interface de données, et non celle d'une page de tableau de bord : elle porte l'année dans son URL et rend exactement les deux nombres cités, sans mise en page à interpréter. Le millésime 2021 est le dernier exercice complet avant l'invasion."
+      "note": "L'adresse est celle de l'interface de données, et non celle d'une page de tableau de bord : elle porte l'année dans son URL et rend exactement les deux nombres cités, sans mise en page à interpréter. Le millésime 2021 est le dernier exercice complet avant l'invasion.",
+      "kind": "Mesure publiée"
     },
     "banque-mondiale-pop-2021": {
       "title": "Population totale — Russie et Ukraine, année 2021",
       "organisation": "Banque mondiale",
       "capture": "14 août 2026",
       "statedUpdate": "Indicateur SP.POP.TOTL, millésime 2021",
-      "note": "Série construite sur les estimations des Nations unies, qui rattachent la Crimée à l'Ukraine. Le recensement russe de 2021 compte au contraire 146,2 millions d'habitants, Crimée incluse : l'écart d'environ deux millions ne change pas l'ordre de grandeur du rapport entre les deux pays."
+      "note": "Série construite sur les estimations des Nations unies, qui rattachent la Crimée à l'Ukraine. Le recensement russe de 2021 compte au contraire 146,2 millions d'habitants, Crimée incluse : l'écart d'environ deux millions ne change pas l'ordre de grandeur du rapport entre les deux pays.",
+      "kind": "Mesure publiée"
     },
     "SIPRI-FS-2026": {
       "title": "SIPRI Fact Sheet, avril 2026 — « Trends in World Military Expenditure, 2025 »",
       "organisation": "SIPRI (Stockholm International Peace Research Institute)",
       "capture": "2026-08-14",
       "statedUpdate": "Fact Sheet daté d'avril 2026 ; la base SIPRI Military Expenditure Database a été mise à jour le 27 avril 2026 et remplace toutes les données publiées antérieurement",
-      "note": "PDF horodaté par son millésime. Table 1 donne la dépense militaire en part du PIB pour 2025 et 2016. Méthodologie SIPRI (définition élargie de type OTAN) explicitée en dernière page : forces armées, ministères de la défense, forces paramilitaires militarisées, activités spatiales militaires, pensions militaires, R&D, aide militaire du pays donateur ; exclut défense civile et anciens combattants."
+      "note": "PDF horodaté par son millésime. Table 1 donne la dépense militaire en part du PIB pour 2025 et 2016. Méthodologie SIPRI (définition élargie de type OTAN) explicitée en dernière page : forces armées, ministères de la défense, forces paramilitaires militarisées, activités spatiales militaires, pensions militaires, R&D, aide militaire du pays donateur ; exclut défense civile et anciens combattants.",
+      "kind": "Mesure publiée"
     },
     "SIPRI-FS-2025": {
       "title": "SIPRI Fact Sheet, avril 2025 — « Trends in World Military Expenditure, 2024 »",
       "organisation": "SIPRI",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2025 ; base mise à jour avril 2025",
-      "note": "Contient l'avertissement de SIPRI sur l'opacité russe : « environ 30 % des dépenses budgétaires ont été classifiées en 2024 » et « la dépense militaire réelle de la Russie en 2024 est probablement supérieure aux 149 milliards de dollars estimés ici »."
+      "note": "Contient l'avertissement de SIPRI sur l'opacité russe : « environ 30 % des dépenses budgétaires ont été classifiées en 2024 » et « la dépense militaire réelle de la Russie en 2024 est probablement supérieure aux 149 milliards de dollars estimés ici ».",
+      "kind": "Mesure publiée"
     },
     "SIPRI-FS-2024": {
       "title": "SIPRI Fact Sheet, avril 2024 — « Trends in World Military Expenditure, 2023 »",
       "organisation": "SIPRI",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2024 ; base mise à jour avril 2024",
-      "note": "Millésime utile pour l'année 2023, que les éditions ultérieures ne réaffichent pas en colonne."
+      "note": "Millésime utile pour l'année 2023, que les éditions ultérieures ne réaffichent pas en colonne.",
+      "kind": "Mesure publiée"
     },
     "SIPRI-FS-2023": {
       "title": "SIPRI Fact Sheet, avril 2023 — « Trends in World Military Expenditure, 2022 »",
       "organisation": "SIPRI",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2023 ; base mise à jour avril 2023",
-      "note": "Précise que le total ukrainien de 2022 « n'inclut pas l'aide militaire fournie à l'Ukraine »."
+      "note": "Précise que le total ukrainien de 2022 « n'inclut pas l'aide militaire fournie à l'Ukraine ».",
+      "kind": "Mesure publiée"
     },
     "SIPRI-FS-2022": {
       "title": "SIPRI Fact Sheet, avril 2022 — « Trends in World Military Expenditure, 2021 »",
       "organisation": "SIPRI",
       "capture": "2026-08-14",
       "statedUpdate": "Avril 2022 ; base mise à jour avril 2022",
-      "note": "Année de référence d'avant-guerre pour les deux pays."
+      "note": "Année de référence d'avant-guerre pour les deux pays.",
+      "kind": "Mesure publiée"
     },
     "MINFIN-ONBP-2026": {
       "title": "« Основные направления бюджетной, налоговой и таможенно-тарифной политики на 2026 год и на плановый период 2027 и 2028 годов »",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 03/10/2025 (date affichée sur https://minfin.gov.ru/ru/perfomance/budget/policy/)",
-      "note": "PDF de 182 pages, lu directement. Tableau 4.1.1 (recettes pétro-gazières en % du PIB et en % des recettes, 2023-2028), tableau 4.1.3 (dépenses fédérales par section 2026-2028), tableau 4.4.2 (structure des dépenses de l'ensemble du système budgétaire en % du PIB, 2026-2028)."
+      "note": "PDF de 182 pages, lu directement. Tableau 4.1.1 (recettes pétro-gazières en % du PIB et en % des recettes, 2023-2028), tableau 4.1.3 (dépenses fédérales par section 2026-2028), tableau 4.4.2 (structure des dépenses de l'ensemble du système budgétaire en % du PIB, 2026-2028).",
+      "kind": "Document budgétaire"
     },
     "MINFIN-BUDGET-CITOYEN": {
       "title": "« Бюджет для граждан » au projet de loi de finances 2026-2028",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Édition liée au projet de budget 2026-2028 (déposé à l'automne 2025) ; renvoie explicitement à la loi 419-ФЗ du 30/11/2024 amendée par la loi 152-ФЗ du 01/07/2025",
-      "note": "Page 6 : dépenses fédérales par section pour 2025 (loi amendée) et 2026-2028 (projet). C'est la seule publication Minfin ouverte trouvée qui rétablit la ligne « Défense nationale » pour 2025."
+      "note": "Page 6 : dépenses fédérales par section pour 2025 (loi amendée) et 2026-2028 (projet). C'est la seule publication Minfin ouverte trouvée qui rétablit la ligne « Défense nationale » pour 2025.",
+      "kind": "Document budgétaire"
     },
     "INTERFAX-2022-07-20": {
       "title": "« Доля нефтегазового сектора в ВВП РФ в I кв. выросла до максимума с начала расчетов »",
       "organisation": "Interfax (reprise des calculs de Rosstat)",
       "capture": "2026-08-14",
       "statedUpdate": "Article horodaté « 19:15, 20 июля 2022 »",
-      "note": "Reprend la série annuelle complète publiée par Rosstat ce jour-là (2017 à 2021) ainsi que la définition méthodologique du « secteur pétro-gazier » retenue par Rosstat (sous-secteur primaire : extraction et raffinage ; sous-secteur secondaire : biens et services liés à l'extraction, au raffinage, au transport et à la vente)."
+      "note": "Reprend la série annuelle complète publiée par Rosstat ce jour-là (2017 à 2021) ainsi que la définition méthodologique du « secteur pétro-gazier » retenue par Rosstat (sous-secteur primaire : extraction et raffinage ; sous-secteur secondaire : biens et services liés à l'extraction, au raffinage, au transport et à la vente).",
+      "kind": "Mesure publiée"
     },
     "KOMMERSANT-2024-04-05": {
       "title": "« Доля нефтегазового сектора в ВВП РФ в 2023 году снизилась до 16,5% »",
       "organisation": "Kommersant (reprise de Rosstat)",
       "capture": "2026-08-14",
       "statedUpdate": "Article daté du 5 avril 2024",
-      "note": "Ne donne que deux années (2022 et 2023) ; ne reprend pas 2019-2021."
+      "note": "Ne donne que deux années (2022 et 2023) ; ne reprend pas 2019-2021.",
+      "kind": "Mesure publiée"
     },
     "ANGI-2026-04-20": {
       "title": "« Вклад нефтегазовых доходов в ВВП России по итогам 2025 года достиг исторического минимума »",
       "organisation": "Agence d'information pétrolière et gazière (ANGI), citant Rosstat via RIA Novosti",
       "capture": "2026-08-14",
       "statedUpdate": "Article horodaté « 20 апреля / 08:21 » (2026)",
-      "note": "Donne aussi le PIB nominal russe 2025 : 214,3 trillions de roubles, en hausse de 1 % en volume. Le titre de l'article emploie « нефтегазовых доходов » (recettes) alors que le corps mesure bien la part du SECTEUR dans le PIB — illustration exacte de la confusion à éviter."
+      "note": "Donne aussi le PIB nominal russe 2025 : 214,3 trillions de roubles, en hausse de 1 % en volume. Le titre de l'article emploie « нефтегазовых доходов » (recettes) alors que le corps mesure bien la part du SECTEUR dans le PIB — illustration exacte de la confusion à éviter.",
+      "kind": "Mesure publiée"
     },
     "EPRUSSIA-2026-04-20": {
       "title": "« Доля нефтегазового сектора в ВВП России упала до исторического минимума »",
       "organisation": "EPRussia (revue Энергетика и промышленность России), citant Rosstat",
       "capture": "2026-08-14",
       "statedUpdate": "Article daté du 20 avril 2026",
-      "note": "Confirmation indépendante du chiffre 2025 (13 %), du minimum antérieur (14 % en 2020) et d'un écart de 3 points par rapport à 2024."
+      "note": "Confirmation indépendante du chiffre 2025 (13 %), du minimum antérieur (14 % en 2020) et d'un écart de 3 points par rapport à 2024.",
+      "kind": "Mesure publiée"
     },
     "UKRAINEINVEST-2024-08": {
       "title": "« Інвестиційні можливості сектору енергетики » — Енергетичний сектор України",
       "organisation": "UkraineInvest (agence gouvernementale ukrainienne de promotion des investissements), d'après YC.Market, Ember et l'AIE",
       "capture": "2026-08-14",
       "statedUpdate": "Fichier déposé en août 2024 (chemin /2024/08/, version datée du 14.08)",
-      "note": "Page 2, graphique « Частка енергетики у ВВП країни, 2023 » plaçant l'Ukraine à 8 %, entre la Tchéquie (8-9 %) et la Slovaquie (7 %), la Pologne étant à 10 %. Il s'agit d'une infographie de promotion, sans tableau chiffré ni méthode publiée."
+      "note": "Page 2, graphique « Частка енергетики у ВВП країни, 2023 » plaçant l'Ukraine à 8 %, entre la Tchéquie (8-9 %) et la Slovaquie (7 %), la Pologne étant à 10 %. Il s'agit d'une infographie de promotion, sans tableau chiffré ni méthode publiée.",
+      "kind": "Estimation"
     },
     "cia-factbook-russie": {
       "title": "The World Factbook — Russie, rubrique « Military expenditures »",
       "organisation": "Central Intelligence Agency (via le dépôt factbook.json)",
       "capture": "14 août 2026",
       "statedUpdate": "Fichier figé au 22 janvier 2026, deux semaines avant la fermeture du Factbook",
-      "note": "Le Factbook lui-même a cessé d'exister : cia.gov annonce sa fermeture le 4 février 2026 et ses pages pays ne répondent plus. Les captures d'archive n'aident pas, la page chargeait ses valeurs en script. Le lien pointe donc sur le dépôt qui conserve le texte de la rubrique en JSON, épinglé sur un commit précis — une adresse suivant la branche principale changerait sous le lien."
+      "note": "Le Factbook lui-même a cessé d'exister : cia.gov annonce sa fermeture le 4 février 2026 et ses pages pays ne répondent plus. Les captures d'archive n'aident pas, la page chargeait ses valeurs en script. Le lien pointe donc sur le dépôt qui conserve le texte de la rubrique en JSON, épinglé sur un commit précis — une adresse suivant la branche principale changerait sous le lien.",
+      "kind": "Estimation"
     },
     "cia-factbook-ukraine": {
       "title": "The World Factbook — Ukraine, rubrique « Military expenditures »",
       "organisation": "Central Intelligence Agency (via le dépôt factbook.json)",
       "capture": "14 août 2026",
       "statedUpdate": "Fichier figé au 21 janvier 2026",
-      "note": "Même remarque que pour la Russie. La rubrique ukrainienne s'arrête à 2021 et ne reprend pas : la seule chose que le Factbook dit de la guerre est une note sans chiffre daté."
+      "note": "Même remarque que pour la Russie. La rubrique ukrainienne s'arrête à 2021 et ne reprend pas : la seule chose que le Factbook dit de la guerre est une note sans chiffre daté.",
+      "kind": "Estimation"
     },
     "cia-factbook-fermeture": {
       "title": "Spotlighting The World Factbook as We Bid a Fond Farewell",
       "organisation": "Central Intelligence Agency",
       "capture": "14 août 2026",
       "statedUpdate": "Publié le 4 février 2026",
-      "note": "L'annonce de l'agence elle-même. Elle explique pourquoi aucune des adresses du Factbook ne peut plus servir de citation vivante, et pourquoi les séries qui en viennent s'arrêtent toutes au millésime 2024."
+      "note": "L'annonce de l'agence elle-même. Elle explique pourquoi aucune des adresses du Factbook ne peut plus servir de citation vivante, et pourquoi les séries qui en viennent s'arrêtent toutes au millésime 2024.",
+      "kind": "Mesure publiée"
     },
     "SIPRI-DB-2026": {
       "title": "SIPRI Military Expenditure Database 1949-2025 (classeur complet, onglets « Share of GDP », « Share of Govt. spending », « Local currency calendar years », « Current US$ »)",
       "organisation": "SIPRI (Stockholm International Peace Research Institute)",
       "capture": "2026-08-14",
       "statedUpdate": "Base mise à jour le 27 avril 2026 selon le fact sheet d'avril 2026 qui l'accompagne ; elle remplace toutes les données SIPRI publiées antérieurement",
-      "note": "Classeur XLSX téléchargé et lu onglet par onglet. C'est la source qui manquait à la première passe : elle porte la ligne « part des dépenses publiques » pour chaque année et chaque pays, que les fact sheets ne publient que pour quelques pays et quelques années. Attention, ses valeurs sont RÉVISÉES et diffèrent de celles des fact sheets publiés à l'époque — l'écart est documenté ci-dessous."
+      "note": "Classeur XLSX téléchargé et lu onglet par onglet. C'est la source qui manquait à la première passe : elle porte la ligne « part des dépenses publiques » pour chaque année et chaque pays, que les fact sheets ne publient que pour quelques pays et quelques années. Attention, ses valeurs sont RÉVISÉES et diffèrent de celles des fact sheets publiés à l'époque — l'écart est documenté ci-dessous.",
+      "kind": "Mesure publiée"
     },
     "MINFIN-EXEC-ANNUEL": {
       "title": "« Краткая ежегодная информация об исполнении федерального бюджета (млрд руб.) » — Annexe 3.1, exécution annuelle du budget fédéral 2006-2025",
       "organisation": "Ministère des finances de la Fédération de Russie (Minfin)",
       "capture": "2026-08-14",
       "statedUpdate": "Publié et modifié le 05/05/2026 (date affichée sur https://minfin.gov.ru/ru/statistics/fedbud/)",
-      "note": "Fichier XLSX primaire, relu pour cette passe. Seule source d'EXÉCUTION constatée : dépenses totales jusqu'en 2025, mais ventilation par section fonctionnelle jusqu'en 2021 seulement."
+      "note": "Fichier XLSX primaire, relu pour cette passe. Seule source d'EXÉCUTION constatée : dépenses totales jusqu'en 2025, mais ventilation par section fonctionnelle jusqu'en 2021 seulement.",
+      "kind": "Document budgétaire"
     },
     "BDG-2022-LOI": {
       "title": "« Бюджет для граждан » à la loi de finances 390-ФЗ du 06/12/2021 (exercice 2022, période 2023-2024)",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 30/12/2021 (date affichée sur la page https://minfin.gov.ru/ru/perfomance/budget/process/utverzhdenie/budget_citizen/)",
-      "note": "Page 8, tableau « Расходы федерального бюджета по разделам функциональной классификации ». Page rendue en image et lue visuellement, l'extraction texte de ces infographies désappariant libellés et valeurs. Dernier budget voté avant l'invasion."
+      "note": "Page 8, tableau « Расходы федерального бюджета по разделам функциональной классификации ». Page rendue en image et lue visuellement, l'extraction texte de ces infographies désappariant libellés et valeurs. Dernier budget voté avant l'invasion.",
+      "kind": "Document budgétaire"
     },
     "BDG-2023-PROJET": {
       "title": "« Бюджет для граждан » au projet de loi de finances pour 2023-2025",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 01/11/2022",
-      "note": "Page 8, série 2021-2025, avec la note explicite « показатели сводной бюджетной росписи на 1 сентября 2022 года » : les colonnes 2021 et 2022 sont donc des états de la répartition budgétaire consolidée en cours d'exercice, pas des lois initiales ni des exécutions. Document capital : c'est la dernière fois que le Minfin publie une ligne défense pour un exercice de guerre en cours."
+      "note": "Page 8, série 2021-2025, avec la note explicite « показатели сводной бюджетной росписи на 1 сентября 2022 года » : les colonnes 2021 et 2022 sont donc des états de la répartition budgétaire consolidée en cours d'exercice, pas des lois initiales ni des exécutions. Document capital : c'est la dernière fois que le Minfin publie une ligne défense pour un exercice de guerre en cours.",
+      "kind": "Document budgétaire"
     },
     "BDG-2023-LOI": {
       "title": "« Бюджет для граждан » à la loi de finances 466-ФЗ du 05/12/2022 (exercice 2023, période 2024-2025)",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 30/12/2022",
-      "note": "Pages 14-15, tableau par sections 2023-2025. Page rendue en image et lue visuellement."
+      "note": "Pages 14-15, tableau par sections 2023-2025. Page rendue en image et lue visuellement.",
+      "kind": "Document budgétaire"
     },
     "BDG-2024-PROJET": {
       "title": "« Бюджет для граждан » au projet de loi de finances pour 2024-2026",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 01/11/2023",
-      "note": "Page 5, série 2023-2026, note « показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г. » pour la colonne 2023."
+      "note": "Page 5, série 2023-2026, note « показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г. » pour la colonne 2023.",
+      "kind": "Document budgétaire"
     },
     "BDG-2024-LOI": {
       "title": "« Бюджет для граждан » à la loi de finances 540-ФЗ du 27/11/2023 (exercice 2024, période 2025-2026)",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 28/12/2023",
-      "note": "Pages 14-15, tableau par sections 2024-2026. Note de bas de page : « показатели сводной бюджетной росписи по состоянию на 1 декабря 2023 г. »."
+      "note": "Pages 14-15, tableau par sections 2024-2026. Note de bas de page : « показатели сводной бюджетной росписи по состоянию на 1 декабря 2023 г. ».",
+      "kind": "Document budgétaire"
     },
     "BDG-2025-PROJET": {
       "title": "« Бюджет для граждан » au projet de loi de finances pour 2025-2027",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 31/10/2024",
-      "note": "Page 5, série 2024-2027. Sa colonne 2024, pourtant référencée à la même base légale que celle de la brochure publiée deux mois plus tard, en diffère de plus de 1 500 milliards de roubles — divergence rapportée telle quelle plus bas."
+      "note": "Page 5, série 2024-2027. Sa colonne 2024, pourtant référencée à la même base légale que celle de la brochure publiée deux mois plus tard, en diffère de plus de 1 500 milliards de roubles — divergence rapportée telle quelle plus bas.",
+      "kind": "Document budgétaire"
     },
     "BDG-2025-LOI": {
       "title": "« Бюджет для граждан » à la loi de finances 419-ФЗ du 30/11/2024 (exercice 2025, période 2026-2027)",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 27/12/2024",
-      "note": "Pages 12-13, série 2024-2027. Note de bas de page : la colonne 2024 suit la loi 540-ФЗ « с учетом изменений, внесенных Федеральным законом от 12 июля 2024 г. № 175-ФЗ ». Le fichier réellement servi par le site (chemin /2025/04/) diffère de celui référencé par les moteurs de recherche (/2024/12/) ; les deux ouvrent le même document."
+      "note": "Pages 12-13, série 2024-2027. Note de bas de page : la colonne 2024 suit la loi 540-ФЗ « с учетом изменений, внесенных Федеральным законом от 12 июля 2024 г. № 175-ФЗ ». Le fichier réellement servi par le site (chemin /2025/04/) diffère de celui référencé par les moteurs de recherche (/2024/12/) ; les deux ouvrent le même document.",
+      "kind": "Document budgétaire"
     },
     "BDG-2026-PROJET": {
       "title": "« Бюджет для граждан » au projet de loi de finances pour 2026-2028",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 31/10/2025",
-      "note": "Page 6, série 2025-2028. La colonne 2025 suit la loi 419-ФЗ amendée par la loi 152-ФЗ du 01/07/2025. Document déjà utilisé lors de la première passe."
+      "note": "Page 6, série 2025-2028. La colonne 2025 suit la loi 419-ФЗ amendée par la loi 152-ФЗ du 01/07/2025. Document déjà utilisé lors de la première passe.",
+      "kind": "Document budgétaire"
     },
     "BDG-2026-LOI": {
       "title": "« Бюджет для граждан » à la loi de finances 426-ФЗ du 28/11/2025 (exercice 2026, période 2027-2028)",
       "organisation": "Minfin",
       "capture": "2026-08-14",
       "statedUpdate": "Publié le 29/12/2025",
-      "note": "Pages 14-15, série 2025-2028. Note de bas de page : la colonne 2025 suit la loi 419-ФЗ « с учетом изменений, внесенных Федеральным законом от 4 ноября 2025 г. № 414-ФЗ » — c'est le second amendement de l'exercice 2025."
+      "note": "Pages 14-15, série 2025-2028. Note de bas de page : la colonne 2025 suit la loi 419-ФЗ « с учетом изменений, внесенных Федеральным законом от 4 ноября 2025 г. № 414-ФЗ » — c'est le second amendement de l'exercice 2025.",
+      "kind": "Document budgétaire"
     },
     "CONSULTANT-466": {
       "title": "Annexe de répartition des crédits par programmes d'État — section « 02 Национальная оборона »",
       "organisation": "ConsultantPlus (texte de la loi fédérale 466-ФЗ du 05/12/2022)",
       "capture": "2026-08-14",
       "statedUpdate": "Texte de la loi du 05/12/2022, page consultée dans sa version courante",
-      "note": "Sert à mesurer l'opacité, pas le total : l'annexe de répartition par programmes ne publie que la fraction non classifiée de la section."
+      "note": "Sert à mesurer l'opacité, pas le total : l'annexe de répartition par programmes ne publie que la fraction non classifiée de la section.",
+      "kind": "Document budgétaire"
     }
   },
   "figures": {
