@@ -66,6 +66,16 @@
 .cap-svg .cap-side.ru { fill: var(--ru); }
 .cap-svg .cap-side.ua { fill: var(--ua); }
 
+/* Le nombre d'habitants accompagne le nom du camp sans en prendre la couleur : il situe,
+   il n'accuse pas. Les capitales et l'interlettrage du nom ne lui vont pas — c'est un
+   chiffre, pas un libellé. */
+.cap-svg .cap-people {
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    fill: var(--ink-3);
+}
+
 /* Les deux totaux du camp. Discrets par construction : ils situent le bilan, ils ne sont
    pas le sujet — le sujet est ce que le trimestre a pris, poste par poste. */
 .cap-svg .cap-total {

@@ -87,10 +87,10 @@
     // Les chiffres ont leur bande à eux, au bord extérieur du bandeau : quelle que soit la
     // longueur de la masse, le chiffre reste lisible et jamais recouvert.
     var NUM_IN = 186, NUM_OUT = 22;
-    // TRACK : la longueur qu'atteint la plus grosse masse d'une rangée. MAX_LEN reste la butée
-    // physique de la piste, celle qui protège la bande des chiffres — rien ne devrait plus
-    // l'atteindre, et le chevron reste là pour le dire si cela arrivait.
-    var BAR_H = 16, TRACK = 306, MAX_LEN = 322;
+    // TRACK : la longueur de la piste, et la butée de toute masse. Ce qui la dépasse est taillé
+    // à cette longueur et le dit par une coupure en éclair à son extrémité. CUT est la
+    // profondeur de cette dent, mordue vers l'intérieur de la barre.
+    var BAR_H = 16, TRACK = 306, CUT = 6;
     var RUINED_INDEX = 25;
 
     var ICON_X = GUT_L + 7, ICON_S = 22, NAME_X = GUT_L + 37, NAME_MAX = GUT_R - 6;
@@ -107,6 +107,24 @@
             n.setAttribute(k, attrs[k]);
         });
         return n;
+    }
+
+    // Le contour d'une masse taillée : trois côtés droits, et le quatrième — celui du bout —
+    // en dents de scie mordant vers l'intérieur. Une barre qui finit ainsi n'annonce pas sa
+    // valeur par sa longueur, et c'est précisément ce qu'elle doit faire comprendre sans qu'on
+    // le lui explique nulle part.
+    function sawEdge(anchor, edge, top, dir) {
+        var teeth = 6;
+        var bite = edge - dir * CUT;
+        var d = ["M" + anchor + " " + top, "L" + edge + " " + top];
+
+        for (var i = 1; i <= teeth; i++) {
+            var y = top + (BAR_H * i / teeth);
+            d.push("L" + (i % 2 ? bite : edge) + " " + y);
+        }
+
+        d.push("L" + anchor + " " + (top + BAR_H), "Z");
+        return d.join(" ");
     }
 
     function text(host, x, y, value, attrs) {
@@ -401,8 +419,9 @@
         var dir = invader ? -1 : 1;
         var index = post.index;
         var charge = !!post.inverted;
-        var len = Math.min(Math.max(post.value, 0) * scale, MAX_LEN);
-        var was = Math.min(Math.max(post.opening, 0) * scale, MAX_LEN);
+        var len = Math.min(Math.max(post.value, 0) * scale, TRACK);
+        var was = Math.min(Math.max(post.opening, 0) * scale, TRACK);
+        var cut = !gauge && post.value * scale > TRACK + 0.5;
         var ruined = index < RUINED_INDEX && !charge && !gauge;
         var edge = anchor + dir * len;
         var wasEdge = anchor + dir * was;
@@ -472,18 +491,31 @@
         // qu'on paie, hachurée pour ce qui est en ruine — et non par un signe posé à côté.
         var fill = charge ? "url(#" + chargeId + ")" : (ruined ? "url(#" + hatchId + ")" : colour);
         if (!gauge) {
-            g.appendChild(svg("rect", {
-                x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
-                fill: fill,
-                stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
-                "stroke-width": charge || ruined ? "0.9" : "0.7"
-            }));
+            // Une masse qui tient dans la piste est un rectangle. Une masse taillée finit en
+            // éclair : trois dents mordues vers l'intérieur, le signe qu'un axe brisé porte
+            // depuis toujours. Le chiffre au bord reste, lui, la valeur entière.
+            g.appendChild(cut
+                ? svg("path", {
+                    d: sawEdge(anchor, edge, top, dir), class: "cap-mass",
+                    fill: fill,
+                    stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
+                    "stroke-width": charge || ruined ? "0.9" : "0.7",
+                    "stroke-linejoin": "miter"
+                })
+                : svg("rect", {
+                    x: body.x, y: top, width: Math.max(body.width, 1.5), height: BAR_H, class: "cap-mass",
+                    fill: fill,
+                    stroke: charge || ruined ? colour : "rgba(26,24,21,0.3)",
+                    "stroke-width": charge || ruined ? "0.9" : "0.7"
+                }));
         }
 
         if (!charge && !ruined && !gauge) {
-            // Chant supérieur biseauté : la matière a une épaisseur, comme les douves.
+            // Chant supérieur biseauté : la matière a une épaisseur, comme les douves. Il
+            // s'arrête avant la coupure, sinon il en repeindrait la première dent.
+            var bevel = Math.max(body.width - 2.4 - (cut ? CUT : 0), 0);
             g.appendChild(svg("rect", {
-                x: body.x + 1.2, y: top + 1.2, width: Math.max(body.width - 2.4, 0), height: 3.2,
+                x: body.x + 1.2 + (cut && !invader ? CUT : 0), y: top + 1.2, width: bevel, height: 3.2,
                 fill: "#fff", opacity: "0.34"
             }));
         }
@@ -515,30 +547,6 @@
                 stroke: colour, "stroke-width": "1",
                 "stroke-dasharray": gained ? null : "3 2",
                 opacity: "0.85"
-            }));
-        }
-
-        // La masse bute sur son plafond : le chevron dit que la ligne est hors d'échelle, et
-        // le chiffre de sa bande dit de combien. Il se grave DANS le chant de la masse, jamais
-        // au-delà — posé dehors, il viendrait buter contre le chiffre.
-        if (!gauge && post.value * scale > MAX_LEN) {
-            var cx = edge - dir * 9;
-            g.appendChild(svg("path", {
-                d: "M" + cx + " " + (yc - 5) + " l" + (dir * 5) + " 5 l" + (-dir * 5) + " 5",
-                fill: "none", stroke: charge ? "#1a1815" : "#fff", "stroke-width": "2",
-                "stroke-linecap": "round", opacity: "0.8"
-            }));
-        }
-
-        // Le cadenas : la perte est définitive à l'échelle de la partie. Il dit
-        // « irréparable » mieux qu'un chiffre. Posé contre la gouttière, où la masse est
-        // toujours présente, il ne bouge jamais d'un trimestre à l'autre.
-        if (post.permanentLoss) {
-            var lx = invader ? anchor - 17 : anchor + 6;
-            g.appendChild(svg("rect", { x: lx, y: yc - 1, width: 11, height: 8, rx: "1.5", fill: "#1a1815" }));
-            g.appendChild(svg("path", {
-                d: "M" + (lx + 2.2) + " " + (yc - 1) + " v-2.6 a3.3 3.3 0 0 1 6.6 0 V" + (yc - 1),
-                fill: "none", stroke: "#1a1815", "stroke-width": "1.5"
             }));
         }
 
@@ -675,21 +683,37 @@
     // choix qui avait été fait entre les deux camps, où la masse ukrainienne est courte par
     // construction — le pourcentage contre chaque masse porte la trajectoire, le chiffre au bord
     // du bandeau porte le niveau, et la longueur porte enfin ce qu'elle prétend porter.
+    // La règle est unique pour les sept postes et les deux camps : c'est ce qui permet de
+    // comparer deux longueurs d'un coup d'œil. Mais un poste écrase les six autres — l'appareil
+    // civil russe vaut près de trois fois la plus grosse des autres masses — et une règle calée
+    // sur lui réduirait tout le reste à des traits.
+    //
+    // Elle se cale donc sur la SECONDE masse du jeu, jamais sur la première. Ce qui dépasse est
+    // dessiné à la longueur de la piste et porte une coupure : la barre dit alors elle-même
+    // qu'elle a été taillée, et le chiffre au bord reste exact. Rien n'est nommé ici — si deux
+    // postes venaient à sortir du lot, la seconde masse monterait avec eux et plus rien ne
+    // serait coupé.
     function rules(game) {
         if (game.tovRule) { return game.tovRule; }
 
-        var top = 0;
+        // Un sommet PAR POSTE, et non par valeur : le même poste culmine à peu près au même
+        // niveau à chaque tour, si bien qu'un simple « deuxième plus grand nombre » retomberait
+        // sur le tour d'à côté du poste écrasant, et n'écarterait rien du tout.
+        var peaks = {};
         (game.turns || []).forEach(function (t) {
             [t.invader, t.defender].forEach(function (side) {
                 (side.capital || []).forEach(function (post) {
                     var v = Math.max(post.value || 0, post.reference || 0);
-                    if (v > top) { top = v; }
+                    if (!(post.code in peaks) || v > peaks[post.code]) { peaks[post.code] = v; }
                 });
             });
         });
 
-        game.tovRule = top;
-        return top;
+        var ranked = Object.keys(peaks).map(function (code) { return peaks[code]; })
+            .sort(function (a, b) { return b - a; });
+
+        game.tovRule = ranked.length > 1 ? ranked[1] : (ranked[0] || 0);
+        return game.tovRule;
     }
 
     // Le goulot du trimestre : le poste que l'alerte la plus vive du moteur désigne, et le camp
@@ -757,8 +781,28 @@
         // sous lui : à gauche l'envahisseur, à droite l'envahi, et plus rien à chercher.
         s.appendChild(svg("rect", { x: 22, y: 46, width: GUT_L - 36, height: 3, fill: "#a8322a" }));
         s.appendChild(svg("rect", { x: GUT_R + 14, y: 46, width: W - 36 - GUT_R, height: 3, fill: "#1e5fa8" }));
-        text(s, 22, 26, t.invader.name.toUpperCase(), { class: "cap-side ru" });
-        text(s, W - 22, 26, t.defender.name.toUpperCase(), { "text-anchor": "end", class: "cap-side ua" });
+        // Le nombre d'habitants se pose contre le nom, du côté de la gouttière. Il n'entre dans
+        // aucun calcul : il est là parce que l'écart entre les deux bilans est trois fois plus
+        // de gens produisant trois fois plus chacun, et que la seconde moitié de cette phrase
+        // se lit comme un réglage arbitraire tant qu'on ne voit pas la première.
+        var side = function (camp, x, anchorEnd, cls) {
+            var n = text(s, x, 26, "", { "text-anchor": anchorEnd ? "end" : "start", class: "cap-side " + cls });
+            var name = svg("tspan", {});
+            name.textContent = camp.name.toUpperCase();
+            var people = svg("tspan", { class: "cap-people", dx: anchorEnd ? "-10" : "10" });
+            people.textContent = num(camp.population, 1) + " M hab.";
+            if (anchorEnd) {
+                people.setAttribute("dx", "0");
+                name.setAttribute("dx", "10");
+                n.appendChild(people);
+                n.appendChild(name);
+            } else {
+                n.appendChild(name);
+                n.appendChild(people);
+            }
+        };
+        side(t.invader, 22, false, "ru");
+        side(t.defender, W - 22, true, "ua");
 
         // Deux totaux par camp, jamais leur somme : un fonds souverain et une année de recette
         // pétrolière ne s'additionnent pas, et le chiffre unique qui prétendrait le contraire

@@ -1395,7 +1395,7 @@
           "confidence": "Moyenne",
           "confidenceWhy": "Deux conventions du jeu, assumées comme telles : la part civile de l'appareil productif, posée à 24 %, et la capitalisation à cinq années de production. Ni l'une ni l'autre n'est mesurée ; seule leur entrée, le PIB, l'est.",
           "retained": true,
-          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 1 720 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 412,8 Md$ par an, que la capitalisation porte à 2 064 Md$. C'est le premier poste du bilan parce qu'il porte toute l'économie non militaire, quand les six autres sont des tranches étroites."
+          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 1 720 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 412,8 Md$ par an, que la capitalisation porte à 2 064 Md$. Ce n'est pas toute l’économie non militaire — les services, l’agriculture et les usines d’armement en sont exclus — mais c’est de loin la plus large des sept assiettes, et c’est ce qui en fait le premier poste du bilan."
         }
       ]
     },
@@ -1434,7 +1434,7 @@
           "confidence": "Moyenne",
           "confidenceWhy": "Deux conventions du jeu, assumées comme telles : la part civile de l'appareil productif, posée à 24 %, et la capitalisation à cinq années de production. Ni l'une ni l'autre n'est mesurée ; seule leur entrée, le PIB, l'est.",
           "retained": true,
-          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 188 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 45,1 Md$ par an, que la capitalisation porte à 226 Md$. C'est le premier poste du bilan parce qu'il porte toute l'économie non militaire, quand les six autres sont des tranches étroites."
+          "why": "Le poste vaut cinq années de ce qu'il produit. Sur 188 Md$ de capacité productive, 24 % sont rangés du côté civil, soit 45,1 Md$ par an, que la capitalisation porte à 226 Md$. Ce n'est pas toute l’économie non militaire — les services, l’agriculture et les usines d’armement en sont exclus — mais c’est de loin la plus large des sept assiettes, et c’est ce qui en fait le premier poste du bilan."
         }
       ]
     }

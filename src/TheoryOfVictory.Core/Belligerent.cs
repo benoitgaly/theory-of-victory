@@ -32,6 +32,14 @@ public sealed class Belligerent
 
     private readonly string? prose;
 
+    /// <summary>
+    /// Inhabitants at the outset, in millions. Nothing in the engine reads it: it is there so the
+    /// band can state it, because the whole gap between the two economies is three times the
+    /// people producing three times as much each, and a reader who cannot see the first half of
+    /// that sentence will read the second as an arbitrary calibration.
+    /// </summary>
+    public double PopulationMillions { get; init; }
+
     public required PoliticalState Politics { get; init; }
 
     public required ForeignSupport Foreign { get; init; }

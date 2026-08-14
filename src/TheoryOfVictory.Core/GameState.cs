@@ -107,6 +107,9 @@ public sealed class SideSnapshot
 
     public required string Name { get; init; }
 
+    /// <summary>Inhabitants at the outset, in millions. Stated, never computed against.</summary>
+    public double Population { get; init; }
+
     public double HeadlineGdp { get; init; }
 
     public double ProductiveCapacity { get; init; }

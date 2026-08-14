@@ -116,6 +116,10 @@ public static class UkraineScenario
             Side = Side.Invader,
             Name = "Russie",
             NameInProse = "la Russie",
+            // Estimation des Nations unies pour 2021, reprise par la Banque mondiale — le
+            // recensement russe de la même année en compte 146,2, Crimée incluse.
+            // Source, observation et confiance : data/historical-figures.json, figure civilian-ru.
+            PopulationMillions = 144.7d,
             Politics = new PoliticalState
             {
                 Regime = RegimeType.Authoritarian,
@@ -293,6 +297,9 @@ public static class UkraineScenario
             Side = Side.Defender,
             Name = "Ukraine",
             NameInProse = "l'Ukraine",
+            // Même série, même millésime, Crimée comprise dans le total ukrainien.
+            // Source, observation et confiance : data/historical-figures.json, figure civilian-ua.
+            PopulationMillions = 44.3d,
             Politics = new PoliticalState
             {
                 Regime = RegimeType.Democratic,

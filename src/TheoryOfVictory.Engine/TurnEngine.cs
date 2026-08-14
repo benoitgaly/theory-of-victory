@@ -263,6 +263,7 @@ public sealed class TurnEngine
         {
             SideCode = belligerent.Side.Code,
             Name = belligerent.Name,
+            Population = belligerent.PopulationMillions,
             HeadlineGdp = belligerent.Economy.HeadlineGdpBillions,
             ProductiveCapacity = belligerent.Economy.ProductiveCapacityBillions,
             Treasury = belligerent.Economy.TreasuryBillions,
