@@ -1,5 +1,7 @@
+@using TheoryOfVictory.Core.Localization
+@using TheoryOfVictory.Web.Services
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="@Languages.Code(Localizer.Current)">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +13,10 @@
 </head>
 <body>
     @RenderBody()
+    <script>
+        window.tovModel = @Html.Raw(JsModel.Render(Localizer.Current));
+    </script>
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

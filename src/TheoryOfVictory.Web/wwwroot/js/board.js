@@ -1,6 +1,10 @@
 (function () {
     "use strict";
 
+    // La clé EST le texte français source, comme dans le C#. Un catalogue, une convention, et
+    // une étiquette absente qui se lit en français plutôt que de laisser un trou.
+    var T = window.tov.t;
+
     var games = window.tovGames || [];
     var board = window.tovBoard || [];
     var geo = window.tovGeo;
@@ -33,45 +37,40 @@
 
     var state = { gameIndex: 0, turnIndex: 0, phase: 0 };
 
-    var SEASONS = { Winter: "hiver", Spring: "printemps", Summer: "été", Autumn: "automne" };
+    var SEASONS = { Winter: T("hiver"), Spring: T("printemps"), Summer: T("été"), Autumn: T("automne") };
 
     // The three flows the front consumes, and only those: a stave is a resource with a need
     // and therefore a coverage. Men have neither — they are the size of the barrel, since it
     // is the force held in line that dimensions the front and so manufactures the need.
     var FLOWS = [
-        { key: "weapons", label: "Armes", colour: "#b8860b", scale: 120 },
-        { key: "fuel", label: "Carburant", colour: "#8a5a2b", scale: 60 },
-        { key: "food", label: "Nourriture", colour: "#3d7a51", scale: 60 }
+        { key: "weapons", label: T("Armes"), colour: "#b8860b", scale: 120 },
+        { key: "fuel", label: T("Carburant"), colour: "#8a5a2b", scale: 60 },
+        { key: "food", label: T("Nourriture"), colour: "#3d7a51", scale: 60 }
     ];
 
     var DEEP = [
-        { key: "strike_drones", label: "Drones d'attaque", colour: "#8e5878", scale: 400 },
-        { key: "missiles", label: "Missiles", colour: "#a8322a", scale: 120 },
-        { key: "cheap_interceptors", label: "Défense bas coût", colour: "#3f7f93", scale: 900 },
-        { key: "heavy_interceptors", label: "Intercepteurs lourds", colour: "#1e5fa8", scale: 120 }
+        { key: "strike_drones", label: T("Drones d'attaque"), colour: "#8e5878", scale: 400 },
+        { key: "missiles", label: T("Missiles"), colour: "#a8322a", scale: 120 },
+        { key: "cheap_interceptors", label: T("Défense bas coût"), colour: "#3f7f93", scale: 900 },
+        { key: "heavy_interceptors", label: T("Intercepteurs lourds"), colour: "#1e5fa8", scale: 120 }
     ];
 
     var ALLOC = [
-        { key: "recruitment", label: "Recrutement", colour: "#7a6a55" },
-        { key: "weapons", label: "Munitions", colour: "#b8860b" },
-        { key: "strike", label: "Frappe profonde", colour: "#8e5878" },
-        { key: "defence", label: "Défense AA", colour: "#3f7f93" },
-        { key: "expansion", label: "Usines", colour: "#4a6d3a" },
-        { key: "innovation", label: "Innovation", colour: "#2f8f8f" },
-        { key: "fortification", label: "Fortifications", colour: "#6b7280" },
-        { key: "foreign", label: "Achats étrangers", colour: "#a8322a" },
-        { key: "civilian", label: "Civil", colour: "#c2b8a3" },
-        { key: "audit", label: "Anticorruption", colour: "#9b7fb0" }
+        { key: "recruitment", label: T("Recrutement"), colour: "#7a6a55" },
+        { key: "weapons", label: T("Munitions"), colour: "#b8860b" },
+        { key: "strike", label: T("Frappe profonde"), colour: "#8e5878" },
+        { key: "defence", label: T("Défense AA"), colour: "#3f7f93" },
+        { key: "expansion", label: T("Usines"), colour: "#4a6d3a" },
+        { key: "innovation", label: T("Innovation"), colour: "#2f8f8f" },
+        { key: "fortification", label: T("Fortifications"), colour: "#6b7280" },
+        { key: "foreign", label: T("Achats étrangers"), colour: "#a8322a" },
+        { key: "civilian", label: T("Civil"), colour: "#c2b8a3" },
+        { key: "audit", label: T("Anticorruption"), colour: "#9b7fb0" }
     ];
 
-    function fmt(v, d) {
-        if (v === null || v === undefined || isNaN(v)) { return "—"; }
-        // French grouping uses a narrow no-break space, which several faces render with no
-        // advance at all in tabular figures — « 1141000 ». A plain no-break space always
-        // shows, and a figure of a million men has to be readable at a glance.
-        return v.toLocaleString("fr-FR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 })
-            .replace(/ /g, " ");
-    }
+    // Le formatage suit la langue : « 2 064 » et « 2,064 » sont la même quantité écrite
+    // pour deux lecteurs. La règle est écrite une seule fois, dans i18n.js.
+    var fmt = window.tov.num;
 
     function el(tag, cls, text) {
         var n = document.createElement(tag);
@@ -192,16 +191,23 @@
     // « l'été 2026 », « le printemps 2027 » — la saison porte son article, ce qui laisse la
     // phrase libre de choisir sa préposition.
     var SEASON_ARTICLE = {
-        Winter: "l'hiver", Spring: "le printemps", Summer: "l'été", Autumn: "l'automne"
+        Winter: T("l'hiver"), Spring: T("le printemps"), Summer: T("l'été"), Autumn: T("l'automne")
     };
 
     function namedQuarter(q) {
         return (SEASON_ARTICLE[q.season] || SEASONS[q.season] || q.season) + " " + q.year;
     }
 
+    // « à l'hiver 2026 » : la préposition se contracte avec l'article en français et disparaît
+    // ailleurs, donc c'est la phrase entière qui se traduit, jamais un préfixe recollé.
     function dateInOf(t) {
-        var articles = { Winter: "à l'hiver ", Spring: "au printemps ", Summer: "à l'été ", Autumn: "à l'automne " };
-        return (articles[t.season] || "en ") + t.year;
+        switch (t.season) {
+            case "Winter": return T("à l'hiver %1", t.year);
+            case "Spring": return T("au printemps %1", t.year);
+            case "Summer": return T("à l'été %1", t.year);
+            case "Autumn": return T("à l'automne %1", t.year);
+            default: return T("en %1", t.year);
+        }
     }
 
     function renderTimeline() {
@@ -220,9 +226,9 @@
         next.disabled = atEnd;
         next.title = atEnd
             ? (g.endedEarly
-                ? "La guerre s'est terminée ici : il n'y a pas de trimestre suivant."
-                : "Dernier trimestre de la partie.")
-            : "Trimestre suivant";
+                ? T("La guerre s'est terminée ici : il n'y a pas de trimestre suivant.")
+                : T("Dernier trimestre de la partie."))
+            : T("Trimestre suivant");
 
         var planned = g.plannedTurns || g.turns.length;
         var lastIndex = g.turns.length - 1;
@@ -267,7 +273,7 @@
                     b.addEventListener("click", function () { state.turnIndex = index; render(); });
                 })(i);
             } else {
-                b.title = "La guerre s'est terminée avant ce trimestre : il n'a pas été joué.";
+                b.title = T("La guerre s'est terminée avant ce trimestre : il n'a pas été joué.");
             }
 
             host.appendChild(b);
@@ -358,20 +364,20 @@
         // 1. Economy: the headline rises while capacity is eaten.
         var gap = side.headlineGdp - side.productiveCapacity;
         chain.appendChild(link(
-            "1 · Économie",
+            T("1 · Économie"),
             fmt(side.headlineGdp),
             " Md",
-            "Capacité productive <b>" + fmt(side.productiveCapacity) + " Md</b>" +
-            (gap > 0 ? " · <span class=\"l-loss\">écart +" + fmt(gap) + "</span>" : "")));
+            T("Capacité productive <b>%1 Md</b>", fmt(side.productiveCapacity)) +
+            (gap > 0 ? " · <span class=\"l-loss\">" + T("écart +%1", fmt(gap)) + "</span>" : "")));
 
         // 2. Revenue: where the money actually comes from.
         var rev = [
-            { label: "Fiscalité", value: side.fiscalRevenue, colour: "#6b7280" },
-            { label: "Pétrole", value: side.oilRevenue, colour: "#8a5a2b" },
-            { label: isInvader ? "Achats étrangers" : "Aide reçue", value: isInvader ? 0 : side.foreignSupport, colour: "#1e5fa8" }
+            { label: T("Fiscalité"), value: side.fiscalRevenue, colour: "#6b7280" },
+            { label: T("Pétrole"), value: side.oilRevenue, colour: "#8a5a2b" },
+            { label: isInvader ? T("Achats étrangers") : T("Aide reçue"), value: isInvader ? 0 : side.foreignSupport, colour: "#1e5fa8" }
         ];
         var revTotal = rev.reduce(function (s, r) { return s + Math.max(0, r.value); }, 0) || 1;
-        var revBox = link("2 · Recettes du tour", fmt(revTotal, 1), " Md", null);
+        var revBox = link(T("2 · Recettes du tour"), fmt(revTotal, 1), " Md", null);
         revBox.appendChild(stackbar(rev, revTotal));
         revBox.appendChild(chips(rev));
         chain.appendChild(revBox);
@@ -381,7 +387,7 @@
             return { label: a.label, value: side.allocation[a.key] || 0, colour: a.colour };
         });
         var allocTotal = alloc.reduce(function (s, a) { return s + a.value; }, 0) || 1;
-        var allocBox = link("3 · Budget de guerre", fmt(allocTotal, 1), " Md", null);
+        var allocBox = link(T("3 · Budget de guerre"), fmt(allocTotal, 1), " Md", null);
         allocBox.appendChild(stackbar(alloc, allocTotal));
         allocBox.appendChild(chips(alloc.slice(0, 5)));
         chain.appendChild(allocBox);
@@ -391,11 +397,11 @@
         var capacity = side.capacity.weapons || 0;
         var used = capacity > 0 ? Math.min(1, produced / capacity) : 0;
         var factoryBox = link(
-            "4 · Usines",
+            T("4 · Usines"),
             fmt(produced),
             " k",
-            "Capacité <b>" + fmt(capacity) + " k/tour</b> · utilisée à " + fmt(used * 100) + " %" +
-            (side.productionCeiling < 0.99 ? " · <span class=\"l-loss\">plafond sanctions " + fmt(side.productionCeiling * 100) + " %</span>" : ""));
+            T("Capacité <b>%1 k/tour</b> · utilisée à %2 %", fmt(capacity), fmt(used * 100)) +
+            (side.productionCeiling < 0.99 ? " · <span class=\"l-loss\">" + T("plafond sanctions %1 %", fmt(side.productionCeiling * 100)) + "</span>" : ""));
         var capBar = el("div", "stackbar");
         var usedSpan = el("span");
         usedSpan.style.width = (used * 100).toFixed(1) + "%";
@@ -407,11 +413,11 @@
         // 5. Transmission: what actually reaches the line.
         var lost = (1 - side.transmissionRate) * 100;
         chain.appendChild(link(
-            "5 · Transmission",
+            T("5 · Transmission"),
             fmt(side.transmissionRate * 100),
             " %",
-            "<span class=\"l-loss\">−" + fmt(lost) + " %</span> perdus · corruption " + fmt(side.corruption) +
-            " · logistique " + fmt(side.logisticsIntegrity * 100) + " %"));
+            T("<span class=\"l-loss\">−%1 %</span> perdus · corruption %2 · logistique %3 %",
+                fmt(lost), fmt(side.corruption), fmt(side.logisticsIntegrity * 100))));
 
         return chain;
     }
@@ -654,7 +660,7 @@
             x: 36, y: waterY - 13.5, "text-anchor": "middle", "font-size": "8.5",
             "font-weight": "800", "letter-spacing": "0.09em", fill: "#fff"
         });
-        wlab.textContent = "NIVEAU RÉEL";
+        wlab.textContent = T("NIVEAU RÉEL");
         svg.appendChild(wlab);
         var wpct = svgEl("text", {
             x: 36, y: waterY + 16, "text-anchor": "middle", "font-size": "14",
@@ -669,6 +675,28 @@
     // The hand of the quarter: what this side played, and what it was holding instead.
     // V1.0 follows a calendar, so the held cards are shown for what they are — a choice
     // that was available and not taken. In V2 this is the row the player picks from.
+    // Les sept phrases que peut prendre la note de la main, chacune entière : une racine et
+    // un « s » recollés à l'affichage ne se traduisent pas.
+    function playedNote(played, held) {
+        if (played === 0) {
+            return held > 1
+                ? T("Aucune carte jouée ce trimestre — <strong>%1</strong> gardées en main.", held)
+                : T("Aucune carte jouée ce trimestre — <strong>%1</strong> gardée en main.", held);
+        }
+
+        var start = played > 1
+            ? T("<strong>%1</strong> cartes jouées", played)
+            : T("<strong>%1</strong> carte jouée", played);
+
+        if (held === 0) {
+            return start + T(" — la main entière est partie ce trimestre.");
+        }
+
+        return start + (held > 1
+            ? T(", %1 gardées en main.", held)
+            : T(", %1 gardée en main.", held));
+    }
+
     function renderHand(t, sideCode) {
         var hand = handFor(t, sideCode);
         var played = hand.filter(function (h) { return h.played; });
@@ -676,16 +704,12 @@
 
         var panel = el("section", "panel hand-panel");
         var head = el("div", "hand-head");
-        head.appendChild(el("div", "panel-title", "La main de ce trimestre"));
+        head.appendChild(el("div", "panel-title", T("La main de ce trimestre")));
 
+        // Le pluriel n'est pas une règle universelle — l'anglais n'accorde pas son participe —
+        // donc chaque phrase se traduit entière, au lieu d'une racine et d'un « s » recollés.
         var note = el("div", "hand-note");
-        note.innerHTML = played.length
-            ? "<strong>" + played.length + "</strong> carte" + (played.length > 1 ? "s jouées" : " jouée") +
-              (held > 0
-                  ? ", " + held + " gardée" + (held > 1 ? "s" : "") + " en main."
-                  : " — la main entière est partie ce trimestre.")
-            : "Aucune carte jouée ce trimestre — <strong>" + held + "</strong> gardée" +
-              (held > 1 ? "s" : "") + " en main.";
+        note.innerHTML = playedNote(played.length, held);
         head.appendChild(note);
         panel.appendChild(head);
 
@@ -702,8 +726,8 @@
     function renderPlayedCard(card) {
         var node = renderCard(card);
         node.classList.add("is-played");
-        node.insertBefore(el("div", "mtg-played-tag", "Jouée ce trimestre"), node.firstChild);
-        node.title = safeText(card && card.title, "Carte sans titre") + " — jouée ce trimestre";
+        node.insertBefore(el("div", "mtg-played-tag", T("Jouée ce trimestre")), node.firstChild);
+        node.title = T("%1 — jouée ce trimestre", safeText(card && card.title, T("Carte sans titre")));
         return node;
     }
 
@@ -712,8 +736,8 @@
     function renderHeldCard(card) {
         var node = renderCard(card);
         node.classList.add("back");
-        node.querySelector(".mtg-inner").appendChild(el("div", "mtg-held", "Gardée en main"));
-        node.title = safeText(card && card.title, "Carte sans titre") + " — non jouée ce trimestre";
+        node.querySelector(".mtg-inner").appendChild(el("div", "mtg-held", T("Gardée en main")));
+        node.title = T("%1 — non jouée ce trimestre", safeText(card && card.title, T("Carte sans titre")));
         return node;
     }
 
@@ -726,10 +750,10 @@
         var flag = el("span", "side-flag");
         flag.style.background = isInvader ? "var(--ru)" : "var(--ua)";
         h.appendChild(flag);
-        h.appendChild(document.createTextNode("Génération de force — " + side.name));
+        h.appendChild(document.createTextNode(T("Génération de force — %1", side.name)));
         head.appendChild(h);
         head.appendChild(el("div", "turn-tag",
-            dateOf(t) + " · Brent " + fmt(t.oilPrice) + " $"));
+            T("%1 · Brent %2 $", dateOf(t), fmt(t.oilPrice))));
         stage.appendChild(head);
 
         stage.appendChild(renderHand(t, side.sideCode));
@@ -739,19 +763,19 @@
         var row = el("div", "barrel-row");
 
         var barrelPanel = el("section", "panel barrel-panel");
-        barrelPanel.appendChild(el("div", "panel-title", "Puissance de combat soutenable"));
+        barrelPanel.appendChild(el("div", "panel-title", T("Puissance de combat soutenable")));
         var lead = el("p", "barrel-lead");
-        lead.innerHTML = "Le niveau ne monte jamais au-dessus de la douve la plus courte. <b>Ta puissance est celle de ta ressource la plus rare</b>, jamais la somme.";
+        lead.innerHTML = T("Le niveau ne monte jamais au-dessus de la douve la plus courte. <b>Ta puissance est celle de ta ressource la plus rare</b>, jamais la somme.");
         barrelPanel.appendChild(lead);
 
         var wrap = el("div", "barrel-wrap");
         wrap.appendChild(renderBarrel(side));
 
         var readout = el("div", "barrel-readout");
-        readout.appendChild(el("div", "b-eyebrow", "Puissance soutenable ce trimestre"));
+        readout.appendChild(el("div", "b-eyebrow", T("Puissance soutenable ce trimestre")));
         readout.appendChild(el("div", "b-power", fmt(side.combatPower)));
         readout.appendChild(el("div", "b-caption",
-            "sur un effectif théorique de " + fmt(side.menEstablishment) + " hommes"));
+            T("sur un effectif théorique de %1 hommes", fmt(side.menEstablishment))));
 
         // Jauge atteint / cible : l'écart se voit avant de se lire.
         var reach = side.menEstablishment > 0 ? Math.min(1, side.combatPower / side.menEstablishment) : 0;
@@ -769,18 +793,18 @@
         });
 
         var bn = el("div", "b-bottleneck");
-        bn.appendChild(el("div", "bb-label", "Goulot d'étranglement"));
+        bn.appendChild(el("div", "bb-label", T("Goulot d'étranglement")));
         bn.appendChild(el("div", "bb-value", side.bottleneckName || "—"));
         if (scarcest < 1.5) {
             var bbNote = el("div", "bb-note");
-            bbNote.innerHTML = "Plafonné à <b>" + fmt(scarcest * 100) +
-                " %</b> du besoin. Tout ce qui est produit au-delà, dans les autres ressources, ne se transforme en rien.";
+            bbNote.innerHTML = T("Plafonné à <b>%1 %</b> du besoin. Tout ce qui est produit au-delà, dans les autres ressources, ne se transforme en rien.",
+                fmt(scarcest * 100));
             bn.appendChild(bbNote);
         }
         readout.appendChild(bn);
 
         var ratio = el("div", "b-ratio");
-        ratio.innerHTML = "<span>Ratio de génération</span><b style=\"color:" + coverColour(side.forceGenerationRatio) +
+        ratio.innerHTML = "<span>" + T("Ratio de génération") + "</span><b style=\"color:" + coverColour(side.forceGenerationRatio) +
             "\">" + fmt(side.forceGenerationRatio, 2) + "</b>";
         readout.appendChild(ratio);
 
@@ -791,7 +815,7 @@
         // Front flows as tokens
         var stockPanel = el("section", "panel");
         stockPanel.style.padding = "20px 22px";
-        stockPanel.appendChild(el("div", "panel-title", "Ce qui atteint le front ce trimestre"));
+        stockPanel.appendChild(el("div", "panel-title", T("Ce qui atteint le front ce trimestre")));
         var grid = el("div", "stock-grid");
         grid.appendChild(manpowerCard(side));
         FLOWS.forEach(function (f) {
@@ -806,25 +830,25 @@
         var strike = isInvader ? t.invaderStrike : t.defenderStrike;
         var deepPanel = el("section", "panel");
         deepPanel.style.padding = "20px 22px";
-        deepPanel.appendChild(el("div", "panel-title", "Frappe en profondeur et défense"));
+        deepPanel.appendChild(el("div", "panel-title", T("Frappe en profondeur et défense")));
 
         var deepGrid = el("div", "stock-grid");
         if (strike) {
-            deepGrid.appendChild(stockCard("Drones lancés", strike.dronesSent, 0, "#8e5878", 400, null));
-            deepGrid.appendChild(stockCard("Missiles lancés", strike.missilesSent, 0, "#a8322a", 120, null));
+            deepGrid.appendChild(stockCard(T("Drones lancés"), strike.dronesSent, 0, "#8e5878", 400, null));
+            deepGrid.appendChild(stockCard(T("Missiles lancés"), strike.missilesSent, 0, "#a8322a", 120, null));
         }
-        deepGrid.appendChild(stockCard("Défense bas coût en stock", side.stocks.cheap_interceptors || 0, 0, "#3f7f93", 900, null));
-        deepGrid.appendChild(stockCard("Intercepteurs lourds en stock", side.stocks.heavy_interceptors || 0, 0, "#1e5fa8", 120, null));
+        deepGrid.appendChild(stockCard(T("Défense bas coût en stock"), side.stocks.cheap_interceptors || 0, 0, "#3f7f93", 900, null));
+        deepGrid.appendChild(stockCard(T("Intercepteurs lourds en stock"), side.stocks.heavy_interceptors || 0, 0, "#1e5fa8", 120, null));
         deepPanel.appendChild(deepGrid);
 
         if (strike) {
             var note = el("p", "barrel-lead");
             note.style.marginTop = "12px";
-            note.innerHTML = "Interception adverse : <b>" + fmt(strike.interceptionRate * 100) + " %</b>" +
-                (strike.saturated ? " — mais la vague a <b>saturé</b> les magasins." : ".") +
+            note.innerHTML = T("Interception adverse : <b>%1 %</b>", fmt(strike.interceptionRate * 100)) +
+                (strike.saturated ? T(" — mais la vague a <b>saturé</b> les magasins.") : ".") +
                 (strike.exchangeRatio > 0
-                    ? " Rapport d'échange : <b>" + fmt(strike.exchangeRatio, 1) + " €</b> dépensés en interception par euro détruit" +
-                      (strike.exchangeRatio > 1 ? " — le défenseur perd la guerre des coûts." : ".")
+                    ? T(" Rapport d'échange : <b>%1 €</b> dépensés en interception par euro détruit", fmt(strike.exchangeRatio, 1)) +
+                      (strike.exchangeRatio > 1 ? T(" — le défenseur perd la guerre des coûts.") : ".")
                     : "");
             deepPanel.appendChild(note);
         }
@@ -833,8 +857,8 @@
 
         var foot = el("p", "footnote");
         foot.innerHTML = isInvader
-            ? "La Russie <b>achète</b> son soutien étranger : le flux coûte cher et ne s'arrête jamais tant qu'elle peut payer. Dépendance actuelle : " + fmt(side.dependency * 100) + " %."
-            : "L'Ukraine <b>reçoit</b> son soutien : le flux est gratuit et peut s'arrêter du jour au lendemain. Volonté des soutiens : " + fmt(side.externalWill) + "/100.";
+            ? T("La Russie <b>achète</b> son soutien étranger : le flux coûte cher et ne s'arrête jamais tant qu'elle peut payer. Dépendance actuelle : %1 %.", fmt(side.dependency * 100))
+            : T("L'Ukraine <b>reçoit</b> son soutien : le flux est gratuit et peut s'arrêter du jour au lendemain. Volonté des soutiens : %1/100.", fmt(side.externalWill));
         stage.appendChild(foot);
     }
 
@@ -844,14 +868,14 @@
     function manpowerCard(side) {
         var card = el("div", "stock manpower");
         var head = el("div", "s-head");
-        head.appendChild(el("span", "s-name", "Hommes en ligne de contact"));
+        head.appendChild(el("span", "s-name", T("Hommes en ligne de contact")));
         head.appendChild(el("span", "s-value", fmt(side.menInContact)));
         card.appendChild(head);
 
         var tiers = [
-            { label: "Sous les drapeaux", value: side.menUnderArms },
-            { label: "Au théâtre", value: side.menInTheatre },
-            { label: "En ligne de contact", value: side.menInContact }
+            { label: T("Sous les drapeaux"), value: side.menUnderArms },
+            { label: T("Au théâtre"), value: side.menInTheatre },
+            { label: T("En ligne de contact"), value: side.menInContact }
         ];
         var widest = tiers[0].value > 0 ? tiers[0].value : 1;
 
@@ -872,7 +896,7 @@
 
         var note = el("div", "sc-outcome");
         note.style.marginTop = "8px";
-        note.textContent = "L'effectif dimensionne le front — c'est lui qui fabrique le besoin en obus.";
+        note.textContent = T("L'effectif dimensionne le front — c'est lui qui fabrique le besoin en obus.");
         card.appendChild(note);
 
         return card;
@@ -908,7 +932,7 @@
 
             var note = el("div", "sc-outcome");
             note.style.marginTop = "5px";
-            note.textContent = "Couverture " + fmt(coverage * 100) + " % du besoin";
+            note.textContent = T("Couverture %1 % du besoin", fmt(coverage * 100));
             card.appendChild(note);
         }
 
@@ -2690,9 +2714,26 @@
 
     // La ligne de type est recomposée quand le moteur ne la fournit pas, pour que le
     // bandeau garde sa hauteur et son sens plutôt que de tomber sur une bande vide.
+    // La famille est une valeur de DONNÉE — les tables de ciel, de couleur et de scène s'y
+    // indexent — et elle ne se traduit qu'au moment de l'écrire. La traduction passe par une
+    // table plutôt que par T(variable) : une clé qu'on ne peut pas lire dans le code est une
+    // clé que l'inventaire ne voit pas, et qui part en ligne non traduite en silence.
+    var FAMILY_LABEL = {
+        "Économique": T("Économique"),
+        "Politique occidentale": T("Politique occidentale"),
+        "Politique interne": T("Politique interne"),
+        "Énergie": T("Énergie"),
+        "Militaire et technologique": T("Militaire et technologique"),
+        "Externe": T("Externe")
+    };
+
+    function familyOf(card) {
+        var family = safeText(card.family, "");
+        return FAMILY_LABEL[family] || safeText(family, T("Famille inconnue"));
+    }
+
     function typeLineOf(card) {
-        var family = safeText(card.family, "Famille inconnue");
-        return safeText(card.typeLine, family);
+        return safeText(card.typeLine, familyOf(card));
     }
 
     // Une carte d'événement ne se paie pas : elle n'a pas de médaillon du tout. Un médaillon
@@ -2706,12 +2747,12 @@
         var cost = el("div", "mtg-cost");
         if (pol > 0) {
             var polPip = el("span", "pip pol", String(Math.round(pol)));
-            polPip.title = "Coût politique : " + Math.round(pol);
+            polPip.title = T("Coût politique : %1", Math.round(pol));
             cost.appendChild(polPip);
         }
         if (money > 0) {
             var moneyPip = el("span", "pip money", String(Math.round(money)));
-            moneyPip.title = "Coût financier : " + Math.round(money) + " Md";
+            moneyPip.title = T("Coût financier : %1 Md", Math.round(money));
             cost.appendChild(moneyPip);
         }
 
@@ -2732,7 +2773,7 @@
         var inner = el("div", "mtg-inner");
 
         var title = el("div", "mtg-title");
-        var name = el("div", "mtg-name", safeText(card.title, "Carte sans titre"));
+        var name = el("div", "mtg-name", safeText(card.title, T("Carte sans titre")));
         // Un titre long se compose plus petit plutôt que de pousser l'illustration vers
         // le bas : toutes les cartes de la main gardent le même gabarit.
         if (name.textContent.length > 32) { name.classList.add("is-longer"); }
@@ -2757,15 +2798,15 @@
             rulesText.forEach(function (r) { rules.appendChild(el("li", null, r)); });
             text.appendChild(rules);
         } else {
-            text.appendChild(el("p", "mtg-norule", "Aucun effet chiffré : la carte agit par la situation qu'elle installe."));
+            text.appendChild(el("p", "mtg-norule", T("Aucun effet chiffré : la carte agit par la situation qu'elle installe.")));
         }
-        text.appendChild(el("p", "mtg-flavour", safeText(card.description, "Pas de texte d'ambiance pour cette carte.")));
+        text.appendChild(el("p", "mtg-flavour", safeText(card.description, T("Pas de texte d'ambiance pour cette carte."))));
         inner.appendChild(text);
 
         wrap.appendChild(inner);
 
         var foot = el("div", "mtg-foot");
-        foot.appendChild(el("span", "fam", safeText(card.family, "Famille inconnue")));
+        foot.appendChild(el("span", "fam", familyOf(card)));
         foot.appendChild(el("span", null, "TOV · V1"));
         wrap.appendChild(foot);
 
@@ -2786,15 +2827,15 @@
 
     function occupationTag(reading, t) {
         if (!reading || !reading.area) {
-            return fmt(t.squareKilometresGained) + " km² pris sur les secteurs simulés";
+            return T("%1 km² pris sur les secteurs simulés", fmt(t.squareKilometresGained));
         }
-        var rounded = Math.round(reading.area.occupied / 1000) * 1000;
-        var suffix = reading.regime === "documented"
-            ? "sous contrôle russe"
-            : (reading.regime === "counterfactual"
-                ? "sous contrôle russe — déroulé hypothétique"
-                : "sous contrôle russe — projection du modèle");
-        return "≈ " + fmt(rounded) + " km² " + suffix;
+        var rounded = fmt(Math.round(reading.area.occupied / 1000) * 1000);
+        if (reading.regime === "documented") {
+            return T("≈ %1 km² sous contrôle russe", rounded);
+        }
+        return reading.regime === "counterfactual"
+            ? T("≈ %1 km² sous contrôle russe — déroulé hypothétique", rounded)
+            : T("≈ %1 km² sous contrôle russe — projection du modèle", rounded);
     }
 
     // Under the map, the one sentence that says what happened this quarter — or, past the
@@ -2805,26 +2846,29 @@
 
         if (reading.regime === "documented" && reading.quarter) {
             var q = reading.quarter;
-            box.innerHTML = "<strong>" + dateOf(q) + ".</strong> " + escapeHtml(q.headline);
+            box.innerHTML = T("<strong>%1.</strong> %2", dateOf(q), escapeHtml(q.headline));
             if (q.confidence && q.confidence !== "haute") {
-                box.innerHTML += " <em>Confiance " + escapeHtml(q.confidence) +
-                    " : le trimestre n'est pas terminé.</em>";
+                box.innerHTML += " <em>" + T("Confiance %1 : le trimestre n'est pas terminé.",
+                    confidenceLabel(q.confidence)) + "</em>";
             }
             return box;
         }
 
         // « après » plutôt que « au-delà de », qui produirait « au-delà de le printemps » un
         // trimestre sur quatre : la saison porte son propre article.
-        var from = reading.handover ? namedQuarter(reading.handover) : "la période documentée";
+        var from = reading.handover ? namedQuarter(reading.handover) : T("la période documentée");
         box.classList.add("projected");
         box.innerHTML = reading.regime === "counterfactual"
-            ? "<strong>Déroulé hypothétique.</strong> Une armée a rompu dans ce déroulé, ce qui " +
-              "n'est pas arrivé. Après " + from + ", le front affiché n'est plus celui de la " +
-              "guerre réelle : c'est celui que produisent les rapports de force du modèle."
-            : "<strong>Projection.</strong> Après " + from + ", plus rien n'est observé. La " +
-              "position réelle de ce trimestre-là sert de plateau, et seuls les huit secteurs " +
-              "simulés la déplacent — le reste de la carte est laissé où l'histoire l'a laissé.";
+            ? T("<strong>Déroulé hypothétique.</strong> Une armée a rompu dans ce déroulé, ce qui n'est pas arrivé. Après %1, le front affiché n'est plus celui de la guerre réelle : c'est celui que produisent les rapports de force du modèle.", from)
+            : T("<strong>Projection.</strong> Après %1, plus rien n'est observé. La position réelle de ce trimestre-là sert de plateau, et seuls les huit secteurs simulés la déplacent — le reste de la carte est laissé où l'histoire l'a laissé.", from);
         return box;
+    }
+
+    // Deux valeurs dans la chronique, deux branches : voir FAMILY_LABEL pour la raison.
+    function confidenceLabel(value) {
+        if (value === "moyenne") { return T("moyenne"); }
+        if (value === "basse") { return T("basse"); }
+        return escapeHtml(value);
     }
 
     function escapeHtml(value) {
@@ -2853,7 +2897,7 @@
         var reading = mapSvg.tovReading || null;
 
         var head = el("div", "stage-head");
-        head.appendChild(el("h2", null, "Résolution — champ de bataille"));
+        head.appendChild(el("h2", null, T("Résolution — champ de bataille")));
         head.appendChild(el("div", "turn-tag", dateOf(t) + " · " + occupationTag(reading, t)));
         stage.appendChild(head);
 
@@ -2861,9 +2905,8 @@
         // because the war did, not because the button failed.
         if (g.endedEarly && state.turnIndex === g.turns.length - 1) {
             var stop = el("div", "run-ended");
-            stop.innerHTML = "<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine " +
-                dateInOf(t) + " — les " + (g.plannedTurns - g.turns.length) +
-                " trimestres suivants du calendrier n'ont pas été joués.";
+            stop.innerHTML = T("<strong>La guerre s'arrête ici.</strong> Ce déroulé se termine %1 — les %2 trimestres suivants du calendrier n'ont pas été joués.",
+                dateInOf(t), g.plannedTurns - g.turns.length);
             stage.appendChild(stop);
         }
 
@@ -2895,7 +2938,7 @@
         var right = el("div");
         var sectorPanel = el("section", "panel");
         sectorPanel.style.padding = "16px 18px";
-        sectorPanel.appendChild(el("div", "panel-title", "Rapport de force par secteur"));
+        sectorPanel.appendChild(el("div", "panel-title", T("Rapport de force par secteur")));
 
         var sectors = t.sectors || [];
         var movers = sectors.filter(function (s) { return Math.abs(s.hexesMoved) > 0.01; });
@@ -2904,12 +2947,13 @@
 
         // Une phrase avant la liste : ce que le trimestre a produit, en un coup d'œil.
         var summary = el("div", "sector-summary");
+        var balance = "<b class=\"" + (netKm >= 0 ? "ru" : "ua") + "\">" +
+            (netKm >= 0 ? "+" : "−") + fmt(Math.abs(netKm), 1) + " km</b>";
         summary.innerHTML = movers.length === 0
-            ? "<b>Aucun secteur</b> n'a bougé ce trimestre sur " + sectors.length + "."
-            : "<b>" + movers.length + " secteur" + (movers.length > 1 ? "s" : "") + " sur " + sectors.length +
-              "</b> " + (movers.length > 1 ? "ont bougé" : "a bougé") + ", pour un solde de <b class=\"" +
-              (netKm >= 0 ? "ru" : "ua") + "\">" +
-              (netKm >= 0 ? "+" : "−") + fmt(Math.abs(netKm), 1) + " km</b>.";
+            ? T("<b>Aucun secteur</b> n'a bougé ce trimestre sur %1.", sectors.length)
+            : (movers.length > 1
+                ? T("<b>%1 secteurs sur %2</b> ont bougé, pour un solde de %3.", movers.length, sectors.length, balance)
+                : T("<b>%1 secteur sur %2</b> a bougé, pour un solde de %3.", movers.length, sectors.length, balance));
         sectorPanel.appendChild(summary);
 
         // This panel is the model's reading of ITS eight sectors, and during the documented
@@ -2918,16 +2962,14 @@
         // model's cumulative gain, which measures the sectors and nothing else.
         var provenance = el("div", "sector-provenance");
         provenance.innerHTML = (reading && reading.regime === "documented"
-            ? "Rapports de force <b>calculés par le modèle</b> sur ses huit secteurs ; la carte, " +
-              "elle, porte la position réelle du trimestre. "
-            : "") + "Cumul du modèle depuis février 2022 : <b>" +
-            fmt(t.squareKilometresGained) + " km²</b>.";
+            ? T("Rapports de force <b>calculés par le modèle</b> sur ses huit secteurs ; la carte, elle, porte la position réelle du trimestre.") + " "
+            : "") + T("Cumul du modèle depuis février 2022 : <b>%1 km²</b>.", fmt(t.squareKilometresGained));
         sectorPanel.appendChild(provenance);
 
         // Face à une défense effondrée le rapport tend vers l'infini : le chiffre exact
         // n'apprend plus rien, seul compte le fait que plus rien ne tient en face.
         function ratioLabel(ratio) {
-            return ratio > 12 ? "défense rompue" : "rapport " + fmt(ratio, 2);
+            return ratio > 12 ? T("défense rompue") : T("rapport %1", fmt(ratio, 2));
         }
 
         // Un secteur ne bouge qu'au-delà d'un rapport de 1,1 : l'échelle s'arrête à 3.
@@ -2939,8 +2981,8 @@
             bar.appendChild(fill);
             var th = el("div", "threshold");
             th.style.left = (1.1 / 3 * 100).toFixed(0) + "%";
-            th.title = "Seuil de mouvement : 1,1";
-            if (withScale) { th.appendChild(el("i", null, "1,1")); }
+            th.title = T("Seuil de mouvement : %1", fmt(1.1, 1));
+            if (withScale) { th.appendChild(el("i", null, fmt(1.1, 1))); }
             bar.appendChild(th);
             return bar;
         }
@@ -2962,8 +3004,8 @@
         // ramenés à leur seule information distinctive, le rapport de force.
         if (frozen.length) {
             var frozenHead = el("div", "frozen-head");
-            frozenHead.innerHTML = "<span>" + frozen.length + " secteurs figés</span><em>" +
-                (frozen[0].outcome || "usure réciproque") + "</em>";
+            frozenHead.innerHTML = "<span>" + T("%1 secteurs figés", frozen.length) + "</span><em>" +
+                (frozen[0].outcome || T("usure réciproque")) + "</em>";
             sectorPanel.appendChild(frozenHead);
 
             var frozenList = el("div", "sector-list frozen");
@@ -2991,7 +3033,7 @@
         }
 
         var foot = el("p", "footnote");
-        foot.innerHTML = "Un secteur ne bouge qu'au-delà d'un rapport de <b>1,1</b>, et attaquer coûte trois à cinq fois ce que coûte tenir. Un hexagone de lecture fait <b>40 km</b> de large, soit environ 1 400 km² : rien de plus fin ne survit au dessin, et les contours sont approximatifs, posés pour la lecture.";
+        foot.innerHTML = T("Un secteur ne bouge qu'au-delà d'un rapport de <b>1,1</b>, et attaquer coûte trois à cinq fois ce que coûte tenir. Un hexagone de lecture fait <b>40 km</b> de large, soit environ 1 400 km² : rien de plus fin ne survit au dessin, et les contours sont approximatifs, posés pour la lecture.");
         stage.appendChild(foot);
     }
 

@@ -78,7 +78,7 @@ window.tovDepth = (function () {
             fill: "none", stroke: colour, "stroke-width": "1.1",
             "stroke-dasharray": "5 5", opacity: "0.34"
         });
-        tip(path, "La frappe en profondeur ne touche pas la ligne de contact.");
+        tip(path, window.tov.t("La frappe en profondeur ne touche pas la ligne de contact."));
         svg.appendChild(path);
     }
 

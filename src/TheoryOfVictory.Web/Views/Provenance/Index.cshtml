@@ -1,34 +1,48 @@
 @using TheoryOfVictory.Core
+@using TheoryOfVictory.Core.Localization
 @model TheoryOfVictory.Core.ProvenanceRegistry
 @{
-    ViewData["Title"] = "D'où viennent les chiffres";
+    ViewData["Title"] = Localizer.Loc("D'où viennent les chiffres");
 }
 
 <article class="prov">
-    <nav class="prov-back"><a href="index.html">← Le plateau</a></nav>
+    <nav class="prov-back">
+        <a href="index.html">@Localizer.Loc("← Le plateau")</a>
+        <partial name="_LanguagePicker" />
+    </nav>
 
     <header class="prov-head">
-        <p class="prov-kicker">D'où viennent les chiffres</p>
-        <h1>@Model.Figures.Count chiffre@(Model.Figures.Count > 1 ? "s" : "") documenté@(Model.Figures.Count > 1 ? "s" : "")</h1>
+        <p class="prov-kicker">@Localizer.Loc("D'où viennent les chiffres")</p>
+        @* Le pluriel n'est pas une règle universelle — l'anglais accorde son nom et pas son
+           participe — donc la phrase entière se traduit, au lieu d'une racine et d'un « s »
+           recollés à l'affichage. *@
+        <h1>
+            @(Model.Figures.Count > 1
+                ? Localizer.Loc("%1 chiffres documentés", Model.Figures.Count)
+                : Localizer.Loc("%1 chiffre documenté", Model.Figures.Count))
+        </h1>
     </header>
 
     <p>
-        Un chiffre entre ici quand une observation datée le soutient, et pas avant. Tous les
-        autres postes du plateau sont des constantes de scénario : leur page le dit, et c'est
-        tout ce qu'elle a à dire.
+        @Localizer.Loc("Un chiffre entre ici quand une observation datée le soutient, et pas avant. Tous les autres postes du plateau sont des constantes de scénario : leur page le dit, et c'est tout ce qu'elle a à dire.")
     </p>
 
     <div class="prov-scroll">
         <table class="prov-table">
             <thead>
-                <tr><th>Chiffre</th><th>Camp</th><th>Observations</th><th>Sources</th></tr>
+                <tr>
+                    <th>@Localizer.Loc("Chiffre")</th>
+                    <th>@Localizer.Loc("Camp")</th>
+                    <th>@Localizer.Loc("Observations")</th>
+                    <th>@Localizer.Loc("Sources")</th>
+                </tr>
             </thead>
             <tbody>
                 @foreach (HistoricalFigure figure in Model.Figures)
                 {
                     <tr>
                         <td><a href="provenance-@(figure.Code).html">@figure.Label</a></td>
-                        <td>@(figure.EngineSide == "invader" ? "Russie" : "Ukraine")</td>
+                        <td>@(figure.EngineSide == "invader" ? Localizer.Loc("Russie") : Localizer.Loc("Ukraine"))</td>
                         <td class="num">@figure.Observations.Count</td>
                         <td class="num">@Model.SourcesOf(figure).Count</td>
                     </tr>

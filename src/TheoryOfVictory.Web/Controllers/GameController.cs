@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine;
 using TheoryOfVictory.Web.Services;
 
@@ -65,10 +66,12 @@ public sealed class GameController : Controller
             }
         }
 
+        Language language = Localizer.Current;
+
         ViewBag.GamesJson = JsonSerializer.Serialize(games, JsonOptions);
-        ViewBag.FrontHistoryJson = JsonSerializer.Serialize(_library.FrontHistory, JsonOptions);
+        ViewBag.FrontHistoryJson = JsonSerializer.Serialize(_library.FrontHistory(language), JsonOptions);
         ViewBag.BoardJson = JsonSerializer.Serialize(board, JsonOptions);
-        ViewBag.DeckJson = JsonSerializer.Serialize(_library.Deck, JsonOptions);
+        ViewBag.DeckJson = JsonSerializer.Serialize(_library.Deck(language), JsonOptions);
         ViewBag.CurrentTurn = currentTurn;
         return View();
     }

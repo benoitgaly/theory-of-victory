@@ -1,5 +1,6 @@
+@using TheoryOfVictory.Core.Localization
 @{
-    ViewData["Title"] = "La guerre comme génération de force";
+    ViewData["Title"] = Localizer.Loc("La guerre comme génération de force");
 }
 
 <header class="masthead">
@@ -10,28 +11,31 @@
             <p class="subtitle">You have the cards in hand</p>
         </div>
     </div>
-    <div class="variant-picker" id="variantPicker"></div>
+    <div class="masthead-right">
+        <div class="variant-picker" id="variantPicker"></div>
+        <partial name="_LanguagePicker" />
+    </div>
 </header>
 
 <nav class="timeline">
-    <button type="button" class="step" id="firstTurn" title="Revenir au premier trimestre" aria-label="Premier tour">⏮</button>
-    <button type="button" class="step" id="prevTurn" title="Trimestre précédent" aria-label="Trimestre précédent">◀</button>
+    <button type="button" class="step" id="firstTurn" title="@Localizer.Loc("Revenir au premier trimestre")" aria-label="@Localizer.Loc("Premier trimestre")">⏮</button>
+    <button type="button" class="step" id="prevTurn" title="@Localizer.Loc("Trimestre précédent")" aria-label="@Localizer.Loc("Trimestre précédent")">◀</button>
     <div class="ticks" id="turnTicks"></div>
-    <button type="button" class="step" id="nextTurn" title="Trimestre suivant" aria-label="Trimestre suivant">▶</button>
+    <button type="button" class="step" id="nextTurn" title="@Localizer.Loc("Trimestre suivant")" aria-label="@Localizer.Loc("Trimestre suivant")">▶</button>
 </nav>
 
 <nav class="phases" id="phasePicker">
     <button type="button" class="phase active" data-phase="0">
         <span class="p-num">1</span>
-        <span class="p-body"><strong>Génération de force</strong><em>Russie</em></span>
+        <span class="p-body"><strong>@Localizer.Loc("Génération de force")</strong><em>@Localizer.Loc("Russie")</em></span>
     </button>
     <button type="button" class="phase" data-phase="1">
         <span class="p-num">2</span>
-        <span class="p-body"><strong>Génération de force</strong><em>Ukraine</em></span>
+        <span class="p-body"><strong>@Localizer.Loc("Génération de force")</strong><em>@Localizer.Loc("Ukraine")</em></span>
     </button>
     <button type="button" class="phase" data-phase="2">
         <span class="p-num">3</span>
-        <span class="p-body"><strong>Résolution</strong><em>Champ de bataille</em></span>
+        <span class="p-body"><strong>@Localizer.Loc("Résolution")</strong><em>@Localizer.Loc("Champ de bataille")</em></span>
     </button>
 </nav>
 

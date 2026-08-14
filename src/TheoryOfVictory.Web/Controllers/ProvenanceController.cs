@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TheoryOfVictory.Core;
-using TheoryOfVictory.Engine.Provenance;
+using TheoryOfVictory.Core.Localization;
+using TheoryOfVictory.Web.Services;
 
 namespace TheoryOfVictory.Web.Controllers;
 
@@ -14,7 +15,17 @@ namespace TheoryOfVictory.Web.Controllers;
 /// </summary>
 public sealed class ProvenanceController : Controller
 {
-    private static readonly ProvenanceRegistry Registry = ProvenanceLibrary.Load();
+    private readonly ProvenanceLibraryCache _registries;
+
+    public ProvenanceController(ProvenanceLibraryCache registries)
+    {
+        _registries = registries;
+    }
+
+    private ProvenanceRegistry Registry
+    {
+        get { return _registries.For(Localizer.Current); }
+    }
 
     public IActionResult Index()
     {
@@ -28,7 +39,8 @@ public sealed class ProvenanceController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        HistoricalFigure? figure = Registry.Find(id);
+        ProvenanceRegistry registry = Registry;
+        HistoricalFigure? figure = registry.Find(id);
         if (figure is null)
         {
             // A post the database says nothing about. The page exists and says exactly that,
@@ -37,7 +49,7 @@ public sealed class ProvenanceController : Controller
             return View("Missing");
         }
 
-        ViewBag.Sources = Registry.SourcesOf(figure);
+        ViewBag.Sources = registry.SourcesOf(figure);
         return View(figure);
     }
 }

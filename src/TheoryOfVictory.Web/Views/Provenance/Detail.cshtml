@@ -1,4 +1,5 @@
 @using TheoryOfVictory.Core
+@using TheoryOfVictory.Core.Localization
 @model TheoryOfVictory.Core.HistoricalFigure
 @{
     ViewData["Title"] = Model.Label;
@@ -10,21 +11,46 @@
         "Moyenne" => "mid",
         _ => "low",
     };
+
+    // The three confidence marks and the five kinds of source are written out in the data file
+    // and printed as they are. They go through a branch per value rather than Loc(variable):
+    // a key nobody can read in the code is a key the inventory never sees, and it ships
+    // untranslated without anything saying so. An unknown value prints as it stands.
+    string confidenceLabel(string confidence) => confidence switch
+    {
+        "Haute" => Localizer.Loc("Haute"),
+        "Moyenne" => Localizer.Loc("Moyenne"),
+        "Basse" => Localizer.Loc("Basse"),
+        _ => confidence,
+    };
+
+    string kindLabel(string kind) => kind switch
+    {
+        "Mesure publiée" => Localizer.Loc("Mesure publiée"),
+        "Lecture graphique" => Localizer.Loc("Lecture graphique"),
+        "Estimation" => Localizer.Loc("Estimation"),
+        "Estimation d'un tiers" => Localizer.Loc("Estimation d'un tiers"),
+        "Document budgétaire" => Localizer.Loc("Document budgétaire"),
+        _ => kind,
+    };
 }
 
 <article class="prov">
-    <nav class="prov-back"><a href="index.html">← Le plateau</a></nav>
+    <nav class="prov-back">
+        <a href="index.html">@Localizer.Loc("← Le plateau")</a>
+        <partial name="_LanguagePicker" />
+    </nav>
 
     <header class="prov-head">
-        <p class="prov-kicker">D'où vient ce chiffre</p>
+        <p class="prov-kicker">@Localizer.Loc("D'où vient ce chiffre")</p>
         <h1>@Model.Label</h1>
     </header>
 
     <section class="prov-block">
-        <h2>Les sources</h2>
+        <h2>@Localizer.Loc("Les sources")</h2>
         @if (sources.Count == 0)
         {
-            <p class="prov-empty">Aucune. Ce chiffre n'est soutenu par rien de publié.</p>
+            <p class="prov-empty">@Localizer.Loc("Aucune. Ce chiffre n'est soutenu par rien de publié.")</p>
         }
         else
         {
@@ -43,14 +69,14 @@
                             }
                         </p>
                         <p class="ps-org">
-                            @source.Organisation · @source.Kind
+                            @source.Organisation · @kindLabel(source.Kind)
                             @if (source.StatedUpdate is not null)
                             {
                                 <text> · @source.StatedUpdate</text>
                             }
                             @if (source.Capture is not null)
                             {
-                                <text> · relevée le @source.Capture</text>
+                                <text> · @Localizer.Loc("relevée le %1", source.Capture)</text>
                             }
                         </p>
                         @if (!string.IsNullOrWhiteSpace(source.Note))
@@ -64,7 +90,7 @@
     </section>
 
     <section class="prov-block wide">
-        <h2>Les observations</h2>
+        <h2>@Localizer.Loc("Les observations")</h2>
 
         @* Une table à cinq colonnes imposait une grille à des lignes qui n'en sont pas une :
            quatre cellules courtes, une cinquième portant un paragraphe, et donc du vide à
@@ -84,10 +110,10 @@
                     </div>
                     <div class="obs-body">
                         <p class="obs-tags">
-                            <span class="prov-badge @badge(observation.Confidence)">@observation.Confidence</span>
+                            <span class="prov-badge @badge(observation.Confidence)">@confidenceLabel(observation.Confidence)</span>
                             @if (observation.Retained)
                             {
-                                <span class="obs-kept">retenue par le moteur</span>
+                                <span class="obs-kept">@Localizer.Loc("retenue par le moteur")</span>
                             }
                         </p>
                         <p class="obs-why">@observation.Why</p>
@@ -101,5 +127,5 @@
         </ol>
     </section>
 
-    <nav class="prov-back"><a href="provenance.html">Tous les chiffres →</a></nav>
+    <nav class="prov-back"><a href="provenance.html">@Localizer.Loc("Tous les chiffres →")</a></nav>
 </article>

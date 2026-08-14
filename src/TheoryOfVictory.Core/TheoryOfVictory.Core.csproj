@@ -9,8 +9,15 @@
   <!-- Les catalogues sont EMBARQUÉS, pas copiés à côté de l'exécutable : le site est figé en
        HTML et publié sur un hébergement sans serveur, donc une traduction qui manquerait au
        déploiement ne se rattraperait nulle part. -->
+  <!-- WithCulture=false et LogicalName explicite : « ui.fr.json » se termine par ce que MSBuild
+       lit comme un code de culture, et il en ferait sans un mot un assembly satellite fr/ dont
+       le nom logique perdrait la langue. Le catalogue doit rester une ressource ordinaire de
+       l'assembly principal — c'est un fichier de données, pas une localisation .NET. -->
   <ItemGroup>
-    <EmbeddedResource Include="i18n\*.json" />
+    <EmbeddedResource Include="i18n\*.json">
+      <WithCulture>false</WithCulture>
+      <LogicalName>TheoryOfVictory.Core.i18n.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,18 @@
+@using TheoryOfVictory.Core.Localization
+@using TheoryOfVictory.Web.Services
+@*  Deux mots, l'un allumé. Un sélecteur de langue n'a rien à expliquer : le nom d'une langue
+    dans cette langue est le seul libellé qui se lise sans être traduit.  *@
+<nav class="lang-picker">
+    @foreach (Language language in Languages.All)
+    {
+        string code = Languages.Code(language);
+        if (language == Localizer.Current)
+        {
+            <span class="lang current">@code.ToUpperInvariant()</span>
+        }
+        else
+        {
+            <a class="lang" data-lang="@code" href="@LanguageLinks.For(language, Context.Request.Path)">@code.ToUpperInvariant()</a>
+        }
+    }
+</nav>

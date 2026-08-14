@@ -10,6 +10,10 @@
 window.tovGeo = (function () {
     "use strict";
 
+    // Un toponyme est une étiquette : Kyiv s'écrit pareil dans les deux langues, Sébastopol et
+    // la mer Noire non. Ils passent donc par le catalogue comme le reste de l'interface.
+    var T = window.tov.t;
+
     var UKRAINE = [
         [38.21, 47.09], [37.54, 47.07], [37.34, 46.92], [37.05, 46.88], [36.79, 46.71],
         [36.69, 46.76], [36.56, 46.76], [36.28, 46.66], [36.02, 46.67], [35.83, 46.62],
@@ -92,38 +96,38 @@ window.tovGeo = (function () {
     ];
 
     var CITIES = [
-        { name: "Kyiv", lon: 30.52, lat: 50.45, rank: 1 },
-        { name: "Kharkiv", lon: 36.23, lat: 49.99, rank: 1 },
-        { name: "Odessa", lon: 30.73, lat: 46.48, rank: 1 },
-        { name: "Lviv", lon: 24.03, lat: 49.84, rank: 2 },
-        { name: "Dnipro", lon: 35.05, lat: 48.47, rank: 2 },
-        { name: "Zaporijjia", lon: 35.14, lat: 47.84, rank: 2 },
-        { name: "Donetsk", lon: 37.80, lat: 48.00, rank: 2 },
-        { name: "Louhansk", lon: 39.31, lat: 48.57, rank: 3 },
-        { name: "Marioupol", lon: 37.55, lat: 47.10, rank: 3 },
-        { name: "Kherson", lon: 32.62, lat: 46.64, rank: 3 },
-        { name: "Sébastopol", lon: 33.53, lat: 44.60, rank: 3 },
+        { name: T("Kyiv"), lon: 30.52, lat: 50.45, rank: 1 },
+        { name: T("Kharkiv"), lon: 36.23, lat: 49.99, rank: 1 },
+        { name: T("Odessa"), lon: 30.73, lat: 46.48, rank: 1 },
+        { name: T("Lviv"), lon: 24.03, lat: 49.84, rank: 2 },
+        { name: T("Dnipro"), lon: 35.05, lat: 48.47, rank: 2 },
+        { name: T("Zaporijjia"), lon: 35.14, lat: 47.84, rank: 2 },
+        { name: T("Donetsk"), lon: 37.80, lat: 48.00, rank: 2 },
+        { name: T("Louhansk"), lon: 39.31, lat: 48.57, rank: 3 },
+        { name: T("Marioupol"), lon: 37.55, lat: 47.10, rank: 3 },
+        { name: T("Kherson"), lon: 32.62, lat: 46.64, rank: 3 },
+        { name: T("Sébastopol"), lon: 33.53, lat: 44.60, rank: 3 },
         // The northern axes of 2022 and the Kursk salient of 2024 need somewhere to be read
         // against: without these three names, the ground that changes hands up there is a
         // coloured patch with no address.
-        { name: "Tchernihiv", lon: 31.29, lat: 51.49, rank: 3 },
-        { name: "Soumy", lon: 34.80, lat: 50.91, rank: 3 },
-        { name: "Soudja", lon: 35.28, lat: 51.19, rank: 3 }
+        { name: T("Tchernihiv"), lon: 31.29, lat: 51.49, rank: 3 },
+        { name: T("Soumy"), lon: 34.80, lat: 50.91, rank: 3 },
+        { name: T("Soudja"), lon: 35.28, lat: 51.19, rank: 3 }
     ];
 
     // Placed in the neighbours' territory, far enough from the border to stay off the grid.
     var NEIGHBOURS = [
-        { name: "Pologne", lon: 22.35, lat: 50.75 },
-        { name: "Biélorussie", lon: 27.60, lat: 52.20 },
-        { name: "Russie", lon: 39.60, lat: 51.30 },
-        { name: "Moldavie", lon: 28.55, lat: 47.15 },
-        { name: "Roumanie", lon: 25.60, lat: 46.70 },
-        { name: "Hongrie", lon: 21.40, lat: 48.05 }
+        { name: T("Pologne"), lon: 22.35, lat: 50.75 },
+        { name: T("Biélorussie"), lon: 27.60, lat: 52.20 },
+        { name: T("Russie"), lon: 39.60, lat: 51.30 },
+        { name: T("Moldavie"), lon: 28.55, lat: 47.15 },
+        { name: T("Roumanie"), lon: 25.60, lat: 46.70 },
+        { name: T("Hongrie"), lon: 21.40, lat: 48.05 }
     ];
 
     var SEAS = [
-        { name: "Mer Noire", lon: 31.60, lat: 44.65 },
-        { name: "Mer d'Azov", lon: 37.10, lat: 46.25 }
+        { name: T("Mer Noire"), lon: 31.60, lat: 44.65 },
+        { name: T("Mer d'Azov"), lon: 37.10, lat: 46.25 }
     ];
 
     // Coast of the neighbours, from the Ukrainian border on the Azov round to the Danube.

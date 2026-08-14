@@ -1,20 +1,23 @@
+@using TheoryOfVictory.Core.Localization
 @{
-    ViewData["Title"] = "Chiffre non documenté";
+    ViewData["Title"] = Localizer.Loc("Chiffre non documenté");
 }
 
 <article class="prov">
-    <nav class="prov-back"><a href="index.html">← Le plateau</a></nav>
+    <nav class="prov-back">
+        <a href="index.html">@Localizer.Loc("← Le plateau")</a>
+        <partial name="_LanguagePicker" />
+    </nav>
 
     <header class="prov-head">
-        <p class="prov-kicker">D'où vient ce chiffre</p>
-        <h1>Rien ne le soutient</h1>
+        <p class="prov-kicker">@Localizer.Loc("D'où vient ce chiffre")</p>
+        <h1>@Localizer.Loc("Rien ne le soutient")</h1>
     </header>
 
     <p>
-        Ce poste ne figure pas dans la base des données historiques : aucune observation datée,
-        aucune source. La valeur que porte le moteur est une constante du scénario, posée pour
-        qu'il produise une courbe discutable. <b>Elle ne doit pas être citée comme un fait.</b>
+        @Localizer.Loc("Ce poste ne figure pas dans la base des données historiques : aucune observation datée, aucune source. La valeur que porte le moteur est une constante du scénario, posée pour qu'il produise une courbe discutable.")
+        <b>@Localizer.Loc("Elle ne doit pas être citée comme un fait.")</b>
     </p>
 
-    <nav class="prov-back"><a href="provenance.html">Les chiffres qui ont une source →</a></nav>
+    <nav class="prov-back"><a href="provenance.html">@Localizer.Loc("Les chiffres qui ont une source →")</a></nav>
 </article>
