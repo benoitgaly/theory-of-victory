@@ -1,4 +1,409 @@
 {
-  "_comment": "The English words of the deck, by card code. Titles and descriptions only: the costs, the effects and the probabilities live once, in cards.fr.json, and are never repeated here — a rebalancing must not be able to hold in one language and not in the other. Empty for now, and that is a stated state rather than an oversight: a card's flavour text is authored writing and falls back to French until an author writes it.",
-  "cards": {}
+  "_comment": "The English words of the deck, by card code. Titles and descriptions only: the costs, the effects and the probabilities live once, in cards.fr.json, and are never repeated here — a rebalancing must not be able to hold in one language and not in the other. The family is not written here either: it is a data value the board indexes on, and the catalogue turns it into English at the moment it is printed. A card absent from this file is not an oversight but a stated state: its flavour text is authored writing, and it keeps reading in French until an author writes it.",
+  "cards": {
+    "sanctions_package_1": {
+      "title": "First sanctions package",
+      "description": "The West freezes half the sovereign fund and cuts the banking channels. Friction settles in, and the oil now sells at a discount."
+    },
+    "western_aid_opens": {
+      "title": "Western aid gets organised",
+      "description": "Deliveries move from emergency to industry. What matters arrives in kind, not in cash."
+    },
+    "himars_deep_strike": {
+      "title": "Long-range precision strike",
+      "description": "The ammunition dumps pull back eighty kilometres. This is not ground taken, it is the enemy's flow cut."
+    },
+    "partial_mobilisation": {
+      "title": "Partial mobilisation",
+      "description": "Three hundred thousand men taken out of the economy. Free in cash, ruinous in consent — and GDP will pay for it for years."
+    },
+    "counter_offensive_2022": {
+      "title": "The autumn counter-offensives",
+      "description": "A front held too thin gives way where nobody was looking. The attacker still pays, but far less than usual."
+    },
+    "grid_campaign": {
+      "title": "Campaign against the power grid",
+      "description": "The aim is no longer the substations but the turbine halls. Turbines are not replaced in a season."
+    },
+    "oil_price_cap": {
+      "title": "Cap on the price of the barrel",
+      "description": "The discount deepens without cutting the volumes. The sanction that pays best is the one nobody sees."
+    },
+    "failed_offensive": {
+      "title": "The summer offensive bogs down",
+      "description": "Minefields, drones everywhere, and not enough of an edge in force. Ground is no longer taken by willpower."
+    },
+    "attention_elsewhere": {
+      "title": "Another war draws the attention",
+      "description": "The interceptor stocks go elsewhere, and so do the capitals. Support is not withdrawn: it is distracted."
+    },
+    "aid_blocked": {
+      "title": "The main backer's budget stalls",
+      "description": "Nothing is cancelled, everything is suspended. The depots empty at the usual rate, with nothing left to refill them."
+    },
+    "aid_unblocked": {
+      "title": "Aid unblocked",
+      "description": "The tap opens again, but a quarter of famine leaves the depots empty and the front further back."
+    },
+    "aid_collapse": {
+      "title": "Outside support breaks off",
+      "description": "The free flow is not cut at the front, it is cut in a capital — and that has been three years' work. What is received without being paid for can stop without being replaced."
+    },
+    "refinery_strikes": {
+      "title": "Drones over the refineries",
+      "description": "Russian refining is concentrated and the exports pass through few terminals. Strike there and you strike the wallet."
+    },
+    "foreign_shells": {
+      "title": "A foreign shell supplier",
+      "description": "A paid flow, discreet, and it does not stop. It costs hard currency and dependence, never uncertainty."
+    },
+    "licence_transfer": {
+      "title": "Licence transfer",
+      "description": "What was bought yesterday is built at home tomorrow. A foreign purchase becomes national capacity."
+    },
+    "fibre_optic_drones": {
+      "title": "Fibre-optic drones",
+      "description": "Jamming no longer bites. Every edge expires: this one has just expired the other side's."
+    },
+    "shadow_fleet_sanctions": {
+      "title": "Sanctions on the shadow fleet",
+      "description": "The barrels are not cut, every voyage is made dearer. It is the slow channel that decides."
+    },
+    "anticorruption_crisis": {
+      "title": "Anti-corruption crisis",
+      "description": "Cleaning up costs before it pays: conditionality tightens at the very moment the cleaning begins."
+    },
+    "elite_fracture": {
+      "title": "A fracture at the top",
+      "description": "It is not the street that threatens the regime, it is the part of the apparatus for whom the war has stopped paying."
+    },
+    "component_embargo": {
+      "title": "Embargo on machine tools",
+      "description": "Quiet, technical, no press conference. It is the sanction that cuts a physical input, and therefore the only one that counts."
+    },
+    "aid_predictable": {
+      "title": "Guaranteed multi-year aid",
+      "description": "What changes everything is not the amount but the predictability: an industry can finally be planned three years out."
+    },
+    "frozen_assets_released": {
+      "title": "Transfer of the frozen assets",
+      "description": "Three hundred billion, frozen since the first day, change sides. The sanction becomes a budget."
+    },
+    "component_embargo_total": {
+      "title": "Extended embargo on components",
+      "description": "The middlemen fall one by one. Without machine tools a production line is not replaced: it stops."
+    },
+    "refinery_campaign_sustained": {
+      "title": "A sustained campaign against refining",
+      "description": "They come back every quarter, without let-up. Repairable damage only counts if the wound is reopened before it heals."
+    },
+    "oil_price_crash": {
+      "title": "The price of the barrel collapses",
+      "description": "A barrel under fifty dollars does what no offensive has managed: it cuts off the cash."
+    },
+    "sovereign_fund_empty": {
+      "title": "The sovereign fund is empty",
+      "description": "There is no more dipping into the reserves: there are none left. From here, every shell is paid for out of the country's own flesh."
+    },
+    "elite_break": {
+      "title": "The apparatus breaks",
+      "description": "The war has stopped paying the men who held it up. A regime does not fall because the street shouts: it falls because the apparatus lets go."
+    },
+    "supplier_withdraws": {
+      "title": "The supplier pulls out",
+      "description": "The paid flow never stops — except when the seller decides the buyer is not going to win."
+    },
+    "harsh_winter": {
+      "title": "A hard winter",
+      "description": "The same destruction is worth nothing in July and becomes a national crisis in January. You do not choose the season: you choose the quarter in which you strike."
+    },
+    "electronic_warfare": {
+      "title": "A wall of electronic warfare",
+      "description": "The drones are not shot down, the link that guides them is cut. An edge is not destroyed: it expires."
+    },
+    "air_defence_surge": {
+      "title": "An umbrella over the grid",
+      "description": "The interceptors covering Kyiv this quarter are the ones Pokrovsk will go without. The same missile cannot be in two places."
+    },
+    "evasion_network": {
+      "title": "A network of circumvention",
+      "description": "A middleman in Dushanbe, a flag of convenience, and the sanction laid down on turn 3 is worth nothing by turn 12. Sanctioning is not an act, it is upkeep."
+    },
+    "counter_battery": {
+      "title": "Counter-battery fire",
+      "description": "The launcher fires three rounds and moves, or it never moves again. Counter-fire takes no ground, it forbids the act."
+    },
+    "us_election_swing": {
+      "title": "The American election swings",
+      "description": "Nothing has been destroyed, no line has moved. Yet a ballot five thousand kilometres away has just decided the fate of a front."
+    },
+    "budget_fatigue": {
+      "title": "Budget fatigue",
+      "description": "Nobody abandons anybody: they postpone, they trim, they attach conditions. The free flow never stops at a stroke, it thins."
+    },
+    "chinese_pressure": {
+      "title": "Pressure from the great neighbour",
+      "description": "The supplier does not threaten, it restates the terms. Every purchase deepens the dependence, and dependence is paid in concessions."
+    },
+    "air_defence_gap": {
+      "title": "A hole in the air-defence cover",
+      "description": "The magazines empty faster than they fill. It is not the interception rate that decides, it is the cost ratio — and the quarter chosen to exploit it."
+    },
+    "decapitation_strike": {
+      "title": "Decapitation",
+      "description": "Remove one man and you discover the chain hung on him. The regime looks stable until the turn where it is not stable at all."
+    },
+    "drone_swarm_scaling": {
+      "title": "Drones go to scale",
+      "description": "The drone does not add firepower: it buys firepower without shells. To innovate is to move the bottleneck, never to remove it."
+    },
+    "rail_interdiction": {
+      "title": "Rail interdiction",
+      "description": "What leaves the depot is not what arrives. Cutting a rail junction is worth more ground than a trench taken."
+    },
+    "conscription_law": {
+      "title": "The mobilisation age is lowered",
+      "description": "A manpower pool three times smaller, and every man taken weighs three times as much. Ukraine pays for each mobilisation twice: at the front and in the factory."
+    },
+    "contract_recruitment_drive": {
+      "title": "Signing bonus",
+      "description": "Nobody is called up: they are bought. Every rise in the bonus buys civil peace and charges another man to the shell budget."
+    },
+    "prison_recruitment": {
+      "title": "Recruiting in the prisons",
+      "description": "Six months at the front in exchange for freedom. Men are paid in a currency the state mints itself, and what comes back is a troop that will not hold through two assaults."
+    },
+    "mobilisation_wave_two": {
+      "title": "A second wave of mobilisation",
+      "description": "This time the wave reaches the regions that produce. The men reach the front; the shells stop reaching it."
+    },
+    "foreign_drones": {
+      "title": "Drones bought abroad",
+      "description": "A scooter engine, a foam wing, the price of a saloon car. Against a three-million interceptor, the exchange is won at the purchase, not at the shot."
+    },
+    "foreign_ballistic_missiles": {
+      "title": "Ballistic missiles bought abroad",
+      "description": "The paid flow asks nobody for a vote. It is settled in hard currency and repaid in concessions, long after delivery."
+    },
+    "shahed_plant": {
+      "title": "The assembly line at home",
+      "description": "What used to arrive by the shipload now comes out of a shed on the Volga. Buying was only the first step, bringing it in-house was the point — and the plant runs on chips it does not make."
+    },
+    "shadow_fleet": {
+      "title": "The shadow fleet",
+      "description": "Two hundred tired hulls, flags nobody can trace, insurers that do not exist. The discount narrows voyage after voyage, and every middleman takes his cut along the way."
+    },
+    "oil_export_rerouting": {
+      "title": "Exports reroute to Asia",
+      "description": "The barrels do not lack buyers, only buyers who argue about the price. To sell to a single customer is to let him set what you sell him."
+    },
+    "component_smuggling": {
+      "title": "The components come another way",
+      "description": "A company in Astana, a freight agent in the Gulf, and the machine tool arrives six months late at three times the price. A sanction that is no longer maintained is no longer a sanction."
+    },
+    "refinery_air_defence": {
+      "title": "An umbrella over the refineries",
+      "description": "Covering Ryazan means stripping Pokrovsk. The same interceptor cannot be in two places, and the trade-off is paid at the front."
+    },
+    "rail_repair_brigades": {
+      "title": "Railway repair troops",
+      "description": "A junction cut on Monday is running again by Thursday. Repairable damage only counts if you come back to reopen it before it heals."
+    },
+    "counter_intelligence": {
+      "title": "Counter-intelligence",
+      "description": "A man is not protected, his diary is made unreadable. The price is paid in mistrust, inside the very apparatus being protected."
+    },
+    "glide_bombs": {
+      "title": "Glide bombs",
+      "description": "A guidance kit on a bomb from the sixties, released sixty kilometres out. Yesterday's stockpile becomes today's weapon, and nothing has been invented."
+    },
+    "electronic_warfare_scaling": {
+      "title": "Jamming moves up a class",
+      "description": "What used to cover a headquarters now covers a whole division. This side adopts late, then at industrial scale: it is the only way it knows how to innovate."
+    },
+    "substation_strikes": {
+      "title": "The switchyards",
+      "description": "The nuclear plant is not struck, the switchyard that ties it to the country is. Unplugged, it produces for nobody, and the taboo stands untouched."
+    },
+    "grain_port_strikes": {
+      "title": "Strikes on the grain ports",
+      "description": "Wheat has never fired a shot. It pays wages, taxes and a share of the shells — and the whole world watches the silos burn."
+    },
+    "decoy_saturation": {
+      "title": "Waves of decoys",
+      "description": "Half the swarm carries nothing. It has nothing to carry: its work was to empty the magazines before the other half arrived."
+    },
+    "war_economy_conversion": {
+      "title": "Conversion to a war economy",
+      "description": "Three shifts, seven days a week, and a gross domestic product that climbs while the country grows poorer. The figure on display is never the one that binds."
+    },
+    "sovereign_fund_draw": {
+      "title": "A draw on the sovereign fund",
+      "description": "The reserve for bad days funds the current quarter. Every withdrawal brings closer the one where there is nothing left to withdraw, and the apparatus can count."
+    },
+    "war_tax_rise": {
+      "title": "War tax",
+      "description": "The war stops being paid for by the reserve and starts being paid for by those who work. The coffers fill; consent does not refill."
+    },
+    "industrial_requisition": {
+      "title": "Industrial requisition",
+      "description": "The factory stays private on paper and no longer chooses its orders. You gain shells and lose the loyalty of the men who make them."
+    },
+    "domestic_repression": {
+      "title": "A turn of the screw at home",
+      "description": "Discontent does not go away, it stops being visible. Closing the valve puts the reckoning off and makes everything that follows worse."
+    },
+    "state_propaganda_surge": {
+      "title": "A propaganda offensive",
+      "description": "Nobody is convinced, the whole space is simply filled. A centralised regime manufactures consent the way it manufactures shells, and without having to ask."
+    },
+    "diplomatic_complaisance": {
+      "title": "Buying diplomatic goodwill",
+      "description": "A loan, a terminal, an abstention. What is bought away from the battlefield is settled in cash and never announced."
+    },
+    "meat_assault": {
+      "title": "Infantry assaults in the open",
+      "description": "Five hundred metres of black earth for a battalion. The gain shows on the map the same evening; the price only shows two quarters later."
+    },
+    "depot_strikes": {
+      "title": "Strikes on the depots",
+      "description": "One depot going up is worth three offensives. What never left the rear will only be missed at the front a month later, and nobody will make the connection."
+    },
+    "naval_drones_black_sea": {
+      "title": "Naval drones in the Black Sea",
+      "description": "A country with no navy has driven a fleet out of its own base. The corridor reopens, and the wheat starts paying for the war again."
+    },
+    "domestic_drone_industry": {
+      "title": "A national drone industry",
+      "description": "A hundred workshops rather than one factory: nothing decisive to strike, everything replaceable. What you build yourself does not stop at a foreign election."
+    },
+    "cheap_interception": {
+      "title": "Low-cost interception",
+      "description": "Downing a fifty-thousand-dollar drone with a three-million-dollar missile is losing while winning. The cost ratio decides before the interception rate does."
+    },
+    "drone_coalition": {
+      "title": "The drone coalition",
+      "description": "The backers stop delivering systems and start funding an industry. Received is not owned; built is."
+    },
+    "allied_intelligence": {
+      "title": "Allied intelligence",
+      "description": "A satellite image weighs nothing and is worth a regiment. It is also the quietest dependence of all: it stops without a communique."
+    },
+    "nato_training_pipeline": {
+      "title": "Training abroad",
+      "description": "Twelve weeks on a Welsh moor, and the man comes back another man. Training never shows in the quarter that pays for it."
+    },
+    "electronic_warfare_ukraine": {
+      "title": "Jamming the guidance kits",
+      "description": "The bomb is released all the same and falls wide. What is coming is not shot down: it is stripped of its address."
+    },
+    "decentralised_generation": {
+      "title": "Cogeneration and islanded grids",
+      "description": "A thousand small machines instead of ten large ones: nothing decisive left to aim at. A grid is not defended, it is made unworthy of a strike."
+    },
+    "recruitment_reform": {
+      "title": "Recruitment reform",
+      "description": "A term of service in writing, pay that is honoured, a way home. Consent is bought with money the country does not have."
+    },
+    "frozen_assets_windfall": {
+      "title": "A loan secured on the frozen assets",
+      "description": "The capital is left untouched, it is the interest that is borrowed against. Legal caution costs two years, but the tap does open in the end."
+    },
+    "diplomatic_campaign": {
+      "title": "A diplomatic campaign",
+      "description": "Thirty capitals in a quarter. This side's political capital cannot be decreed: it is won abroad, one room at a time."
+    },
+    "transparency_reform": {
+      "title": "Transparency reform",
+      "description": "Cleaning up costs before it pays: the crisis breaks in the quarter of the cleaning, the benefit arrives three quarters later."
+    },
+    "oil_price_spike": {
+      "title": "The barrel spikes",
+      "description": "One variable, four channels, all pulling the same way. A hundred-dollar barrel funds the war, calms the elites and wears down opinion on the other side."
+    },
+    "global_recession": {
+      "title": "Global recession",
+      "description": "World demand falls back and the barrel follows. No sanctions package will have done as much, and nobody had to vote for it."
+    },
+    "currency_collapse": {
+      "title": "The currency slips its moorings",
+      "description": "The exchange rate says nothing about what is produced; it says what it will cost to import what can no longer be made."
+    },
+    "mild_winter": {
+      "title": "A mild winter",
+      "description": "Four degrees warmer, and a campaign prepared all autumn falls into nothing. Preparing for the worst winter remains the only way to make it a mild one."
+    },
+    "rasputitsa": {
+      "title": "Rasputitsa",
+      "description": "For two months a year, the black earth swallows the convoys and leaves armour useless. The side that is not attacking is the one that loses least by it."
+    },
+    "dam_breach": {
+      "title": "A dam gives way",
+      "description": "Attribution will never be established. The water, meanwhile, carries off the villages, the fields and the cooling of a power station."
+    },
+    "armed_mutiny": {
+      "title": "Armed mutiny",
+      "description": "A column drives up the motorway meeting nobody, then turns round. Everyone has seen the emptiness; the purge that follows closes the apparatus tighter than before."
+    },
+    "parliament_veto": {
+      "title": "A veto in the backers' council",
+      "description": "One government is enough to suspend what twenty-six have voted through. The free flow has as many taps as there are capitals."
+    },
+    "european_election_swing": {
+      "title": "A European election swings",
+      "description": "The ballot boxes of a country with no war at home decide the calibre delivered to the one that has."
+    },
+    "inflation_surge": {
+      "title": "Inflation rises among the backers",
+      "description": "Sanctions make energy dearer, energy feeds inflation, inflation eats away at will. Striking the adversary weakens the friend by the same mechanism."
+    },
+    "ceasefire_talks": {
+      "title": "Talks with no tomorrow",
+      "description": "They negotiate a line nobody holds and each side means to improve before the signing. The announcement wears down the rear far more than the front."
+    },
+    "pipeline_sabotage": {
+      "title": "Sabotage on a gas pipeline",
+      "description": "Four pipes under eighty metres of water, and no inquiry will ever come to anything. The market, for its part, settled the matter the same day."
+    },
+    "demographic_wall": {
+      "title": "The demographic wall",
+      "description": "The thin cohorts of the nineties reach the age to serve. An army you buy pays for that gap dearly; an army you mobilise pays for it in consent."
+    },
+    "air_base_strikes": {
+      "title": "Strikes on the air bases",
+      "description": "A glide bomb cannot be jammed on the ground: it is no longer there. Striking the aircraft on its apron costs less than chasing what it drops."
+    },
+    "security_guarantees": {
+      "title": "Security guarantees",
+      "description": "A written promise delivers not one shell. It changes what a country dares to plan, and what its backers dare to fund."
+    },
+    "major_oil_sanctions": {
+      "title": "The two majors are designated",
+      "description": "The price cap gives way to naming the sellers. Asia's refiners do not refuse the barrel: they demand to be paid for the risk, and the discount doubles in three weeks."
+    },
+    "force_concentration": {
+      "title": "The build-up",
+      "description": "A hundred thousand men around a country they swear they have no wish to invade. Nothing is hidden — the convoys can be counted, the field hospitals move up towards the border: a war announced is still a war nobody prevents."
+    },
+    "zapad_exercises": {
+      "title": "The autumn manoeuvres",
+      "description": "The exercise is announced, observed, entirely by the book. What does not go home when it ends, nobody counts."
+    },
+    "ultimatum_to_nato": {
+      "title": "The December ultimatum",
+      "description": "In writing, they demand what they know cannot be granted. The refusal is not the failure of the approach: it is its product."
+    },
+    "intelligence_warning": {
+      "title": "The warning nobody believes",
+      "description": "The intelligence gives the date, the axes and the numbers. It is heard out politely and nothing changes: believing commits you, doubting costs nothing — until the morning the doubt falls due."
+    },
+    "first_defensive_deliveries": {
+      "title": "The first defensive deliveries",
+      "description": "Anti-tank missiles a man carries on his shoulder, nothing that reaches beyond the hill. Enough weapons not to be complicit, not enough to deter."
+    },
+    "no_mobilisation_yet": {
+      "title": "The order that is not given",
+      "description": "To mobilise is to prove right the man massing his troops, and to empty the factories before the first shot. So they wait — and they will wait until the very last morning."
+    }
+  }
 }
