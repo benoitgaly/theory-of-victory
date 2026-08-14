@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 public sealed class GameState
@@ -31,9 +33,10 @@ public sealed class GameState
         return side == Side.Invader ? Invader : DefenderSide;
     }
 
+    /// <summary>La date du trimestre, jamais son rang : « Été 2026 ».</summary>
     public string Label
     {
-        get { return $"T{Turn} — {Season.ToFrench()} {Year}"; }
+        get { return $"{Season.Label()} {Year}"; }
     }
 }
 
@@ -41,9 +44,9 @@ public sealed class GameOutcome
 {
     public required string Code { get; init; }
 
-    public required string Title { get; init; }
+    public required LocalizedText Title { get; init; }
 
-    public required string Explanation { get; init; }
+    public required LocalizedText Explanation { get; init; }
 
     public string? WinnerSideCode { get; init; }
 
@@ -76,7 +79,7 @@ public sealed class TurnSnapshot
 
     public List<PlayedCard> CardsPlayed { get; init; } = [];
 
-    public List<string> Narrative { get; init; } = [];
+    public List<LocalizedText> Narrative { get; init; } = [];
 
     public StrikeResolution? InvaderStrike { get; init; }
 
@@ -92,7 +95,7 @@ public sealed class TurnSnapshot
     /// The single sentence this turn is about, picked from the sharpest pressure on the
     /// board. What a turn-by-turn replay needs to give a reason to press next.
     /// </summary>
-    public string Headline { get; init; } = string.Empty;
+    public LocalizedText? Headline { get; init; }
 
     /// <summary>Both sides' alerts, sharpest first. The board's tension strip.</summary>
     public List<PressureAlert> Alerts { get; init; } = [];
@@ -105,7 +108,7 @@ public sealed class SideSnapshot
 {
     public required string SideCode { get; init; }
 
-    public required string Name { get; init; }
+    public required LocalizedText Name { get; init; }
 
     /// <summary>Inhabitants at the outset, in millions. Stated, never computed against.</summary>
     public double Population { get; init; }
@@ -174,7 +177,7 @@ public sealed class SideSnapshot
 
     public string? BottleneckCode { get; init; }
 
-    public string? BottleneckName { get; init; }
+    public LocalizedText? BottleneckName { get; init; }
 
     public Dictionary<string, double> Coverage { get; init; } = [];
 

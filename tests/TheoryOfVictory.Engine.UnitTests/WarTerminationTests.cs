@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine;
 using TheoryOfVictory.Engine.Scenarios;
 using Xunit;
@@ -260,17 +261,26 @@ public sealed class WarTerminationTests
     {
         (_, PlayedGame game) = ARunThatEndsInAnArmistice();
 
-        Assert.Contains("Armistice", game.Outcome!.Title, StringComparison.Ordinal);
-        Assert.Contains(BrokenSideOf(game, game.Turns[^1]).Name, game.Outcome.Title, StringComparison.Ordinal);
-        Assert.False(string.IsNullOrWhiteSpace(game.Outcome.Explanation));
+        // Le fait d'abord — c'est lui que le moteur a énoncé, et il ne dépend d'aucune langue.
+        Assert.Equal(TextCodes.Outcome.ArmisticeTitle, game.Outcome!.Title.Code);
+        Assert.False(string.IsNullOrWhiteSpace(Phrasebook.Say(game.Outcome.Explanation)));
+
+        // Puis la phrase, parce que c'est elle qui doit nommer le camp qui se retire : un
+        // titre d'armistice qui ne dit pas QUI se retire ne se lit pas sur une page.
+        Assert.Contains(
+            Phrasebook.Say(BrokenSideOf(game, game.Turns[^1]).Name),
+            Phrasebook.Say(game.Outcome.Title),
+            StringComparison.Ordinal);
 
         Assert.Contains(
             game.Turns[^1].Narrative,
-            line => line.Contains("ARMISTICE", StringComparison.Ordinal));
+            line => line.Code == TextCodes.Narrative.ArmisticeInvader
+                || line.Code == TextCodes.Narrative.ArmisticeDefender);
 
         Assert.Contains(
             game.Turns.SelectMany(turn => turn.Narrative),
-            line => line.Contains("plus personne ne paie", StringComparison.OrdinalIgnoreCase));
+            line => line.Code == TextCodes.Narrative.NoOnePaysInvader
+                || line.Code == TextCodes.Narrative.NoOnePaysDefender);
     }
 
     private static SideSnapshot BrokenSideOf(PlayedGame game, TurnSnapshot turn)

@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>
@@ -12,7 +14,7 @@ public sealed class PlayedCard
 
     public required string Family { get; init; }
 
-    public required string TypeLine { get; init; }
+    public required LocalizedText TypeLine { get; init; }
 
     public required string Description { get; init; }
 
@@ -30,7 +32,7 @@ public sealed class PlayedCard
     public double MoneyCost { get; init; }
 
     /// <summary>Rules text, one readable line per effect.</summary>
-    public List<string> RulesText { get; init; } = [];
+    public List<LocalizedText> RulesText { get; init; } = [];
 
     /// <summary>Card this one answers, when it is a counter.</summary>
     public string? CountersCardCode { get; init; }

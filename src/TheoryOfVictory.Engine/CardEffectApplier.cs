@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine;
 
@@ -8,7 +9,7 @@ namespace TheoryOfVictory.Engine;
 /// </summary>
 public static class CardEffectApplier
 {
-    public static void Apply(GameState state, CardEffect effect, List<string> narrative)
+    public static void Apply(GameState state, CardEffect effect, List<LocalizedText> narrative)
     {
         // The oil price is a property of the world, not of a side: apply it once.
         if (effect.Kind == EffectKind.OilPriceDelta)
@@ -35,7 +36,7 @@ public static class CardEffectApplier
         return [Side.FromCode(sideCode)];
     }
 
-    private static void ApplyToSide(GameState state, Belligerent belligerent, CardEffect effect, List<string> narrative)
+    private static void ApplyToSide(GameState state, Belligerent belligerent, CardEffect effect, List<LocalizedText> narrative)
     {
         double value = effect.Value;
 
@@ -176,13 +177,13 @@ public static class CardEffectApplier
         return Math.Clamp(value, 0d, belligerent.Innovation.ScaleCeiling);
     }
 
-    private static void Mobilise(Belligerent belligerent, double thousands, List<string> narrative)
+    private static void Mobilise(Belligerent belligerent, double thousands, List<LocalizedText> narrative)
     {
         Manpower manpower = belligerent.Manpower;
         double taken = Math.Min(thousands, manpower.MobilisablePool);
         if (taken <= 0d)
         {
-            narrative.Add($"{belligerent.Name} : mobilisation décrétée, mais le réservoir est vide.");
+            narrative.Add(LocalizedText.Of(TextCodes.Narrative.MobilisationEmpty, belligerent.Name));
             return;
         }
 
@@ -214,6 +215,10 @@ public static class CardEffectApplier
         // Rushing the cycle degrades quality, which raises losses, which forces the next wave.
         manpower.TrainingQuality = Math.Max(0.55d, manpower.TrainingQuality - 0.08d);
 
-        narrative.Add($"{belligerent.Name} : {taken * 1000d:N0} hommes mobilisés, {gdpHit:F1} Md de capacité productive perdus.");
+        narrative.Add(LocalizedText.Of(
+            TextCodes.Narrative.Mobilised,
+            belligerent.Name,
+            LocalizedText.Number(taken * 1000d, "N0"),
+            LocalizedText.Number(gdpHit, "F1")));
     }
 }

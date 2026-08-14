@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -13,7 +14,7 @@ public sealed class DeepStrikePhase : ITurnPhase
 
     public string Name
     {
-        get { return "Frappes en profondeur"; }
+        get { return "Deep strikes"; }
     }
 
     public void Execute(TurnContext context)
@@ -135,32 +136,46 @@ public sealed class DeepStrikePhase : ITurnPhase
         }
     }
 
-    private static string Adjective(Belligerent belligerent)
+    /// <summary>
+    /// Ce que la vague frappe, chez qui. Une phrase par cible ET par camp : l'adjectif s'accorde
+    /// avec le nom qu'il suit, et une règle qui recollerait « russe » ou « ukrainien » derrière
+    /// n'importe quel groupe nominal se tromperait un mot sur deux — et ne survivrait pas au
+    /// passage dans une autre langue.
+    /// </summary>
+    private static LocalizedText TargetName(StrikeTarget target, Belligerent side)
     {
-        return belligerent.Side == Side.Invader ? "russe" : "ukrainien";
+        bool invader = side.Side == Side.Invader;
+
+        return LocalizedText.Of(target switch
+        {
+            StrikeTarget.PowerGrid => invader ? TextCodes.Target.GridInvader : TextCodes.Target.GridDefender,
+            StrikeTarget.Refining => invader ? TextCodes.Target.RefiningInvader : TextCodes.Target.RefiningDefender,
+            StrikeTarget.Industry => invader ? TextCodes.Target.IndustryInvader : TextCodes.Target.IndustryDefender,
+            StrikeTarget.Logistics => invader ? TextCodes.Target.LogisticsInvader : TextCodes.Target.LogisticsDefender,
+            StrikeTarget.CivilianIndustry => invader ? TextCodes.Target.CivilianInvader : TextCodes.Target.CivilianDefender,
+            _ => TextCodes.Target.Rear,
+        });
     }
 
     private void Report(TurnContext context, Belligerent attacker, Belligerent target, StrikeResolution resolution)
     {
-        string targetName = resolution.Target switch
-        {
-            StrikeTarget.PowerGrid => $"le réseau électrique de l'arrière {Adjective(target)}",
-            StrikeTarget.Refining => $"le raffinage et les terminaux {Adjective(target)}s",
-            StrikeTarget.Industry => $"les usines d'armement {Adjective(target)}s",
-            StrikeTarget.Logistics => $"les nœuds logistiques {Adjective(target)}s",
-            StrikeTarget.CivilianIndustry => $"les entrepôts et les usines civiles {Adjective(target)}s",
-            _ => "l'arrière adverse",
-        };
+        LocalizedText targetName = TargetName(resolution.Target, target);
 
         if (resolution.Saturated && resolution.ExchangeRatio > 1.5d)
         {
-            context.Say(
-                $"{attacker.Name} sature {targetName} — {resolution.InterceptionRate * 100d:F0} % interceptés, "
-                + $"mais {resolution.ExchangeRatio:F1} € dépensés par € détruit.");
+            context.Say(LocalizedText.Of(
+                TextCodes.Narrative.StrikeSaturated,
+                attacker.Name,
+                targetName,
+                LocalizedText.Number(resolution.InterceptionRate * 100d, "F0"),
+                LocalizedText.Number(resolution.ExchangeRatio, "F1")));
             return;
         }
 
-        context.Say(
-            $"{attacker.Name} frappe {targetName} — {resolution.InterceptionRate * 100d:F0} % interceptés.");
+        context.Say(LocalizedText.Of(
+            TextCodes.Narrative.Strike,
+            attacker.Name,
+            targetName,
+            LocalizedText.Number(resolution.InterceptionRate * 100d, "F0")));
     }
 }

@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -466,28 +467,28 @@ public sealed class FrontPhase : ITurnPhase
         TurnContext.Accumulate(context.LossesThisTurn, belligerent.Side, actual);
     }
 
-    private static string DescribeOutcome(double ratio, double hexes, Belligerent attacker, Belligerent holder)
+    private static LocalizedText DescribeOutcome(double ratio, double hexes, Belligerent attacker, Belligerent holder)
     {
         if (holder.HasCollapsed)
         {
-            return $"Effondrement de {holder.Name} — avance libre";
+            return LocalizedText.Of(TextCodes.Sector.HolderCollapsed, holder.Name);
         }
 
         if (ratio < 1.1d)
         {
-            return "Aucun mouvement, usure réciproque";
+            return LocalizedText.Of(TextCodes.Sector.NoMovement);
         }
 
         if (hexes < 1d)
         {
-            return $"Grignotage par {attacker.Name}";
+            return LocalizedText.Of(TextCodes.Sector.Nibbling, attacker.Name);
         }
 
         if (ratio < 3d)
         {
-            return $"Avance de {attacker.Name}";
+            return LocalizedText.Of(TextCodes.Sector.Advance, attacker.Name);
         }
 
-        return $"Percée de {attacker.Name}";
+        return LocalizedText.Of(TextCodes.Sector.Breakthrough, attacker.Name);
     }
 }

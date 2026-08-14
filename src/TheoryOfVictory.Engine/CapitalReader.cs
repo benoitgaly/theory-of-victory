@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine;
 
@@ -139,16 +140,16 @@ public static class CapitalReader
         };
     }
 
-    private static string Label(StrikeTarget target)
+    private static LocalizedText Label(StrikeTarget target)
     {
-        return target switch
+        return LocalizedText.Of(target switch
         {
-            StrikeTarget.PowerGrid => "frappe sur le réseau électrique",
-            StrikeTarget.Refining => "frappe sur le raffinage",
-            StrikeTarget.Industry => "frappe sur les usines d'armement",
-            StrikeTarget.CivilianIndustry => "frappe sur les entrepôts civils",
-            _ => "frappe en profondeur",
-        };
+            StrikeTarget.PowerGrid => TextCodes.Capital.GridStrike,
+            StrikeTarget.Refining => TextCodes.Capital.RefiningStrike,
+            StrikeTarget.Industry => TextCodes.Capital.ArmsStrike,
+            StrikeTarget.CivilianIndustry => TextCodes.Capital.CivilianStrike,
+            _ => TextCodes.Capital.DeepStrike,
+        });
     }
 
     /// <summary>
@@ -283,43 +284,56 @@ public static class CapitalReader
 
         List<CapitalPost> posts =
         [
-            Build(Reserves, "Réserves monétaires", CapitalNature.Stock, false, closing, opening, reference,
+            Build(Reserves, LocalizedText.Of(TextCodes.Capital.Reserves), CapitalNature.Stock, false, closing, opening, reference,
                 threshold: draw > 0.01d ? draw * ReserveWarningQuarters : null,
-                thresholdLabel: "quatre trimestres de ponction",
-                secondary: draw, secondaryLabel: "ponction du trimestre", secondaryUnit: "Md$"),
+                thresholdLabel: LocalizedText.Of(TextCodes.Capital.ReserveThreshold),
+                secondary: draw,
+                secondaryLabel: LocalizedText.Of(TextCodes.Capital.QuarterDraw),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitBillions)),
 
-            Build(Grid, "Centrales électriques", CapitalNature.Stock, false, closing, opening, reference,
+            Build(Grid, LocalizedText.Of(TextCodes.Capital.Grid), CapitalNature.Stock, false, closing, opening, reference,
                 threshold: GridValue(belligerent.Grid.DemandGw(Season.Winter)),
-                thresholdLabel: $"la demande d'hiver, {belligerent.Grid.DemandGw(Season.Winter):F0} GW",
-                secondary: belligerent.Grid.AvailableCapacityGw, secondaryLabel: "parc debout", secondaryUnit: "GW"),
+                thresholdLabel: LocalizedText.Of(
+                    TextCodes.Capital.WinterDemand,
+                    LocalizedText.Number(belligerent.Grid.DemandGw(Season.Winter), "F0")),
+                secondary: belligerent.Grid.AvailableCapacityGw,
+                secondaryLabel: LocalizedText.Of(TextCodes.Capital.StandingPlant),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitGigawatts)),
 
             // La seconde lecture des postes capitalisés est leur production de l'année : c'est
             // elle qui rend la règle du bilan lisible sans document — la valeur affichée en est
             // exactement cinq fois celle-ci.
-            Build(Oil, exporter ? "Pétrole — recette" : "Pétrole — facture", CapitalNature.Stock, !exporter,
+            Build(Oil,
+                LocalizedText.Of(exporter ? TextCodes.Capital.OilRevenue : TextCodes.Capital.OilBill),
+                CapitalNature.Stock, !exporter,
                 closing, opening, reference,
                 secondary: closing.GetValueOrDefault(Oil) / CapitalisationMultiple,
-                secondaryLabel: exporter ? "recette de l'année" : "facture de l'année", secondaryUnit: "Md$"),
+                secondaryLabel: LocalizedText.Of(exporter ? TextCodes.Capital.YearRevenue : TextCodes.Capital.YearBill),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitBillions)),
 
-            Build(Civilian, "Usines civiles", CapitalNature.Stock, false, closing, opening, reference,
+            Build(Civilian, LocalizedText.Of(TextCodes.Capital.Civilian), CapitalNature.Stock, false, closing, opening, reference,
                 secondary: belligerent.Civilian.LivingStandard * 100d,
-                secondaryLabel: "niveau de vie", secondaryUnit: "% de l'avant-guerre"),
+                secondaryLabel: LocalizedText.Of(TextCodes.Capital.LivingStandard),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitPreWarShare)),
 
-            Build(Arms, "Usines d'armement", CapitalNature.Stock, false, closing, opening, reference,
+            Build(Arms, LocalizedText.Of(TextCodes.Capital.Arms), CapitalNature.Stock, false, closing, opening, reference,
                 secondary: closing.GetValueOrDefault(Arms) / CapitalisationMultiple,
-                secondaryLabel: "production de l'année", secondaryUnit: "Md$"),
+                secondaryLabel: LocalizedText.Of(TextCodes.Capital.YearProduction),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitBillions)),
 
             // No threshold rule: this post IS its own threshold. The mass reaching zero is the
             // regime falling, and a line drawn there would only repeat the floor of the column.
-            Build(Regime, "Tenue du pouvoir", CapitalNature.AnnualFlow, false, closing, opening, reference,
+            Build(Regime, LocalizedText.Of(TextCodes.Capital.Regime), CapitalNature.AnnualFlow, false, closing, opening, reference,
                 secondary: belligerent.Politics.PoliticalCapital,
-                secondaryLabel: "capital politique produit", secondaryUnit: "pts"),
+                secondaryLabel: LocalizedText.Of(TextCodes.Capital.PoliticalCapital),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitPoints)),
 
-            Build(Foreign, granted ? "Soutien étranger — reçu" : "Soutien étranger — acheté",
+            Build(Foreign,
+                LocalizedText.Of(granted ? TextCodes.Capital.ForeignReceived : TextCodes.Capital.ForeignBought),
                 CapitalNature.AnnualFlow, false, closing, opening, reference,
                 secondary: tank,
-                secondaryLabel: granted ? "volonté des soutiens" : "capacité à payer",
-                secondaryUnit: granted ? "sur 100" : "Md$"),
+                secondaryLabel: LocalizedText.Of(granted ? TextCodes.Capital.BackersWill : TextCodes.Capital.AbilityToPay),
+                secondaryUnit: LocalizedText.Of(granted ? TextCodes.Capital.UnitOutOfHundred : TextCodes.Capital.UnitBillions)),
 
             // Le soutien étranger, c'est ce qu'on reçoit ; le soutien international, c'est la
             // position diplomatique qui décide si le premier continue. Une seule quantité, lue
@@ -327,7 +341,7 @@ public static class CapitalReader
             // du bandeau qui ne soit pas un capital, donc la seule qui ne se compte pas en
             // dollars et n'entre dans aucun des deux totaux.
             Build(International,
-                invader ? "Soutien international — latitude" : "Soutien international — pression obtenue",
+                LocalizedText.Of(invader ? TextCodes.Capital.InternationalLatitude : TextCodes.Capital.InternationalPressure),
                 CapitalNature.Position, !invader, closing, opening, reference,
                 // Vu de Moscou, ce que l'achat coûte vraiment ; vu de Kyiv, le canal lent —
                 // les composants, qui pèsent double dans la latitude et sont le seul des trois
@@ -336,8 +350,8 @@ public static class CapitalReader
                 secondary: invader
                     ? belligerent.Foreign.Dependency * 100d
                     : state.Invader.Sanctions.ComponentSeverity * 100d,
-                secondaryLabel: invader ? "dépendance aux fournisseurs" : "verrou sur les composants",
-                secondaryUnit: "%"),
+                secondaryLabel: LocalizedText.Of(invader ? TextCodes.Capital.SupplierDependency : TextCodes.Capital.ComponentLock),
+                secondaryUnit: LocalizedText.Of(TextCodes.Capital.UnitPercent)),
         ];
 
         return [.. posts.Select(post => Attribute(post, belligerent, closing, opening, cardsPlayed, incoming))];
@@ -345,17 +359,17 @@ public static class CapitalReader
 
     private static CapitalPost Build(
         string code,
-        string name,
+        LocalizedText name,
         CapitalNature nature,
         bool inverted,
         IReadOnlyDictionary<string, double> closing,
         IReadOnlyDictionary<string, double> opening,
         IReadOnlyDictionary<string, double> reference,
         double? threshold = null,
-        string? thresholdLabel = null,
+        LocalizedText? thresholdLabel = null,
         double? secondary = null,
-        string? secondaryLabel = null,
-        string? secondaryUnit = null)
+        LocalizedText? secondaryLabel = null,
+        LocalizedText? secondaryUnit = null)
     {
         double value = closing.GetValueOrDefault(code);
         double open = opening.TryGetValue(code, out double measured) ? measured : value;
@@ -366,7 +380,9 @@ public static class CapitalReader
             Name = name,
             // Six posts of the seven are money; the diplomatic position is not a possession
             // and is read on a hundred, which is exactly why it has no column of its own.
-            Unit = nature == CapitalNature.Position ? "sur 100" : "Md$",
+            Unit = LocalizedText.Of(nature == CapitalNature.Position
+                ? TextCodes.Capital.UnitOutOfHundred
+                : TextCodes.Capital.UnitBillions),
             Nature = nature,
             Inverted = inverted,
             Value = value,
@@ -441,7 +457,7 @@ public static class CapitalReader
         }
 
         double loss = -move;
-        string? cause = Cause(post.Code, belligerent, cardsPlayed, incoming);
+        LocalizedText? cause = Cause(post.Code, belligerent, cardsPlayed, incoming);
 
         if (cause is null)
         {
@@ -465,7 +481,7 @@ public static class CapitalReader
         return closing.GetValueOrDefault(key) > opening.GetValueOrDefault(key) + 0.001d;
     }
 
-    private static string? Cause(
+    private static LocalizedText? Cause(
         string code,
         Belligerent belligerent,
         IReadOnlyList<EventCard> cardsPlayed,
@@ -490,7 +506,8 @@ public static class CapitalReader
 
                 if (hitsThisSide)
                 {
-                    return card.Title;
+                    // Le titre vient du fichier de cartes : il traverse sans être traduit.
+                    return LocalizedText.Of(TextCodes.Verbatim, card.Title);
                 }
             }
         }
@@ -503,7 +520,7 @@ public static class CapitalReader
         double regeneration = 0d,
         double consumption = 0d,
         double destruction = 0d,
-        string? cause = null,
+        LocalizedText? cause = null,
         bool permanent = false)
     {
         return new CapitalPost
@@ -602,7 +619,7 @@ public static class CapitalReader
             chain.Links.Add(new CapitalLink
             {
                 PostCode = "living_standard",
-                Label = "Niveau de vie",
+                Label = LocalizedText.Of(TextCodes.Capital.LivingStandardLink),
                 PercentDelta = standard - 100d,
             });
         }

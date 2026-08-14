@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine;
 
@@ -13,7 +14,7 @@ public sealed class TurnContext
 
     public required Doctrine DefenderDoctrine { get; set; }
 
-    public List<string> Narrative { get; } = [];
+    public List<LocalizedText> Narrative { get; } = [];
 
     public List<PlayedCard> CardsPlayed { get; } = [];
 
@@ -60,7 +61,7 @@ public sealed class TurnContext
         return side == Side.Invader ? InvaderDoctrine : DefenderDoctrine;
     }
 
-    public void Say(string line)
+    public void Say(LocalizedText line)
     {
         Narrative.Add(line);
     }

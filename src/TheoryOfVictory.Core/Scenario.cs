@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>A scripted card play: V1.0 has no dice, the calendar is written in advance.</summary>
@@ -28,11 +30,11 @@ public sealed class Scenario
 {
     public required string Code { get; init; }
 
-    public required string Title { get; init; }
+    public required LocalizedText Title { get; init; }
 
-    public string Subtitle { get; init; } = string.Empty;
+    public LocalizedText? Subtitle { get; init; }
 
-    public string Description { get; init; } = string.Empty;
+    public LocalizedText? Description { get; init; }
 
     public required int StartYear { get; init; }
 

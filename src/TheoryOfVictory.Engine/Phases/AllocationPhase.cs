@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -48,7 +49,10 @@ public sealed class AllocationPhase : ITurnPhase
 
         if (fundable < budgetCeiling * 0.8d && fundable > 0d)
         {
-            context.Say($"{belligerent.Name} : effort de guerre bridé par les recettes, {fundable:F1} Md finançables seulement.");
+            context.Say(LocalizedText.Of(
+                TextCodes.Narrative.WarBudgetCapped,
+                belligerent.Name,
+                LocalizedText.Number(fundable, "F1")));
         }
 
         if (budget <= 0d)
@@ -173,7 +177,10 @@ public sealed class AllocationPhase : ITurnPhase
 
             if (delivered > 0.5d)
             {
-                context.Say($"{belligerent.Name} : {delivered:F1} Md d'armes achetées à l'étranger, hors capacité nationale.");
+                context.Say(LocalizedText.Of(
+                    TextCodes.Narrative.ForeignPurchases,
+                    belligerent.Name,
+                    LocalizedText.Number(delivered, "F1")));
             }
         }
 
@@ -193,7 +200,10 @@ public sealed class AllocationPhase : ITurnPhase
 
         if (unspent > budget * 0.15d)
         {
-            context.Say($"{belligerent.Name} : {unspent:F1} Md non convertis — l'argent existe, la capacité non.");
+            context.Say(LocalizedText.Of(
+                TextCodes.Narrative.UnspentMoney,
+                belligerent.Name,
+                LocalizedText.Number(unspent, "F1")));
         }
     }
 
@@ -224,8 +234,11 @@ public sealed class AllocationPhase : ITurnPhase
         double payable = budget / manpower.UpkeepCostPerThousand;
         manpower.PayableForceSize = payable;
 
-        context.Say($"{belligerent.Name} : la solde n'est plus couverte — {payable * 1000d:N0} hommes finançables "
-            + $"sur {manpower.AtFront * 1000d:N0} au front.");
+        context.Say(LocalizedText.Of(
+            TextCodes.Narrative.PayNotCovered,
+            belligerent.Name,
+            LocalizedText.Number(payable * 1000d, "N0"),
+            LocalizedText.Number(manpower.AtFront * 1000d, "N0")));
 
         return 0d;
     }
@@ -248,7 +261,10 @@ public sealed class AllocationPhase : ITurnPhase
         belligerent.SustainmentShortfall = Math.Clamp(missed, 0d, 1d);
         if (missed > 0.05d)
         {
-            context.Say($"{belligerent.Name} : {missed * 100d:F0} % du ravitaillement impayé — la trésorerie ne suit plus.");
+            context.Say(LocalizedText.Of(
+                TextCodes.Narrative.SustainmentUnpaid,
+                belligerent.Name,
+                LocalizedText.Number(missed * 100d, "F0")));
         }
     }
 
@@ -345,7 +361,11 @@ public sealed class AllocationPhase : ITurnPhase
 
         if (gdpHit > 1d)
         {
-            context.Say($"{belligerent.Name} : {recruited * 1000d:N0} recrues, {gdpHit:F1} Md de capacité productive en moins.");
+            context.Say(LocalizedText.Of(
+                TextCodes.Narrative.Recruited,
+                belligerent.Name,
+                LocalizedText.Number(recruited * 1000d, "N0"),
+                LocalizedText.Number(gdpHit, "F1")));
         }
 
         return Math.Max(0d, budgetBillions - (recruited * manpower.ContractCostPerThousand));

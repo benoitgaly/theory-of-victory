@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>
@@ -40,7 +42,7 @@ public sealed class FrontSector
 {
     public required string Code { get; init; }
 
-    public required string Name { get; init; }
+    public required LocalizedText Name { get; init; }
 
     /// <summary>Rivers, ridges and woods. Above one favours the defender.</summary>
     public double TerrainMultiplier { get; init; } = 1d;
@@ -118,7 +120,7 @@ public sealed class SectorResolution
 {
     public required string SectorCode { get; init; }
 
-    public required string SectorName { get; init; }
+    public required LocalizedText SectorName { get; init; }
 
     /// <summary>
     /// Which side was pushing. Derivable from the sign of <see cref="HexesMoved"/> only when
@@ -182,7 +184,7 @@ public sealed class SectorResolution
 
     public double DefenderLosses { get; init; }
 
-    public required string Outcome { get; init; }
+    public required LocalizedText Outcome { get; init; }
 }
 
 /// <summary>

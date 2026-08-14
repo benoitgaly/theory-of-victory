@@ -13,7 +13,7 @@ public sealed class GameController : Controller
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter(), new FiniteDoubleConverter() },
+        Converters = { new JsonStringEnumConverter(), new FiniteDoubleConverter(), new LocalizedTextConverter() },
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 

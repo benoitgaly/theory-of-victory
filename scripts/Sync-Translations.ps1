@@ -28,10 +28,17 @@ $catalogueDir = Join-Path $repoRoot "src\TheoryOfVictory.Core\i18n"
 
 # Les trois façons d'appeler le catalogue, et rien d'autre. Une chaîne qui n'entre pas par là
 # n'est pas traduisible, et c'est le test des chaînes accentuées qui la rattrape.
+#
+# La clé peut s'écrire sur plusieurs lignes, collée par des + : le compilateur n'en fait qu'une
+# chaîne, et l'inventaire doit la recomposer de la même façon — sans quoi il enregistrerait le
+# premier tiers d'une phrase, que le code ne demandera jamais.
+$literal = '"(?:[^"\\]|\\.)*"'
+$joined = "(?<parts>$literal(?:\s*\+\s*$literal)*)"
+
 $patterns = @(
-    'Localizer\.Loc\(\s*"((?:[^"\\]|\\.)*)"',
-    '(?<![\w.])T\(\s*"((?:[^"\\]|\\.)*)"',
-    'tov\.t\(\s*"((?:[^"\\]|\\.)*)"'
+    "Localizer\.Loc\(\s*$joined",
+    "(?<![\w.])T\(\s*$joined",
+    "tov\.t\(\s*$joined"
 )
 
 function Get-SourceFiles {
@@ -57,7 +64,11 @@ foreach ($file in Get-SourceFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
     foreach ($pattern in $patterns) {
         foreach ($match in [regex]::Matches($content, $pattern)) {
-            $key = Convert-FromLiteral $match.Groups[1].Value
+            $key = ""
+            foreach ($piece in [regex]::Matches($match.Groups["parts"].Value, $literal)) {
+                $key += Convert-FromLiteral $piece.Value.Trim('"')
+            }
+
             if ($key.Trim().Length -gt 0) {
                 [void] $keys.Add($key)
             }
@@ -71,9 +82,11 @@ function Read-Catalogue([string] $path) {
     $table = [System.Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
     if (-not (Test-Path $path)) { return $table }
 
-    $json = Get-Content -Path $path -Raw -Encoding UTF8 | ConvertFrom-Json
-    foreach ($property in $json.PSObject.Properties) {
-        $table[$property.Name] = $property.Value
+    # -AsHashtable : « Basse » et « basse » sont deux étiquettes du jeu, et l'objet PowerShell
+    # par défaut refuse de porter les deux.
+    $json = Get-Content -Path $path -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
+    foreach ($key in $json.Keys) {
+        $table[$key] = $json[$key]
     }
     return $table
 }

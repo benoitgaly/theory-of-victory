@@ -40,7 +40,7 @@ public sealed class LogisticsPhase : ITurnPhase
 
     public string Name
     {
-        get { return "Logistique"; }
+        get { return "Logistics"; }
     }
 
     public void Execute(TurnContext context)

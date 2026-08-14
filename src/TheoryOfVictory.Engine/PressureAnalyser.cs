@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine.Phases;
 
 namespace TheoryOfVictory.Engine;
@@ -118,10 +119,10 @@ public static class PressureAnalyser
                 Code = $"depot_{kind.Code}",
                 SideCode = belligerent.Side.Code,
                 Level = level,
-                Title = $"{kind.DisplayName} : {quarters:F1} trimestre(s) de couverture, et ça descend",
-                Detail = $"Les dépôts de {belligerent.NameInProse} couvrent encore {quarters:F1} trimestre(s) de "
-                    + "consommation, mais ils ne se remplissent plus. Le front ne verra rien passer "
-                    + "jusqu'au trimestre où il ne verra plus rien du tout.",
+                Title = LocalizedText.Of(
+                    TextCodes.Alert.DepotTitle, kind.Label, LocalizedText.Number(quarters, "F1")),
+                Detail = LocalizedText.Of(
+                    TextCodes.Alert.DepotDetail, belligerent.NameInProse, LocalizedText.Number(quarters, "F1")),
                 TurnsAhead = quarters,
                 Value = stock,
                 Threshold = 0d,
@@ -135,10 +136,10 @@ public static class PressureAnalyser
                 Code = "sustainment",
                 SideCode = belligerent.Side.Code,
                 Level = AlertLevel.Critical,
-                Title = $"Ravitaillement impayé à {belligerent.SustainmentShortfall * 100d:F0} %",
-                Detail = $"{belligerent.NameOpeningSentence} n'a plus de quoi acheter les rations et le carburant de ses "
-                    + "propres troupes. On nourrit avant de choisir : quand cette ligne-là casse, "
-                    + "aucune allocation ne rattrape plus rien.",
+                Title = LocalizedText.Of(
+                    TextCodes.Alert.SustainmentTitle,
+                    LocalizedText.Number(belligerent.SustainmentShortfall * 100d, "F0")),
+                Detail = LocalizedText.Of(TextCodes.Alert.SustainmentDetail, belligerent.NameOpeningSentence),
                 Value = belligerent.SustainmentShortfall,
                 Threshold = 0d,
             });
@@ -162,10 +163,12 @@ public static class PressureAnalyser
                 Code = "reserves",
                 SideCode = belligerent.Side.Code,
                 Level = level,
-                Title = $"Fonds souverain : {quarters:F1} trimestre(s)",
-                Detail = $"{belligerent.NameOpeningSentence} ponctionne {economy.LastTurnReserveDrawBillions:F1} Md par trimestre "
-                    + $"pour tenir son effort de guerre. Il reste {economy.ReservesBillions:F0} Md. "
-                    + "Après quoi la guerre ne coûte plus que ce qu'elle rapporte.",
+                Title = LocalizedText.Of(TextCodes.Alert.ReservesTitle, LocalizedText.Number(quarters, "F1")),
+                Detail = LocalizedText.Of(
+                    TextCodes.Alert.ReservesDetail,
+                    belligerent.NameOpeningSentence,
+                    LocalizedText.Number(economy.LastTurnReserveDrawBillions, "F1"),
+                    LocalizedText.Number(economy.ReservesBillions, "F0")),
                 TurnsAhead = quarters,
                 Value = economy.ReservesBillions,
                 Threshold = 0d,
@@ -180,10 +183,13 @@ public static class PressureAnalyser
                 Code = "funding_gap",
                 SideCode = belligerent.Side.Code,
                 Level = gap > 0.4d ? AlertLevel.Critical : gap > 0.25d ? AlertLevel.Alert : AlertLevel.Watch,
-                Title = $"Effort de guerre bridé à {(1d - gap) * 100d:F0} %",
-                Detail = $"Les recettes du trimestre ne financent que {economy.WarFundableBillions:F1} Md "
-                    + $"sur les {economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare:F1} Md que "
-                    + $"{belligerent.NameInProse} voudrait dépenser. L'appareil le voit avant le front.",
+                Title = LocalizedText.Of(
+                    TextCodes.Alert.FundingGapTitle, LocalizedText.Number((1d - gap) * 100d, "F0")),
+                Detail = LocalizedText.Of(
+                    TextCodes.Alert.FundingGapDetail,
+                    LocalizedText.Number(economy.WarFundableBillions, "F1"),
+                    LocalizedText.Number(economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare, "F1"),
+                    belligerent.NameInProse),
                 TurnsAhead = 1d,
                 Value = economy.WarFundableBillions,
                 Threshold = economy.HeadlineGdpBillions * economy.WarBudgetCeilingShare,
@@ -205,11 +211,14 @@ public static class PressureAnalyser
                 SideCode = belligerent.Side.Code,
                 Level = AlertLevel.Critical,
                 Title = left <= 0
-                    ? "Le front cède"
-                    : $"Effondrement dans {left} tour(s)",
-                Detail = $"{belligerent.NameOpeningSentence} régénère {ratio:F2} de ce qu'elle consomme, sous le seuil de "
-                    + $"{ControlPhase.CollapseThreshold:F2} depuis {below} tour(s). Trois tours sous le seuil "
-                    + "et le front ne cède pas sous un assaut : il cède faute de flux.",
+                    ? LocalizedText.Of(TextCodes.Alert.CollapseNow)
+                    : LocalizedText.Of(TextCodes.Alert.CollapseIn, left),
+                Detail = LocalizedText.Of(
+                    TextCodes.Alert.CollapseDetail,
+                    belligerent.NameOpeningSentence,
+                    LocalizedText.Number(ratio, "F2"),
+                    LocalizedText.Number(ControlPhase.CollapseThreshold, "F2"),
+                    below),
                 TurnsAhead = left,
                 Value = ratio,
                 Threshold = ControlPhase.CollapseThreshold,
@@ -224,9 +233,11 @@ public static class PressureAnalyser
                 Code = "generation_thin",
                 SideCode = belligerent.Side.Code,
                 Level = AlertLevel.Alert,
-                Title = $"Régénération à {ratio:F2}, seuil à {ControlPhase.CollapseThreshold:F2}",
-                Detail = $"{belligerent.NameOpeningSentence} remplace tout juste ce qu'elle perd. Un mauvais trimestre "
-                    + "et le compte à rebours démarre.",
+                Title = LocalizedText.Of(
+                    TextCodes.Alert.GenerationTitle,
+                    LocalizedText.Number(ratio, "F2"),
+                    LocalizedText.Number(ControlPhase.CollapseThreshold, "F2")),
+                Detail = LocalizedText.Of(TextCodes.Alert.GenerationDetail, belligerent.NameOpeningSentence),
                 Value = ratio,
                 Threshold = ControlPhase.CollapseThreshold,
             });
@@ -255,16 +266,19 @@ public static class PressureAnalyser
             Level = stress >= RegimeCollapseStress - 4d
                 ? AlertLevel.Critical
                 : stress >= RegimeCollapseStress - 10d ? AlertLevel.Alert : AlertLevel.Watch,
-            Title = authoritarian
-                ? $"Appareil sous tension : {stress:F0} / {RegimeCollapseStress:F0}"
-                : $"Volonté sous tension : {stress:F0} / {RegimeCollapseStress:F0}",
+            Title = LocalizedText.Of(
+                authoritarian ? TextCodes.Alert.ApparatusStressTitle : TextCodes.Alert.WillStressTitle,
+                LocalizedText.Number(stress, "F0"),
+                LocalizedText.Number(RegimeCollapseStress, "F0")),
             Detail = authoritarian
-                ? $"Cohésion des élites à {belligerent.Politics.EliteCohesion:F0}, tension latente à "
-                    + $"{belligerent.Politics.LatentTension:F0}. Un régime ne tombe pas quand la rue crie, "
-                    + "il tombe quand la guerre cesse de payer ceux qui comptent."
-                : $"Moral à {belligerent.Politics.Morale:F0}, mécontentement à "
-                    + $"{belligerent.Politics.PopularDiscontent:F0}. Ce camp-là ne se renverse pas : "
-                    + "il négocie.",
+                ? LocalizedText.Of(
+                    TextCodes.Alert.ApparatusStressDetail,
+                    LocalizedText.Number(belligerent.Politics.EliteCohesion, "F0"),
+                    LocalizedText.Number(belligerent.Politics.LatentTension, "F0"))
+                : LocalizedText.Of(
+                    TextCodes.Alert.NegotiationDetail,
+                    LocalizedText.Number(belligerent.Politics.Morale, "F0"),
+                    LocalizedText.Number(belligerent.Politics.PopularDiscontent, "F0")),
             Value = stress,
             Threshold = RegimeCollapseStress,
         });
@@ -295,13 +309,14 @@ public static class PressureAnalyser
             Code = "winter_shedding",
             SideCode = belligerent.Side.Code,
             Level = industrial < 1d ? AlertLevel.Critical : AlertLevel.Alert,
-            Title = $"Hiver : délestage de {winterShortfall * 100d:F0} % au prochain tour",
+            Title = LocalizedText.Of(
+                TextCodes.Alert.WinterSheddingTitle, LocalizedText.Number(winterShortfall * 100d, "F0")),
             Detail = industrial < 1d
-                ? $"La demande hivernale dépasse ce que le réseau de {belligerent.NameInProse} peut fournir, et le "
-                    + $"tampon civil est épuisé : {(1d - industrial) * 100d:F0} % de la production d'armes "
-                    + "s'éteindra avec les usines."
-                : $"La demande hivernale dépasse la génération disponible. Le civil sera délesté le premier — "
-                    + "cela coûte du moral, pas encore des obus.",
+                ? LocalizedText.Of(
+                    TextCodes.Alert.WinterSheddingIndustrial,
+                    belligerent.NameInProse,
+                    LocalizedText.Number((1d - industrial) * 100d, "F0"))
+                : LocalizedText.Of(TextCodes.Alert.WinterSheddingCivilian),
             TurnsAhead = 1d,
             Value = belligerent.Grid.AvailableCapacityGw,
             Threshold = belligerent.Grid.DemandGw(Season.Winter),
@@ -329,10 +344,14 @@ public static class PressureAnalyser
             Code = "red_queen",
             SideCode = belligerent.Side.Code,
             Level = AlertLevel.Watch,
-            Title = $"Avance tactique périmée en 2 tours ({edge:F2} → {inTwo:F2})",
-            Detail = $"L'adversaire s'adapte de {decay * 100d:F0} % par tour. Sans réinvestissement, "
-                + $"{belligerent.NameInProse} retombe à sa consommation d'obus d'avant — et le goulot revient "
-                + "se placer là où il était.",
+            Title = LocalizedText.Of(
+                TextCodes.Alert.EdgeDecayTitle,
+                LocalizedText.Number(edge, "F2"),
+                LocalizedText.Number(inTwo, "F2")),
+            Detail = LocalizedText.Of(
+                TextCodes.Alert.EdgeDecayDetail,
+                LocalizedText.Number(decay * 100d, "F0"),
+                belligerent.NameInProse),
             TurnsAhead = 2d,
             Value = edge,
             Threshold = 0.2d,
@@ -358,9 +377,8 @@ public static class PressureAnalyser
             Code = "external_will",
             SideCode = belligerent.Side.Code,
             Level = will <= 25d ? AlertLevel.Critical : AlertLevel.Alert,
-            Title = $"Volonté des soutiens : {will:F0} / 100",
-            Detail = $"{belligerent.NameOpeningSentence} vit d'un flux qu'elle ne paie pas et ne contrôle pas. "
-                + "Couper ce flux prend une journée et une élection ; le reconstituer prend des années.",
+            Title = LocalizedText.Of(TextCodes.Alert.ExternalWillTitle, LocalizedText.Number(will, "F0")),
+            Detail = LocalizedText.Of(TextCodes.Alert.ExternalWillDetail, belligerent.NameOpeningSentence),
             Value = will,
             Threshold = 0d,
         });

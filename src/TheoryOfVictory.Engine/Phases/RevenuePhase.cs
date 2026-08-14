@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -12,7 +13,7 @@ public sealed class RevenuePhase : ITurnPhase
 
     public string Name
     {
-        get { return "Revenus"; }
+        get { return "Revenue"; }
     }
 
     public void Execute(TurnContext context)
@@ -99,7 +100,10 @@ public sealed class RevenuePhase : ITurnPhase
 
                 if (drawn > 0d)
                 {
-                    context.Say($"{belligerent.Name} : {drawn:F1} Md ponctionnés sur les réserves.");
+                    context.Say(LocalizedText.Of(
+                        TextCodes.Narrative.ReserveDraw,
+                        belligerent.Name,
+                        LocalizedText.Number(drawn, "F1")));
                 }
             }
 

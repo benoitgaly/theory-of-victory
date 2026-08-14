@@ -1,36 +1,32 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 public sealed class Belligerent
 {
     public required Side Side { get; init; }
 
-    public required string Name { get; init; }
-
     /// <summary>
-    /// The name as it reads INSIDE a sentence, article included: prose says "ce que la Russie
-    /// voudrait dépenser" and "les dépôts de l'Ukraine", never the bare noun. It is carried as
-    /// data rather than derived from the spelling, because an article belongs to the noun and
-    /// no rule guesses gender — a scenario that adds a masculine side just writes it down.
-    ///
-    /// It falls back to the bare name, so a side that never appears in prose declares nothing.
+    /// Le nom du camp, sous ses trois formes — nu, dans une phrase avec son article, et en tête
+    /// de phrase. Il n'est plus écrit ici : c'est celui du <see cref="Side"/>, et le scénario
+    /// n'a pas à le redonner. Un camp portait son nom en français et sa version « en prose »
+    /// juste à côté, ce qui obligeait chaque scénario à connaître le genre du mot ; les trois
+    /// formes vivent maintenant dans le livre de phrases, avec toutes les autres.
     /// </summary>
-    public string NameInProse
+    public LocalizedText Name
     {
-        get => prose ?? Name;
-        init => prose = value;
+        get { return Side.Label; }
     }
 
-    /// <summary>The same name opening a sentence, where the article takes the capital.</summary>
-    public string NameOpeningSentence
+    public LocalizedText NameInProse
     {
-        get
-        {
-            string written = NameInProse;
-            return written.Length == 0 ? written : char.ToUpperInvariant(written[0]) + written[1..];
-        }
+        get { return Side.LabelInProse; }
     }
 
-    private readonly string? prose;
+    public LocalizedText NameOpeningSentence
+    {
+        get { return Side.LabelOpeningSentence; }
+    }
 
     /// <summary>
     /// Inhabitants at the outset, in millions. Nothing in the engine reads it: it is there so the
@@ -124,7 +120,7 @@ public sealed class Belligerent
 
     public bool HasCollapsed { get; set; }
 
-    public string? CollapseReason { get; set; }
+    public LocalizedText? CollapseReason { get; set; }
 
     public double GetDelivered(ResourceKind kind)
     {

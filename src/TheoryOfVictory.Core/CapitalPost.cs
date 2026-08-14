@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>
@@ -42,10 +44,10 @@ public sealed class CapitalPost
 {
     public required string Code { get; init; }
 
-    public required string Name { get; init; }
+    public required LocalizedText Name { get; init; }
 
     /// <summary>Billions of dollars on the seven posts of the band, and nothing else.</summary>
-    public required string Unit { get; init; }
+    public required LocalizedText Unit { get; init; }
 
     public required CapitalNature Nature { get; init; }
 
@@ -68,7 +70,7 @@ public sealed class CapitalPost
     public double? Threshold { get; init; }
 
     /// <summary>What the threshold is, in words: a red line nobody can name is a red line nobody trusts.</summary>
-    public string? ThresholdLabel { get; init; }
+    public LocalizedText? ThresholdLabel { get; init; }
 
     /// <summary>
     /// A second reading of the same post, in its own physical unit: the gigawatts behind the
@@ -77,9 +79,9 @@ public sealed class CapitalPost
     /// </summary>
     public double? Secondary { get; init; }
 
-    public string? SecondaryLabel { get; init; }
+    public LocalizedText? SecondaryLabel { get; init; }
 
-    public string? SecondaryUnit { get; init; }
+    public LocalizedText? SecondaryUnit { get; init; }
 
     /// <summary>Repair, growth, revenue, aid received. Drawn engraved: ordinary is never solid matter.</summary>
     public double Regeneration { get; init; }
@@ -95,7 +97,7 @@ public sealed class CapitalPost
     /// nobody can argue with is exactly what a teaching tool has to refuse, so a fall nothing
     /// can be named for is booked as ordinary consumption rather than dressed up as damage.
     /// </summary>
-    public string? DestructionCause { get; init; }
+    public LocalizedText? DestructionCause { get; init; }
 
     /// <summary>True when the loss does not come back inside this war. Draws the padlock.</summary>
     public bool PermanentLoss { get; init; }
@@ -162,7 +164,7 @@ public sealed class CapitalLink
 {
     public required string PostCode { get; init; }
 
-    public required string Label { get; init; }
+    public required LocalizedText Label { get; init; }
 
     /// <summary>
     /// Signed move of the quarter, as a share of where the post stood. The same form as
@@ -182,7 +184,7 @@ public sealed class CapitalLink
 public sealed class CapitalChain
 {
     /// <summary>The card title or the strike that started it. Never a guess.</summary>
-    public required string Origin { get; init; }
+    public required LocalizedText Origin { get; init; }
 
     public List<CapitalLink> Links { get; init; } = [];
 }

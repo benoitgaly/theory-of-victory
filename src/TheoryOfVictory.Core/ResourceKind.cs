@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>
@@ -7,17 +9,17 @@ namespace TheoryOfVictory.Core;
 public sealed class ResourceKind : IEquatable<ResourceKind>
 {
     // Front flows: consumed every turn by the troops in line. Counted in thousands of rounds / kilotonnes.
-    public static readonly ResourceKind Weapons = new("weapons", "Armes", "front", 4.5d);
-    public static readonly ResourceKind Fuel = new("fuel", "Carburant", "front", 0.9d);
-    public static readonly ResourceKind Food = new("food", "Nourriture", "front", 0.4d);
+    public static readonly ResourceKind Weapons = new("weapons", TextCodes.Resource.Weapons, "front", 4.5d);
+    public static readonly ResourceKind Fuel = new("fuel", TextCodes.Resource.Fuel, "front", 0.9d);
+    public static readonly ResourceKind Food = new("food", TextCodes.Resource.Food, "front", 0.4d);
 
     // Deep strike vectors: never reach the front, they attack what produces it.
-    public static readonly ResourceKind StrikeDrones = new("strike_drones", "Drones d'attaque", "strike", 0.035d);
-    public static readonly ResourceKind Missiles = new("missiles", "Missiles", "strike", 1.6d);
+    public static readonly ResourceKind StrikeDrones = new("strike_drones", TextCodes.Resource.StrikeDrones, "strike", 0.035d);
+    public static readonly ResourceKind Missiles = new("missiles", TextCodes.Resource.Missiles, "strike", 1.6d);
 
     // Interceptors: the cost-exchange battle is fought here.
-    public static readonly ResourceKind CheapInterceptors = new("cheap_interceptors", "Défense bas coût", "defence", 0.02d);
-    public static readonly ResourceKind HeavyInterceptors = new("heavy_interceptors", "Intercepteurs lourds", "defence", 3.2d);
+    public static readonly ResourceKind CheapInterceptors = new("cheap_interceptors", TextCodes.Resource.CheapInterceptors, "defence", 0.02d);
+    public static readonly ResourceKind HeavyInterceptors = new("heavy_interceptors", TextCodes.Resource.HeavyInterceptors, "defence", 3.2d);
 
     public static IReadOnlyList<ResourceKind> All { get; } =
         [Weapons, Fuel, Food, StrikeDrones, Missiles, CheapInterceptors, HeavyInterceptors];
@@ -28,17 +30,17 @@ public sealed class ResourceKind : IEquatable<ResourceKind>
 
     public static IReadOnlyList<ResourceKind> Interceptors { get; } = [CheapInterceptors, HeavyInterceptors];
 
-    private ResourceKind(string code, string displayName, string family, double unitCostMillions)
+    private ResourceKind(string code, string label, string family, double unitCostMillions)
     {
         Code = code;
-        DisplayName = displayName;
+        Label = LocalizedText.Of(label);
         Family = family;
         UnitCostMillions = unitCostMillions;
     }
 
     public string Code { get; }
 
-    public string DisplayName { get; }
+    public LocalizedText Label { get; }
 
     /// <summary>front, strike or defence — drives grouping on the board display.</summary>
     public string Family { get; }
@@ -76,6 +78,6 @@ public sealed class ResourceKind : IEquatable<ResourceKind>
 
     public override string ToString()
     {
-        return DisplayName;
+        return Label.ToString();
     }
 }

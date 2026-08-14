@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Scenarios;
 
@@ -54,30 +55,24 @@ public static class UkraineScenario
                 SupportVariant.Holds => "ukraine_2022_holds",
                 _ => "ukraine_2022_collapse",
             },
-            Title = variant switch
+            Title = LocalizedText.Of(variant switch
             {
-                SupportVariant.Resolve => "L'Occident joue ses cartes",
-                SupportVariant.Holds => "Le soutien tient, sans plus",
-                _ => "Le soutien s'arrête",
-            },
-            Subtitle = variant switch
+                SupportVariant.Resolve => TextCodes.Scenario.ResolveTitle,
+                SupportVariant.Holds => TextCodes.Scenario.HoldsTitle,
+                _ => TextCodes.Scenario.CollapseTitle,
+            }),
+            Subtitle = LocalizedText.Of(variant switch
             {
-                SupportVariant.Resolve => "L'Ukraine l'emporte",
-                SupportVariant.Holds => "Front figé, personne ne gagne",
-                _ => "L'Ukraine cède",
-            },
-            Description = variant switch
+                SupportVariant.Resolve => TextCodes.Scenario.ResolveSubtitle,
+                SupportVariant.Holds => TextCodes.Scenario.HoldsSubtitle,
+                _ => TextCodes.Scenario.CollapseSubtitle,
+            }),
+            Description = LocalizedText.Of(variant switch
             {
-                SupportVariant.Resolve => "On ne prend pas de terrain : on coupe la caisse. Embargo sur les "
-                    + "composants, campagne trimestrielle sur le raffinage, baril effondré, aide rendue "
-                    + "prévisible. La guerre cesse de payer ceux qui la tiennent, et c'est l'arrière russe "
-                    + "qui cède avant le front ukrainien.",
-                SupportVariant.Holds => "Le soutien extérieur vacille mais ne rompt jamais, sans jamais non "
-                    + "plus s'intensifier. Les deux camps remplacent ce qu'ils consomment et le front se fige. "
-                    + "L'égalité industrielle produit l'enlisement, pas la paix.",
-                _ => "Même départ, mêmes cartes, même calendrier pétrolier. Seule différence : au tour 6, le "
-                    + "flux gratuit s'arrête. Rien ne bouge pendant deux tours, puis tout cède d'un bloc.",
-            },
+                SupportVariant.Resolve => TextCodes.Scenario.ResolveDescription,
+                SupportVariant.Holds => TextCodes.Scenario.HoldsDescription,
+                _ => TextCodes.Scenario.CollapseDescription,
+            }),
             // The game opens a quarter BEFORE the invasion: autumn 2021 is pure force
             // generation, without a shot fired, and it is the most demonstrative turn of the
             // whole run. Starting in autumn keeps every winter on turns 2, 6, 10, 14, 18 and 22,
@@ -114,8 +109,6 @@ public static class UkraineScenario
         Belligerent russia = new()
         {
             Side = Side.Invader,
-            Name = "Russie",
-            NameInProse = "la Russie",
             // Estimation des Nations unies pour 2021, reprise par la Banque mondiale — le
             // recensement russe de la même année en compte 146,2, Crimée incluse.
             // Source, observation et confiance : data/historical-figures.json, figure civilian-ru.
@@ -308,8 +301,6 @@ public static class UkraineScenario
         Belligerent ukraine = new()
         {
             Side = Side.Defender,
-            Name = "Ukraine",
-            NameInProse = "l'Ukraine",
             // Même série, même millésime, Crimée comprise dans le total ukrainien.
             // Source, observation et confiance : data/historical-figures.json, figure civilian-ua.
             PopulationMillions = 44.3d,
@@ -504,7 +495,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "kharkiv",
-                Name = "Kharkiv",
+                Name = LocalizedText.Of(TextCodes.Sector.Kharkiv),
                 TerrainMultiplier = 1.05d,
                 Urbanisation = 0.35d,
                 Width = 7,
@@ -517,7 +508,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "kupiansk",
-                Name = "Koupiansk",
+                Name = LocalizedText.Of(TextCodes.Sector.Kupiansk),
                 TerrainMultiplier = 1.1d,
                 Urbanisation = 0.12d,
                 Width = 6,
@@ -530,7 +521,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "lyman",
-                Name = "Lyman",
+                Name = LocalizedText.Of(TextCodes.Sector.Lyman),
                 TerrainMultiplier = 1.25d,
                 Urbanisation = 0.08d,
                 Width = 5,
@@ -543,7 +534,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "bakhmut",
-                Name = "Bakhmout — Tchassiv Iar",
+                Name = LocalizedText.Of(TextCodes.Sector.Bakhmut),
                 TerrainMultiplier = 1.15d,
                 Urbanisation = 0.4d,
                 Width = 5,
@@ -556,7 +547,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "pokrovsk",
-                Name = "Pokrovsk",
+                Name = LocalizedText.Of(TextCodes.Sector.Pokrovsk),
                 TerrainMultiplier = 0.95d,
                 Urbanisation = 0.22d,
                 Width = 7,
@@ -569,7 +560,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "vuhledar",
-                Name = "Vouhledar",
+                Name = LocalizedText.Of(TextCodes.Sector.Vuhledar),
                 TerrainMultiplier = 1d,
                 Urbanisation = 0.18d,
                 Width = 5,
@@ -582,7 +573,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "zaporizhzhia",
-                Name = "Zaporijjia",
+                Name = LocalizedText.Of(TextCodes.Sector.Zaporizhzhia),
                 TerrainMultiplier = 1.2d,
                 Urbanisation = 0.15d,
                 Width = 7,
@@ -595,7 +586,7 @@ public static class UkraineScenario
             new FrontSector
             {
                 Code = "kherson",
-                Name = "Kherson — Dniepr",
+                Name = LocalizedText.Of(TextCodes.Sector.Kherson),
                 TerrainMultiplier = 1.6d,
                 Urbanisation = 0.2d,
                 Width = 6,

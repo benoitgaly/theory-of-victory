@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -70,7 +71,10 @@ public sealed class ProductionPhase : ITurnPhase
 
             if (expansion.Kind == ResourceKind.Weapons && expansion.AddedUnitsPerTurn > 20d)
             {
-                context.Say($"{belligerent.Name} : nouvelle capacité en service, +{expansion.AddedUnitsPerTurn:F0} k unités par tour.");
+                context.Say(LocalizedText.Of(
+                    TextCodes.Narrative.NewCapacity,
+                    belligerent.Name,
+                    LocalizedText.Number(expansion.AddedUnitsPerTurn, "F0")));
             }
         }
     }

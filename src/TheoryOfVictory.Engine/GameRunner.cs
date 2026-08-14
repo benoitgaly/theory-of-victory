@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine.Phases;
 
 namespace TheoryOfVictory.Engine;
@@ -8,11 +9,11 @@ public sealed class PlayedGame
 {
     public required string ScenarioCode { get; init; }
 
-    public required string Title { get; init; }
+    public required LocalizedText Title { get; init; }
 
-    public required string Subtitle { get; init; }
+    public required LocalizedText? Subtitle { get; init; }
 
-    public required string Description { get; init; }
+    public required LocalizedText? Description { get; init; }
 
     public required List<TurnSnapshot> Turns { get; init; }
 
@@ -108,7 +109,7 @@ public sealed class GameRunner
             // armistice is therefore not played at all: there is no front left to resolve, and
             // resolving one anyway would send the line running on a ratio that has lost all
             // meaning. The war stops on the last quarter that still had something to decide.
-            List<string> aftermathLines = RunAftermath(state, scenario, invaderDoctrine, defenderDoctrine);
+            List<LocalizedText> aftermathLines = RunAftermath(state, scenario, invaderDoctrine, defenderDoctrine);
             if (!AftermathPhase.KeepsPlaying(state))
             {
                 // The quarter that declares the armistice is not played, but it still has the
@@ -157,7 +158,7 @@ public sealed class GameRunner
     /// turn reads that context: it exists so the phase keeps the ordinary phase signature and can
     /// be moved into the turn engine, in its proper place, the day that file is free.
     /// </summary>
-    private List<string> RunAftermath(
+    private List<LocalizedText> RunAftermath(
         GameState state,
         Scenario scenario,
         Doctrine invaderDoctrine,

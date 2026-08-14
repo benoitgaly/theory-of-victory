@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine.Phases;
 
 namespace TheoryOfVictory.Engine;
@@ -180,7 +181,7 @@ public sealed class TurnEngine
     /// sharpest pressure on the board is what the player needs to hear before deciding
     /// whether the next turn matters.
     /// </summary>
-    private static string Headline(GameState state, List<PressureAlert> alerts)
+    private static LocalizedText Headline(GameState state, List<PressureAlert> alerts)
     {
         if (state.Outcome is not null && state.Outcome.Code != "frozen_front")
         {
@@ -189,7 +190,7 @@ public sealed class TurnEngine
 
         if (alerts.Count == 0)
         {
-            return "Les deux camps remplacent ce qu'ils consomment. Rien ne bouge, et c'est le sujet.";
+            return LocalizedText.Of(TextCodes.Narrative.QuietQuarter);
         }
 
         PressureAlert sharpest = alerts[0];
@@ -255,9 +256,9 @@ public sealed class TurnEngine
 
         // Only a consumed flow can be a bottleneck: the men are the size of the barrel,
         // never one of its staves.
-        string? bottleneckName = belligerent.BottleneckCode is null
+        LocalizedText? bottleneckName = belligerent.BottleneckCode is null
             ? null
-            : ResourceKind.FromCode(belligerent.BottleneckCode).DisplayName;
+            : ResourceKind.FromCode(belligerent.BottleneckCode).Label;
 
         return new SideSnapshot
         {

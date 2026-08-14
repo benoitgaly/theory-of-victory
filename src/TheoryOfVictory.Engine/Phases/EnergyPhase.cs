@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -14,7 +15,7 @@ public sealed class EnergyPhase : ITurnPhase
 
     public string Name
     {
-        get { return "Énergie"; }
+        get { return "Energy"; }
     }
 
     public void Execute(TurnContext context)
@@ -71,11 +72,14 @@ public sealed class EnergyPhase : ITurnPhase
 
             if (industrial < 1d)
             {
-                context.Say($"{belligerent.Name} : délestage industriel, {(1d - industrial) * 100d:F0} % de la production d'armes perdue.");
+                context.Say(LocalizedText.Of(
+                    TextCodes.Narrative.IndustrialShedding,
+                    belligerent.Name,
+                    LocalizedText.Number((1d - industrial) * 100d, "F0")));
             }
             else if (context.State.Season == Season.Winter)
             {
-                context.Say($"{belligerent.Name} : coupures civiles en plein hiver, le moral encaisse.");
+                context.Say(LocalizedText.Of(TextCodes.Narrative.CivilianCuts, belligerent.Name));
             }
         }
     }

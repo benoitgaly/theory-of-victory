@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Scenarios;
 
@@ -23,7 +24,7 @@ public sealed class DuelResult
 {
     public required DeckArchetype Archetype { get; init; }
 
-    public required string Name { get; init; }
+    public required LocalizedText Name { get; init; }
 
     /// <summary>Total political capital the deck costs to play in full.</summary>
     public required double PoliticalCost { get; init; }
@@ -32,7 +33,7 @@ public sealed class DuelResult
 
     public required string OutcomeCode { get; init; }
 
-    public required string OutcomeTitle { get; init; }
+    public required LocalizedText OutcomeTitle { get; init; }
 
     /// <summary>Turn the war was decided on. The scenario length when it was not.</summary>
     public required int DecidedOnTurn { get; init; }
@@ -114,7 +115,7 @@ public static class DeckDuel
                 PoliticalCost = cost,
                 Plays = deck.Count,
                 OutcomeCode = game.Outcome?.Code ?? "unresolved",
-                OutcomeTitle = game.Outcome?.Title ?? "Partie non conclue",
+                OutcomeTitle = game.Outcome?.Title ?? LocalizedText.Of(TextCodes.Outcome.Unresolved),
                 DecidedOnTurn = game.Turns.Count,
                 DefenderWins = game.Outcome?.WinnerSideCode == Side.Defender.Code,
                 InvaderPowerAtEnd = last.Invader.CombatPower,
@@ -138,15 +139,14 @@ public static class DeckDuel
         return false;
     }
 
-    public static string Name(DeckArchetype archetype)
+    public static LocalizedText Name(DeckArchetype archetype)
     {
-        return archetype switch
+        return LocalizedText.Of(archetype switch
         {
-            DeckArchetype.DeepStrike => "Frappe profonde",
-            DeckArchetype.FrontalAttrition => "Attrition frontale",
-            DeckArchetype.Political => "Épuisement politique",
-            _ => archetype.ToString(),
-        };
+            DeckArchetype.DeepStrike => TextCodes.Deck.DeepStrike,
+            DeckArchetype.FrontalAttrition => TextCodes.Deck.FrontalAttrition,
+            _ => TextCodes.Deck.Political,
+        });
     }
 
     /// <summary>

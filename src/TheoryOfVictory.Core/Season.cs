@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>Three-month turns make one turn in four the winter crisis turn.</summary>
@@ -11,16 +13,16 @@ public enum Season
 
 public static class SeasonExtensions
 {
-    public static string ToFrench(this Season season)
+    /// <summary>Le nom de la saison, dans la langue du lecteur et nulle part ailleurs.</summary>
+    public static LocalizedText Label(this Season season)
     {
-        return season switch
+        return LocalizedText.Of(season switch
         {
-            Season.Winter => "Hiver",
-            Season.Spring => "Printemps",
-            Season.Summer => "Été",
-            Season.Autumn => "Automne",
-            _ => season.ToString(),
-        };
+            Season.Winter => TextCodes.Season.Winter,
+            Season.Spring => TextCodes.Season.Spring,
+            Season.Summer => TextCodes.Season.Summer,
+            _ => TextCodes.Season.Autumn,
+        });
     }
 
     /// <summary>Mud season halves mobility, a real constraint on spring and autumn offensives.</summary>

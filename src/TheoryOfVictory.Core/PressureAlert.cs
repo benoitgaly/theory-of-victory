@@ -1,3 +1,5 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>How close to breaking. Three steps, because a gauge nobody can read is decoration.</summary>
@@ -28,10 +30,10 @@ public sealed class PressureAlert
     public required AlertLevel Level { get; init; }
 
     /// <summary>Short label, board-ready.</summary>
-    public required string Title { get; init; }
+    public required LocalizedText Title { get; init; }
 
     /// <summary>One sentence saying what breaks, and what it would take not to.</summary>
-    public required string Detail { get; init; }
+    public required LocalizedText Detail { get; init; }
 
     /// <summary>Turns before it bites, when the model can honestly say. Negative means unknown.</summary>
     public double TurnsAhead { get; init; } = -1d;

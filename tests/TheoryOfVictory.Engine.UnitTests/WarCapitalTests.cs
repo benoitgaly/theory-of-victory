@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine;
 using TheoryOfVictory.Engine.Scenarios;
 using Xunit;
@@ -123,8 +124,10 @@ public sealed class WarCapitalTests
                 {
                     foreach (CapitalPost post in side.Capital)
                     {
-                        string expected = post.Code == CapitalReader.International ? "sur 100" : "Md$";
-                        Assert.Equal(expected, post.Unit);
+                        string expected = post.Code == CapitalReader.International
+                            ? TextCodes.Capital.UnitOutOfHundred
+                            : TextCodes.Capital.UnitBillions;
+                        Assert.Equal(expected, post.Unit.Code);
                     }
 
                     // Une charge se retranche du bilan au lieu de le gonfler : la facture
@@ -350,7 +353,7 @@ public sealed class WarCapitalTests
                         continue;
                     }
 
-                    Assert.False(string.IsNullOrWhiteSpace(side.Chain.Origin));
+                    Assert.False(string.IsNullOrWhiteSpace(side.Chain.Origin.ToString()));
                     Assert.True(side.Chain.Links.Count > 1, "Un ruban d'un seul maillon n'est pas une chaîne.");
                 }
             }
@@ -380,17 +383,19 @@ public sealed class WarCapitalTests
             {
                 foreach (PressureAlert alert in turn.Alerts)
                 {
+                    string detail = Phrasebook.Say(alert.Detail);
+
                     foreach (string fragment in broken)
                     {
                         Assert.False(
-                            alert.Detail.Contains(fragment, StringComparison.Ordinal),
-                            $"T{turn.Turn} / {alert.Code} : « {fragment} » dans « {alert.Detail} ».");
+                            detail.Contains(fragment, StringComparison.Ordinal),
+                            $"T{turn.Turn} / {alert.Code} : « {fragment} » dans « {detail} ».");
                     }
 
                     Assert.False(
-                        alert.Detail.StartsWith("Russie", StringComparison.Ordinal)
-                            || alert.Detail.StartsWith("Ukraine", StringComparison.Ordinal),
-                        $"T{turn.Turn} / {alert.Code} : la phrase s'ouvre sur un nom nu — « {alert.Detail} ».");
+                        detail.StartsWith("Russie", StringComparison.Ordinal)
+                            || detail.StartsWith("Ukraine", StringComparison.Ordinal),
+                        $"T{turn.Turn} / {alert.Code} : la phrase s'ouvre sur un nom nu — « {detail} ».");
                 }
             }
         }
@@ -478,8 +483,8 @@ public sealed class WarCapitalTests
         return new CapitalPost
         {
             Code = code,
-            Name = code,
-            Unit = "Md$",
+            Name = LocalizedText.Of(TextCodes.Verbatim, code),
+            Unit = LocalizedText.Of(TextCodes.Capital.UnitBillions),
             Nature = CapitalNature.Stock,
             Value = index,
             Opening = index,

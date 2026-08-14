@@ -27,12 +27,32 @@ public sealed class TranslationTests
     /// </summary>
     private static readonly Regex[] Calls =
     [
-        new(@"Localizer\.Loc\(\s*""((?:[^""\\]|\\.)*)""", RegexOptions.Compiled),
-        new(@"(?<![\w.])T\(\s*""((?:[^""\\]|\\.)*)""", RegexOptions.Compiled),
-        new(@"tov\.t\(\s*""((?:[^""\\]|\\.)*)""", RegexOptions.Compiled),
+        new(@"Localizer\.Loc\(\s*" + Joined, RegexOptions.Compiled),
+        new(@"(?<![\w.])T\(\s*" + Joined, RegexOptions.Compiled),
+        new(@"tov\.t\(\s*" + Joined, RegexOptions.Compiled),
     ];
 
+    /// <summary>
+    /// Une clé peut s'écrire sur plusieurs lignes, collée par des + : le compilateur n'en fait
+    /// qu'une chaîne, et l'inventaire doit la recomposer de la même façon. Une expression qui
+    /// s'arrêterait au premier littéral enregistrerait le premier tiers d'une phrase, que le
+    /// code ne demandera jamais.
+    /// </summary>
+    private const string Joined = "(?<parts>" + Quoted + @"(?:\s*\+\s*" + Quoted + ")*)";
+
     private static readonly Regex Accented = new(@"[à-öø-ÿÀ-ÖØ-Þ«»œŒ]", RegexOptions.Compiled);
+
+    /// <summary>
+    /// La seule exception qui ne soit pas une valeur de donnée : le POURQUOI d'un ordre du
+    /// calendrier, écrit à côté de lui dans le scénario. Rien ne le lit et rien ne l'affiche —
+    /// c'est une annotation d'auteur, au même titre qu'un commentaire, et elle se lit là où
+    /// elle explique quelque chose : contre la ligne qu'elle justifie.
+    /// </summary>
+    private static readonly Regex Annotation =
+        new("Reason = " + Quoted, RegexOptions.Compiled);
+
+    /// <summary>Un littéral entre guillemets, échappements compris.</summary>
+    private const string Quoted = @"""((?:[^""\\]|\\.)*)""";
 
     /// <summary>
     /// Les littéraux accentués qui ne sont PAS du texte affiché, un par un, avec la raison.
@@ -65,10 +85,12 @@ public sealed class TranslationTests
     ];
 
     /// <summary>
-    /// Ce que le test surveille. Le moteur n'y est pas encore : ses phrases sont en cours de
-    /// sortie vers le catalogue, et il entrera dans le filet quand il n'en portera plus. Le
-    /// simulateur n'y entrera jamais — c'est un rapport de console pour développeur, qui n'est
-    /// servi à aucun lecteur.
+    /// Ce que le test surveille : tout ce qui peut finir sur la page. Le moteur en fait partie
+    /// depuis qu'il n'énonce plus que des faits — c'est le livre de phrases, et lui seul, qui a
+    /// le droit d'écrire du français.
+    ///
+    /// Le simulateur n'y entre pas : c'est un rapport de console pour développeur, servi à
+    /// aucun lecteur, et le traduire ne rendrait service à personne.
     /// </summary>
     private static readonly string[] WatchedFolders =
     [
@@ -76,6 +98,8 @@ public sealed class TranslationTests
         Path.Combine("src", "TheoryOfVictory.Web", "Views"),
         Path.Combine("src", "TheoryOfVictory.Web", "Controllers"),
         Path.Combine("src", "TheoryOfVictory.Web", "Services"),
+        Path.Combine("src", "TheoryOfVictory.Engine"),
+        Path.Combine("src", "TheoryOfVictory.Core"),
     ];
 
     [Fact]
@@ -83,10 +107,12 @@ public sealed class TranslationTests
     {
         List<string> offenders = [];
 
-        foreach (string file in WatchedFiles())
+        foreach (string file in WatchedFiles(includeCatalogues: false))
         {
             string content = WithoutComments(File.ReadAllText(file), file);
             HashSet<string> keys = KeysIn(content);
+            HashSet<string> annotations =
+                [.. Annotation.Matches(content).Select(match => Unescape(match.Groups[1].Value))];
 
             foreach (Match match in Literals(content))
             {
@@ -96,7 +122,7 @@ public sealed class TranslationTests
                     continue;
                 }
 
-                if (keys.Contains(literal) || DataValues.Contains(literal))
+                if (keys.Contains(literal) || DataValues.Contains(literal) || annotations.Contains(literal))
                 {
                     continue;
                 }
@@ -175,7 +201,7 @@ public sealed class TranslationTests
         IReadOnlyDictionary<string, string> catalogue = Localizer.Catalogue(Language.French);
         List<string> missing = [];
 
-        foreach (string file in WatchedFiles())
+        foreach (string file in WatchedFiles(includeCatalogues: true))
         {
             string content = WithoutComments(File.ReadAllText(file), file);
             foreach (string key in KeysIn(content))
@@ -200,11 +226,17 @@ public sealed class TranslationTests
         {
             foreach (Match match in call.Matches(content))
             {
-                keys.Add(Unescape(match.Groups[1].Value));
+                keys.Add(Rejoin(match.Groups["parts"].Value));
             }
         }
 
         return keys;
+    }
+
+    /// <summary>Les morceaux d'une clé écrite sur plusieurs lignes, recollés.</summary>
+    private static string Rejoin(string parts)
+    {
+        return string.Concat(Regex.Matches(parts, Quoted).Select(piece => Unescape(piece.Groups[1].Value)));
     }
 
     private static MatchCollection Literals(string content)
@@ -234,7 +266,7 @@ public sealed class TranslationTests
         return stripped;
     }
 
-    private static IEnumerable<string> WatchedFiles()
+    private static IEnumerable<string> WatchedFiles(bool includeCatalogues)
     {
         string root = RepositoryRoot();
         foreach (string folder in WatchedFolders)
@@ -251,9 +283,12 @@ public sealed class TranslationTests
                 string extension = Path.GetExtension(file);
                 bool watched = extension is ".cs" or ".cshtml" or ".js";
 
-                // i18n.js EST le catalogue côté page : c'est le seul fichier qui a le droit de
-                // parler des traductions sans passer par elles.
-                if (watched && name != "i18n.js" && !file.Contains($"{Path.DirectorySeparatorChar}lib{Path.DirectorySeparatorChar}"))
+                // i18n.js et Phrasebook.cs SONT les catalogues — l'un pour la page, l'autre pour
+                // le serveur. Ce sont les deux seuls fichiers qui ont le droit d'écrire une
+                // phrase française, puisque c'est très exactement leur travail.
+                bool catalogue = name is "i18n.js" or "Phrasebook.cs";
+                if (watched && (includeCatalogues || !catalogue)
+                    && !file.Contains($"{Path.DirectorySeparatorChar}lib{Path.DirectorySeparatorChar}"))
                 {
                     yield return file;
                 }

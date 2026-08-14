@@ -1,22 +1,36 @@
+using TheoryOfVictory.Core.Localization;
+
 namespace TheoryOfVictory.Core;
 
 /// <summary>String-backed enumeration, GA convention: no magic ints in persisted data.</summary>
 public sealed class Side : IEquatable<Side>
 {
-    public static readonly Side Invader = new("invader", "Russie");
-    public static readonly Side Defender = new("defender", "Ukraine");
+    public static readonly Side Invader = new(
+        "invader", TextCodes.Side.Invader, TextCodes.Side.InvaderInProse, TextCodes.Side.InvaderOpening);
+
+    public static readonly Side Defender = new(
+        "defender", TextCodes.Side.Defender, TextCodes.Side.DefenderInProse, TextCodes.Side.DefenderOpening);
 
     public static IReadOnlyList<Side> All { get; } = [Invader, Defender];
 
-    private Side(string code, string displayName)
+    private Side(string code, string label, string inProse, string opening)
     {
         Code = code;
-        DisplayName = displayName;
+        Label = LocalizedText.Of(label);
+        LabelInProse = LocalizedText.Of(inProse);
+        LabelOpeningSentence = LocalizedText.Of(opening);
     }
 
     public string Code { get; }
 
-    public string DisplayName { get; }
+    /// <summary>Le nom nu, sur une étiquette.</summary>
+    public LocalizedText Label { get; }
+
+    /// <summary>Le nom avec son article, au milieu d'une phrase : « les dépôts de la Russie ».</summary>
+    public LocalizedText LabelInProse { get; }
+
+    /// <summary>Le même en tête de phrase, où l'article prend la majuscule.</summary>
+    public LocalizedText LabelOpeningSentence { get; }
 
     public Side Opponent
     {
@@ -53,6 +67,6 @@ public sealed class Side : IEquatable<Side>
 
     public override string ToString()
     {
-        return DisplayName;
+        return Label.ToString();
     }
 }

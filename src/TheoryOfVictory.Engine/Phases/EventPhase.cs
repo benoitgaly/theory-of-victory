@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -10,7 +11,7 @@ public sealed class EventPhase : ITurnPhase
 {
     public string Name
     {
-        get { return "Événements"; }
+        get { return "Events"; }
     }
 
     public void Execute(TurnContext context)
@@ -35,7 +36,7 @@ public sealed class EventPhase : ITurnPhase
         {
             context.State.PendingEffects.Remove(pending);
             CardEffectApplier.Apply(context.State, pending.Effect, context.Narrative);
-            context.Say($"Effet différé : {pending.CardTitle}.");
+            context.Say(LocalizedText.Of(TextCodes.Narrative.DelayedEffect, pending.CardTitle));
         }
     }
 
@@ -77,7 +78,7 @@ public sealed class EventPhase : ITurnPhase
             if (countered.Contains(card.Code))
             {
                 printed.Countered = true;
-                context.Say($"« {card.Title} » est contrée : la carte est jouée, elle ne produit rien.");
+                context.Say(LocalizedText.Of(TextCodes.Narrative.CardCountered, card.Title));
                 continue;
             }
 
@@ -124,8 +125,11 @@ public sealed class EventPhase : ITurnPhase
 
         if (shortfall > 0d)
         {
-            context.Say($"« {card.Title} » coûte {card.PoliticalCost:F0} de capital politique — "
-                + $"il en manquait {shortfall:F0}. En V2, cette carte reste en main.");
+            context.Say(LocalizedText.Of(
+                TextCodes.Narrative.CardOverdraft,
+                card.Title,
+                LocalizedText.Number(card.PoliticalCost, "F0"),
+                LocalizedText.Number(shortfall, "F0")));
         }
 
         return shortfall <= 0d;

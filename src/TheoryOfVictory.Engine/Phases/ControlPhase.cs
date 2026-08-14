@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -20,7 +21,7 @@ public sealed class ControlPhase : ITurnPhase
 
     public string Name
     {
-        get { return "Contrôle"; }
+        get { return "Control"; }
     }
 
     public void Execute(TurnContext context)
@@ -98,15 +99,14 @@ public sealed class ControlPhase : ITurnPhase
             }
 
             belligerent.HasCollapsed = true;
-            belligerent.CollapseReason = "génération de force sous le seuil trois tours de suite";
-            context.Say($"RUPTURE — {belligerent.Name} ne régénère plus assez de force : le front cède.");
+            belligerent.CollapseReason = LocalizedText.Of(TextCodes.Outcome.ReasonGeneration);
+            context.Say(LocalizedText.Of(TextCodes.Narrative.Rupture, belligerent.Name));
 
             context.State.Outcome ??= new GameOutcome
             {
                 Code = "military_collapse",
-                Title = $"Effondrement militaire — {belligerent.Name}",
-                Explanation = "Le ratio de génération de force est resté sous le seuil trois tours consécutifs. "
-                    + "Le front n'a pas cédé sous un assaut : il a cédé parce que le flux s'est tari.",
+                Title = LocalizedText.Of(TextCodes.Outcome.MilitaryCollapseTitle, belligerent.Name),
+                Explanation = LocalizedText.Of(TextCodes.Outcome.MilitaryCollapseExplanation),
                 WinnerSideCode = side.Opponent.Code,
                 Turn = context.State.Turn,
             };
@@ -132,18 +132,17 @@ public sealed class ControlPhase : ITurnPhase
             }
 
             bool authoritarian = belligerent.Politics.Regime == RegimeType.Authoritarian;
-            string title = authoritarian
-                ? $"Chute du régime — {belligerent.Name}"
-                : $"Capitulation négociée — {belligerent.Name}";
+            LocalizedText title = LocalizedText.Of(
+                authoritarian ? TextCodes.Outcome.RegimeCollapseTitle : TextCodes.Outcome.NegotiatedTitle,
+                belligerent.Name);
 
-            string explanation = authoritarian
-                ? "L'appareil s'est fracturé. Ce n'est pas la rue qui a renversé le régime : "
-                    + "c'est la guerre qui a cessé de payer ceux qui comptaient."
-                : "La volonté de continuer s'est épuisée et le pays a négocié. "
-                    + "On perd aussi par l'arrière.";
+            LocalizedText explanation = LocalizedText.Of(authoritarian
+                ? TextCodes.Outcome.RegimeCollapseExplanation
+                : TextCodes.Outcome.NegotiatedExplanation);
 
             belligerent.HasCollapsed = true;
-            belligerent.CollapseReason = authoritarian ? "chute du régime" : "épuisement de la volonté";
+            belligerent.CollapseReason = LocalizedText.Of(
+                authoritarian ? TextCodes.Outcome.ReasonRegime : TextCodes.Outcome.ReasonWill);
 
             context.State.Outcome = new GameOutcome
             {
@@ -175,12 +174,12 @@ public sealed class ControlPhase : ITurnPhase
         context.State.Outcome = new GameOutcome
         {
             Code = bothExhausted ? "mutual_exhaustion" : "frozen_front",
-            Title = bothExhausted ? "Épuisement mutuel" : "Front figé",
-            Explanation = !bothExhausted
-                ? "Les deux camps régénèrent autant qu'ils consomment. Le front tient, personne ne gagne : "
-                    + "l'égalité industrielle produit l'enlisement, pas la paix."
-                : "Les deux camps sont passés sous leur seuil de régénération. "
-                    + "Armistice sur la ligne atteinte, faute de pouvoir continuer.",
+            Title = LocalizedText.Of(bothExhausted
+                ? TextCodes.Outcome.MutualExhaustionTitle
+                : TextCodes.Outcome.FrozenFrontTitle),
+            Explanation = LocalizedText.Of(bothExhausted
+                ? TextCodes.Outcome.MutualExhaustionExplanation
+                : TextCodes.Outcome.FrozenFrontExplanation),
             Turn = context.State.Turn,
         };
     }

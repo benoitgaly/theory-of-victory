@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 using TheoryOfVictory.Engine;
 using TheoryOfVictory.Engine.Scenarios;
 
@@ -16,7 +17,7 @@ foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
 
     Console.WriteLine();
     Console.WriteLine(new string('=', 118));
-    Console.WriteLine($"  {game.Title.ToUpperInvariant()} — {game.Subtitle}");
+    Console.WriteLine($"  {game.Title.ToString().ToUpperInvariant()} — {game.Subtitle}");
     Console.WriteLine(new string('=', 118));
     Console.WriteLine();
     Console.WriteLine(
@@ -29,7 +30,7 @@ foreach (SupportVariant variant in Enum.GetValues<SupportVariant>())
             CultureInfo.CurrentCulture,
             "T{0,-4} {1,-8} {2,3} {3,5:F0}$ | {4,14:F0} {5,-10} {6,5:F2} {7,5:F0}  | {8,14:F0} {9,-10} {10,5:F2} {11,5:F0}  | {12,8:F0}",
             turn.Turn,
-            turn.Season.ToFrench(),
+            turn.Season.Label(),
             turn.Year % 100,
             turn.OilPrice,
             turn.Invader.CombatPower,
@@ -219,14 +220,15 @@ static void Mechanisms(PlayedGame game)
     Console.WriteLine($"  Magasin lourd UA   {heavyLow,3:F0} au plus bas, {heavyHigh:F0} au plus haut");
 }
 
-static string Short(string? name)
+static string Short(LocalizedText? name)
 {
-    if (string.IsNullOrEmpty(name))
+    string written = name?.ToString() ?? string.Empty;
+    if (written.Length == 0)
     {
         return "-";
     }
 
-    return name.Length <= 10 ? name : name[..10];
+    return written.Length <= 10 ? written : written[..10];
 }
 
 // What each card was worth, measured by replaying the same war without it. This is the

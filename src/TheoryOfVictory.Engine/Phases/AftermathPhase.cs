@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine.Phases;
 
@@ -30,7 +31,7 @@ public sealed class AftermathPhase : ITurnPhase
 
     public string Name
     {
-        get { return "Dénouement"; }
+        get { return "Aftermath"; }
     }
 
     /// <summary>
@@ -114,9 +115,11 @@ public sealed class AftermathPhase : ITurnPhase
         // plain lie on a page that shows cumulative losses in the next column.
         manpower.MobilisablePool += left;
 
-        context.Say(
-            $"Plus personne ne paie l'armée {Adjective(broken)} : {left * 1000d:N0} hommes ont quitté "
-            + "la ligne ce trimestre. Aucun assaut ne les en a délogés.");
+        context.Say(LocalizedText.Of(
+            broken.Side == Side.Invader
+                ? TextCodes.Narrative.NoOnePaysInvader
+                : TextCodes.Narrative.NoOnePaysDefender,
+            LocalizedText.Number(left * 1000d, "N0")));
     }
 
     /// <summary>
@@ -165,23 +168,22 @@ public sealed class AftermathPhase : ITurnPhase
         Belligerent broken,
         int quarters)
     {
-        string cause = state.Outcome!.Code switch
+        LocalizedText cause = LocalizedText.Of(state.Outcome!.Code switch
         {
-            "regime_collapse" => "Le régime est tombé, et l'armée a cessé d'être payée.",
-            "negotiated_capitulation" => "La volonté a cédé, et l'armée a cessé d'être tenue.",
-            _ => "La génération de force s'est tarie, et l'armée a cessé d'être alimentée.",
-        };
+            "regime_collapse" => TextCodes.Outcome.ArmisticeCauseRegime,
+            "negotiated_capitulation" => TextCodes.Outcome.ArmisticeCauseWill,
+            _ => TextCodes.Outcome.ArmisticeCauseGeneration,
+        });
 
         state.Outcome = new GameOutcome
         {
             Code = ArmisticeCode,
-            Title = $"Armistice — {broken.Name} se retire",
-            Explanation = cause
-                + $" En {quarters} trimestres, elle est tombée sous "
-                + $"{rules.ArmisticeManningRatio * 100d:F0} % de son effectif théorique sans qu'une "
-                + "seule attaque l'ait emportée : les secteurs sont revenus parce qu'il n'y avait "
-                + "plus personne pour les tenir. Le front n'a jamais été le moteur de cette guerre — "
-                + "il en était le thermomètre, et il vient de le montrer une dernière fois.",
+            Title = LocalizedText.Of(TextCodes.Outcome.ArmisticeTitle, broken.Name),
+            Explanation = LocalizedText.Of(
+                TextCodes.Outcome.ArmisticeExplanation,
+                cause,
+                quarters,
+                LocalizedText.Number(rules.ArmisticeManningRatio * 100d, "F0")),
             WinnerSideCode = broken.Side.Opponent.Code,
 
             // The turn the war was DECIDED, not the turn it stopped. The armistice is a
@@ -190,9 +192,9 @@ public sealed class AftermathPhase : ITurnPhase
             Turn = state.Outcome.Turn,
         };
 
-        context.Say(
-            $"ARMISTICE — l'armée {Adjective(broken)} n'existe plus comme force organisée. "
-            + "Le terrain a changé de mains sans bataille.");
+        context.Say(LocalizedText.Of(broken.Side == Side.Invader
+            ? TextCodes.Narrative.ArmisticeInvader
+            : TextCodes.Narrative.ArmisticeDefender));
     }
 
     /// <summary>
@@ -215,8 +217,4 @@ public sealed class AftermathPhase : ITurnPhase
         return code is "military_collapse" or "regime_collapse" or "negotiated_capitulation";
     }
 
-    private static string Adjective(Belligerent belligerent)
-    {
-        return belligerent.Side == Side.Invader ? "russe" : "ukrainienne";
-    }
 }

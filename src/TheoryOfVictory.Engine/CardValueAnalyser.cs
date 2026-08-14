@@ -1,4 +1,5 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine;
 
@@ -33,7 +34,7 @@ public sealed class CardValue
     public required double DefenderPowerDelta { get; init; }
 
     /// <summary>One line a player can read: what not playing this card would have cost.</summary>
-    public required string Verdict { get; init; }
+    public required LocalizedText Verdict { get; init; }
 }
 
 /// <summary>
@@ -124,7 +125,7 @@ public static class CardValueAnalyser
         };
     }
 
-    private static string Verdict(
+    private static LocalizedText Verdict(
         Scenario reference,
         PlayedGame baseline,
         bool changesWinner,
@@ -133,50 +134,52 @@ public static class CardValueAnalyser
     {
         if (changesWinner)
         {
-            return $"Décisive — sans elle, la guerre finit en « {Readable(counterfactualOutcome)} ».";
+            return LocalizedText.Of(TextCodes.Verdict.Decisive, Readable(counterfactualOutcome));
         }
 
-        string winner = Winner(reference, baseline);
+        LocalizedText winner = Winner(reference, baseline);
 
         if (turnsGained > 0d)
         {
-            return $"Elle fait tomber la décision {turnsGained:F0} trimestre(s) plus tôt, {winner}.";
+            return LocalizedText.Of(
+                TextCodes.Verdict.BringsForward, LocalizedText.Number(turnsGained, "F0"), winner);
         }
 
         if (turnsGained < 0d)
         {
-            return $"Elle prolonge la guerre de {-turnsGained:F0} trimestre(s) sans en changer l'issue.";
+            return LocalizedText.Of(
+                TextCodes.Verdict.Lengthens, LocalizedText.Number(-turnsGained, "F0"));
         }
 
-        return "Sans effet mesurable sur l'issue : elle rend le chemin plus confortable, rien de plus.";
+        return LocalizedText.Of(TextCodes.Verdict.NoMeasurableEffect);
     }
 
     /// <summary>
     /// Naming who the acceleration serves is what turns a delta into a lesson: a card
     /// that hastens its own player's defeat reads as a warning, not as an achievement.
     /// </summary>
-    private static string Winner(Scenario reference, PlayedGame baseline)
+    private static LocalizedText Winner(Scenario reference, PlayedGame baseline)
     {
         string? code = baseline.Outcome?.WinnerSideCode;
         if (string.IsNullOrEmpty(code))
         {
-            return "sans départager les camps";
+            return LocalizedText.Of(TextCodes.Verdict.WithoutSeparating);
         }
 
         Belligerent winner = Side.FromCode(code) == Side.Invader ? reference.Invader : reference.Defender;
-        return $"au profit de : {winner.Name}";
+        return LocalizedText.Of(TextCodes.Verdict.InFavourOf, winner.Name);
     }
 
-    private static string Readable(string outcomeCode)
+    private static LocalizedText Readable(string outcomeCode)
     {
-        return outcomeCode switch
+        return LocalizedText.Of(outcomeCode switch
         {
-            "frozen_front" => "front figé",
-            "mutual_exhaustion" => "épuisement mutuel",
-            "military_collapse" => "effondrement militaire",
-            "regime_collapse" => "chute du régime",
-            "negotiated_capitulation" => "capitulation négociée",
-            _ => "partie non conclue",
-        };
+            "frozen_front" => TextCodes.Verdict.ReadableFrozenFront,
+            "mutual_exhaustion" => TextCodes.Verdict.ReadableMutualExhaustion,
+            "military_collapse" => TextCodes.Verdict.ReadableMilitaryCollapse,
+            "regime_collapse" => TextCodes.Verdict.ReadableRegimeCollapse,
+            "negotiated_capitulation" => TextCodes.Verdict.ReadableNegotiated,
+            _ => TextCodes.Verdict.ReadableUnresolved,
+        });
     }
 }

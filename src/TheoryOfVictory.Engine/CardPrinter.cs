@@ -1,13 +1,21 @@
 using TheoryOfVictory.Core;
+using TheoryOfVictory.Core.Localization;
 
 namespace TheoryOfVictory.Engine;
 
-/// <summary>Turns a card's typed effects into printable rules text.</summary>
+/// <summary>
+/// Turns a card's typed effects into printable rules text.
+///
+/// Le cartouche ne contient plus de phrase : il contient des FAITS — un code d'effet, la cible
+/// et la valeur — et la phrase se compose à la lecture. Une ligne de règles est de la langue,
+/// et un deck rejoué dans une autre langue doit dire la même chose sans que rien du moteur ne
+/// change.
+/// </summary>
 public static class CardPrinter
 {
     public static PlayedCard Print(EventCard card)
     {
-        List<string> rules = [];
+        List<LocalizedText> rules = [];
         List<string> affected = [];
         foreach (CardEffect effect in card.Effects)
         {
@@ -30,7 +38,7 @@ public static class CardPrinter
             Code = card.Code,
             Title = card.Title,
             Family = card.Family,
-            TypeLine = $"{TypeName(card.Type)} — {card.Family}",
+            TypeLine = LocalizedText.Of(TextCodes.Card.TypeLine, TypeName(card.Type), FamilyName(card.Family)),
             Description = card.Description,
             OwnerSideCode = card.OwnerSideCode,
             PoliticalCost = card.PoliticalCost,
@@ -42,80 +50,120 @@ public static class CardPrinter
         };
     }
 
-    private static string TypeName(CardType type)
+    private static LocalizedText TypeName(CardType type)
     {
-        return type switch
+        return LocalizedText.Of(type switch
         {
-            CardType.Permanent => "Permanent",
-            CardType.Instant => "Éphémère",
-            CardType.SlowRitual => "Rituel lent",
-            CardType.Counter => "Contre-carte",
-            _ => "Carte",
+            CardType.Permanent => TextCodes.Card.Permanent,
+            CardType.Instant => TextCodes.Card.Instant,
+            CardType.SlowRitual => TextCodes.Card.SlowRitual,
+            CardType.Counter => TextCodes.Card.Counter,
+            _ => TextCodes.Card.Plain,
+        });
+    }
+
+    /// <summary>
+    /// La famille est une valeur de DONNÉE — cards.fr.json l'écrit, et la page s'en sert pour
+    /// choisir le ciel et la teinte de la carte. Elle ne se traduit donc qu'à l'écriture, par
+    /// une branche par valeur : passer la variable à Loc rendrait la clé illisible dans le code
+    /// et invisible pour l'inventaire. Une famille inconnue s'imprime telle quelle.
+    /// </summary>
+    private static LocalizedText FamilyName(string family)
+    {
+        return family switch
+        {
+            "Économique" => LocalizedText.Of(TextCodes.Card.FamilyEconomic),
+            "Politique occidentale" => LocalizedText.Of(TextCodes.Card.FamilyWesternPolitics),
+            "Politique interne" => LocalizedText.Of(TextCodes.Card.FamilyDomesticPolitics),
+            "Énergie" => LocalizedText.Of(TextCodes.Card.FamilyEnergy),
+            "Militaire et technologique" => LocalizedText.Of(TextCodes.Card.FamilyMilitary),
+            "Externe" => LocalizedText.Of(TextCodes.Card.FamilyExternal),
+            _ => LocalizedText.Of(TextCodes.Verbatim, family),
         };
     }
 
-    private static string Side(string? code)
+    private static LocalizedText Side(string? code)
     {
-        return code switch
+        return LocalizedText.Of(code switch
         {
-            "invader" => "Russie",
-            "defender" => "Ukraine",
-            _ => "chaque camp",
-        };
+            "invader" => TextCodes.Side.Invader,
+            "defender" => TextCodes.Side.Defender,
+            _ => TextCodes.Side.EitherSide,
+        });
     }
 
-    private static string Signed(double value, string unit)
+    /// <summary>
+    /// Le signe voyage avec le nombre, dans son format : « +3 », « −0,45 ». Les deux sections du
+    /// format s'en chargent, ce qui laisse la valeur brute jusqu'à la lecture — et le séparateur
+    /// décimal suit alors la langue au lieu d'être figé à l'impression de la carte.
+    /// </summary>
+    private static IFormattable Signed(double value)
     {
-        string sign = value >= 0d ? "+" : "−";
-        return $"{sign}{Math.Abs(value):0.##} {unit}";
+        return LocalizedText.Number(value, "+0.##;−0.##");
     }
 
-    private static string Describe(CardEffect effect)
+    private static LocalizedText Describe(CardEffect effect)
     {
-        string who = Side(effect.TargetSideCode);
-        string delay = effect.DelayTurns > 0 ? $" (dans {effect.DelayTurns} tours)" : string.Empty;
+        LocalizedText who = Side(effect.TargetSideCode);
 
-        string body = effect.Kind switch
+        LocalizedText body = effect.Kind switch
         {
-            EffectKind.OilPriceDelta => $"Prix du baril {Signed(effect.Value, "$")}",
-            EffectKind.AidPledgeDelta => $"{who} : aide promise {Signed(effect.Value, "Md par tour")}",
-            EffectKind.AidDisbursementRate => $"{who} : versement de l'aide {Signed(effect.Value * 100d, "%")}",
-            EffectKind.ForeignSupplyCeilingDelta => $"{who} : plafond d'achat étranger {Signed(effect.Value, "Md")}",
-            EffectKind.SanctionsPriceDelta => $"{who} : décote sur le baril {Signed(effect.Value * 100d, "pts")}",
-            EffectKind.SanctionsFrictionDelta => $"{who} : friction douanière {Signed(effect.Value * 100d, "pts")}",
-            EffectKind.SanctionsComponentDelta => $"{who} : accès aux composants {Signed(-effect.Value * 100d, "pts")}",
-            EffectKind.MobilisationWave => $"{who} : mobilise {effect.Value:0} k hommes",
-            EffectKind.RecruitmentCostMultiplier => $"{who} : coût de recrutement ×{effect.Value:0.##}",
-            EffectKind.MoraleDelta => $"{who} : moral {Signed(effect.Value, string.Empty)}",
-            EffectKind.PopularDiscontentDelta => $"{who} : mécontentement {Signed(effect.Value, string.Empty)}",
-            EffectKind.EliteCohesionDelta => $"{who} : cohésion des élites {Signed(effect.Value, string.Empty)}",
-            EffectKind.ExternalWillDelta => $"{who} : volonté des soutiens {Signed(effect.Value, string.Empty)}",
-            EffectKind.CorruptionDelta => $"{who} : corruption {Signed(effect.Value, string.Empty)}",
-            EffectKind.PoliticalCapitalDelta => $"{who} : capital politique {Signed(effect.Value, string.Empty)}",
-            EffectKind.InnovationTacticalJump => $"{who} : avance drones tactiques {Signed(effect.Value, string.Empty)}",
-            EffectKind.InnovationStrikeJump => $"{who} : avance frappe profonde {Signed(effect.Value, string.Empty)}",
-            EffectKind.InnovationCounterJump => $"{who} : avance contre-drone {Signed(effect.Value, string.Empty)}",
-            EffectKind.ProductionCapacityMultiplier => $"{who} : capacité industrielle ×{effect.Value:0.##}",
-            EffectKind.GridPermanentDamage => $"{who} : {effect.Value:0.#} GW détruits définitivement",
-            EffectKind.CivilianIndustryDamage => $"{who} : {effect.Value:0.#} Md d'appareil civil détruits",
-            EffectKind.RefiningIntegrityDelta => $"{who} : raffinage {Signed(effect.Value * 100d, "%")}",
-            EffectKind.LogisticsIntegrityDelta => $"{who} : logistique {Signed(effect.Value * 100d, "%")}",
-            EffectKind.TreasuryDelta => $"{who} : trésorerie {Signed(effect.Value, "Md")}",
-            EffectKind.StockDelta => $"{who} : stock {Signed(effect.Value, StockName(effect.ResourceCode))}",
-            EffectKind.ConditionalityDelta => $"{who} : conditionnalité de l'aide {Signed(effect.Value * 100d, "pts")}",
-            _ => effect.Kind.ToString(),
+            EffectKind.OilPriceDelta => LocalizedText.Of(TextCodes.Card.OilPrice, Signed(effect.Value)),
+            EffectKind.AidPledgeDelta => LocalizedText.Of(TextCodes.Card.AidPledge, who, Signed(effect.Value)),
+            EffectKind.AidDisbursementRate => LocalizedText.Of(TextCodes.Card.AidDisbursement, who, Signed(effect.Value * 100d)),
+            EffectKind.ForeignSupplyCeilingDelta => LocalizedText.Of(TextCodes.Card.ForeignCeiling, who, Signed(effect.Value)),
+            EffectKind.SanctionsPriceDelta => LocalizedText.Of(TextCodes.Card.BarrelDiscount, who, Signed(effect.Value * 100d)),
+            EffectKind.SanctionsFrictionDelta => LocalizedText.Of(TextCodes.Card.CustomsFriction, who, Signed(effect.Value * 100d)),
+            EffectKind.SanctionsComponentDelta => LocalizedText.Of(TextCodes.Card.ComponentAccess, who, Signed(-effect.Value * 100d)),
+            EffectKind.MobilisationWave => LocalizedText.Of(TextCodes.Card.Mobilisation, who, LocalizedText.Number(effect.Value, "0")),
+            EffectKind.RecruitmentCostMultiplier => LocalizedText.Of(TextCodes.Card.RecruitmentCost, who, LocalizedText.Number(effect.Value, "0.##")),
+            EffectKind.MoraleDelta => LocalizedText.Of(TextCodes.Card.Morale, who, Signed(effect.Value)),
+            EffectKind.PopularDiscontentDelta => LocalizedText.Of(TextCodes.Card.Discontent, who, Signed(effect.Value)),
+            EffectKind.EliteCohesionDelta => LocalizedText.Of(TextCodes.Card.EliteCohesion, who, Signed(effect.Value)),
+            EffectKind.ExternalWillDelta => LocalizedText.Of(TextCodes.Card.BackersWill, who, Signed(effect.Value)),
+            EffectKind.CorruptionDelta => LocalizedText.Of(TextCodes.Card.Corruption, who, Signed(effect.Value)),
+            EffectKind.PoliticalCapitalDelta => LocalizedText.Of(TextCodes.Card.PoliticalCapital, who, Signed(effect.Value)),
+            EffectKind.InnovationTacticalJump => LocalizedText.Of(TextCodes.Card.TacticalDroneEdge, who, Signed(effect.Value)),
+            EffectKind.InnovationStrikeJump => LocalizedText.Of(TextCodes.Card.DeepStrikeEdge, who, Signed(effect.Value)),
+            EffectKind.InnovationCounterJump => LocalizedText.Of(TextCodes.Card.CounterDroneEdge, who, Signed(effect.Value)),
+            EffectKind.ProductionCapacityMultiplier => LocalizedText.Of(TextCodes.Card.IndustrialCapacity, who, LocalizedText.Number(effect.Value, "0.##")),
+            EffectKind.GridPermanentDamage => LocalizedText.Of(TextCodes.Card.GridDestroyed, who, LocalizedText.Number(effect.Value, "0.#")),
+            EffectKind.CivilianIndustryDamage => LocalizedText.Of(TextCodes.Card.CivilianDestroyed, who, LocalizedText.Number(effect.Value, "0.#")),
+            EffectKind.RefiningIntegrityDelta => LocalizedText.Of(TextCodes.Card.Refining, who, Signed(effect.Value * 100d)),
+            EffectKind.LogisticsIntegrityDelta => LocalizedText.Of(TextCodes.Card.Logistics, who, Signed(effect.Value * 100d)),
+            EffectKind.TreasuryDelta => LocalizedText.Of(TextCodes.Card.Treasury, who, Signed(effect.Value)),
+            EffectKind.StockDelta => LocalizedText.Of(TextCodes.Card.StockDelta, who, Signed(effect.Value), StockName(effect.ResourceCode)),
+            EffectKind.ConditionalityDelta => LocalizedText.Of(TextCodes.Card.AidConditionality, who, Signed(effect.Value * 100d)),
+            _ => LocalizedText.Of(TextCodes.Card.Unnamed, effect.Kind.ToString()),
         };
 
-        return body + delay;
+        return effect.DelayTurns > 0
+            ? LocalizedText.Of(TextCodes.Card.Delayed, body, effect.DelayTurns)
+            : body;
     }
 
-    private static string StockName(string? code)
+    /// <summary>
+    /// Le nom de la ressource au milieu d'une phrase, où le français le veut en minuscule. Une
+    /// mise en minuscule automatique ferait le travail en français et le referait mal ailleurs :
+    /// l'anglais garde ses majuscules à certains noms, l'allemand à tous les siens.
+    /// </summary>
+    private static LocalizedText StockName(string? code)
     {
         if (string.IsNullOrWhiteSpace(code))
         {
-            return "unités";
+            return LocalizedText.Of(TextCodes.Resource.UnitsInline);
         }
 
-        return ResourceKind.FromCode(code).DisplayName.ToLowerInvariant();
+        return LocalizedText.Of(code switch
+        {
+            "weapons" => TextCodes.Resource.WeaponsInline,
+            "fuel" => TextCodes.Resource.FuelInline,
+            "food" => TextCodes.Resource.FoodInline,
+            "strike_drones" => TextCodes.Resource.StrikeDronesInline,
+            "missiles" => TextCodes.Resource.MissilesInline,
+            "cheap_interceptors" => TextCodes.Resource.CheapInterceptorsInline,
+            "heavy_interceptors" => TextCodes.Resource.HeavyInterceptorsInline,
+            _ => TextCodes.Resource.UnitsInline,
+        });
     }
 }
