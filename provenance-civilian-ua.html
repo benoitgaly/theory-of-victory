@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chiffre non document&#xE9; — Theory of Victory</title>
+    <title>Usines civiles &#x2014; Ukraine — Theory of Victory</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="css/site.css?v=FTegrZhHinM409bn6XIehb0vY7VhSmih3wZYaHvqi9o" />
     <link rel="stylesheet" href="css/capital.css?v=JhkESyN4y-Ja_NMSq3neh52xbbUHcG13zWfyFzoxizY" />
@@ -16,16 +16,87 @@
 
     <header class="prov-head">
         <p class="prov-kicker">D'où vient ce chiffre</p>
-        <h1>Rien ne le soutient</h1>
+        <h1>Usines civiles &#x2014; Ukraine</h1>
     </header>
 
-    <p>
-        Ce poste ne figure pas dans la base des données historiques : aucune observation datée,
-        aucune source. La valeur que porte le moteur est une constante du scénario, posée pour
-        qu'il produise une courbe discutable. <b>Elle ne doit pas être citée comme un fait.</b>
-    </p>
+    <section class="prov-block">
+        <h2>Les sources</h2>
+            <ol class="prov-sources">
+                    <li>
+                        <p class="ps-title">
+                                <a href="https://api.worldbank.org/v2/country/RUS;UKR/indicator/NY.GDP.MKTP.CD?date=2021&amp;format=json" rel="noreferrer">PIB aux prix courants du march&#xE9;, en dollars des &#xC9;tats-Unis &#x2014; Russie et Ukraine, ann&#xE9;e 2021</a>
+                        </p>
+                        <p class="ps-org">
+                            Banque mondiale · Mesure publi&#xE9;e
+ · Indicateur NY.GDP.MKTP.CD, mill&#xE9;sime 2021 · relevée le 14 ao&#xFB;t 2026                        </p>
+                            <p class="ps-note">L&#x27;adresse est celle de l&#x27;interface de donn&#xE9;es, et non celle d&#x27;une page de tableau de bord : elle porte l&#x27;ann&#xE9;e dans son URL et rend exactement les deux nombres cit&#xE9;s, sans mise en page &#xE0; interpr&#xE9;ter. Le mill&#xE9;sime 2021 est le dernier exercice complet avant l&#x27;invasion.</p>
+                    </li>
+                    <li>
+                        <p class="ps-title">
+                                <a href="https://api.worldbank.org/v2/country/RUS;UKR/indicator/SP.POP.TOTL?date=2021&amp;format=json" rel="noreferrer">Population totale &#x2014; Russie et Ukraine, ann&#xE9;e 2021</a>
+                        </p>
+                        <p class="ps-org">
+                            Banque mondiale · Mesure publi&#xE9;e
+ · Indicateur SP.POP.TOTL, mill&#xE9;sime 2021 · relevée le 14 ao&#xFB;t 2026                        </p>
+                            <p class="ps-note">S&#xE9;rie construite sur les estimations des Nations unies, qui rattachent la Crim&#xE9;e &#xE0; l&#x27;Ukraine. Le recensement russe de 2021 compte au contraire 146,2 millions d&#x27;habitants, Crim&#xE9;e incluse : l&#x27;&#xE9;cart d&#x27;environ deux millions ne change pas l&#x27;ordre de grandeur du rapport entre les deux pays.</p>
+                    </li>
+            </ol>
+    </section>
 
-    <nav class="prov-back"><a href="provenance.html">Les chiffres qui ont une source →</a></nav>
+    <section class="prov-block wide">
+        <h2>Les observations</h2>
+
+        <ol class="obs-list">
+                <li class="obs ">
+                    <div class="obs-rail">
+                        <p class="obs-date">2021</p>
+                        <p class="obs-value">
+                            199,8<span class="u">Md$</span>
+                        </p>
+                    </div>
+                    <div class="obs-body">
+                        <p class="obs-tags">
+                            <span class="prov-badge high">Haute</span>
+                        </p>
+                        <p class="obs-why">Le PIB entier n&#x27;est pas ce que ce poste porte, mais c&#x27;est de lui que tout part. Le sc&#xE9;nario ouvre sur un chiffre arrondi de 196 Md$, dont 188 de capacit&#xE9; productive.</p>
+                            <p class="conf-why">Mesure publi&#xE9;e par la Banque mondiale, relev&#xE9;e sur son interface de donn&#xE9;es, sans conversion ni interpolation.</p>
+                    </div>
+                </li>
+                <li class="obs ">
+                    <div class="obs-rail">
+                        <p class="obs-date">2021</p>
+                        <p class="obs-value">
+                            44,3<span class="u">M hab.</span>
+                        </p>
+                    </div>
+                    <div class="obs-body">
+                        <p class="obs-tags">
+                            <span class="prov-badge high">Haute</span>
+                        </p>
+                        <p class="obs-why">La population n&#x27;entre dans aucun calcul du moteur. Elle est cit&#xE9;e ici parce qu&#x27;elle r&#xE9;pond &#xE0; la question que le bandeau pose sans le vouloir : l&#x27;&#xE9;cart entre les deux appareils civils tient pour un tiers au nombre d&#x27;habitants et pour deux tiers &#xE0; ce que chacun produit.</p>
+                            <p class="conf-why">Estimation des Nations unies reprise par la Banque mondiale. L&#x27;incertitude porte sur le rattachement de la Crim&#xE9;e, pas sur l&#x27;ordre de grandeur.</p>
+                    </div>
+                </li>
+                <li class="obs kept">
+                    <div class="obs-rail">
+                        <p class="obs-date">1er octobre 2021</p>
+                        <p class="obs-value">
+                            225,6<span class="u">Md$</span>
+                        </p>
+                    </div>
+                    <div class="obs-body">
+                        <p class="obs-tags">
+                            <span class="prov-badge mid">Moyenne</span>
+                                <span class="obs-kept">retenue par le moteur</span>
+                        </p>
+                        <p class="obs-why">Le poste vaut cinq ann&#xE9;es de ce qu&#x27;il produit. Sur 188 Md$ de capacit&#xE9; productive, 24 % sont rang&#xE9;s du c&#xF4;t&#xE9; civil, soit 45,1 Md$ par an, que la capitalisation porte &#xE0; 226 Md$. C&#x27;est le premier poste du bilan parce qu&#x27;il porte toute l&#x27;&#xE9;conomie non militaire, quand les six autres sont des tranches &#xE9;troites.</p>
+                            <p class="conf-why">Deux conventions du jeu, assum&#xE9;es comme telles : la part civile de l&#x27;appareil productif, pos&#xE9;e &#xE0; 24 %, et la capitalisation &#xE0; cinq ann&#xE9;es de production. Ni l&#x27;une ni l&#x27;autre n&#x27;est mesur&#xE9;e ; seule leur entr&#xE9;e, le PIB, l&#x27;est.</p>
+                    </div>
+                </li>
+        </ol>
+    </section>
+
+    <nav class="prov-back"><a href="provenance.html">Tous les chiffres →</a></nav>
 </article>
 
     
