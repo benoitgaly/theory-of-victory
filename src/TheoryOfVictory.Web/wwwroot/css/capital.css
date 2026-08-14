@@ -21,19 +21,11 @@
     margin: 0 0 4px;
 }
 
-/* Le bandeau n'a plus qu'un titre : les 4 px se justifiaient sous un paragraphe, pas au-dessus
-   de la bannière du goulot, contre laquelle le titre venait buter. */
-.capital-band .cap-head h3 {
+/* Les deux pièces n'ont plus qu'un titre : ni préface, ni légende. Un plateau se lit, il ne se
+   préface pas, et un dessin qu'il faut accompagner d'un mode d'emploi est un dessin à refaire. */
+.capital-band .cap-head h3,
+.capital-scissor .cap-head h3 {
     margin: 0 0 12px;
-}
-
-.capital-band .cap-head p,
-.capital-scissor .cap-head p {
-    margin: 0 0 12px;
-    max-width: 78ch;
-    color: var(--ink-2);
-    font-size: 12.5px;
-    line-height: 1.45;
 }
 
 .cap-svg,
@@ -71,11 +63,6 @@
     fill: var(--ink-2);
 }
 
-/* Le poste que le moteur désigne comme la pression la plus vive du trimestre. */
-.cap-svg .cap-name.alerted {
-    fill: var(--paper);
-}
-
 .cap-svg .cap-side.ru { fill: var(--ru); }
 .cap-svg .cap-side.ua { fill: var(--ua); }
 
@@ -104,69 +91,26 @@
     fill: var(--ink-2);
 }
 
+/* Une seule graisse, une seule taille, quel que soit l'état. Il y en avait trois — 500 pour un
+   trimestre calme, 600 pour la base, 800 pour un mouvement — et une opacité en plus sur le calme :
+   la ligne qui bougeait criait, celle qui ne bougeait pas chuchotait, et l'œil classait les
+   postes par le bruit qu'ils faisaient avant de les avoir lus. Seule la COULEUR distingue, et
+   elle ne distingue que le signe. */
 .cap-svg .cap-delta {
     font-family: var(--font-ui);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     fill: var(--ink-3);
 }
 
-/* Coloré uniquement s'il s'agit d'une destruction : le reste est ordinaire. */
-.cap-svg .cap-delta.destroyed {
-    fill: var(--bad);
-    font-weight: 800;
-}
+/* La couleur suit le signe, et rien d'autre : le capital descend ou il monte. C'est la seule
+   convention que le lecteur n'a pas à apprendre — et elle remplace un rouge qui signalait la
+   destruction, c'est-à-dire une information que rien à l'écran ne permettait de deviner. */
+.cap-svg .cap-delta.down { fill: var(--bad); }
 
-.cap-svg .cap-delta.flat {
-    font-weight: 500;
-    opacity: 0.75;
-}
+.cap-svg .cap-delta.up { fill: var(--ok); }
 
 .cap-post { cursor: help; }
-
-/* ---- La bannière du goulot ----
-
-   La pastille noire sur un poste de la gouttière disait la règle centrale du jeu — la
-   puissance est la ressource la plus rare — mais elle ne la disait à personne : rien à
-   l'écran ne la nommait. La bannière porte la même pastille et la phrase du moteur, juste
-   au-dessus du bandeau : le lecteur relie les deux sans qu'on ait à le lui expliquer. */
-
-.cap-bottleneck {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 9px;
-    margin: 0 0 12px;
-    padding: 7px 10px;
-    background: var(--card-2);
-    border-left: 3px solid var(--ink);
-    font-size: 12.5px;
-    line-height: 1.4;
-}
-
-.cap-bottleneck.ru { border-left-color: var(--ru); }
-.cap-bottleneck.ua { border-left-color: var(--ua); }
-
-.cap-bottleneck .cb-chip {
-    padding: 3px 9px 2px;
-    border-radius: 9px;
-    background: var(--ink);
-    color: var(--paper);
-    font-family: var(--font-ui);
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-}
-
-.cap-bottleneck .cb-post {
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-}
-
-.cap-bottleneck .cb-detail { color: var(--ink-2); }
 
 /* ---- Le ruban de conséquence ---- */
 
@@ -201,12 +145,19 @@
     color: var(--ink-2);
 }
 
+/* Même règle que le bandeau, et pour la même raison : la couleur suit le signe. Le ruban
+   imprimait tout en rouge, y compris les hausses — la chaîne d'une destruction contient des
+   postes qui montent, et les peindre en rouge disait le contraire de ce qu'ils font. */
 .cap-ribbon .cr-link i {
     margin-left: 5px;
     font-style: normal;
     font-weight: 700;
-    color: var(--bad);
+    color: var(--ink-3);
 }
+
+.cap-ribbon .cr-link i.down { color: var(--bad); }
+
+.cap-ribbon .cr-link i.up { color: var(--ok); }
 
 /* ---- Le ciseau ---- */
 
