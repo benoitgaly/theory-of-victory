@@ -666,7 +666,7 @@
     },
     "civilian-ru|2020|cia-factbook-russie|% du PIB · estimation CIA": {
       "confidenceWhy": "An estimate by an intelligence service, published with no method and no interval. Its worth lies in its continuity, not in its precision — hence the rounding to the whole point.",
-      "why": "The pre-war regime. The CIA and SIPRI agree here to within a tenth, which is reassuring about both."
+      "why": "The pre-war baseline. The CIA and SIPRI agree here to within a tenth, which is reassuring about both."
     },
     "civilian-ru|2021|banque-mondiale-pib-2021|Md$": {
       "confidenceWhy": "A measurement published by the World Bank, read off its data interface, with no conversion and no interpolation.",
