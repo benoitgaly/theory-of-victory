@@ -73,6 +73,16 @@
 .cap-svg .cap-side.ru { fill: var(--ru); }
 .cap-svg .cap-side.ua { fill: var(--ua); }
 
+/* Les deux totaux du camp. Discrets par construction : ils situent le bilan, ils ne sont
+   pas le sujet — le sujet est ce que le trimestre a pris, poste par poste. */
+.cap-svg .cap-total {
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    fill: var(--ink-3);
+}
+
 /* Les chiffres sont en sérif : c'est la matière du plateau. */
 .cap-svg .cap-value,
 .sc-svg .sc-end {
@@ -107,6 +117,50 @@
 }
 
 .cap-post { cursor: help; }
+
+/* ---- La bannière du goulot ----
+
+   La pastille noire sur un poste de la gouttière disait la règle centrale du jeu — la
+   puissance est la ressource la plus rare — mais elle ne la disait à personne : rien à
+   l'écran ne la nommait. La bannière porte la même pastille et la phrase du moteur, juste
+   au-dessus du bandeau : le lecteur relie les deux sans qu'on ait à le lui expliquer. */
+
+.cap-bottleneck {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 9px;
+    margin: 0 0 12px;
+    padding: 7px 10px;
+    background: var(--card-2);
+    border-left: 3px solid var(--ink);
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.cap-bottleneck.ru { border-left-color: var(--ru); }
+.cap-bottleneck.ua { border-left-color: var(--ua); }
+
+.cap-bottleneck .cb-chip {
+    padding: 3px 9px 2px;
+    border-radius: 9px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-ui);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.cap-bottleneck .cb-post {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.cap-bottleneck .cb-detail { color: var(--ink-2); }
 
 /* ---- Le ruban de conséquence ---- */
 
