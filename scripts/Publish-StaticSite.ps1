@@ -12,6 +12,12 @@
     relatif — GitHub Pages sert le site depuis un sous-répertoire — puis copie les feuilles
     de style et les scripts.
 
+    Le site est BILINGUE : /fr/ et /en/ sont deux sites complets, le plateau et ses seize
+    pages de provenance chacun, sous les mêmes noms de fichiers. À la racine, un renvoi par
+    nom de fichier envoie le lecteur vers sa langue — celle qu'il a choisie s'il en a choisi
+    une, celle de son navigateur sinon — en emportant le déroulé et le trimestre de
+    l'adresse. Une adresse partagée l'an dernier continue donc d'ouvrir la même page.
+
 .PARAMETER OutputPath
     Répertoire de sortie. Par défaut « .artifacts/site » à la racine du dépôt.
 
@@ -61,7 +67,7 @@ try {
     foreach ($attempt in 1..60) {
         Start-Sleep -Seconds 2
         try {
-            $page = Invoke-WebRequest -Uri "http://localhost:$Port/" -UseBasicParsing -TimeoutSec 20
+            $page = Invoke-WebRequest -Uri "http://localhost:$Port/fr/" -UseBasicParsing -TimeoutSec 20
             break
         }
         catch {
@@ -73,19 +79,14 @@ try {
         throw "Le serveur n'a pas répondu sur le port $Port."
     }
 
-    # Les actifs sont référencés en absolu ; GitHub Pages sert depuis /<dépôt>/, donc en relatif.
-    $html = $page.Content -replace '(?<=(?:src|href)=")/(css/|js/|favicon)', '$1'
-
-    Set-Content -Path (Join-Path $OutputPath "index.html") -Value $html -Encoding UTF8
-
     # Les pages de provenance — une par chiffre du bandeau, plus leur sommaire. Elles sont
     # rendues par le serveur, donc elles doivent être figées comme le plateau.
     #
     # La liste n'est pas écrite ici : elle est LUE sur le sommaire, qui l'énumère déjà. Un
     # inventaire recopié dans ce script serait une deuxième vérité à maintenir, et il
     # divergerait au premier chiffre ajouté au registre.
-    $pagesToFreeze = @("provenance.html")
-    $summary = Invoke-WebRequest -Uri "http://localhost:$Port/provenance.html" -UseBasicParsing -TimeoutSec 30
+    $pagesToFreeze = @("index.html", "provenance.html")
+    $summary = Invoke-WebRequest -Uri "http://localhost:$Port/fr/provenance.html" -UseBasicParsing -TimeoutSec 30
     $pagesToFreeze += ([regex]::Matches($summary.Content, 'href="(provenance-[^"]+\.html)"') |
         ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
 
@@ -113,13 +114,80 @@ try {
 
     $pagesToFreeze = @($pagesToFreeze | Sort-Object -Unique)
 
-    foreach ($page in $pagesToFreeze) {
-        $rendered = Invoke-WebRequest -Uri "http://localhost:$Port/$page" -UseBasicParsing -TimeoutSec 30
-        $frozen = $rendered.Content -replace '(?<=(?:src|href)=")/(css/|js/|favicon)', '$1'
-        Set-Content -Path (Join-Path $OutputPath $page) -Value $frozen -Encoding UTF8
+    # Les langues sont LUES sur le sélecteur du plateau plutôt qu'écrites ici : une troisième
+    # langue ajoutée au moteur doit se publier sans qu'on pense à revenir dans ce script.
+    $languages = @([regex]::Matches($page.Content, 'data-lang="(?<code>[a-z]{2})"') |
+        ForEach-Object { $_.Groups["code"].Value })
+    $languages += "fr"
+    $languages = @($languages | Sort-Object -Unique)
+
+    foreach ($language in $languages) {
+        $folder = Join-Path $OutputPath $language
+        New-Item -ItemType Directory -Force -Path $folder | Out-Null
+
+        foreach ($name in $pagesToFreeze) {
+            $rendered = Invoke-WebRequest -Uri "http://localhost:$Port/$language/$name" -UseBasicParsing -TimeoutSec 30
+
+            # Les actifs sont référencés en absolu, et les feuilles comme les scripts sont
+            # partagés par les deux langues : une page vit un cran plus bas que la racine du
+            # site, donc elle les remonte. GitHub Pages sert depuis /<dépôt>/, où un chemin
+            # absolu pointerait hors du site.
+            $frozen = $rendered.Content -replace '(?<=(?:src|href)=")/(css/|js/|favicon)', '../$1'
+            Set-Content -Path (Join-Path $folder $name) -Value $frozen -Encoding UTF8
+        }
+
+        Write-Host "$($pagesToFreeze.Count) pages figées en $language."
     }
 
-    Write-Host "$($pagesToFreeze.Count) pages de provenance figées."
+    # À la racine, une page par nom de fichier, qui renvoie vers la langue du lecteur. Elle
+    # n'existe pas pour l'accueil seulement : une adresse partagée l'an dernier pointe sur
+    # provenance-civilian-ru.html À LA RACINE, et elle doit continuer d'ouvrir cette page-là.
+    # Le paramètre de déroulé et de trimestre voyage avec, sinon un lien partagé perdrait en
+    # route ce qu'il désignait.
+    $redirect = @'
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Theory of Victory</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<script>
+(function () {
+    // Le choix déjà fait l'emporte sur la langue du navigateur : un lecteur qui a désigné une
+    // langue ne doit pas être rebasculé dans l'autre au retour suivant.
+    var stored = null;
+    try { stored = localStorage.getItem("tov-lang"); } catch (ignored) { stored = null; }
+
+    var known = __LANGUAGES__;
+    var chosen = null;
+    if (known.indexOf(stored) >= 0) { chosen = stored; }
+
+    if (!chosen) {
+        var offered = (navigator.languages || [navigator.language || "fr"]);
+        for (var i = 0; i < offered.length && !chosen; i++) {
+            var code = String(offered[i]).slice(0, 2).toLowerCase();
+            if (known.indexOf(code) >= 0) { chosen = code; }
+        }
+    }
+
+    location.replace((chosen || "fr") + "/__PAGE__" + location.search + location.hash);
+})();
+</script>
+</head>
+<body>
+<p><a href="fr/__PAGE__">Le plateau, en français</a> · <a href="en/__PAGE__">The board, in English</a></p>
+</body>
+</html>
+'@
+
+    $languageList = "[" + (($languages | ForEach-Object { '"' + $_ + '"' }) -join ", ") + "]"
+
+    foreach ($name in $pagesToFreeze) {
+        $body = $redirect.Replace("__LANGUAGES__", $languageList).Replace("__PAGE__", $name)
+        Set-Content -Path (Join-Path $OutputPath $name) -Value $body -Encoding UTF8
+    }
+
+    Write-Host "$($pagesToFreeze.Count) pages de renvoi écrites à la racine."
 
     foreach ($folder in @("css", "js")) {
         Copy-Item -Recurse -Force (Join-Path $wwwroot $folder) (Join-Path $OutputPath $folder)
