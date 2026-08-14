@@ -58,11 +58,22 @@ public sealed class FigureSource
 /// </summary>
 public sealed class FigureObservation
 {
+    /// <summary>
+    /// The date as the data file writes it. It is half of the identifier the prose is keyed on,
+    /// so it stays in French in every language — <see cref="DateLabel"/> is what a reader sees.
+    /// </summary>
     public required string Date { get; init; }
+
+    /// <summary>The date as the page prints it, in the reader's language.</summary>
+    public required string DateLabel { get; init; }
 
     public required double Value { get; init; }
 
+    /// <summary>The other half of the identifier, and French for the same reason as the date.</summary>
     public required string Unit { get; init; }
+
+    /// <summary>The unit as the page prints it, beside the value.</summary>
+    public required string UnitLabel { get; init; }
 
     /// <summary>Null when nothing published supports it — and the page says so in those words.</summary>
     public string? SourceCode { get; init; }

@@ -103,9 +103,9 @@
             {
                 <li class="obs @(observation.Retained ? "kept" : "")">
                     <div class="obs-rail">
-                        <p class="obs-date">@observation.Date</p>
+                        <p class="obs-date">@observation.DateLabel</p>
                         <p class="obs-value">
-                            @observation.Value.ToString("N1").Replace("-", "−")<span class="u">@observation.Unit</span>
+                            @observation.Value.ToString("N1").Replace("-", "−")<span class="u">@observation.UnitLabel</span>
                         </p>
                     </div>
                     <div class="obs-body">

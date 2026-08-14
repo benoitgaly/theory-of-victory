@@ -3,242 +3,414 @@
   "sources": {
     "cbr-reserves-hebdo": {
       "title": "International reserves of the Russian Federation — weekly values at the end of the reporting period",
+      "organisation": "Central Bank of the Russian Federation",
+      "capture": "28 February 2022",
+      "statedUpdate": "Page dated 18 February 2022 by its publisher",
       "note": "The address is that of a timestamped archive, not of the live page: cbr.ru republishes the same address at every update, so a link to the current page would not prove what it displayed on the date cited. The table is published by the central bank itself, in billions of dollars, at the end of each reporting week. It is the most direct measurement that exists for this item."
     },
     "conseil-ue-sanctions": {
       "title": "EU sanctions against Russia: questions and answers — section “How are immobilised Russian assets used?”",
+      "organisation": "Council of the European Union",
+      "capture": "14 August 2026",
+      "statedUpdate": "Page dated 5 August 2026 by its publisher",
       "note": "The Council writes two distinct things there: that the third package of sanctions of February 2022 banned every transaction related to the management of the Central Bank of Russia's reserves, and that €210 billion of assets are frozen in the Union. That amount is the EU's ALONE. The total immobilised by the G7, the EU and Australia together is higher, and it is not quantified on that page: it is therefore not carried over here."
     },
     "kiel-graphique-2026-08-13": {
       "title": "Chart “Aid allocations by donor group”, 2022–June 2026, inflation-adjusted monthly averages, in billions of euros",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "The file name carries its publication date: 13 August 2026",
       "note": "This is the chart file itself, served by the publisher, and its name carries the publication date — an address that cannot be silently replaced by a later version. The values below are READ OFF IT BY EYE, to ±0.05 €bn/month: this is not an extraction from the dataset. The chart also measures ALLOCATION — what is assigned to a concrete package — and not delivery; that is one rung above what the engine represents, and the whole 2024 discrepancy comes from there."
     },
     "kiel-communique-2026-08-13": {
       "title": "Ukraine Support Tracker: Europe leads on aid – US weapons remain key",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Page dated 13 August 2026 by its publisher",
       "note": "The press release that accompanies the chart, used here as a CONTROL on the reading of the chart. It states in words a value the chart gives only as a bar height: “financial and humanitarian aid was 41 percent lower than in 2025” as a monthly average. The reading gives 1.77 against 3.01, i.e. −41.2%: it is confirmed to a tenth of a point. The release also quantifies the European loan — close to €11bn allocated over May and June 2026, of which 4.3 military and 6.7 financial, under a €90bn Ukraine Support Loan for 2026-2027 — and states that European donors bought at least €3bn of armaments from American industry in the first half of 2026."
     },
     "minfin-fnb-2021-10": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 October 2021",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Monthly release of the Russian Ministry of Finance, the fund's own issuer. The file name carries the reporting date, so the address cannot be silently replaced by a later month. The document gives TWO distinct amounts: the total volume of the fund and, separately, the “obyom likvidnykh aktivov” — the volume of liquid assets, defined by the Ministry itself as only those sums deposited in the fund's accounts at the Bank of Russia. The rest is locked up in deposits at VEB.RF, in bonds and in shares of Russian issuers. The file was downloaded from this address and its text extracted; reading the HTML pages of minfin.gov.ru directly, by contrast, requires a workaround tool. This source says nothing about the central bank's foreign exchange reserves, which are an entirely separate item."
     },
     "minfin-fnb-2022-01": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 January 2022",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Same monthly series, last annual reporting date before the invasion. The file name carries the reporting date. It gives the state of the fund seven weeks before 24 February 2022 and serves as the pre-war upper bound for the liquid share."
     },
     "minfin-fnb-2022-03": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 March 2022",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "First reporting date published after the invasion and after the freeze of 28 February. The document is decisive for understanding the trap of this item: its “liquid assets” line still counts 38,561.6 million euros, 4,178.7 million pounds sterling and 600,304.0 million yen — currencies that Western sanctions had just made unusable. At that date the Ministry's “liquid” line therefore measures what the fund OWNS, not what Moscow can SPEND, and the source does not draw that distinction."
     },
     "minfin-fnb-2023-01": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 January 2023",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Same series. At this reporting date the pound sterling and the yen have disappeared from the liquid line, and the euro weighs no more than 10.46 billion: the line is beginning to approach what can actually be mobilised, without being there yet."
     },
     "minfin-fnb-2023-07": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 July 2023",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Same series, mid-2023 point. There remain 7.28 billion euros in the liquid line, a marginal residue; from 2024 onwards the line contains nothing but yuan, gold and roubles."
     },
     "minfin-fnb-2024-01": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 January 2024",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Same series. From this reporting date onwards the liquid share consists solely of yuan, unallocated-account gold and roubles: it finally measures what the Russian Treasury can actually commit, and it therefore becomes comparable from one date to the next without correction."
     },
     "minfin-fnb-2025-01": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 January 2025",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Same series. This is the low point of the whole series for the liquid share expressed in dollars. The source does not say why: it gives a position, not an explanation, and the fall mixes budget drawdowns, the depreciation of the rouble and the valuation of gold."
     },
     "minfin-fnb-2025-08": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 August 2025",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
       "note": "Same series, mid-2025 point. The file name carries the reporting date."
     },
     "minfin-fnb-2026-02": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 February 2026",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release dated 6 February 2026 in the Ministry's list of information releases",
       "note": "Same series. The file for the reporting date of 1 January 2026 also exists but carries a generic name — Informatsionnoe_soobshchenie.docx — which does not prove its date; that is why the February point, whose file name is dated, is preferred here. For the record, the 1 January 2026 reporting date gives 171,490.8 million dollars in total and 52,219.8 million of liquid assets."
     },
     "minfin-fnb-2026-07": {
       "title": "Information release on the results of the investment of the resources of the National Wealth Fund — position at 1 July 2026",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release dated 3 July 2026 in the Ministry's list of information releases",
       "note": "Last reporting date published as at the capture date. The fund's accounts at the Bank of Russia now contain nothing but 189,793.8 million yuan and 141,082.8 kg of gold: two assets only, one of which is valued at the price of the metal. The source stops there — it says nothing about the drawdown rate planned, nor about how much of that liquidity is already committed in the budget."
     },
     "minfin-fnb-serie-xlsx": {
       "title": "Data on the movements and the results of the management of the resources of the National Wealth Fund — full monthly series since 2008",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "File dated 7 July 2026 by its publisher, with the workbook's internal property timestamped 7 July 2026 at 12:32 UTC",
       "note": "The Ministry's reference workbook: one column per month since January 2008, the end-of-period volume in billions of roubles and in billions of dollars, and the detailed composition of the accounts at the Bank of Russia. It serves here as a CONTROL on the monthly releases: the totals agree to the second decimal. Note that it contains NO “liquid assets” line — that line exists only in the monthly releases. It is, on the other hand, the source that dates the disappearance of Western currencies from the liquid line: pound sterling and yen fall to zero at the end of December 2022, the euro is extinguished gradually over the course of 2023."
     },
     "minfin-fnb-table-volume": {
       "title": "Volume of the National Wealth Fund — monthly table from February 2008 to November 2024",
+      "organisation": "Ministry of Finance of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Page dated 8 November 2024 by its publisher",
       "note": "A live page, but frozen since November 2024: the Ministry moved publication over to the monthly workbook. It displays the long series of the TOTAL volume, in roubles, in dollars and as a percentage of GDP, and nothing on the liquid share. The dated file it offers for download is Obem_na_01.11.2024.docx; the values read here were read in the table rendered as HTML, not in that file. Useful as a third control on the totals, of no value of its own beyond that."
     },
     "cbr-reserves-mensuel-requete": {
       "title": "International reserves of the Russian Federation — monthly values at the end of the reporting period, January 2022 to August 2026",
+      "organisation": "Central Bank of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Page dated 1 August 2026 by its publisher",
       "note": "The central bank's MONTHLY series was never interrupted: it is the weekly publication, the only one consulted in the existing database, that stops on 18 February 2022. The address carries the requested interval in its parameters, but the PAGE remains live and republished: it therefore does not prove what it displayed on any given day. That is why three timestamped snapshots are set alongside it below, covering every point retained except March 2022 and July 2026. The table distinguishes foreign exchange reserves, SDRs, the reserve position at the IMF and gold, but it NEVER distinguishes the frozen share from the available one."
     },
     "cbr-reserves-archive-2024-07": {
       "title": "International reserves of the Russian Federation — monthly values, May 2023 to May 2024",
+      "organisation": "Central Bank of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Snapshot of 2 July 2024; in it the page is dated 1 June 2024 by its publisher",
       "note": "Timestamped snapshot serving as proof of display for the 2023 points and those of the first half of 2024. It covers nothing before May 2023 or after May 2024."
     },
     "cbr-reserves-archive-2025-03": {
       "title": "International reserves of the Russian Federation — monthly values, February 2024 to February 2025",
+      "organisation": "Central Bank of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Snapshot of 23 March 2025; in it the page is dated 1 March 2025 by its publisher",
       "note": "Timestamped snapshot covering the end of 2024. It notably carries the closing value at 31 December 2024, which no other available snapshot shows."
     },
     "cbr-reserves-archive-2026-07": {
       "title": "International reserves of the Russian Federation — monthly values, June 2025 to June 2026",
+      "organisation": "Central Bank of the Russian Federation",
+      "capture": "14 August 2026",
+      "statedUpdate": "Snapshot of 23 July 2026; in it the page is dated 1 July 2026 by its publisher",
       "note": "The most recent timestamped snapshot. It covers the 2025 close and the first half of 2026, but not the July 2026 value, published after it."
     },
     "conseil-ue-immobilise-g7-2024-02-12": {
       "title": "Immobilised Russian assets: Council decides to set aside extraordinary revenues — press release of 12 February 2024",
+      "organisation": "Council of the European Union",
+      "capture": "14 August 2026",
+      "statedUpdate": "Press release dated 12 February 2024 at 17:14; carries “Last review: 28 January 2025”",
       "note": "This is the source that fills the gap identified. The Council writes there in so many words: “Around €260 billion in Central Bank of Russia assets have been immobilised in the form of securities and cash in the jurisdictions of the G7 partners, the EU and Australia, with more than two thirds of those immobilised in the EU.” The perimeter is exactly the one sought, and it therefore encompasses the €210bn for the EU alone already present in the database. The address carries the publication date in its path. Where it stops proving anything: it is a rounded order of magnitude fixed in February 2024, never refreshed by the Council since, and it is a valuation of a stock of securities and cash, not an audited inventory jurisdiction by jurisdiction. The country-by-country breakdown does not appear there, and Australia is not quantified separately."
     },
     "eprs-confiscation-2025-09": {
       "title": "Confiscation of immobilised Russian sovereign assets: State of play, arguments and scenarios — briefing PE 775.908",
+      "organisation": "European Parliamentary Research Service (EPRS)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Document dated September 2025 by its publisher; reference PE 775.908",
       "note": "The file name carries the year and the reference number, an address that cannot be silently replaced. The briefing serves here as a CONTROL on the Council's figure: it recalls the February 2024 amount — €260bn for the EU and the other G7 countries — and adds that, including non-G7 countries, the world total would approach €300bn. Its figure 1 details a total of €289.5bn for 2025: European Union 209.2, of which Belgium 180, Japan 28.1, United Kingdom 26.6, Canada 15.1, Switzerland 6.2, United States 4.3. Note that this perimeter is NOT the Council's — it adds Switzerland and does not isolate Australia — and the EPRS itself states that these amounts come from calculations by PISM and the Swiss federal government, not from an official declaration by the holding jurisdictions, and that the exact value per jurisdiction is hard to establish for want of consistent official information. This figure therefore cannot replace the Council's, only bracket it."
     },
     "conseil-ue-fnb-interdiction-2025-12-12": {
       "title": "Council decides to prohibit transfers of immobilised Central Bank of Russia assets back to Russia — press release of 12 December 2025",
+      "organisation": "Council of the European Union",
+      "capture": "14 August 2026",
+      "statedUpdate": "Press release dated 12 December 2025 at 19:35; carries “Last review: 16 December 2025”",
       "note": "A source with no figure in it, retained for a single point of law, verified in the text: the regulation of 12 December 2025 prohibits any transfer of assets of the Central Bank of Russia “or of any legal person, entity or body acting on behalf of, or at the direction of, the Central Bank of Russia, such as the Russian National Wealth Fund”. It therefore establishes that the National Wealth Fund is named in the European freeze, and that it must not be treated as an item sitting outside the sanctions. It says nothing about the amount of the fund held in the Union, and the Council publishes none."
     },
     "kiel-ust-r30-fichier": {
       "title": "Ukraine Support Tracker — Release 30, full data workbook (“ReadMe” sheet)",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "The ReadMe sheet describes itself as “Ukraine Support Tracker — 30th release (covering January 24, 2022 to June 30, 2026)” and carries the date 30 June 2026",
       "note": "File downloaded (12,155,823 bytes) and opened here with openpyxl: 95 sheets. This is not a search-engine summary. The file name carries the release number, so the address cannot be silently replaced by a later version. The ReadMe fixes the vocabulary on which everything else depends: “We report ALLOCATIONS as our primary metric. Commitments of future aid are reported in auxiliary figures. When information on deliveries or disbursements is available, we report these as well.” A commitment is an announcement, an allocation an assignment to a concrete package, a disbursement a payment observed — and the tracker publishes the last of these only where the information exists. This file proves what governments have ANNOUNCED and ASSIGNED; it stops proving anything the moment you ask it what reached the front."
     },
     "kiel-ust-r30-fig-a31": {
       "title": "Ukraine Support Tracker — Release 30, sheet “Fig A31 Monthly Avg 2022-2026” (Monthly Average of Aid Allocations by Donor Group: 2022–June 2026, billion Euros)",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release 30, covering 24 January 2022 to 30 June 2026",
       "note": "This is the dataset UNDERNEATH the “Aid allocations by donor group” chart read off by eye until now: same three groups, same two types, same five periods. The values are now read in the cell, no longer off a bar height. Structure of the table: rows 12 to 16 = 2022, 2023, 2024, 2025, 2026; columns E, F, G, H = military (United States, Europe, Other donors, Total); columns I, J, K, L = financial and humanitarian (the same four). The formulas sum column Q of the bilateral database — “tot_sub_activity_value_constant_currency” — hence CONSTANT EUROS, adjusted for inflation and exchange rates, 2021 base (the Country_Deflator sheet writes “Currency Power Change (2021 = baseline)”). Explicit filters in the formula: measure = allocation, type = Military or Financial & Humanitarian, month within the bounds of the year. “Europe” = EU member states and institutions, Norway, United Kingdom, Iceland, Switzerland. “Other donors” = Australia, Canada, Japan, New Zealand, South Korea, Türkiye, China, Taiwan, India. The sheet says nothing about what was delivered: allocation only."
     },
     "kiel-ust-r30-fig-2": {
       "title": "Ukraine Support Tracker — Release 30, sheet “Fig 2. Country Groups (stacked)” (Aid allocations and residual commitments across donor groups, billion Euros)",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release 30, cumulative from 24 January 2022 to 30 June 2026",
       "note": "The sheet publishes side by side, for geographic Europe and for the United States, the cumulative COMMITTED and ALLOCATED, and the gap between the two. It also gives the definition the tracker uses: “Allocations are defined as aid which has been delivered OR SPECIFIED FOR DELIVERY” — an allocation therefore includes equipment earmarked but not yet on its way. That is precisely why allocation is not delivery. Amounts in CURRENT euros (the formulas go back to columns M and P of the database, undeflated), unlike the Fig A31 sheet. The sheet does not quantify the “Other donors” group."
     },
     "kiel-ust-r30-aggregates": {
       "title": "Ukraine Support Tracker — Release 30, sheets “Aggregates by Country Group” and “Fig A22. Cumulative Alloc.”",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release 30, cumulative from 24 January 2022 to 30 June 2026",
       "note": "“Aggregates by Country Group” breaks commitments and allocations down by country and by sub-group (EU, Anglo-Saxon countries, other donor countries, geographic Europe), in billions of current euros, across the three types of aid. “Fig A22” gives the cumulative monthly series and its end point at 30 June 2026. These sheets do not follow the group split of Fig A31: the “Other donors” total in the sense of the chart has to be rebuilt by adding Canada, Australia, New Zealand and the “Other donor countries” block. That addition is done here and flagged as such. Known discrepancy between the two sheets — €179.80bn against €179.34bn of military aid allocated — because the monthly series excludes allocations with no month assigned."
     },
     "kiel-ust-r30-fig-9": {
       "title": "Ukraine Support Tracker — Release 30, sheets “Fig 9. Budget Support by Donor” and “Financial disb per Month (€)” (Foreign budgetary support: allocations vs. disbursements)",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release 30, from 24 January 2022 to 30 June 2026",
       "note": "THE source on actual disbursement, and the only one that gives amounts for it. It covers a single category: budgetary support to the Ukrainian state — loans, grants and guarantees paid into the budget. The disbursements do not come from the tracker but from the UKRAINIAN MINISTRY OF FINANCE, that is, from the recipient, which makes them a control independent of the donor. The sheet specifies “nominal value”: CURRENT euros, not adjusted for inflation. It proves nothing about military aid, nothing about humanitarian aid, and nothing about what the weapons that actually arrived are worth."
     },
     "kiel-ust-r30-inkind": {
       "title": "Ukraine Support Tracker — Release 30, sheets “In-kind Military per Country”, “Fig A4. Weapon Delivery” and “Delivery Transparency Index”",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release 30, from 24 January 2022 to 30 June 2026",
       "note": "The second and last window the tracker offers on what was delivered. It is in NUMBERS OF UNITS, never in euros, and it is limited to five categories of heavy weapons: 155/152 mm howitzers, multiple rocket launchers, tanks, surface-to-air systems, infantry fighting vehicles. The sheet publishes a “delivery rate” by category and by country, measured against the COMMITTED (“Committed / Delivered” columns), not against the allocated — a distinction that forbids mapping those rates back onto the allocated amounts. Nothing there covers ammunition, drones, spare parts or maintenance."
     },
     "kiel-ust-r30-maindata": {
       "title": "Ukraine Support Tracker — Release 30, sheet “Bilateral Assistance, MAIN DATA” (line-by-line database, 5,820 activities, column “tot_value_deliv_EUR”)",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "Release 30, from 24 January 2022 to 30 June 2026",
       "note": "The raw database behind every figure sheet, 80 columns. It carries a “tot_value_deliv_EUR” column — the euro value of what has been delivered — and counting it is what measures the exact size of the gap: the field is almost always empty. The fill count reported below is a count performed here on this database, not a figure published by the publisher, and it is flagged as such."
     },
     "kiel-ust-page-publication": {
       "title": "Publication page “Ukraine Support Tracker Data” — dataset record and download link",
+      "organisation": "Kiel Institute for the World Economy",
+      "capture": "14 August 2026",
+      "statedUpdate": "The record shows “Publication Date 06/2026” — the month alone, with no day",
       "note": "Used solely to establish that the Release 30 file downloaded is indeed the one the publisher currently serves as the live version: the “XLSX Download” button points to exactly the address used here. It does NOT give the date of release to the day — “06/2026” designates the end of the period covered, not the publication, which came later since the press release accompanying this release is dated 13 August 2026."
     },
     "banque-mondiale-pib-2021": {
       "title": "GDP at current market prices, in United States dollars — Russia and Ukraine, year 2021",
+      "organisation": "World Bank",
+      "capture": "14 August 2026",
+      "statedUpdate": "Indicator NY.GDP.MKTP.CD, 2021 vintage",
       "note": "The address is that of the data interface, not that of a dashboard page: it carries the year in its URL and returns exactly the two numbers cited, with no layout to interpret. The 2021 vintage is the last full financial year before the invasion."
     },
     "banque-mondiale-pop-2021": {
       "title": "Total population — Russia and Ukraine, year 2021",
+      "organisation": "World Bank",
+      "capture": "14 August 2026",
+      "statedUpdate": "Indicator SP.POP.TOTL, 2021 vintage",
       "note": "A series built on United Nations estimates, which attach Crimea to Ukraine. The Russian census of 2021, by contrast, counts 146.2 million inhabitants, Crimea included: the gap of about two million does not change the order of magnitude of the ratio between the two countries."
     },
     "SIPRI-FS-2026": {
       "title": "SIPRI Fact Sheet, April 2026 — “Trends in World Military Expenditure, 2025”",
+      "organisation": "SIPRI (Stockholm International Peace Research Institute)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Fact Sheet dated April 2026; the SIPRI Military Expenditure Database was updated on 27 April 2026 and supersedes all previously published data",
       "note": "PDF timestamped by its vintage. Table 1 gives military spending as a share of GDP for 2025 and 2016. The SIPRI methodology (a broad, NATO-type definition) is set out on the last page: armed forces, defence ministries, militarised paramilitary forces, military space activities, military pensions, R&D, military aid from the donor country; it excludes civil defence and veterans."
     },
     "SIPRI-FS-2025": {
       "title": "SIPRI Fact Sheet, April 2025 — “Trends in World Military Expenditure, 2024”",
+      "organisation": "SIPRI",
+      "capture": "14 August 2026",
+      "statedUpdate": "April 2025; database updated April 2025",
       "note": "Contains SIPRI's warning about Russian opacity: “around 30 per cent of budgeted expenditure was classified in 2024” and Russia's real military spending in 2024 is probably higher than the 149 billion dollars estimated here."
     },
     "SIPRI-FS-2024": {
       "title": "SIPRI Fact Sheet, April 2024 — “Trends in World Military Expenditure, 2023”",
+      "organisation": "SIPRI",
+      "capture": "14 August 2026",
+      "statedUpdate": "April 2024; database updated April 2024",
       "note": "A vintage useful for the year 2023, which later editions do not display again as a column."
     },
     "SIPRI-FS-2023": {
       "title": "SIPRI Fact Sheet, April 2023 — “Trends in World Military Expenditure, 2022”",
+      "organisation": "SIPRI",
+      "capture": "14 August 2026",
+      "statedUpdate": "April 2023; database updated April 2023",
       "note": "States that the Ukrainian total for 2022 “does not include military aid provided to Ukraine”."
     },
     "SIPRI-FS-2022": {
       "title": "SIPRI Fact Sheet, April 2022 — “Trends in World Military Expenditure, 2021”",
+      "organisation": "SIPRI",
+      "capture": "14 August 2026",
+      "statedUpdate": "April 2022; database updated April 2022",
       "note": "The pre-war reference year for both countries."
     },
     "MINFIN-ONBP-2026": {
       "title": "“Основные направления бюджетной, налоговой и таможенно-тарифной политики на 2026 год и на плановый период 2027 и 2028 годов”",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 03/10/2025 (date shown at https://minfin.gov.ru/ru/perfomance/budget/policy/)",
       "note": "A 182-page PDF, read directly. Table 4.1.1 (oil and gas revenue as a share of GDP and as a share of revenue, 2023-2028), table 4.1.3 (federal spending by section 2026-2028), table 4.4.2 (structure of the spending of the budget system as a whole as a share of GDP, 2026-2028)."
     },
     "MINFIN-BUDGET-CITOYEN": {
       "title": "“Бюджет для граждан” accompanying the 2026-2028 draft budget act",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Edition tied to the 2026-2028 draft budget (tabled in the autumn of 2025); it refers explicitly to act 419-ФЗ of 30/11/2024 as amended by act 152-ФЗ of 01/07/2025",
       "note": "Page 6: federal spending by section for 2025 (amended act) and 2026-2028 (draft). It is the only open Minfin publication found that restores the “National Defence” line for 2025."
     },
     "INTERFAX-2022-07-20": {
       "title": "“Доля нефтегазового сектора в ВВП РФ в I кв. выросла до максимума с начала расчетов”",
+      "organisation": "Interfax (reporting Rosstat's calculations)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Article timestamped “19:15, 20 июля 2022”",
       "note": "Reproduces the full annual series published by Rosstat that day (2017 to 2021) as well as the methodological definition of the “oil and gas sector” used by Rosstat (primary sub-sector: extraction and refining; secondary sub-sector: goods and services linked to extraction, refining, transport and sale)."
     },
     "KOMMERSANT-2024-04-05": {
       "title": "“Доля нефтегазового сектора в ВВП РФ в 2023 году снизилась до 16,5%”",
+      "organisation": "Kommersant (reporting Rosstat)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Article dated 5 April 2024",
       "note": "Gives only two years (2022 and 2023); does not carry 2019-2021."
     },
     "ANGI-2026-04-20": {
       "title": "“Вклад нефтегазовых доходов в ВВП России по итогам 2025 года достиг исторического минимума”",
+      "organisation": "Oil and Gas Information Agency (ANGI), citing Rosstat via RIA Novosti",
+      "capture": "14 August 2026",
+      "statedUpdate": "Article timestamped “20 апреля / 08:21” (2026)",
       "note": "Also gives Russian nominal GDP for 2025: 214.3 trillion roubles, up 1% in volume terms. The headline uses “нефтегазовых доходов” (revenue) whereas the body does measure the share of the SECTOR in GDP — the exact illustration of the confusion to be avoided."
     },
     "EPRUSSIA-2026-04-20": {
       "title": "“Доля нефтегазового сектора в ВВП России упала до исторического минимума”",
+      "organisation": "EPRussia (the journal Энергетика и промышленность России), citing Rosstat",
+      "capture": "14 August 2026",
+      "statedUpdate": "Article dated 20 April 2026",
       "note": "Independent confirmation of the 2025 figure (13%), of the previous low (14% in 2020) and of a 3-point gap against 2024."
     },
     "UKRAINEINVEST-2024-08": {
       "title": "“Інвестиційні можливості сектору енергетики” — Енергетичний сектор України",
+      "organisation": "UkraineInvest (the Ukrainian government investment promotion agency), after YC.Market, Ember and the IEA",
+      "capture": "14 August 2026",
+      "statedUpdate": "File posted in August 2024 (path /2024/08/, version dated 14.08)",
       "note": "Page 2, chart “Частка енергетики у ВВП країни, 2023”, placing Ukraine at 8%, between Czechia (8-9%) and Slovakia (7%), with Poland at 10%. This is a promotional infographic, with no table of figures and no published method."
     },
     "cia-factbook-russie": {
       "title": "The World Factbook — Russia, “Military expenditures” section",
+      "organisation": "Central Intelligence Agency (via the factbook.json repository)",
+      "capture": "14 August 2026",
+      "statedUpdate": "File frozen at 22 January 2026, two weeks before the Factbook closed",
       "note": "The Factbook itself has ceased to exist: cia.gov announced its closure on 4 February 2026 and its country pages no longer answer. Archive captures do not help, since the page loaded its values through a script. The link therefore points to the repository that preserves the text of the section as JSON, pinned to a specific commit — an address following the main branch would change underneath the link."
     },
     "cia-factbook-ukraine": {
       "title": "The World Factbook — Ukraine, “Military expenditures” section",
+      "organisation": "Central Intelligence Agency (via the factbook.json repository)",
+      "capture": "14 August 2026",
+      "statedUpdate": "File frozen at 21 January 2026",
       "note": "The same remark as for Russia. The Ukrainian section stops at 2021 and never resumes: the only thing the Factbook says about the war is a note with no dated figure."
     },
     "cia-factbook-fermeture": {
       "title": "Spotlighting The World Factbook as We Bid a Fond Farewell",
+      "organisation": "Central Intelligence Agency",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 4 February 2026",
       "note": "The agency's own announcement. It explains why none of the Factbook's addresses can serve as a live citation any longer, and why the series that come from it all stop at the 2024 vintage."
     },
     "SIPRI-DB-2026": {
       "title": "SIPRI Military Expenditure Database 1949-2025 (full workbook, sheets “Share of GDP”, “Share of Govt. spending”, “Local currency calendar years”, “Current US$”)",
+      "organisation": "SIPRI (Stockholm International Peace Research Institute)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Database updated on 27 April 2026 according to the April 2026 fact sheet that accompanies it; it supersedes all previously published SIPRI data",
       "note": "XLSX workbook downloaded and read sheet by sheet. It is the source that was missing on the first pass: it carries the “share of government spending” line for every year and every country, which the fact sheets publish only for a handful of countries and years. Note that its values are REVISED and differ from those of the fact sheets published at the time — the gap is documented below."
     },
     "MINFIN-EXEC-ANNUEL": {
       "title": "“Краткая ежегодная информация об исполнении федерального бюджета (млрд руб.)” — Annex 3.1, annual outturn of the federal budget 2006-2025",
+      "organisation": "Ministry of Finance of the Russian Federation (Minfin)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published and modified on 05/05/2026 (date shown at https://minfin.gov.ru/ru/statistics/fedbud/)",
       "note": "A primary XLSX file, re-read for this pass. The only source of observed OUTTURN: total spending up to 2025, but a breakdown by functional section only up to 2021."
     },
     "BDG-2022-LOI": {
       "title": "“Бюджет для граждан” accompanying budget act 390-ФЗ of 06/12/2021 (2022 financial year, 2023-2024 planning period)",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 30/12/2021 (date shown on the page https://minfin.gov.ru/ru/perfomance/budget/process/utverzhdenie/budget_citizen/)",
       "note": "Page 8, table “Расходы федерального бюджета по разделам функциональной классификации”. The page was rendered as an image and read visually, since text extraction from these infographics mismatches labels and values. The last budget enacted before the invasion."
     },
     "BDG-2023-PROJET": {
       "title": "“Бюджет для граждан” accompanying the draft budget act for 2023-2025",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 01/11/2022",
       "note": "Page 8, series 2021-2025, with the explicit note “показатели сводной бюджетной росписи на 1 сентября 2022 года”: the 2021 and 2022 columns are therefore positions of the consolidated budget schedule during the financial year, not enacted acts and not outturns. A crucial document: it is the last time the Ministry of Finance publishes a defence line for a wartime financial year in progress."
     },
     "BDG-2023-LOI": {
       "title": "“Бюджет для граждан” accompanying budget act 466-ФЗ of 05/12/2022 (2023 financial year, 2024-2025 planning period)",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 30/12/2022",
       "note": "Pages 14-15, table by section 2023-2025. The page was rendered as an image and read visually."
     },
     "BDG-2024-PROJET": {
       "title": "“Бюджет для граждан” accompanying the draft budget act for 2024-2026",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 01/11/2023",
       "note": "Page 5, series 2023-2026, note “показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г.” against the 2023 column."
     },
     "BDG-2024-LOI": {
       "title": "“Бюджет для граждан” accompanying budget act 540-ФЗ of 27/11/2023 (2024 financial year, 2025-2026 planning period)",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 28/12/2023",
       "note": "Pages 14-15, table by section 2024-2026. Footnote: “показатели сводной бюджетной росписи по состоянию на 1 декабря 2023 г.”."
     },
     "BDG-2025-PROJET": {
       "title": "“Бюджет для граждан” accompanying the draft budget act for 2025-2027",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 31/10/2024",
       "note": "Page 5, series 2024-2027. Its 2024 column, although referenced to the same legal basis as that of the brochure published two months later, differs from it by more than 1,500 billion roubles — a divergence reported as it stands further down."
     },
     "BDG-2025-LOI": {
       "title": "“Бюджет для граждан” accompanying budget act 419-ФЗ of 30/11/2024 (2025 financial year, 2026-2027 planning period)",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 27/12/2024",
       "note": "Pages 12-13, series 2024-2027. Footnote: the 2024 column follows act 540-ФЗ “с учетом изменений, внесенных Федеральным законом от 12 июля 2024 г. № 175-ФЗ”. The file actually served by the site (path /2025/04/) differs from the one referenced by search engines (/2024/12/); both open the same document."
     },
     "BDG-2026-PROJET": {
       "title": "“Бюджет для граждан” accompanying the draft budget act for 2026-2028",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 31/10/2025",
       "note": "Page 6, series 2025-2028. The 2025 column follows act 419-ФЗ as amended by act 152-ФЗ of 01/07/2025. A document already used on the first pass."
     },
     "BDG-2026-LOI": {
       "title": "“Бюджет для граждан” accompanying budget act 426-ФЗ of 28/11/2025 (2026 financial year, 2027-2028 planning period)",
+      "organisation": "Minfin",
+      "capture": "14 August 2026",
+      "statedUpdate": "Published on 29/12/2025",
       "note": "Pages 14-15, series 2025-2028. Footnote: the 2025 column follows act 419-ФЗ “с учетом изменений, внесенных Федеральным законом от 4 ноября 2025 г. № 414-ФЗ” — this is the second amendment of the 2025 financial year."
     },
     "CONSULTANT-466": {
       "title": "Appropriations breakdown annex by state programme — section “02 Национальная оборона”",
+      "organisation": "ConsultantPlus (text of federal act 466-ФЗ of 05/12/2022)",
+      "capture": "14 August 2026",
+      "statedUpdate": "Text of the act of 05/12/2022, page consulted in its current version",
       "note": "It measures opacity, not the total: the breakdown annex by programme publishes only the unclassified fraction of the section."
     }
   },
@@ -261,606 +433,908 @@
   },
   "observations": {
     "reserves-ru|1er octobre 2021|cbr-reserves-hebdo|Md$": {
+      "date": "1 October 2021",
+      "unit": "$bn",
       "confidenceWhy": "A figure published by the issuer itself, read off a timestamped archive. No conversion, no interpolation.",
       "why": "This is the exact date on which the game's first turn opens — autumn 2021 — and the engine therefore carries this value, to the unit. The quarter is a quarter of peace: nothing is frozen, the reserves are available in full."
     },
     "reserves-ru|12 février 2024 — total immobilisé par le G7, l'UE et l'Australie|conseil-ue-immobilise-g7-2024-02-12|Md€": {
+      "date": "12 February 2024 — total immobilised by the G7, the EU and Australia",
+      "unit": "€bn",
       "confidenceWhy": "The perimeter is exactly the one sought and the amount is written out in words by the Council, but it is a rounded order of magnitude fixed in February 2024, never refreshed since, and denominated in euros rather than dollars.",
       "why": "This is the gap in the database being filled: the €210bn already present covered the European Union alone, whereas the actual freeze extends to the G7 and Australia for some €260bn, more than two thirds of it in the Union. What this figure does NOT say: the breakdown by jurisdiction, the Australian share, and how things have moved since February 2024. Nor does it say how many of those assets are matured securities that have become cash — the European Parliament suggests as much as 90%, which changes the nature of the immobilised asset without changing its amount. Finally, the date matters: the Council publishes this total two years AFTER the freeze, so that no official source quantifies the immobilisation on the day of 28 February 2022 itself."
     },
     "reserves-ru|18 février 2022|cbr-reserves-hebdo|Md$": {
+      "date": "18 February 2022",
+      "unit": "$bn",
       "confidenceWhy": "Same series. It is the last point published before the invasion of 24 February, and the central bank stopped publishing thereafter.",
       "why": "Not retained, but it is the historical peak of the fund, and it falls six days before the invasion. It sets an upper bound on everything Russia could have had in hand on the first day of the war."
     },
     "reserves-ru|Hiver 2022 — valeur du moteur||Md$": {
+      "date": "Winter 2022 — engine value",
+      "unit": "$bn",
       "confidenceWhy": "The size of the freeze is no longer arbitrary: it falls BETWEEN the two published totals. The EU Council quantifies €260bn immobilised by the G7, the EU and Australia in February 2024, about $281bn at the exchange rate of the time; the EPRS puts forward €289.5bn in 2025, about $318bn. The engine removes 301.9. What remains uncertain is the exchange rate used and the reporting date, not the order of magnitude.",
       "why": "The freeze is played on the turn of the invasion and removes $301.9bn from the $611.9bn of the opening position, which leaves 310. Be careful what that number represents: it is what Russia can SPEND, and no source publishes it. The Bank of Russia never splits its reserves between a frozen share and an available one — its own figures go on counting the immobilised assets, which is why the published series does not fall: $643bn in February 2022, 598 at the end of 2023, 754 at the end of 2025. The engine therefore does not model the total Moscow displays, it models the till actually open, obtained by subtraction. It is a derived quantity, and it must be read as such."
     },
     "reserves-ru|Année 2025 — total immobilisé toutes juridictions, Suisse comprise|eprs-confiscation-2025-09|Md€": {
+      "date": "Year 2025 — total immobilised across all jurisdictions, Switzerland included",
+      "unit": "€bn",
       "confidenceWhy": "A compilation by the EPRS drawn from calculations by PISM and the Swiss federal government, not from an official declaration by the holding jurisdictions; the EPRS itself writes that the exact value per jurisdiction is hard to establish for want of consistent official information, and it deliberately uses a cautious figure for Luxembourg.",
       "why": "Retained solely to BRACKET the Council's figure, never to replace it: the perimeter differs, since it adds Switzerland — €6.2bn — and does not isolate Australia. Its real value lies elsewhere, in the concentration it reveals: out of €289.5bn, 209.2 sit in the Union and 180 in Belgium alone, that is 62% of the world total with a single custodian. The Western freeze therefore rests on a Belgian decision, which no aggregate amount would let you guess."
     },
     "reserves-ru|28 février 2022|conseil-ue-sanctions|Md€": {
+      "date": "28 February 2022",
+      "unit": "€bn",
       "confidenceWhy": "The amount is published by the Council, but it covers the European Union ONLY and it is denominated in euros. The total immobilised by all the partners together is higher and is not quantified on that page.",
       "why": "This is the only immobilisation we have been able to verify at source. It dates the freeze — third sanctions package, February 2022 — but it is not enough to quantify what Russia actually lost."
     },
     "reserves-ru|30 juin 2026|cbr-reserves-archive-2026-07|Md$": {
+      "date": "30 June 2026",
+      "unit": "$bn",
       "confidenceWhy": "Read off a snapshot timestamped 23 July 2026, on a page its publisher dates 1 July 2026.",
       "why": "To be set, on the same day, against the $46.4bn of the sovereign fund that can actually be mobilised. A ratio of fifteen to one between what Russia declares it holds and what its Treasury can commit: that is the gap the database has to preserve, failing which reading the reserves alone would give Russia a financial power far above the reality."
     },
     "reserves-ru|30 juin 2026 — dont or monétaire|cbr-reserves-archive-2026-07|Md$": {
+      "date": "30 June 2026 — of which monetary gold",
+      "unit": "$bn",
       "confidenceWhy": "The “gold” column of the central bank's table, read off a timestamped snapshot; no conversion.",
       "why": "Gold accounts for 41.5% of the $720.4bn declared at that date. It is the only item in the reserves that has genuinely grown since 2021, and it is also the only one that can be said to be physically beyond the reach of sanctions. It does not follow that it is spendable: shifting $300bn of gold on markets closed to Russian counterparties is a separate question, on which the source is silent."
     },
     "reserves-ru|31 décembre 2021|cbr-reserves-hebdo|Md$": {
+      "date": "31 December 2021",
+      "unit": "$bn",
       "confidenceWhy": "Same series, same reading.",
       "why": "Not retained: the engine does not replay the pre-war trajectory, it opens on it. This point serves as a control — it shows that the fund is still RISING while the army masses, which the game does not represent."
     },
     "reserves-ru|31 mars 2022|cbr-reserves-mensuel-requete|Md$": {
+      "date": "31 March 2022",
+      "unit": "$bn",
       "confidenceWhy": "A value published by the central bank itself, but read on the live page: no timestamped snapshot available covers that month, and today's display therefore does not prove the display of the time.",
       "why": "The most important point of this whole item, and it comes down to a subtraction. Five weeks after the freeze, declared reserves fall only from $617.1bn at the end of February to $606.4bn at the end of March, a drop of $10.7bn — when some $300bn had just been immobilised. The conclusion is mechanical: the Bank of Russia GOES ON counting the frozen assets in its published total. Every part of the series after February 2022 therefore measures what Russia owns on paper, never what it can mobilise, and the central bank publishes no breakdown between the two."
     },
     "reserves-ru|31 décembre 2023|cbr-reserves-archive-2024-07|Md$": {
+      "date": "31 December 2023",
+      "unit": "$bn",
       "confidenceWhy": "Read off a snapshot timestamped 2 July 2024, on a page its publisher dates 1 June 2024.",
       "why": "Two years after the freeze, the displayed total is almost back to its end-2021 level. That does not mean Russia has recovered its assets: the frozen share is still counted in it, and the recovery comes from gold, whose value rises from $133.1bn at the end of 2021 to $155.9bn at this date."
     },
     "reserves-ru|31 décembre 2024|cbr-reserves-archive-2025-03|Md$": {
+      "date": "31 December 2024",
+      "unit": "$bn",
       "confidenceWhy": "Read off a snapshot timestamped 23 March 2025, on a page its publisher dates 1 March 2025.",
       "why": "Three years after the freeze, the total is stable. Beneath that stability, a complete switch of composition: foreign exchange reserves proper fall to $413.4bn while gold rises to $195.7bn, that is 32% of the total against 21% at the end of 2021."
     },
     "reserves-ru|31 décembre 2025|cbr-reserves-archive-2026-07|Md$": {
+      "date": "31 December 2025",
+      "unit": "$bn",
       "confidenceWhy": "Read off a snapshot timestamped 23 July 2026, on a page its publisher dates 1 July 2026.",
       "why": "The total exceeds its pre-war peak of $643.2bn for the first time. The explanation lies in a single line: gold is worth $326.5bn, against $133.1bn at the end of 2021. Foreign exchange reserves, for their part, stand at $428.3bn and have not moved in two years. A rise in valuation, then, not a replenishment — and it bears largely on assets that remain immobilised."
     },
     "reserves-ru|31 juillet 2026|cbr-reserves-mensuel-requete|Md$": {
+      "date": "31 July 2026",
+      "unit": "$bn",
       "confidenceWhy": "The last point published as at the capture date, and therefore later than the last timestamped snapshot available: it can only be read on the live page.",
       "why": "The most recent point in the series. It confirms the plateau reached: the total no longer advances, gold ebbs slightly to $292.9bn and foreign exchange reserves stay inert at $427.5bn."
     },
     "foreign-ua|Année 2022|kiel-graphique-2026-08-13|Md$/an": {
+      "date": "Year 2022",
+      "unit": "$bn/year",
       "confidenceWhy": "A chart reading to ±0.05 €bn/month, that is ±$0.7bn/year. No value for this year is quantified in words in the press release.",
       "why": "Total allocated: €2.49bn/month of military aid and 2.87 of financial and humanitarian aid, converted by × 12 × 1.15. Military aid alone is worth $34.4bn/year and sets the floor. The engine carries 52.7: it sits inside the bracket, which is the condition it has to meet, since it funds the equipment delivered plus the war budget, humanitarian aid excluded."
     },
     "foreign-ua|2022 → 2026, part américaine de l'aide militaire|kiel-graphique-2026-08-13|points": {
+      "date": "2022 → 2026, American share of military aid",
+      "unit": "points",
       "confidenceWhy": "The gap is too large for reading uncertainty to call it into question: the American bar for 2022 is more than half the total, that of 2026 is a sliver.",
       "why": "This is what the source teaches and what the engine cannot say. The American share of military aid falls from 58% to about 1%, Europe more than doubles, and the military total loses only 7%. Ukraine's foremost supporter has walked out and the flow of weapons has held — a fourth future the game does not know, since all it can do is hold, intensify or stop. On the financial side, the same substitution FAILS, the total losing 39%."
     },
     "foreign-ua|Année 2022 — aide militaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — military aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A value read in the cell of the publisher's dataset, with no conversion and no interpolation; the earlier chart reading gave 2.49, identical to the second decimal.",
       "why": "The monthly average of military aid ALLOCATED over the twelve months of 2022. It says what governments assigned to concrete weapons packages; it does not say what crossed the Ukrainian border that year."
     },
     "foreign-ua|Année 2022 — aide militaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — military aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The United States accounts for 57.6% of the military aid allocated in 2022 — more than the whole of the rest of the world combined. It is the starting point of the shift that follows."
     },
     "foreign-ua|Année 2022 — aide militaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — military aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe in the broad sense — EU, Norway, United Kingdom, Iceland, Switzerland — is still only the second military contributor."
     },
     "foreign-ua|Année 2022 — aide militaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — military aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Canada, Australia, Japan, South Korea and the other non-Europeans outside the United States: a supplement, never a pillar."
     },
     "foreign-ua|Année 2022 — aide financière et humanitaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — financial and humanitarian aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the earlier chart reading gave 2.87, a gap of 0.02.",
       "why": "In 2022 the war budget weighs more than the weapons. The category mixes financial and humanitarian aid: an engine that does not fund humanitarian aid must not take it over as it stands."
     },
     "foreign-ua|Année 2022 — aide financière et humanitaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — financial and humanitarian aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "On the financial side the United States is already behind Europe from the very first year."
     },
     "foreign-ua|Année 2022 — aide financière et humanitaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — financial and humanitarian aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe holds up the Ukrainian budget from 2022 onwards, at a point when it is not yet holding up the weapons."
     },
     "foreign-ua|Année 2022 — aide financière et humanitaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2022 — financial and humanitarian aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Essentially Japan and Canada, whose aid is almost entirely financial."
     },
     "foreign-ua|Année 2023|kiel-graphique-2026-08-13|Md$/an": {
+      "date": "Year 2023",
+      "unit": "$bn/year",
       "confidenceWhy": "A chart reading, same uncertainty.",
       "why": "Military €3.08bn and financial €2.84bn per month. Military floor $42.5bn/year. The engine carries 64.8, inside the bracket."
     },
     "foreign-ua|Année 2023 — aide militaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — military aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the earlier chart reading gave 3.08.",
       "why": "The peak of allocated military aid across the five years. It is the maximum of assignment, not the maximum of delivery — the gap between the two is what the tracker does not measure."
     },
     "foreign-ua|Année 2023 — aide militaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — military aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The absolute American peak. The United States remains the foremost supplier of weapons, at 50.7% of the total."
     },
     "foreign-ua|Année 2023 — aide militaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — military aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Military Europe advances by 56% in a year and comes almost level with Washington."
     },
     "foreign-ua|Année 2023 — aide militaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — military aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The rest of the world falls back on weapons, and will never durably recover."
     },
     "foreign-ua|Année 2023 — aide financière et humanitaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — financial and humanitarian aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the earlier chart reading gave 2.84.",
       "why": "The financial item stalls while the military one rises: 2023 is the year the effort tips towards weapons."
     },
     "foreign-ua|Année 2023 — aide financière et humanitaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — financial and humanitarian aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "A 34% fall in American financial aid in a year, before the budget deadlock of 2024 even begins."
     },
     "foreign-ua|Année 2023 — aide financière et humanitaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — financial and humanitarian aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe offsets the American withdrawal on this item almost exactly."
     },
     "foreign-ua|Année 2023 — aide financière et humanitaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2023 — financial and humanitarian aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The group's maximum across the five years, pulled up by Japanese loan guarantees."
     },
     "foreign-ua|Année 2024|kiel-graphique-2026-08-13|Md$/an": {
+      "date": "Year 2024",
+      "unit": "$bn/year",
       "confidenceWhy": "A chart reading, same uncertainty.",
       "why": "This is the peak of the source, and the engine digs its low here at 54.7 — the only outright disagreement of the five years, and it is deliberate. Kiel records the American package voted in April 2024 at the moment it is ALLOCATED; the engine represents the ammunition shortage the front actually endured. Realigning this point would erase the very event the game set itself as its validation test."
     },
     "foreign-ua|Année 2024 — aide militaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — military aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Allocated military aid FALLS by 7.5% in 2024: the dataset contradicts the idea of a peak in 2024, which holds only for the total across all categories. It is also the year of the ammunition shortage at the front, something the allocation metric cannot show."
     },
     "foreign-ua|Année 2024 — aide militaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — military aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The American package voted in April 2024 is recorded here at the moment it is assigned, not at the moment the shells arrive. It is the precise source of the disagreement between this series and the lived experience of the front."
     },
     "foreign-ua|Année 2024 — aide militaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — military aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The first year in which Europe allocates MORE weaponry than the United States. This line dates the tipping point."
     },
     "foreign-ua|Année 2024 — aide militaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — military aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The group's floor across the five years."
     },
     "foreign-ua|Année 2024 — aide financière et humanitaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — financial and humanitarian aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The absolute peak of the series, all types and all years taken together. It is FINANCIAL, not military: 2024 is the year in which the Ukrainian state budget is rescued, not the year in which Ukraine is best armed."
     },
     "foreign-ua|Année 2024 — aide financière et humanitaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — financial and humanitarian aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "A last-minute American surge — the bulk of United States budgetary support is assigned that year, and it is the last."
     },
     "foreign-ua|Année 2024 — aide financière et humanitaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — financial and humanitarian aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe holds its level; the 2024 peak comes from the American reinforcement, not from Europe."
     },
     "foreign-ua|Année 2024 — aide financière et humanitaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2024 — financial and humanitarian aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The level holds, pulled up by the loans backed by immobilised Russian assets (the ERA mechanism)."
     },
     "foreign-ua|Année 2025|kiel-graphique-2026-08-13|Md$/an": {
+      "date": "Year 2025",
+      "unit": "$bn/year",
       "confidenceWhy": "A chart reading that has been CONTROLLED: the press release of 13 August 2026 states the ratio between financial aid in 2026 and in 2025 in plain words as −41%, and the reading gives −41.2%. The two bars validate each other.",
       "why": "Military €2.56bn and financial €3.01bn per month. The engine carries 79.7, barely above the source's ceiling — the victory playthrough is a counterfactual in which the West plays the frozen assets, and that gap is the point of the variant, not its flaw."
     },
     "foreign-ua|Année 2025 — aide militaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — military aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the earlier chart reading gave 2.56, identical.",
       "why": "The military total loses only 10% even though the leading contributor has vanished. That is the measure of European substitution, and on this item it succeeds."
     },
     "foreign-ua|Année 2025 — aide militaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — military aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "A collapse to 1.3% of the military total, against 57.6% in 2022. The United States stops allocating without stopping selling: Europeans buy their weaponry from American industry, which this line cannot show."
     },
     "foreign-ua|Année 2025 — aide militaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — military aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe alone allocates 92% of military aid, that is 2.6 times its 2022 level. It absorbs the American withdrawal in three years."
     },
     "foreign-ua|Année 2025 — aide militaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — military aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "A clear recovery by the group, which overtakes the United States on weaponry for the first time."
     },
     "foreign-ua|Année 2025 — aide financière et humanitaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — financial and humanitarian aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the earlier chart reading gave 3.01, and the −41% fall announced for 2026 is found here at −41.4%.",
       "why": "The financial item still holds in 2025; it is the following year that it gives way."
     },
     "foreign-ua|Année 2025 — aide financière et humanitaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — financial and humanitarian aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "The cell is exactly zero in the dataset — this is not a rounding of a reading.",
       "why": "A strict zero: no American financial or humanitarian aid allocated in 2025. It is the sharpest fact in the whole series, and it was invisible on the chart, where the bar was simply absent."
     },
     "foreign-ua|Année 2025 — aide financière et humanitaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — financial and humanitarian aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe carries 90% of budgetary support. It offsets the American zero, for one year only."
     },
     "foreign-ua|Année 2025 — aide financière et humanitaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "Year 2025 — financial and humanitarian aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "A level held by Japan and Canada."
     },
     "foreign-ua|Premier semestre 2026|kiel-communique-2026-08-13|Md$/an": {
+      "date": "First half of 2026",
+      "unit": "$bn/year",
       "confidenceWhy": "The point covers only six months and is annualised by simple multiplication, which assumes a second half like the first. The assumption is already contradicted within the half-year: May and June alone carry close to €11bn of European loan.",
       "why": "Military €2.32bn and financial €1.77bn per month. To be read as a floor for the trend, never as a forecast. The engine carries 71.6 for this year, far above: this is where the counterfactual departs furthest from reality."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide militaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — military aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the average covers six months (months 49 to 54 of the series), the publisher dividing by 6 and not by 12.",
       "why": "Over four and a half years, allocated military aid has lost only 6.8% of its 2022 level, even though its foremost contributor has walked out. This is a half-year average, not an annual forecast: nothing licenses multiplying it by twelve to build a year 2026."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide militaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — military aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "The cell is exactly zero in the dataset.",
       "why": "A strict zero on weaponry too. Ukraine's foremost military backer allocates nothing at all — and yet Ukraine goes on receiving American weapons, paid for by third parties."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide militaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — military aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe allocates 96% of military aid, that is 2.4 times its 2022 level. On weaponry, the substitution is complete."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide militaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — military aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "The group falls back after the 2025 surge."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, total tous donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — financial and humanitarian aid, total across all donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset; the earlier chart reading gave 1.77, and the announced fall of −41% is verified here at −41.4%.",
       "why": "The financial item falls to 38.6% below its 2022 level while the military one loses only 6.8. European substitution succeeds on weapons and FAILS on the budget: that is the central fact of the source."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, États-Unis|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — financial and humanitarian aid, United States",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "The cell is exactly zero in the dataset.",
       "why": "A second consecutive year at zero. The United States has withdrawn entirely from both items."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, Europe|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — financial and humanitarian aid, Europe",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "Europe itself falls back by 43% on the financial item against 2025, at a point when it was still advancing on the military one. The half-year is very uneven: May and June concentrate the European loan, which a half-year average flattens out."
     },
     "foreign-ua|Premier semestre 2026 (janvier à juin) — aide financière et humanitaire, autres donateurs|kiel-ust-r30-fig-a31|Md€/mois, euros constants base 2021": {
+      "date": "First half of 2026 (January to June) — financial and humanitarian aid, other donors",
+      "unit": "€bn/month, constant 2021 euros",
       "confidenceWhy": "A cell of the dataset.",
       "why": "A moderate retreat, with no effect on the order of magnitude."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, Europe géographique|kiel-ust-r30-fig-2|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative ALLOCATED, geographic Europe",
+      "unit": "€bn, current euros",
       "confidenceWhy": "A value published as it stands in the Fig 2 sheet, consistent to the second decimal with the sum of the lines of the Aggregates sheet (EU, United Kingdom, Switzerland, Norway, Iceland).",
       "why": "The total aid assigned by Europe since the rupture of diplomatic relations. CURRENT euros, undeflated — this cumulative figure therefore does not compare directly with the monthly averages above, which are in constant 2021 euros."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ENGAGÉ, Europe géographique|kiel-ust-r30-fig-2|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative COMMITTED, geographic Europe",
+      "unit": "€bn, current euros",
       "confidenceWhy": "A value published as it stands in the Fig 2 sheet.",
       "why": "Europe has ANNOUNCED €391bn and has ASSIGNED only 230: €160.6bn remain at the stage of a promise, that is 41% of the total announced. Confusing the two amounts to overstating European support by two thirds."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, États-Unis|kiel-ust-r30-fig-2|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative ALLOCATED, United States",
+      "unit": "€bn, current euros",
       "confidenceWhy": "A value published as it stands in the Fig 2 sheet.",
       "why": "The American total for the whole war. It is now frozen: the last two years are at zero."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ENGAGÉ, États-Unis|kiel-ust-r30-fig-2|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative COMMITTED, United States",
+      "unit": "€bn, current euros",
       "confidenceWhy": "A value published as it stands in the Fig 2 sheet.",
       "why": "The American committed-to-allocated gap is only €3.6bn, that is 3%, against 41% on the European side. Washington has honoured its announcements almost in full; Europe announces far more than it assigns."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, autres donateurs|kiel-ust-r30-aggregates|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative ALLOCATED, other donors",
+      "unit": "€bn, current euros",
       "confidenceWhy": "Each term is published, but the sum is made here: Canada 14.277 + “Other donor countries” 12.9362 + Australia 1.0726 + New Zealand 0.0825. The publisher publishes no total for this group in the sense of the Fig A31 chart.",
       "why": "The third group weighs 7.6% of the total allocated. It is almost entirely financial — Japan alone accounts for €12.2bn of it."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ENGAGÉ, autres donateurs|kiel-ust-r30-aggregates|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative COMMITTED, other donors",
+      "unit": "€bn, current euros",
       "confidenceWhy": "The same addition of published lines: Canada 16.4197 + “Other donor countries” 21.7421 + Australia 1.1132 + New Zealand 0.0825.",
       "why": "This group too announces markedly more than it assigns — a 28% gap, halfway between Europe and the United States."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ, tous donateurs, toutes catégories|kiel-ust-r30-aggregates|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative ALLOCATED, all donors, all categories",
+      "unit": "€bn, current euros",
       "confidenceWhy": "The last point of the cumulative monthly series published in the Fig A22 sheet, stopping at June 2026.",
       "why": "The grand total of the aid assigned to Ukraine in four and a half years. It breaks down into €179.343bn of military, 168.147 of financial and 26.049 of humanitarian aid. It is very slightly below the sum of the groups (374.224) because the monthly series excludes allocations whose month is not identified."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ militaire, Europe géographique|kiel-ust-r30-fig-2|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative military ALLOCATED, geographic Europe",
+      "unit": "€bn, current euros",
       "confidenceWhy": "A value published as it stands in the Fig 2 sheet.",
       "why": "On weaponry, Europe has committed €216.96bn and has assigned only 108.83: HALF of its military promises remain unallocated. It is the largest reservoir of unconverted support the source identifies."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — cumul ALLOUÉ militaire, États-Unis|kiel-ust-r30-fig-2|Md€, euros courants": {
+      "date": "24 January 2022 to 30 June 2026 — cumulative military ALLOCATED, United States",
+      "unit": "€bn, current euros",
       "confidenceWhy": "A value published as it stands in the Fig 2 sheet.",
       "why": "The United States has assigned 98.5% of its €65.58bn of military commitments. Over the whole war it remains the foremost supplier of weapons in cumulative terms, despite two years at zero."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — soutien budgétaire ALLOUÉ, tous donateurs|kiel-ust-r30-fig-9|Md€, euros courants nominaux": {
+      "date": "24 January 2022 to 30 June 2026 — budgetary support ALLOCATED, all donors",
+      "unit": "€bn, current nominal euros",
       "confidenceWhy": "The sum of the 42 country lines published in the Fig 9 sheet; the publisher publishes each country but no total. Cross-checked against the Fig 8 sheet, whose total allocated financial aid is €168.050bn, of which 0.882 is a Polish swap line outside budgetary support — that is 167.169 exactly.",
       "why": "The basis of comparison for the only measure of disbursement the source publishes."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — soutien budgétaire DÉCAISSÉ, tous donateurs|kiel-ust-r30-fig-9|Md€, euros courants nominaux": {
+      "date": "24 January 2022 to 30 June 2026 — budgetary support DISBURSED, all donors",
+      "unit": "€bn, current nominal euros",
       "confidenceWhy": "The sum of the published country lines, same reservations; the disbursements themselves come from the Ukrainian Ministry of Finance, not from an estimate by the tracker.",
       "why": "THE quantified answer to the question of what was disbursed: 76.5% of the budgetary support assigned actually reached the account of the Ukrainian state. A quarter of the budget money promised AND assigned was never paid. This ratio holds ONLY for budgetary support — not for weaponry, and not for humanitarian aid."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — part du soutien budgétaire réellement décaissée, Europe|kiel-ust-r30-fig-9|%": {
+      "date": "24 January 2022 to 30 June 2026 — share of budgetary support actually disbursed, Europe",
+      "unit": "%",
       "confidenceWhy": "A ratio calculated here on the sum of the published European lines: 80.310 disbursed against 100.860 allocated. The EU institutions on their own show 71.111 against 87.609, that is 81.2%, and that line is published as it stands.",
       "why": "Europe pays out four fifths of what it assigns to the Ukrainian budget. Member states taken individually are well below that: Sweden has disbursed 4% of its €1.10bn, Spain 19%, Norway 33%, Poland and Slovakia zero. The European aggregate holds because the EU institutions hold it."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — part du soutien budgétaire réellement décaissée, États-Unis|kiel-ust-r30-fig-9|%": {
+      "date": "24 January 2022 to 30 June 2026 — share of budgetary support actually disbursed, United States",
+      "unit": "%",
       "confidenceWhy": "A ratio of two values published on the same line of the Fig 9 sheet: €29.4601bn disbursed against 47.2972 allocated.",
       "why": "Close to €18bn of American budgetary support assigned was never paid — and will not be, since the United States has allocated nothing at all since 2025. It is the largest absolute gap between assignment and payment in the whole source."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — part du soutien budgétaire réellement décaissée, autres donateurs|kiel-ust-r30-fig-9|%": {
+      "date": "24 January 2022 to 30 June 2026 — share of budgetary support actually disbursed, other donors",
+      "unit": "%",
       "confidenceWhy": "A ratio calculated on the sum of the group's published lines: 18.173 disbursed against 19.012 allocated.",
       "why": "The most reliable group in the source: Japan has paid 9.868 of its €10.378bn, Canada 8.214 of its 8.424. A small donor can be a better payer than a great power."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — taux de livraison des chars lourds|kiel-ust-r30-inkind|% des unités engagées": {
+      "date": "24 January 2022 to 30 June 2026 — delivery rate for heavy tanks",
+      "unit": "% of units committed",
       "confidenceWhy": "A rate published in plain terms by the publisher: 696.8 tanks delivered against 893.3 committed (the half-units come from joint deliveries between countries).",
       "why": "The second and last window the tracker offers on what was delivered, in UNITS rather than in euros. It measures deliveries against the COMMITTED, not against the allocated: this rate cannot be applied to the allocated amounts above. The spread between countries is enormous — Czechia 100%, Poland 81%, United States 30%."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — taux de livraison des obusiers 155/152 mm|kiel-ust-r30-inkind|% des unités engagées": {
+      "date": "24 January 2022 to 30 June 2026 — delivery rate for 155/152 mm howitzers",
+      "unit": "% of units committed",
       "confidenceWhy": "A rate published in plain terms: 542 delivered against 759 committed.",
       "why": "One howitzer in three that was committed never arrived. The United States delivers 98.5% of its own, Germany 30.8%: the average masks two opposite behaviours."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — taux de livraison des lance-roquettes multiples|kiel-ust-r30-inkind|% des unités engagées": {
+      "date": "24 January 2022 to 30 June 2026 — delivery rate for multiple rocket launchers",
+      "unit": "% of units committed",
       "confidenceWhy": "A rate published in plain terms: 65 delivered against 84 committed.",
       "why": "Small volumes, hence a fragile rate: a single system not delivered moves the percentage by more than a point."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — taux de livraison des systèmes sol-air|kiel-ust-r30-inkind|% des unités engagées": {
+      "date": "24 January 2022 to 30 June 2026 — delivery rate for surface-to-air systems",
+      "unit": "% of units committed",
       "confidenceWhy": "A rate published in plain terms: 63 delivered against 85 committed.",
       "why": "The category that decides the survival of the Ukrainian power grid, and a quarter of the systems promised are missing."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — taux de livraison des véhicules de combat d'infanterie|kiel-ust-r30-inkind|% des unités engagées": {
+      "date": "24 January 2022 to 30 June 2026 — delivery rate for infantry fighting vehicles",
+      "unit": "% of units committed",
       "confidenceWhy": "A rate published in plain terms: 726 delivered against 1,283 committed.",
       "why": "The worst rate of the five categories, and it comes down to a single line: the United States committed 305 vehicles and delivered ZERO. The countries of Eastern Europe, for their part, deliver 100% of theirs."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — lignes d'aide militaire portant une valeur livrée en euros|kiel-ust-r30-maindata|% des lignes d'allocation militaire": {
+      "date": "24 January 2022 to 30 June 2026 — military aid lines carrying a delivered value in euros",
+      "unit": "% of military allocation lines",
       "confidenceWhy": "A count performed here on the raw database — 174 lines filled in out of 3,492 military allocations — and not a figure published by the publisher; the field counted, “tot_value_deliv_EUR”, is indeed the one in the database.",
       "why": "This is the measure of the central gap. The “value delivered” column exists but it is empty in 95% of cases: €13.3bn of military aid delivered recorded against €179.8bn allocated. The financial side is worse still (5 lines out of 365), and so is the humanitarian side (38 out of 1,644). Outside budgetary support and the unit counts for heavy weapons, the tracker CANNOT say what arrived — and it does not claim to know."
     },
     "foreign-ua|24 janvier 2022 au 30 juin 2026 — indice de transparence des livraisons d'armes lourdes|kiel-ust-r30-inkind|score moyen sur 3": {
+      "date": "24 January 2022 to 30 June 2026 — heavy weapons delivery transparency index",
+      "unit": "average score out of 3",
       "confidenceWhy": "An average published as it stands in the “Delivery Transparency Index” sheet (1.3239 across 27 donors).",
       "why": "The publisher measures its own blind spot: only 4 donors out of 27 maintain an official site listing their deliveries of heavy weapons, and only 5 document the majority of their entries. Finland and Croatia are at zero, the United States at 0.93 out of 3. The shortfall of information on what was delivered is not a defect of the database: it is a choice made by governments."
     },
     "nwf-ru|1er octobre 2021 — volume total du fonds|minfin-fnb-2021-10|Md$": {
+      "date": "1 October 2021 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "A figure published by the issuing Ministry, read in the dated file itself, with no conversion and no interpolation.",
       "why": "This is the war chest on the very day the game's first turn opens, and it must on no account be confused with the $611.9bn of central bank reserves at the same date: these are two distinct pockets, and the second does not belong to the government. This amount does NOT say what Moscow can spend — for that the next line is needed."
     },
     "nwf-ru|1er octobre 2021 — part liquide|minfin-fnb-2021-10|Md$": {
+      "date": "1 October 2021 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "The “liquid assets” line published separately by the Ministry in the same document, with its explicit definition: only those sums deposited in the fund's accounts at the Bank of Russia.",
       "why": "The sovereign fund can be mobilised only up to 60% on the eve of the war: the rest lies dormant in deposits at VEB.RF, in bonds and in shares of Russian companies that nobody liquidates to fund a front. It is that share, and not the total, that is the economic counterpart of what the engine melts away. An important caveat: at this date the line still counts euros, pounds and yen, which the freeze of February 2022 will render unusable without the Ministry removing them straight away."
     },
     "nwf-ru|1er janvier 2022 — volume total du fonds|minfin-fnb-2022-01|Md$": {
+      "date": "1 January 2022 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "Same series, same method of reading, value cross-checked to the second decimal against the Ministry's monthly workbook.",
       "why": "Seven weeks before the invasion. The sovereign fund FALLS slightly in dollars while the central bank's reserves are still climbing towards their peak of $643.2bn: the two pockets do not move together, and that is precisely why they must be neither added together nor substituted for one another."
     },
     "nwf-ru|1er janvier 2022 — part liquide|minfin-fnb-2022-01|Md$": {
+      "date": "1 January 2022 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "Same series, a line published separately by the issuer.",
       "why": "The mobilisable share stayed flat across the whole last quarter of peace. It is the best available upper bound on what the Russian Treasury actually had in hand on the first day of the war, subject to the same caveat: a fraction of that amount was denominated in Western currencies that were to stop being usable seven weeks later."
     },
     "nwf-ru|1er mars 2022 — volume total du fonds|minfin-fnb-2022-03|Md$": {
+      "date": "1 March 2022 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "The first reporting date published after the invasion, read in the Ministry's dated file.",
       "why": "The total loses $28bn in two months, but that fall is an effect of exchange rates and valuation, not a drawdown: the fund has not been emptied, it has been recounted in a dollar that suddenly became more expensive in roubles."
     },
     "nwf-ru|1er mars 2022 — part liquide|minfin-fnb-2022-03|Md$": {
+      "date": "1 March 2022 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "The figure is published as it stands by the Ministry, but the document shows that it still includes €38.6bn, £4.2bn and ¥600.3bn frozen by Western sanctions: the line measures what the fund owns, not what it can spend.",
       "why": "The most misleading point of the whole series, and the reason it appears here. Three days after the freeze, the so-called liquid share RISES — from $113.5bn to $116.6bn — even though a substantial part of those assets had just been made inaccessible. Any reading that took this number for available cash would gravely overstate Russia's room for manoeuvre on the first turn of the war. The Ministry will not remove the pound and the yen until December 2022, nor the euro until the course of 2023."
     },
     "nwf-ru|1er janvier 2023 — volume total du fonds|minfin-fnb-2023-01|Md$": {
+      "date": "1 January 2023 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "Same series, value cross-checked to the second decimal against the Ministry's monthly workbook.",
       "why": "After a full year of war the total loses only $6bn over twelve months. Taken on its own, this figure would wrongly suggest that the war chest has held."
     },
     "nwf-ru|1er janvier 2023 — part liquide|minfin-fnb-2023-01|Md$": {
+      "date": "1 January 2023 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "A figure published by the issuer, but the line still contains €10.46bn whose use was blocked by sanctions; the amount genuinely mobilisable was therefore lower by roughly that much.",
       "why": "Here is what the total was masking: the mobilisable share loses $26bn in a year, close to a quarter, while the total barely moves. It is here, and not in the total, that the financial cost of the first year of war can be read — the fund has converted liquidity into shareholdings and deposits that it can no longer spend."
     },
     "nwf-ru|1er juillet 2023 — part liquide|minfin-fnb-2023-07|Md$": {
+      "date": "1 July 2023 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "A figure published by the issuer; the line still contains a residue of €7.28bn that cannot be used.",
       "why": "A mid-year point showing that the erosion is continuous, and not concentrated on the annual closings. The total, for its part, is worth $145.58bn at the same date: it has barely moved since January."
     },
     "nwf-ru|1er janvier 2024 — volume total du fonds|minfin-fnb-2024-01|Md$": {
+      "date": "1 January 2024 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "Same series, value cross-checked against the monthly workbook and against the Ministry's long table.",
       "why": "Two years of war have cost the total $58bn, that is 30% of the fund. The comparison with the next line is the heart of the matter."
     },
     "nwf-ru|1er janvier 2024 — part liquide|minfin-fnb-2024-01|Md$": {
+      "date": "1 January 2024 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "From this reporting date onwards the line contains nothing but yuan, gold and roubles: it finally measures, without correction, what can actually be mobilised.",
       "why": "The mobilisable share has halved in two years — from $113.8bn to $55.9bn — when the total has lost only 30%. The liquid share within the total falls from 60% to 42%. It is the most honest measure of what the war has cost the Russian Treasury, and it is that slope, not the slope of the total, that the engine ought to be trying to reproduce."
     },
     "nwf-ru|1er janvier 2025 — volume total du fonds|minfin-fnb-2025-01|Md$": {
+      "date": "1 January 2025 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "Same series, value cross-checked to the second decimal against the monthly workbook.",
       "why": "The floor of the total over the whole period observed. It will not last: the valuation of gold will push this figure back up in 2025 and 2026 without a single additional rouble becoming available."
     },
     "nwf-ru|1er janvier 2025 — part liquide|minfin-fnb-2025-01|Md$": {
+      "date": "1 January 2025 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "A line composed solely of yuan, gold and roubles at this date; no correction needed.",
       "why": "The absolute low point of the mobilisable share: a third of what it was worth when the game opened, and only 32% of the fund. If a single figure had to date the moment when the Russian war chest ceased to be a reserve for manoeuvre, this is it. It says nothing, on the other hand, about domestic borrowing capacity or export revenue, which are the other taps and do not appear in this item."
     },
     "nwf-ru|1er août 2025 — volume total du fonds|minfin-fnb-2025-08|Md$": {
+      "date": "1 August 2025 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "Same series, value cross-checked to the second decimal against the monthly workbook.",
       "why": "The total climbs back by $43bn in seven months. No inflow explains it: it is the revaluation of the assets, gold first among them, and the firming of the rouble. A hasty reading would see a financial rearmament in it, which the next line refutes."
     },
     "nwf-ru|1er août 2025 — part liquide|minfin-fnb-2025-08|Md$": {
+      "date": "1 August 2025 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "A line composed solely of yuan, gold and roubles; published by the issuer.",
       "why": "The mobilisable share climbs back too, but far more slowly: it now represents no more than 30% of the fund. The gap between the two curves keeps widening, and that gap is the information."
     },
     "nwf-ru|1er février 2026 — volume total du fonds|minfin-fnb-2026-02|Md$": {
+      "date": "1 February 2026 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "Same series, dated file name, value cross-checked against the monthly workbook.",
       "why": "The peak of the total across the whole war period, above its October 2021 level. Taken in isolation, this figure would say that the Russian war chest is richer than before the invasion. That is false, and the next line shows it."
     },
     "nwf-ru|1er février 2026 — part liquide|minfin-fnb-2026-02|Md$": {
+      "date": "1 February 2026 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "A line composed solely of yuan, gold and roubles; published by the issuer.",
       "why": "At the very moment the total passes its pre-war level, the mobilisable share remains half of what it was in October 2021 — $55.8bn against $113.8bn. It is the demonstration, in a single pair of numbers, of the whole trap of this subject: tracking the sovereign fund by its total leads to the opposite conclusion from reality."
     },
     "nwf-ru|1er juillet 2026 — volume total du fonds|minfin-fnb-2026-07|Md$": {
+      "date": "1 July 2026 — total volume of the fund",
+      "unit": "$bn",
       "confidenceWhy": "The last reporting date published as at the capture date, dated file name, value cross-checked to the second decimal against the monthly workbook of 7 July 2026.",
       "why": "Equivalent to 13,104.2 billion roubles, that is 5.6% of the GDP projected for 2026 against 12.0% in October 2021: measured against the economy, the fund has lost more than half its weight, even when its dollar amount appears to hold."
     },
     "nwf-ru|1er juillet 2026 — part liquide|minfin-fnb-2026-07|Md$": {
+      "date": "1 July 2026 — liquid share",
+      "unit": "$bn",
       "confidenceWhy": "A line published by the issuer, composed at this date of two assets only: 189,793.8 million yuan and 141,082.8 kg of gold.",
       "why": "The last known point, and the most telling: $46.4bn that can be mobilised, that is 41% of the October 2021 level and only 27.6% of the fund, or 1.5% of GDP. Two warnings come with it. First, part of that amount is gold whose dollar value has risen sharply since 2021: the liquidity displayed depends on a price, not on a receipt. Second, this fund is not beyond the reach of the Western freeze — the Council regulation of 12 December 2025 names the National Wealth Fund alongside the central bank."
     },
     "civilian-ru|1er octobre 2021||Md$": {
+      "date": "1 October 2021",
+      "unit": "$bn",
       "confidenceWhy": "Two conventions of the game, owned as such: the civilian share of the productive apparatus, set at 24%, and capitalisation at five years of output. Neither of the two is measured; only their input, GDP, is.",
       "why": "The item is worth five years of what it produces. Out of $1,720bn of productive capacity, 24% is placed on the civilian side, that is $412.8bn a year, which capitalisation raises to $2,064bn. This is not the whole non-military economy — services, agriculture and the arms plants are excluded from it — but it is by far the widest of the seven bases, and that is what makes it the largest item on the balance sheet."
     },
     "civilian-ru|2020|cia-factbook-russie|% du PIB · estimation CIA": {
+      "date": "2020",
+      "unit": "% of GDP · CIA estimate",
       "confidenceWhy": "An estimate by an intelligence service, published with no method and no interval. Its worth lies in its continuity, not in its precision — hence the rounding to the whole point.",
       "why": "The pre-war baseline. The CIA and SIPRI agree here to within a tenth, which is reassuring about both."
     },
     "civilian-ru|2021|banque-mondiale-pib-2021|Md$": {
+      "date": "2021",
+      "unit": "$bn",
       "confidenceWhy": "A measurement published by the World Bank, read off its data interface, with no conversion and no interpolation.",
       "why": "Whole GDP is not what this item carries, but it is where everything starts. The scenario opens on a rounded figure of $1,800bn, of which 1,720 is productive capacity."
     },
     "civilian-ru|2021|banque-mondiale-pop-2021|M hab.": {
+      "date": "2021",
+      "unit": "m inhabitants",
       "confidenceWhy": "A United Nations estimate carried by the World Bank. The uncertainty bears on the attachment of Crimea, not on the order of magnitude.",
       "why": "Population enters into no calculation in the engine. It is cited here because it answers the question the banner asks without meaning to: the gap between the two civilian economies is one third a matter of the number of inhabitants and two thirds a matter of what each of them produces."
     },
     "civilian-ru|2021|SIPRI-FS-2022|% du PIB": {
+      "date": "2021",
+      "unit": "% of GDP",
       "confidenceWhy": "A value read directly in table 1 of the fact sheet, column “Spending as a share of GDP (%) 2021”, Russia row.",
       "why": "Associated spending: 65.9 billion current dollars, 5th in the world. The reference year before the full-scale invasion."
     },
     "civilian-ru|2021|INTERFAX-2022-07-20|% du PIB": {
+      "date": "2021",
+      "unit": "% of GDP",
       "confidenceWhy": "The figure is indeed attributed to Rosstat by name and dated to the day of its publication, but I was unable to open the Rosstat publication itself (the TLS certificate of rosstat.gov.ru cannot be verified and the site returns an empty page to scraping), and Rosstat has revised this series since.",
       "why": "The Rosstat series as published on 20 July 2022: 16.6% in 2017, 20.7% in 2018, 18.8% in 2019, 13.9% in 2020, 17.4% in 2021. Quarterly detail for 2021: 17.3%, 17.7%, 17.1%, 17.5%. Rosstat has only calculated this indicator since 2017."
     },
     "civilian-ru|2021|cia-factbook-russie|% du PIB · estimation CIA": {
+      "date": "2021",
+      "unit": "% of GDP · CIA estimate",
       "confidenceWhy": "The same reservation. The gap with SIPRI, which gives 4.1%, is smaller than the precision displayed.",
       "why": "The last year of peace, and the point on which the scenario sets its reference military spending."
     },
     "civilian-ru|2021|SIPRI-DB-2026|% des dépenses publiques": {
+      "date": "2021",
+      "unit": "% of government spending",
       "confidenceWhy": "A value read in the 2021 cell of the Russia row of the “Share of Govt. spending” sheet of the SIPRI workbook, opened and parsed locally.",
       "why": "The nature field is empty: SIPRI measures neither an enacted budget nor an accounting outturn, but reconstructs military spending in the broad sense from open sources. A pre-war year, to be kept as the starting point."
     },
     "civilian-ru|2021|BDG-2022-LOI|Md ₽ · budget amendé": {
+      "date": "2021",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The value is read unambiguously on the page rendered as an image, but the brochure attaches no note to its 2021 column: it is impossible to say whether it carries the initial 2021 budget act or a position amended during the financial year, hence the cautious label.",
       "why": "Not to be used as a reference for 2021: the observed outturn for the same year, by contrast, is certain and comes to 3,573.6 billion (see the next line). The gap of 166 billion between the two gives the order of magnitude of in-year drift in peacetime — drift that will become incomparably larger from 2022 onwards."
     },
     "civilian-ru|2021|MINFIN-EXEC-ANNUEL|Md ₽ · exécuté": {
+      "date": "2021",
+      "unit": "₽bn · outturn",
       "confidenceWhy": "The 2021 cell of row 2.2 of the official XLSX file on the outturn of the federal budget, downloaded and parsed; the value is confirmed identically by the 2021 column of the BDG-2023-PROJET brochure, which shows 3,573.6.",
       "why": "The only year in the period for which the outturn of the defence section is published. Measured against GDP of 134,727.5 billion, it comes to 2.65% — a calculation, not a transcription. Internal security the same year: 2,335.9 billion of outturn."
     },
     "civilian-ru|2022|SIPRI-FS-2023|% du PIB": {
+      "date": "2022",
+      "unit": "% of GDP",
       "confidenceWhy": "Table 1, 2022 column, value in square brackets [4.1] marking a SIPRI estimate, which the fact sheet documents explicitly.",
       "why": "86.4 billion dollars, +9.2% in real terms. The ratio is stable against 2021 because Russian nominal GDP rose sharply in 2022 under the effect of hydrocarbon prices: the stability of the ratio masks a real increase in spending."
     },
     "civilian-ru|2022|KOMMERSANT-2024-04-05|% du PIB": {
+      "date": "2022",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure attributed to Rosstat in a dated article, but read in a press report rather than in the original publication; other reports give 18.1% for the same year, which reflects successive revisions.",
       "why": "A cyclical peak tied to hydrocarbon prices in 2022. A much-quoted quarterly figure for that year — 21.7% in the first quarter of 2022, a record since the calculations began — is confirmed by INTERFAX-2022-07-20, but it is a quarter, not a year, and confusing it with the year inflates the estimate by close to 4 points."
     },
     "civilian-ru|2022|cia-factbook-russie|% du PIB · estimation CIA": {
+      "date": "2022",
+      "unit": "% of GDP · CIA estimate",
       "confidenceWhy": "An estimate made at the time when the Russian budget was ceasing to be published by section: it rests on sources the agency does not set out.",
       "why": "The year of the invasion costs only half a point of GDP more. SIPRI, for its part, does not move at all that year and stays at 4.1%. The two services therefore see the same thing: the shock of 2022 is military, it is not yet budgetary."
     },
     "civilian-ru|2022|SIPRI-DB-2026|% des dépenses publiques": {
+      "date": "2022",
+      "unit": "% of government spending",
       "confidenceWhy": "The same sheet, the same row, the 2022 column of the SIPRI workbook.",
       "why": "The first year of war: +2.65 points in a year. The rise is real but moderate, because total government spending also jumped in 2022 (from 24,762 to 31,119 billion roubles at outturn)."
     },
     "civilian-ru|2022|BDG-2022-LOI|Md ₽ · budget voté": {
+      "date": "2022",
+      "unit": "₽bn · enacted budget",
       "confidenceWhy": "The 2022 column of the table by section in the brochure published on 30/12/2021 alongside act 390-ФЗ of 06/12/2021, read on the page rendered as an image.",
       "why": "The last budget enacted before the invasion, adopted eleven weeks before it. That is 2.23% of 2022 GDP — a calculation on the World Bank series. Internal security enacted the same year: 2,826.0 billion. Total spending enacted: 23,694.2 billion, to be compared with the 31,119.0 finally executed."
     },
     "civilian-ru|2022|BDG-2023-PROJET|Md ₽ · budget amendé": {
+      "date": "2022",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The 2022 column of page 8, under the explicit note “показатели сводной бюджетной росписи на 1 сентября 2022 года”, read on the page rendered as an image.",
       "why": "A photograph of the consolidated budget schedule at 1 September 2022, that is six months of war: the defence line has already gained 1,177 billion on the enacted figure, +33.6%, and the financial year is not over. That is 2.98% of GDP. It is the last time the Ministry of Finance publishes a defence line for a wartime financial year in progress."
     },
     "civilian-ru|2023|SIPRI-FS-2024|% du PIB": {
+      "date": "2023",
+      "unit": "% of GDP",
       "confidenceWhy": "Table 1 and the “Key facts” box of the April 2024 fact sheet agree on 5.9% and 109 billion dollars.",
       "why": "+24% in real terms in a year. Value in square brackets ([109]): a SIPRI estimate."
     },
     "civilian-ru|2023|KOMMERSANT-2024-04-05|% du PIB": {
+      "date": "2023",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure attributed to Rosstat, consistent with the trend of the surrounding years, but taken from a press report rather than from the primary publication.",
       "why": "The wording quoted: the share of the oil and gas sector in GDP “fell from 18% in 2022 to 16.5%” in 2023."
     },
     "civilian-ru|2023|cia-factbook-russie|% du PIB · estimation CIA": {
+      "date": "2023",
+      "unit": "% of GDP · CIA estimate",
       "confidenceWhy": "This is the year in which the two estimates diverge most — by close to a point — with neither publishing anything that would settle the matter.",
       "why": "The CIA sees 5%, SIPRI 5.9%. One point of Russian GDP is eighteen billion dollars: the order of magnitude of Ukraine's entire arms industry. Two allied services, the same year, the same question, and a gap of that size — that is the honest measure of what we really know."
     },
     "civilian-ru|2023|SIPRI-DB-2026|% des dépenses publiques": {
+      "date": "2023",
+      "unit": "% of government spending",
       "confidenceWhy": "The same sheet, the 2023 column of the SIPRI workbook, April 2026 update.",
       "why": "A divergence worth flagging against the publication of the time: the April 2024 fact sheet wrote “16 per cent” for 2023 (see the next observation). The gap of 1.2 points comes from the revisions made to the database between 2024 and 2026, not from a contradiction of method."
     },
     "civilian-ru|2023|SIPRI-FS-2024|% des dépenses publiques": {
+      "date": "2023",
+      "unit": "% of government spending",
       "confidenceWhy": "Two concordant occurrences in the PDF, pages 3 and 4: “military spending as a share of government expenditure was highest in Ukraine (58 per cent), followed by Saudi Arabia (24 per cent) and Russia (16 per cent)” and “16 per cent of total government expenditure, which were the highest levels recorded by Russia since the dissolution of the Soviet Union”.",
       "why": "Kept alongside the revised value because it is the one that circulated for two years. For a consistent series, use the revised database; to quote what SIPRI stated in 2024, use this one. The same passage puts Ukraine at 58% in 2023."
     },
     "civilian-ru|2023|BDG-2023-LOI|Md ₽ · budget voté": {
+      "date": "2023",
+      "unit": "₽bn · enacted budget",
       "confidenceWhy": "The 2023 column of the table by section on pages 14-15 of the brochure published on 30/12/2022 alongside act 466-ФЗ of 05/12/2022, read on the page rendered as an image.",
       "why": "2.85% of 2023 GDP. The draft tabled a month earlier carried 4,981.6 billion (BDG-2023-PROJET): the gap between draft and act is 9 billion, that is 0.2% — parliament changed nothing of substance. Internal security enacted: 3,564.3 billion."
     },
     "civilian-ru|2023|BDG-2024-PROJET|Md ₽ · budget amendé": {
+      "date": "2023",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The 2023 column of page 5, under the note “показатели сводной бюджетной росписи по состоянию на 1 сентября 2023 г.”, read on the page rendered as an image.",
       "why": "3.68% of GDP. At 1 September 2023, the defence line already exceeds by 1,434 billion the amount enacted nine months earlier, that is +28.8%. The same gap appears on internal security, but in the opposite direction (3,225.6 against 3,564.3 enacted)."
     },
     "civilian-ru|2023|CONSULTANT-466|Md ₽ · budget voté": {
+      "date": "2023",
+      "unit": "₽bn · enacted budget",
       "confidenceWhy": "The headline total of the annex is read unambiguously (1,486,270,867.1 thousand roubles), but the unit of the table — the thousand roubles — is inferred from its consistency with the sub-lines and is not restated in the page fragment consulted.",
       "why": "A measure of opacity rather than of the budget: the breakdown annex by programme of act 466-ФЗ publishes only 1,486.3 billion of the 4,972.6 enacted for 2023, that is 29.9% of the section. The remaining 70% appear in no public annex. To be set against SIPRI's estimate, which puts the “classified residual” at about 73% of the National Defence budget in 2024 and 79% in 2025: the two approaches converge."
     },
     "civilian-ru|2024|SIPRI-FS-2025|% du PIB": {
+      "date": "2024",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure shown in the “Key facts”, in table 1 and in the body of the text of the April 2025 fact sheet alike.",
       "why": "149 billion dollars, +38% in a year, that is double the 2015 level. SIPRI adds two important reservations: about 30% of budgeted expenditure was classified in 2024, and Russia's real military spending in 2024 is “likely to be higher” than this estimate."
     },
     "civilian-ru|2024|EPRUSSIA-2026-04-20|% du PIB": {
+      "date": "2024",
+      "unit": "% of GDP",
       "confidenceWhy": "This is not a figure published directly: it is inferred from the statement that the sector's contribution fell by 3 points against 2024, starting from the 2025 value of 13%.",
       "why": "To be treated as an order of magnitude (“about 16%”) and not as a measurement. If precision matters, the Rosstat national accounts publication of spring 2025 has to be gone and fetched."
     },
     "civilian-ru|2024|cia-factbook-russie|% du PIB · estimation CIA": {
+      "date": "2024",
+      "unit": "% of GDP · CIA estimate",
       "confidenceWhy": "The last vintage published before the closure of the Factbook. This time the estimate lines up with SIPRI, to within a tenth.",
       "why": "The two services converge again, and on a figure that has almost doubled in two years. This is the quarter in which the war ceases to be fundable at the margin."
     },
     "civilian-ru|2024|SIPRI-DB-2026|% des dépenses publiques": {
+      "date": "2024",
+      "unit": "% of government spending",
       "confidenceWhy": "The 2024 column of the “Share of Govt. spending” sheet of the SIPRI workbook.",
       "why": "The April 2025 fact sheet rounded to 19%, a figure already verified on the first pass: the two are consistent."
     },
     "civilian-ru|2024|BDG-2024-LOI|Md ₽ · budget voté": {
+      "date": "2024",
+      "unit": "₽bn · enacted budget",
       "confidenceWhy": "The 2024 column of the table by section on pages 14-15 of the brochure published on 28/12/2023 alongside act 540-ФЗ of 27/11/2023, read on the page rendered as an image.",
       "why": "5.13% of 2024 GDP: the enacted defence line has doubled in a single financial year. The draft tabled in November 2023 carried 10,775.4 billion (BDG-2024-PROJET), that is 397 billion more than the act finally adopted. Internal security enacted: 3,285.2 billion; total spending enacted: 36,660.7 billion."
     },
     "civilian-ru|2024|BDG-2025-LOI|Md ₽ · budget amendé": {
+      "date": "2024",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The value is read unambiguously on the page rendered as an image, with its footnote referencing act 540-ФЗ as amended by act 175-ФЗ of 12/07/2024 — but another brochure from the same Ministry, published two months earlier and citing exactly the same legal basis, gives 8,866.5 for the same column.",
       "why": "An unresolved divergence between two Minfin publications: 8,866.5 billion in the brochure accompanying the draft of 31/10/2024, 10,374.7 in the brochure accompanying the act of 27/12/2024, with the same legal reference in the note. Both were read visually on the rendered page; this is not an extraction error. I take 10,374.7 as the working value because it is consistent with the enacted figure (10,378.2) and with the SIPRI estimate, and I flag the other rather than pass over it in silence."
     },
     "civilian-ru|2024|BDG-2025-PROJET|Md ₽ · budget amendé": {
+      "date": "2024",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The reading is certain — page rendered as an image, the heading “Национальная оборона” and four values 2024*/2025/2026/2027 in the same frame — but the value contradicts the one published two months later under the same legal reference, with neither document explaining the gap.",
       "why": "Reported so that the divergence is visible, not so that it is used. If a choice has to be made, the brochure accompanying the act (later, and consistent with the rest of the series) prevails."
     },
     "civilian-ru|2025|SIPRI-FS-2026|% du PIB": {
+      "date": "2025",
+      "unit": "% of GDP",
       "confidenceWhy": "A value carried three times in the document (Key facts, table 1 column 2025, figure 3 of the map of military burdens): 7.5%.",
       "why": "190 billion dollars, +5.9% — the weakest annual increase since 2022. The share of military spending in government spending reaches 20%, “the highest level ever recorded by SIPRI for Russia”. By way of comparison, Russia stood at 5.4% of GDP in 2016."
     },
     "civilian-ru|2025|MINFIN-BUDGET-CITOYEN|% du PIB": {
+      "date": "2025",
+      "unit": "% of GDP",
       "confidenceWhy": "A ratio I calculated myself — 13,503.7 billion roubles measured against 2025 nominal GDP of 214.3 trillion roubles published by Rosstat — and not a figure published as such by an institution.",
       "why": "The 2025 nominal GDP figure comes from source ANGI-2026-04-20. To be kept as an order of magnitude: the “National Defence” budget line alone is worth about 6.3% of GDP, against 7.5% for the SIPRI measure, which additionally covers military pensions, part of the paramilitary forces and militarised spending lodged in other sections. The gap between the two measures is therefore about 1.2 points of GDP, and it runs in the expected direction."
     },
     "civilian-ru|2025|ANGI-2026-04-20|% du PIB": {
+      "date": "2025",
+      "unit": "% of GDP",
       "confidenceWhy": "Two independent, dated press reports attributed to Rosstat give the same figure — but both are secondary reports, and one carries a headline that confuses the sector with revenue.",
       "why": "An all-time low since Rosstat's calculations began in 2017, against 14% at the previous trough in 2020. The non-oil-and-gas sector reaches 87% of GDP. Nominal GDP for 2025 is 214.3 trillion roubles, up 1% in volume terms. EPRUSSIA-2026-04-20 confirms the same value, and adds a declining quarterly profile across the year: 15.5% in the first quarter, 11.6% in the fourth."
     },
     "civilian-ru|2025|MINFIN-ONBP-2026|% du PIB": {
+      "date": "2025",
+      "unit": "% of GDP",
       "confidenceWhy": "A value published by the Ministry of Finance, but explicitly presented as an estimated outturn at the time the document was drafted, in October 2025.",
       "why": "The full series published by the Ministry of Finance for this third quantity: 5.0% of GDP in 2023, 5.5% in 2024, 4.0% estimated for 2025, 3.8% forecast for 2026 and 3.5% in 2028. The three indicators never to be confused for 2025 are therefore: 13% (weight of the sector in GDP), 22.7% (share of federal revenue), 4.0% (oil and gas revenue measured against GDP)."
     },
     "civilian-ru|2025|SIPRI-DB-2026|% des dépenses publiques": {
+      "date": "2025",
+      "unit": "% of government spending",
       "confidenceWhy": "The 2025 column of the “Share of Govt. spending” sheet of the SIPRI workbook.",
       "why": "The April 2026 fact sheet rounds to 20% and calls it the highest level ever recorded by SIPRI for Russia. The full 2021-2025 series is therefore: 10.31 — 12.96 — 14.77 — 18.64 — 19.83, a doubling in four years."
     },
     "civilian-ru|2025|BDG-2025-LOI|Md ₽ · budget voté": {
+      "date": "2025",
+      "unit": "₽bn · enacted budget",
       "confidenceWhy": "The 2025 column of the table by section on pages 12-13 of the brochure published on 27/12/2024 alongside act 419-ФЗ of 30/11/2024, read on the page rendered as an image.",
       "why": "6.11% of 2025 GDP. Internal security enacted: 3,438.4 billion; total spending enacted: 41,469.5 billion. Defence accounts for 31.6% of the enacted federal budget."
     },
     "civilian-ru|2025|BDG-2026-PROJET|Md ₽ · budget amendé": {
+      "date": "2025",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The 2025 column of page 6, with the note referencing act 419-ФЗ as amended by act 152-ФЗ of 01/07/2025, already verified on the first pass and reconfirmed here.",
       "why": "The first amendment of the 2025 financial year: +416 billion on the enacted figure. That is 6.30% of GDP."
     },
     "civilian-ru|2025|BDG-2026-LOI|Md ₽ · budget amendé": {
+      "date": "2025",
+      "unit": "₽bn · amended budget",
       "confidenceWhy": "The 2025 column of the table on pages 14-15, with the note referencing act 419-ФЗ as amended by act 414-ФЗ of 04/11/2025, read on the page rendered as an image.",
       "why": "The second amendment of the financial year, and the final position of the act for 2025: 13,574.8 billion, that is 6.34% of GDP and +487 billion on the initial enacted figure. The full trajectory of the 2025 financial year: 13,087.4 enacted in November 2024, then 13,503.7 in July 2025, then 13,574.8 in November 2025. Internal security at the same stage: 3,448.7 billion; total spending: 42,298.7 billion, against 42,910.3 finally executed."
     },
     "civilian-ru|2026|MINFIN-ONBP-2026|% du PIB": {
+      "date": "2026",
+      "unit": "% of GDP",
       "confidenceWhy": "A value read in table 4.4.2 of the Ministry of Finance's budget document, column “%ВВП” for 2026, row “Национальная оборона” (12,989 billion roubles).",
       "why": "This is the only place where the Ministry of Finance itself publishes a share of GDP for defence. The trajectory announced: 5.5% in 2026, 5.3% in 2027, 4.7% in 2028. The “National Security and Law Enforcement” section comes on top of it at 1.8% of GDP across the three years. For the federal budget alone, defence in 2026 is set at 12,930.5 billion roubles and internal security at 3,910.1 billion (table 4.1.3)."
     },
     "civilian-ru|2026|BDG-2026-LOI|Md ₽ · budget voté": {
+      "date": "2026",
+      "unit": "₽bn · enacted budget",
       "confidenceWhy": "The 2026 column of the table on pages 14-15 of the brochure published on 29/12/2025 alongside act 426-ФЗ of 28/11/2025, read on the page rendered as an image.",
       "why": "The first fall in the defence line since the war began: −1,454 billion on the final 2025 position, that is −10.7%. A notable gap with the draft: table 4.1.3 of the October 2025 policy document carried 12,930.5 billion, as did the brochure accompanying the draft of 31/10/2025; the act as passed retains 12,121.0, that is 809 billion less. Internal security enacted: 3,826.7 billion, up by 378 billion — part of the fall shown on defence reappears in the neighbouring section. Total spending enacted: 44,069.7 billion. The ratio to GDP cannot be calculated here for want of an observed 2026 GDP figure."
     },
     "civilian-ua|1er octobre 2021||Md$": {
+      "date": "1 October 2021",
+      "unit": "$bn",
       "confidenceWhy": "Two conventions of the game, owned as such: the civilian share of the productive apparatus, set at 24%, and capitalisation at five years of output. Neither of the two is measured; only their input, GDP, is.",
       "why": "The item is worth five years of what it produces. Out of $188bn of productive capacity, 24% is placed on the civilian side, that is $45.1bn a year, which capitalisation raises to $226bn. This is not the whole non-military economy — services, agriculture and the arms plants are excluded from it — but it is by far the widest of the seven bases, and that is what makes it the largest item on the balance sheet."
     },
     "civilian-ua|2021|banque-mondiale-pib-2021|Md$": {
+      "date": "2021",
+      "unit": "$bn",
       "confidenceWhy": "A measurement published by the World Bank, read off its data interface, with no conversion and no interpolation.",
       "why": "Whole GDP is not what this item carries, but it is where everything starts. The scenario opens on a rounded figure of $196bn, of which 188 is productive capacity."
     },
     "civilian-ua|2021|banque-mondiale-pop-2021|M hab.": {
+      "date": "2021",
+      "unit": "m inhabitants",
       "confidenceWhy": "A United Nations estimate carried by the World Bank. The uncertainty bears on the attachment of Crimea, not on the order of magnitude.",
       "why": "Population enters into no calculation in the engine. It is cited here because it answers the question the banner asks without meaning to: the gap between the two civilian economies is one third a matter of the number of inhabitants and two thirds a matter of what each of them produces."
     },
     "civilian-ua|2021|SIPRI-FS-2022|% du PIB": {
+      "date": "2021",
+      "unit": "% of GDP",
       "confidenceWhy": "A value read in table 1 of the April 2022 fact sheet, Ukraine row, in square brackets ([3.2]) and therefore estimated by SIPRI.",
       "why": "5.9 billion dollars, 36th in the world. The pre-war starting point, to be compared with 1.6% in 2012."
     },
     "civilian-ua|2021|cia-factbook-ukraine|% du PIB · estimation CIA": {
+      "date": "2021",
+      "unit": "% of GDP · CIA estimate",
       "confidenceWhy": "An estimate appreciably higher than SIPRI's for the same year, with neither of the two setting out its perimeter.",
       "why": "The CIA gives 4% where SIPRI gives 3.2%. The scenario retains the latter, because its series covers the war years the Factbook never published. After 2021 the Ukrainian section stops dead: the only thing the Factbook says about the war is a note stating “more than 30% of GDP according to some estimates”, with no year and no source — it therefore does not enter this table."
     },
     "civilian-ua|2022|SIPRI-FS-2023|% du PIB": {
+      "date": "2022",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure shown in the “Key facts” and in table 1 of the April 2023 fact sheet.",
       "why": "44.0 billion dollars, +640% in a year — the sharpest annual rise ever recorded by SIPRI for any country. The total “does not include military aid provided to Ukraine”, a point made by the fact sheet itself."
     },
     "civilian-ua|2023|SIPRI-FS-2024|% du PIB": {
+      "date": "2023",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure shown in the “Key facts” and in table 1 of the April 2024 fact sheet, consistent with the 64.8 billion dollars in the same table.",
       "why": "A correction to the working assumption: the order of magnitude of 34% mentioned in the brief corresponds not to 2023 but to 2024. For 2023 SIPRI publishes 37%, the year of the relative maximum of the Ukrainian series before 2025."
     },
     "civilian-ua|2023|UKRAINEINVEST-2024-08|% du PIB": {
+      "date": "2023",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure read in an investment-promotion infographic, with no table of figures, no definition of the “energy” perimeter and no published method; the sources indicated (YC.Market, Ember, IEA) are not national accounts.",
       "why": "It does not answer the question asked, which bore on the pre-war period: this value postdates the destruction of more than half of Ukraine's energy infrastructure and the loss of 23 GW of capacity, which the same document quantifies. It is supplied as an upper marker, the pre-war order of magnitude being in all likelihood similar or slightly higher, without my being able to establish it. The chart places Ukraine between Czechia (8-9%) and Slovakia (7%), with Poland at 10%."
     },
     "civilian-ua|2024|SIPRI-FS-2025|% du PIB": {
+      "date": "2024",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure shown in the “Key facts” and in table 1 of the April 2025 fact sheet: 64.7 billion dollars, 34% of GDP, 8th in the world.",
       "why": "The apparent fall against the 37% of 2023 is largely a matter of the growth of Ukrainian GDP and of revisions to the SIPRI database, not of a fall in spending — spending rises by 2.9% in real terms over the year."
     },
     "civilian-ua|2025|SIPRI-FS-2026|% du PIB": {
+      "date": "2025",
+      "unit": "% of GDP",
       "confidenceWhy": "A figure carried four times in the April 2026 fact sheet: Key facts, table 1, the Europe section and the map of military burdens (figure 3, Ukraine first in the world).",
       "why": "84.1 billion dollars, +20% in a year, 7th in the world and the highest military burden in the world for the fourth year running. Military spending reaches 63% of government spending. The rise of 5.6 points in the burden in 2025 is the steepest of any country. The initial 2025 budget was revised twice during the year to add 17.7 billion dollars. Against that, Ukraine received 52.2 billion dollars from its partners for its state budget in 2025, of which 37.9 billion in ERA loans from the G7 backed by frozen Russian assets."
     }

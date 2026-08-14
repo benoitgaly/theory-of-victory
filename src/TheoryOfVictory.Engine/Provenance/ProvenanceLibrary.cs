@@ -56,14 +56,18 @@ public static class ProvenanceLibrary
 
             TextDto text = texts.Sources.GetValueOrDefault(dto.Code) ?? new TextDto();
 
+            // The name of an organisation, the date we read it and the date its publisher stamps
+            // on it are printed as sentences, so they belong to a language even though they live
+            // in the data file. The catalogue carries a label for each, and the data value is the
+            // fall-back: a source added without one reads in French rather than not at all.
             registry.Sources[dto.Code] = new FigureSource
             {
                 Code = dto.Code,
-                Organisation = dto.Organisation,
+                Organisation = text.Organisation ?? dto.Organisation,
                 Title = text.Title ?? dto.Code,
                 Url = dto.Url,
-                Capture = dto.Capture,
-                StatedUpdate = dto.StatedUpdate,
+                Capture = text.Capture ?? dto.Capture,
+                StatedUpdate = text.StatedUpdate ?? dto.StatedUpdate,
                 Kind = dto.Kind,
                 Note = text.Note ?? string.Empty,
             };
@@ -80,8 +84,10 @@ public static class ProvenanceLibrary
                 observations.Add(new FigureObservation
                 {
                     Date = observation.Date,
+                    DateLabel = text.Date ?? observation.Date,
                     Value = observation.Value,
                     Unit = observation.Unit,
+                    UnitLabel = text.Unit ?? observation.Unit,
                     SourceCode = observation.SourceCode,
                     Confidence = observation.Confidence,
                     ConfidenceWhy = text.ConfidenceWhy ?? string.Empty,
@@ -310,6 +316,11 @@ public static class ProvenanceLibrary
                 {
                     Label = Pick(entry.Value.Label, existing.Label),
                     Title = Pick(entry.Value.Title, existing.Title),
+                    Organisation = Pick(entry.Value.Organisation, existing.Organisation),
+                    Capture = Pick(entry.Value.Capture, existing.Capture),
+                    StatedUpdate = Pick(entry.Value.StatedUpdate, existing.StatedUpdate),
+                    Date = Pick(entry.Value.Date, existing.Date),
+                    Unit = Pick(entry.Value.Unit, existing.Unit),
                     Note = Pick(entry.Value.Note, existing.Note),
                     Why = Pick(entry.Value.Why, existing.Why),
                     ConfidenceWhy = Pick(entry.Value.ConfidenceWhy, existing.ConfidenceWhy),
@@ -328,6 +339,25 @@ public static class ProvenanceLibrary
         public string? Label { get; set; }
 
         public string? Title { get; set; }
+
+        /// <summary>
+        /// The three fields below shadow a value of the data file rather than adding one: the
+        /// figures are written once and never duplicated per language, but the words wrapped
+        /// around them — an organisation, two dates — have to be readable in the reader's own.
+        /// </summary>
+        public string? Organisation { get; set; }
+
+        public string? Capture { get; set; }
+
+        public string? StatedUpdate { get; set; }
+
+        /// <summary>
+        /// The date and the unit as the page prints them. The data file keeps the two that index
+        /// the observation, and they never move: a translated identifier orphans its own prose.
+        /// </summary>
+        public string? Date { get; set; }
+
+        public string? Unit { get; set; }
 
         public string? Note { get; set; }
 
