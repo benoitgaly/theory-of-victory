@@ -15,9 +15,15 @@ namespace TheoryOfVictory.Core.Localization;
 /// Interpolation uses %1, %2 … so a translator can move an argument to where the sentence needs
 /// it, which a positional format string glued to the French word order would forbid.
 ///
-/// The catalogues are embedded in the assembly rather than read from a database: this site is
-/// published as frozen HTML on a host with no server and no database. What Green Acres reads
-/// from a table, this reads from a JSON loaded once at startup — same API, same reflexes.
+/// Same convention as Green Acres, deliberately NOT the same storage. There, the catalogue is
+/// a folder of gettext files dropped on the web servers — <c>C:\inetpub\wwwroot\Localize</c> —
+/// and therefore outside the repository: no test can measure its coverage, no deployment can
+/// guarantee it, and a French label has already surfaced in a German slot. Here the catalogue
+/// is JSON, committed, and embedded in the assembly. That is what makes the two guard tests
+/// possible at all, and this site needs it more than most: it is published as frozen HTML, so a
+/// translation missing at generation time produces an English page in French that nobody
+/// watches go by. The shape stays key → translation, so a gettext export for a translator would
+/// be a mechanical conversion.
 /// </summary>
 public static class Localizer
 {
