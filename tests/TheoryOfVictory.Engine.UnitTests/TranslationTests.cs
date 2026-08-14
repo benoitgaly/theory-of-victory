@@ -43,6 +43,16 @@ public sealed class TranslationTests
     private static readonly Regex Accented = new(@"[à-öø-ÿÀ-ÖØ-Þ«»œŒ]", RegexOptions.Compiled);
 
     /// <summary>
+    /// L'accent ne suffit pas. « le baril » est resté en français sur la page anglaise pendant
+    /// toute la mise en place, précisément parce qu'il n'en porte aucun — et personne ne l'a vu,
+    /// puisque depuis la page française il était juste. Ces mots-outils n'existent pas en anglais
+    /// et trahissent une phrase française aussi sûrement qu'un accent circonflexe.
+    /// </summary>
+    private static readonly Regex FrenchWords = new(
+        @"\b(le|la|les|une|des|du|aux|dans|sur|sous|pour|par|avec|sans|qui|que|dont|cette|ces|ses|leur|elle|nous|vous|ils|moins|tout|toute|ne|pas|est|sont|cela|chaque|entre|vers|depuis|comme|mais|donc|alors)\b",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    /// <summary>
     /// La seule exception qui ne soit pas une valeur de donnée : le POURQUOI d'un ordre du
     /// calendrier, écrit à côté de lui dans le scénario. Rien ne le lit et rien ne l'affiche —
     /// c'est une annotation d'auteur, au même titre qu'un commentaire, et elle se lit là où
@@ -117,7 +127,7 @@ public sealed class TranslationTests
             foreach (Match match in Literals(content))
             {
                 string literal = Unescape(match.Groups[1].Value);
-                if (!Accented.IsMatch(literal))
+                if (!Accented.IsMatch(literal) && !FrenchWords.IsMatch(literal))
                 {
                     continue;
                 }

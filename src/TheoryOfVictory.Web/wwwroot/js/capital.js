@@ -662,7 +662,7 @@
         }));
         text(g, x0 + 12, 25, dateOf(t), { class: "cap-quarter" });
         text(g, x0 + 12, 41, num(t.oilPrice, 0) + " $", { class: "cap-brent" });
-        text(g, x1 - 12, 41, "le baril", { "text-anchor": "end", class: "cap-label" });
+        text(g, x1 - 12, 41, T("le baril"), { "text-anchor": "end", class: "cap-label" });
 
         // La saison décide : elle mérite un signe et pas un mot.
         if (t.season === "Winter") {
