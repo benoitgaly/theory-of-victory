@@ -38,7 +38,16 @@
         { code: "reserves", colour: "#8a6f2b", yield: T("comble ce que la recette du trimestre ne finance plus") },
         { code: "grid", colour: "#c2621a", yield: T("ne va jamais au front : ouvre ou ferme les usines, le raffinage, le chauffage") },
         { code: "oil", colour: "#8a5a2b", yield: T("recette pour qui l'exporte, charge nette pour qui l'importe") },
-        { code: "civilian", colour: "#6f8060", yield: T("le niveau de vie, donc le consentement à la guerre") },
+        // L'appareil civil ne se DESSINE plus. Il vaut près de trois fois la plus grosse des
+        // autres masses, et une règle capable de le contenir réduisait les six autres rangées à
+        // des traits presque égaux : on lisait six cent douze milliards de réserves et deux cent
+        // soixante-dix de centrales à la même longueur. Le bandeau sert à comparer ce qui bouge,
+        // et ce poste-là ne bouge presque pas — aucune carte ne le vise.
+        //
+        // Il reste dans le patrimoine du camp, dans le moteur et dans sa page de provenance :
+        // il est caché, pas supprimé. Le total annoncé au-dessus des rangées reste donc celui
+        // du bilan entier, et non la somme de ce qui est dessiné.
+        { code: "civilian", colour: "#6f8060", hidden: true, yield: T("le niveau de vie, donc le consentement à la guerre") },
         { code: "arms", colour: "#4a6070", yield: T("les obus, les drones, les missiles, les intercepteurs") },
         // Un flux donné à l'un, acheté par l'autre — et dans les deux cas c'est la position
         // diplomatique qui décide s'il se resserre ou se relâche. Cette position est mesurée
@@ -92,7 +101,11 @@
     // derrière son onglet.
     var solo = false;
     var GUT_L = 528, GUT_R = 712;
-    var HEAD_H = 54, ROW_H = 36, H = HEAD_H + POSTS.length * ROW_H + 12;
+    // Les rangées DESSINÉES. POSTS garde l'inventaire complet — le script de publication y lit
+    // les codes pour figer une page de provenance par poste, y compris celui qu'on ne dessine pas.
+    var ROWS = POSTS.filter(function (p) { return !p.hidden; });
+
+    var HEAD_H = 54, ROW_H = 36, H = HEAD_H + ROWS.length * ROW_H + 12;
 
     // Les chiffres ont leur bande à eux, au bord extérieur du bandeau : quelle que soit la
     // longueur de la masse, le chiffre reste lisible et jamais recouvert.
@@ -121,7 +134,7 @@
         NUM_IN = mobile ? 104 : 186;
         NUM_OUT = mobile ? 6 : 22;
         TRACK = mobile ? 164 : 306;
-        H = HEAD_H + POSTS.length * ROW_H + 12;
+        H = HEAD_H + ROWS.length * ROW_H + 12;
         ICON_X = GUT_L + 7;
         NAME_X = GUT_L + 37;
         NAME_MAX = GUT_R - 6;
@@ -705,7 +718,7 @@
     // déborder sur la piste voisine : un libellé qui empiète sur la masse du camp d'en face
     // fait douter de qui possède quoi, et c'est la seule question que le bandeau pose.
     function spine(host) {
-        POSTS.forEach(function (p, i) {
+        ROWS.forEach(function (p, i) {
             var yc = HEAD_H + i * ROW_H + ROW_H / 2;
             var lines = splitName(NAMES[p.code]);
             var top = lines.length > 1 ? yc - 4 : yc + 3.5;
@@ -727,42 +740,33 @@
         });
     }
 
-    // LA RÈGLE — une seule, pour les deux camps ET pour les sept postes.
+    // LA RÈGLE — une seule, pour les deux camps et pour toutes les rangées.
     //
-    // Chaque rangée avait la sienne, posée sur le plus gros capital que CE poste atteignait dans
-    // le déroulé. La conséquence était intenable à l'œil : deux mille soixante-quatre milliards
-    // d'appareil civil et trois cent dix de réserves tiraient des barres de longueur voisine.
-    // Un bandeau où la longueur ne veut pas dire la même chose d'une ligne à l'autre n'est pas
-    // dense, il est faux — il invite précisément à la comparaison qu'il rend fausse.
+    // Chaque rangée avait autrefois la sienne, posée sur le plus gros capital que CE poste
+    // atteignait. Un bandeau où la longueur ne veut pas dire la même chose d'une ligne à l'autre
+    // n'est pas dense, il est faux : il invite précisément à la comparaison qu'il rend fausse.
     //
-    // La règle est donc unique et posée sur le plus gros capital du déroulé, tous postes
-    // confondus. Trois propriétés en découlent : un milliard vaut la même longueur partout, une
-    // masse ne change jamais d'échelle d'un trimestre à l'autre, et aucune ne bute sur le bord.
+    // La règle est unique pour toutes les rangées et les deux camps : c'est ce qui permet de
+    // comparer deux longueurs d'un coup d'œil. Elle se cale sur la plus grosse masse DESSINÉE du
+    // déroulé — l'appareil civil, qui valait près de trois fois la plus grosse des autres et
+    // écrasait tout le reste, ne se dessine plus et ne pèse donc plus sur elle.
     //
-    // Le prix est connu et il est assumé : les petits postes deviennent courts. C'est déjà le
-    // choix qui avait été fait entre les deux camps, où la masse ukrainienne est courte par
-    // construction — le pourcentage contre chaque masse porte la trajectoire, le chiffre au bord
-    // du bandeau porte le niveau, et la longueur porte enfin ce qu'elle prétend porter.
-    // La règle est unique pour les sept postes et les deux camps : c'est ce qui permet de
-    // comparer deux longueurs d'un coup d'œil. Mais un poste écrase les six autres — l'appareil
-    // civil russe vaut près de trois fois la plus grosse des autres masses — et une règle calée
-    // sur lui réduirait tout le reste à des traits.
-    //
-    // Elle se cale donc sur la SECONDE masse du jeu, jamais sur la première. Ce qui dépasse est
-    // dessiné à la longueur de la piste et porte une coupure : la barre dit alors elle-même
-    // qu'elle a été taillée, et le chiffre au bord reste exact. Rien n'est nommé ici — si deux
-    // postes venaient à sortir du lot, la seconde masse monterait avec eux et plus rien ne
-    // serait coupé.
+    // La coupure en éclair reste en place, sans plus rien à couper aujourd'hui. C'est un filet :
+    // si un poste venait un jour à sortir du lot, il serait taillé et le dirait, plutôt que de
+    // réduire silencieusement ses voisins à des traits.
     function rules(game) {
         if (game.tovRule) { return game.tovRule; }
 
-        // Un sommet PAR POSTE, et non par valeur : le même poste culmine à peu près au même
-        // niveau à chaque tour, si bien qu'un simple « deuxième plus grand nombre » retomberait
-        // sur le tour d'à côté du poste écrasant, et n'écarterait rien du tout.
+        // Un sommet par poste, et seulement parmi ceux que le bandeau montre : une règle posée
+        // sur une masse invisible laisserait un vide au bout de la piste que rien n'expliquerait.
+        var drawn = {};
+        ROWS.forEach(function (row) { drawn[row.code] = true; });
+
         var peaks = {};
         (game.turns || []).forEach(function (t) {
             [t.invader, t.defender].forEach(function (side) {
                 (side.capital || []).forEach(function (post) {
+                    if (!drawn[post.code]) { return; }
                     var v = Math.max(post.value || 0, post.reference || 0);
                     if (!(post.code in peaks) || v > peaks[post.code]) { peaks[post.code] = v; }
                 });
@@ -772,7 +776,7 @@
         var ranked = Object.keys(peaks).map(function (code) { return peaks[code]; })
             .sort(function (a, b) { return b - a; });
 
-        game.tovRule = ranked.length > 1 ? ranked[1] : (ranked[0] || 0);
+        game.tovRule = ranked[0] || 0;
         return game.tovRule;
     }
 
@@ -895,8 +899,8 @@
         // traverse le bandeau d'un camp à l'autre. Celui qui précède la dernière rangée est
         // franc et non pâle : ce qui suit ne se compte pas dans la même unité que ce qui
         // précède, et la coupure doit se voir avant qu'on ait lu quoi que ce soit.
-        for (var r = 1; r < POSTS.length; r++) {
-            var parting = POSTS[r].gauge;
+        for (var r = 1; r < ROWS.length; r++) {
+            var parting = ROWS[r].gauge;
             s.appendChild(svg("line", {
                 x1: 22, y1: HEAD_H + r * ROW_H, x2: W - 22, y2: HEAD_H + r * ROW_H,
                 stroke: parting ? "#8b8578" : "#d9d1be",
@@ -918,7 +922,7 @@
         var ruler = rules(game);
         var scale = ruler > 0 ? TRACK / ruler : 0;
 
-        POSTS.forEach(function (p, i) {
+        ROWS.forEach(function (p, i) {
             var carries = p.code === "foreign";
             var ru = postIn(t.invader, p.code);
             var ua = postIn(t.defender, p.code);
