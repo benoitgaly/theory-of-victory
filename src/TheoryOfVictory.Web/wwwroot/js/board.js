@@ -12,6 +12,35 @@
         return;
     }
 
+    // Une carte JOUÉE arrive dans l'instantané du tour, avec le titre et le texte qu'elle avait
+    // au moment où le moteur l'a posée — c'est-à-dire dans la langue du deck qui a servi à jouer
+    // la partie, une seule fois pour les deux langues. Une carte EN MAIN, elle, se lit dans le
+    // deck de la page, donc traduite. Résultat : sur la version anglaise, les six cartes de la
+    // main étaient en anglais et la septième, la seule qui compte pour le trimestre, restait en
+    // français.
+    //
+    // On rhabille donc chaque carte jouée avec le texte du deck de la page, par son code. Les
+    // effets, eux, ne bougent pas : ce sont des chiffres, ils n'appartiennent à aucune langue.
+    (function dressPlayedCards() {
+        var deck = window.tovDeck || [];
+        if (!deck.length) { return; }
+
+        var byCode = {};
+        deck.forEach(function (card) { byCode[card.code] = card; });
+
+        games.forEach(function (game) {
+            (game.turns || []).forEach(function (turn) {
+                (turn.cardsPlayed || []).forEach(function (played) {
+                    var known = byCode[played.code];
+                    if (!known) { return; }
+                    if (known.title) { played.title = known.title; }
+                    if (known.description) { played.description = known.description; }
+                    if (known.family) { played.family = known.family; }
+                });
+            });
+        });
+    })();
+
     // The page opens on the quarter we are living in, not on February 2022 — and on the
     // last played turn when the war ended before it.
     // Turns up to the quarter we are actually living in are history; everything beyond is
